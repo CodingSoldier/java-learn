@@ -1,0 +1,10 @@
+/.idea
+*/target
+*/*.log
+*/.bpmn
+*/.settings
+*/.project
+*/.classpath
+/*.iml
+/activiti/*.iml
+/web-whole/*.iml

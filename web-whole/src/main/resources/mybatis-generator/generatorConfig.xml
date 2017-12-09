@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+		PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+		"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+	<context id="testTables" targetRuntime="MyBatis3">
+
+		<commentGenerator>
+			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/mybatis?useUnicode=false&amp;characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT" userId="root"
+			password="cpq..123">
+		</jdbcConnection>
+
+		<!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL 和 
+			NUMERIC 类型解析为java.math.BigDecimal -->
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- PO类的位置 -->
+		<javaModelGenerator targetPackage="ssm.projectweb.module01.pojo"
+			targetProject="src/main/java">
+			<!-- enableSubPackages:是否让schema作为包的后缀 -->
+			<property name="enableSubPackages" value="false" />
+			<!-- 从数据库返回的值被清理前后的空格 -->
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<!-- mapper映射文件生成的位置 -->
+		<sqlMapGenerator targetPackage="ssm.projectweb.module01.mapper"
+			targetProject="src/main/java">
+			<!-- enableSubPackages:是否让schema作为包的后缀 -->
+			<property name="enableSubPackages" value="false" />
+		</sqlMapGenerator>
+
+		<!-- mapper接口生成的位置 -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="ssm.projectweb.module01.mapper"
+			targetProject="src/main/java">
+			<!-- enableSubPackages:是否让schema作为包的后缀 -->
+			<property name="enableSubPackages" value="false" />
+		</javaClientGenerator>
+
+		<!-- 指定数据库表 -->
+		<!--<table tableName="user"></table>-->
+		<table tableName="user">
+			<property name="enableInsert" value="true"/>
+			<!--enableSelectByPrimaryKey要配置为true不然没法生成SelectByPrimaryKey-->
+			<property name="enableSelectByPrimaryKey" value="true"/>
+			<property name="enableSelectByExample" value="true"/>
+			<property name="enableUpdateByPrimaryKey" value="true"/>
+			<property name="enableDeleteByPrimaryKey" value="true"/>
+			<property name="enableCountByExample" value="true"/>
+			<property name="enableUpdateByExample" value="true"/>
+			<property name="selectByPrimaryKeyQueryId" value="true"/>
+			<property name="selectByExampleQueryId" value="true"/>
+		</table>
+
+	</context>
+</generatorConfiguration>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

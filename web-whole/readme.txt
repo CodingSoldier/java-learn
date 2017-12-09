@@ -1,0 +1,2 @@
+idea部分：
+    artifacts是maven中的一个概念，表示项目/modules如何打包，比如jar,war,war,exploded,ear等打包形式，一个项目或者说module有了artifacts,就可以部署到web应用服务器上了。application exploded（分散），这个是以文件夹形式发布项目。application archive，就是war包形式，每次都会重新打包全部的,将项目打成一个war包在指定位置

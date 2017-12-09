@@ -1,0 +1,51 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xmlns:context="http://www.springframework.org/schema/context"
+			 xmlns:aop="http://www.springframework.org/schema/aop"
+			 xmlns:tx="http://www.springframework.org/schema/tx"
+			 xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+     	http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<!--扫描ssm.**包中配置了spring注解的java类，并注册配bean，可通过spring管理-->
+	<context:component-scan base-package="ssm.**">
+		<!--不扫描@controller注解的bean-->
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+
+	<!--基于@Transactional注解实现事务管理
+	配置事务管理器：transactionManager
+	指定注解方式实现事务，transaction-manager：默认值就是transactionManager-->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+
+	<!--数据库以及mybatis配置，start-->
+	<!--1导入c3p0配置（c3p0.xml中已经导入了数据库的properties配置），配置太多，放到新的xml中-->
+	<import resource="classpath:config/database/c3p0.xml"></import>
+	<!-- 2、使用spring得到sqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 数据库连接池 -->
+		<property name="dataSource" ref="dataSource" />
+		<!-- 加载mybatis的全局配置文件 -->
+		<property name="configLocation" value="classpath:config/mybatis/mybatis.xml" />
+	</bean>
+	<!-- 3、使用spring提供的mapper扫描器扫描mapper -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 扫描包路径，如果需要扫描多个包，中间使用半角逗号隔开 -->
+		<property name="basePackage" value="ssm.**.mapper"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+	<!--数据库以及mybatis配置，end-->
+
+	<!-- 全局异常处理器，只要实现HandlerExceptionResolver接口就是全局异常处理器-->
+	<bean class="ssm.utils.exception.CustomExceptionResolver"></bean>
+
+</beans>
