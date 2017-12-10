@@ -25,7 +25,7 @@
 		</javaTypeResolver>
 
 		<!-- PO类的位置 -->
-		<javaModelGenerator targetPackage="ssm.projectweb.module01.pojo"
+		<javaModelGenerator targetPackage="ssm.projectnote.tree.treepath"
 			targetProject="src/main/java">
 			<!-- enableSubPackages:是否让schema作为包的后缀 -->
 			<property name="enableSubPackages" value="false" />
@@ -34,7 +34,7 @@
 		</javaModelGenerator>
 
 		<!-- mapper映射文件生成的位置 -->
-		<sqlMapGenerator targetPackage="ssm.projectweb.module01.mapper"
+		<sqlMapGenerator targetPackage="ssm.projectnote.tree.treepath"
 			targetProject="src/main/java">
 			<!-- enableSubPackages:是否让schema作为包的后缀 -->
 			<property name="enableSubPackages" value="false" />
@@ -42,7 +42,7 @@
 
 		<!-- mapper接口生成的位置 -->
 		<javaClientGenerator type="XMLMAPPER"
-			targetPackage="ssm.projectweb.module01.mapper"
+			targetPackage="ssm.projectnote.tree.treepath"
 			targetProject="src/main/java">
 			<!-- enableSubPackages:是否让schema作为包的后缀 -->
 			<property name="enableSubPackages" value="false" />
@@ -50,7 +50,7 @@
 
 		<!-- 指定数据库表 -->
 		<!--<table tableName="user"></table>-->
-		<table tableName="user">
+		<table tableName="treepath">
 			<property name="enableInsert" value="true"/>
 			<!--enableSelectByPrimaryKey要配置为true不然没法生成SelectByPrimaryKey-->
 			<property name="enableSelectByPrimaryKey" value="true"/>
