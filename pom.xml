@@ -257,6 +257,27 @@
         </dependencies>
       </plugin>
 
+      <!--配置jettry插件:
+          1、新建maven 的configuration
+          2、Working directory设置为 E:/workspace/java-learn/web-whole
+          3、Command line设置为 jetty:run-->
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>9.4.8.v20171121</version>
+        <!--<configuration>
+           &lt;!&ndash;热启动配置，需要make后才起效果，新增方法无效，、
+           需要使用jrebel启动，改动代码后同样要make，新增方法能实现热部署。在jrebel面板中不勾选Enable也可以。
+           总的来说就是使用jrebel启动，修改代码后make。&ndash;&gt;
+          <scanIntervalSeconds>1</scanIntervalSeconds>
+          <reload>manual</reload>
+          &lt;!&ndash;修改端口号&ndash;&gt;
+          <httpConnector>
+            <port>8080</port>
+          </httpConnector>
+        </configuration>-->
+      </plugin>
+
     </plugins>
   </build>
 

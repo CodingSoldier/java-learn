@@ -33,6 +33,7 @@ public class CtrlHtmlToSql {
         User user = serviceHtmlToSql.testFindUser(id);
         logger.info("日志，打印{}",user.getUsername());
         Map<String,Object> map = new HashMap<String,Object>();
+        user.setId(66666666);
         map.put("data",user);
         return map;
     }

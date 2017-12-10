@@ -8,3 +8,5 @@
 /*.iml
 /activiti/*.iml
 /web-whole/*.iml
+/web-whole/src/main/resources/rebel.xml
+/web-whole/.rebel.xml.bak
