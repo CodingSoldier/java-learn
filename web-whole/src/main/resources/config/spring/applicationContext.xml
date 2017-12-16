@@ -48,4 +48,10 @@
 	<!-- 全局异常处理器，只要实现HandlerExceptionResolver接口就是全局异常处理器-->
 	<bean class="ssm.utils.exception.CustomExceptionResolver"></bean>
 
+	<!-- 文件上传配置，依赖commons-fileupload，commons-fileupload自带的commons-io还和项目中导入的commons-io版本不一致了 -->
+	<bean id="multipartResolver"
+				class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="5242880"/> <!-- 设置上传文件的最大尺寸为5MB -->
+	</bean>
+
 </beans>

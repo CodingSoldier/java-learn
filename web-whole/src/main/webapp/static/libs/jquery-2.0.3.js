@@ -4556,7 +4556,6 @@ jQuery.event = {
 
 		// Nullify elem to prevent memory leaks in IE
 		elem = null;  //防止内存泄露
-		console.log(elemData); //打印elemData对象
 	},
 
 	// Detach an event or set of events from an element

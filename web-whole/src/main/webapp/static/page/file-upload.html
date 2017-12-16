@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文件上传以及下载</title>
+</head>
+<style>
+    body{font-size:16px}
+    .preview img{
+        width:200px;
+    }
+</style>
+<body>
+
+http://localhost:8080/static/page/file-upload.html
+<br/>
+<h1>文件上传配置</h1>
+1、导入commons-fileupload
+<br/>
+2、applicationContext配置multipartResolver
+<br/>
+3、后台使用MultipartFile input的name名称   来接收文件
+<br/>
+<h1>tomcat虚拟目录</h1>
+1、tomcat-9.0.1/conf/server.xml 配置：
+<Context path="/file" docBase="E://workspace//picture" debug="0" reloadable="true"/>
+path:指定访问该Web应用的URL入口，如：http://127.0.0.1:8080/helloApp1。
+docBase:指定Web应用的文件路径，可以给定绝对路径，也可以给定相对于<Host>的appBase属性的相对路径，如果Web应用采用开放目录结构，则指定Web应用的根目录，如果Web应用是个war文件，则指定war文件的路径。
+    reloadable:如果这个属性设为true，tomcat服务器在运行状态下会监视在WEB-INF/classes和WEB-INF/lib目录下class文件的改动，如果监测到有class文件被更新的，服务器会自动重新加载Web应用。
+2、idea使用虚拟目录：http://blog.csdn.net/cheney550995353/article/details/70185282
+
+<div class="upload-session">
+    <h1>jQuery-File-Upload文件上传</h1>
+    <div>多文件上传，在input加multiple属性，即可在弹出框中选择多个文件，多文件上传会发多个请求，每个请求发送一个文件</div>
+    <input type="file" id="file1" name="file1" multiple/>
+    <div>预览</div>
+    <div class="preview"></div>
+</div>
+
+
+<script src="/static/libs/jquery-2.0.3.js"></script>
+<script src="/static/libs/jQuery-File-Upload/js/vendor/jquery.ui.widget.js"></script>
+<script src="/static/libs/jQuery-File-Upload/js/jquery.fileupload.js"></script>
+
+<script>
+$("#file1").fileupload({
+    url: "/fileUpDown/jqFileUpload/one",
+    dataType: "json",
+    done: function(e, data){
+        $img = $("<img/>").attr("src",data.result.data.path);
+        $(".preview").append($img)
+    }
+});
+</script>
+
+</body>
+</html>
