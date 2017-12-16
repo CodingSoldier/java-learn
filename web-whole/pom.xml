@@ -18,6 +18,7 @@
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.xml</include>
+                    <include>**/*.*</include>
                 </includes>
             </resource>
         </resources>

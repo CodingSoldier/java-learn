@@ -10,5 +10,17 @@
 主页
 
 <script src="/static/libs/jquery-2.0.3.js"></script>
+<script>
+    function myAjax(params) {
+        return $.ajax(params);
+    }
+    myAjax({
+        url:"/test_html_to_sql/test1?id=10",
+        type: "get",
+        success: function (r) {
+            console.log(r)
+        }
+    })
+</script>
 </body>
 </html>
