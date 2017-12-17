@@ -13,7 +13,7 @@
 // */
 //@RunWith(SpringJUnit4ClassRunner.class)   //使用junit4进行测试
 ////加载配置文件
-//@ContextConfiguration(locations = { "classpath:config/spring/springmvc-controller.xml", "classpath:config/spring/applicationContext.xml"})
+//@ContextConfiguration(locations = { "classpath:config/spring/springmvc-controller.xml", "classpath:config/spring/application-context.xml"})
 //public class BaseTest {
 //    protected static Logger logger = LoggerFactory.getLogger("BaseTest.class");
 //}

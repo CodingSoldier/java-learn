@@ -9,7 +9,7 @@
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <!--classpath:  相当于项目根目录，不能加载spring所需的springmvc-controller.xml，不然springmvc-controller.xml中的配置会执行两次-->
-    <param-value>classpath:config/spring/applicationContext.xml</param-value>
+    <param-value>classpath:config/spring/application-context.xml</param-value>
   </context-param>
 
   <!--使用Log4jServletContextListener加载log4j.properties-->
