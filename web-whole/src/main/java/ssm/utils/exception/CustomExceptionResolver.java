@@ -25,7 +25,7 @@ public class CustomExceptionResolver implements HandlerExceptionResolver {
 		/*形参ex是Exception类型，editItems方法上抛出的异常也是Exception，方法内抛出的异常是CustomException
 		如果ex是CustomException，则使用传进来的ex，否则自定义一个CustomException*/
 		CustomException exception = ex instanceof CustomException ?
-				(CustomException)ex : new CustomException("未知错误");
+				(CustomException)ex : new CustomException("后台未知异常");
 
 		/*通过url发送的请求可以跳转到错误页面，
 		* 通过ajax发送的请求似乎不能跳转到错误页面*/

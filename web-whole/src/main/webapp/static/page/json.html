@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>json</title>
+    <style>
+        *{
+            font-size:20px;
+        }
+    </style>
+</head>
+<body>
+
+访问地址  http://localhost:8080/static/page/json.html
+
+<button class="f1" onclick="f1()">@RequestParam Map<String, Object> params只能接收简单类型数据，不能接收list、map</button>
+<br/><br/>
+<button class="f2" onclick="f2()">@ModelAttribute(ps:可以不加注释)，前台get请求也可以发送list、map绑定到bean，但是不能绑定到map，Date依旧是传时间对象</button>
+
+<script src="/static/libs/jquery-2.0.3.js"></script>
+<script>
+    function f1(){
+        $.ajax({
+            url: "/json/requestParamMap",
+            type: 'get',
+            data: {
+                p1:"p1",
+                p2: [1,"2b"],
+                p3: {a:1}
+            },
+            dataType: "json"
+        }).done(function(r){
+            console.log(r);
+        })
+    }
+
+    function f2(){
+        $.ajax({
+            url: "/json/f2",
+            type: 'get',
+            data: {
+                p1:"p1",
+                l1: [1,"2b"].toString(),
+                m1: {a:1},
+                t1: new Date("2017-01-01 10:10:10")
+            },
+            dataType: "json"
+        }).done(function(r){
+            console.log(r);
+        })
+    }
+
+</script>
+</body>
+</html>
