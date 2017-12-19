@@ -37,12 +37,12 @@
     function f2(){
         $.ajax({
             url: "/json/f2",
-            type: 'get',
+            type: 'get',  //get、post都可以，controller方法参数不加任何注解
             data: {
                 p1:"p1",
-                l1: [1,"2b"].toString(),
-                m1: {a:1},
-                t1: new Date("2017-01-01 10:10:10")
+                l1: [1,"2b"].toString(),  //list必须转成string
+//                m1: {a:1},  //后台可以接收map
+                t1: Date.parse(new Date("2017-01-01 10:10:10"))/1000
             },
             dataType: "json"
         }).done(function(r){
