@@ -14,31 +14,55 @@
 
 http://localhost:8080/static/page/file-upload.html
 <br/>
-<h1>文件上传配置</h1>
+<h2>文件上传配置</h2>
 1、导入commons-fileupload
 <br/>
 2、applicationContext配置multipartResolver
 <br/>
 3、后台使用MultipartFile input的name名称   来接收文件
-<br/>
-<h1>tomcat虚拟目录</h1>
+
+<!--<h1>tomcat虚拟目录</h1>
 1、tomcat-9.0.1/conf/server.xml 配置：
 <Context path="/file" docBase="E://workspace//picture" debug="0" reloadable="true"/>
 path:指定访问该Web应用的URL入口，如：http://127.0.0.1:8080/helloApp1。
 docBase:指定Web应用的文件路径，可以给定绝对路径，也可以给定相对于<Host>的appBase属性的相对路径，如果Web应用采用开放目录结构，则指定Web应用的根目录，如果Web应用是个war文件，则指定war文件的路径。
     reloadable:如果这个属性设为true，tomcat服务器在运行状态下会监视在WEB-INF/classes和WEB-INF/lib目录下class文件的改动，如果监测到有class文件被更新的，服务器会自动重新加载Web应用。
-2、idea使用虚拟目录：http://blog.csdn.net/cheney550995353/article/details/70185282
+2、idea使用虚拟目录：http://blog.csdn.net/cheney550995353/article/details/70185282-->
 
 <div class="upload-session">
-    <h1>jQuery-File-Upload文件上传</h1>
+    <h2>jQuery-File-Upload文件上传</h2>
     <div>多文件上传，在input加multiple属性，即可在弹出框中选择多个文件，多文件上传会发多个请求，每个请求发送一个文件</div>
     <input type="file" id="file1" name="file1" multiple/>
     <div>预览</div>
     <div class="preview"></div>
 </div>
 
-<br/>
+
+<div>
+    <h2>文件上传存储到数据库</h2>
+    <input type="file" id="file2" name="file2">
+</div>
+
+<div>
+    <h2>formdata上传表单</h2>
+    <form name="form1" id="form1" enctype="multipart/form-data">
+        <input type="text" name="name"/>
+        <input type="file" name="picFile">
+    </form>
+    <button id="form1-submit">提交formdata</button>
+</div>
+
+<div>
+    <h2>formdata上传表单，多文件</h2>
+    <form name="form2" id="form2" enctype="multipart/form-data">
+        <input type="text" name="name"/>
+        <input type="file" name="picFile" multiple>
+    </form>
+    <button id="form1-submit2">提交formdata</button>
+</div>
+
 <div class="down-session">
+    <h2>文件下载</h2>
     <a href="/fileUpDown/down01">点击a链接下载</a><br>
     <!--<button class="down1">下载文件</button>-->
 </div>
@@ -57,6 +81,41 @@ $("#file1").fileupload({
         $(".preview").append($img)
     }
 });
+
+//图片存储到数据库
+$("#file2").fileupload({
+    url: "/fileUpDown/jqFileUpload/toDatabase",
+    dataType: "json",
+    done: function(e, data){
+
+    }
+});
+
+//formData上传表单
+$("#form1-submit").off("click").on("click", function(){
+    $.ajax({
+        url: "/fileUpDown/formData",
+        type: "post",
+        contentType: false,
+        processData: false,
+        data: new FormData($("#form1").get(0))
+    }).done(function(r){
+
+    })
+})
+
+//formData上传表单，多个文件上传
+$("#form1-submit2").off("click").on("click", function(){
+    $.ajax({
+        url: "/fileUpDown/formData2",
+        type: "post",
+        contentType: false,
+        processData: false,
+        data: new FormData($("#form2").get(0))
+    }).done(function(r){
+
+    })
+})
 
 
 //文件下载
