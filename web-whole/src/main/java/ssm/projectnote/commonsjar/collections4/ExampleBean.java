@@ -1,4 +1,4 @@
-package ssm.projectnote.commonsjar.collections;
+package ssm.projectnote.commonsjar.collections4;
 
 /**
  * @Author：陈丕迁
