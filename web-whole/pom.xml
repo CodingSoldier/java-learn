@@ -8,8 +8,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>web-whole</artifactId>
     <packaging>war</packaging>
-    <!--<name>web-whole Maven Webapp</name>
-    <url>http://maven.apache.org</url>-->
 
     <build>
         <!--解决idea不会将java源码目录中的xml文件打包的问题-->
