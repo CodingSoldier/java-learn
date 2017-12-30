@@ -3,6 +3,7 @@ package ssm.utils.exception;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import ssm.utils.OutPutData;
@@ -12,7 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-/* 全局异常处理器  */
+/* 全局异常处理器，添加@Component注解后不用在application-context.xml中配置bean*/
+@Component
 public class CustomExceptionResolver implements HandlerExceptionResolver {
 	public static final Logger logger = LoggerFactory.getLogger(CustomExceptionResolver.class);
 	@Override

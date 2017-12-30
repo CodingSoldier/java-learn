@@ -45,9 +45,6 @@
 	</bean>
 	<!--数据库以及mybatis配置，end-->
 
-	<!-- 全局异常处理器，只要实现HandlerExceptionResolver接口就是全局异常处理器-->
-	<bean class="ssm.utils.exception.CustomExceptionResolver"></bean>
-
 	<!-- 文件上传配置，依赖commons-fileupload，commons-fileupload自带的commons-io还和项目中导入的commons-io版本不一致了 -->
 	<bean id="multipartResolver"
 				class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
