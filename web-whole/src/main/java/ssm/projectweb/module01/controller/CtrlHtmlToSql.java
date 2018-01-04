@@ -2,12 +2,14 @@ package ssm.projectweb.module01.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ssm.projectweb.module01.pojo.User;
 import ssm.projectweb.module01.service.ServiceHtmlToSql;
+import ssm.projectweb.module01.service.ServiceTransactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +27,8 @@ public class CtrlHtmlToSql {
     private static Logger logger = LoggerFactory.getLogger("CtrlHtmlToSql.class");
     @Resource
     private ServiceHtmlToSql serviceHtmlToSql;
+    @Autowired
+    private ServiceTransactional serviceTransactional;
 
     //  http://localhost:8080/test_html_to_sql/test1?id=10
     @RequestMapping("/test1")

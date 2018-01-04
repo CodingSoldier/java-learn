@@ -1,4 +1,4 @@
-package ssm.projectnote.spring.aop;
+package com.spring.aop;
 
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 @Component
 public class D_Anno_Aspect {
 
-    @Pointcut("execution (* ssm.projectnote.spring.aop.d.controller..*.*(..))")
+    @Pointcut("execution (* com.spring.aop.d.controller..*.*(..))")
     public void aspect(){}
 
     @Before("aspect()")

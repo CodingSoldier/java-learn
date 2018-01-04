@@ -87,12 +87,6 @@
       <artifactId>spring-aspects</artifactId>
       <version>${spring.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context-support</artifactId>
-      <version>${spring.version}</version>
-    </dependency>
-
     <!--spring-webmvc包含Spring MVC框架相关的所有类。包含国际化、标签、Theme、视图展现的FreeMarker、JasperReports、Tiles、Velocity、 XSLT相关类，spring-webmvc.jar依赖spring-aop、spring-beans、spring-context、spring-core、spring-expression、spring-web、-->
     <dependency>
       <groupId>org.springframework</groupId>
@@ -285,6 +279,7 @@
   <modules>
     <module>web-whole</module>
     <module>activiti</module>
+    <module>note</module>
   </modules>
 
 </project>
