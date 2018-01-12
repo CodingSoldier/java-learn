@@ -11,6 +11,20 @@
 
   <artifactId>note</artifactId>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjtools</artifactId>
+      <version>1.8.13</version>
+    </dependency>
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjrt</artifactId>
+      <version>1.8.13</version>
+    </dependency>
+
+  </dependencies>
+
   <build>
     <!--解决idea不会将java源码目录中的xml文件打包的问题-->
     <resources>
@@ -22,5 +36,6 @@
         </includes>
       </resource>
     </resources>
+
   </build>
 </project>

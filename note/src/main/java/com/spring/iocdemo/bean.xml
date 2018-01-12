@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+  <bean id="dao1" class="com.spring.iocdemo.Dao1"></bean>
+
+  <bean id="service1" class="com.spring.iocdemo.Service1"></bean>
+</beans>

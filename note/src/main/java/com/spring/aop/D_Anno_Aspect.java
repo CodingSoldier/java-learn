@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 @Component
 public class D_Anno_Aspect {
 
-    @Pointcut("execution (* com.spring.aop.d.controller..*.*(..))")
+    @Pointcut("@annotation(com.spring.aop.DAnnoLog)")
     public void aspect(){}
 
     @Before("aspect()")
