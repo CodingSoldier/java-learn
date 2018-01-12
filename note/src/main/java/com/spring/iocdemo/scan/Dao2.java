@@ -7,8 +7,8 @@ import com.spring.iocdemo.ComponentCustom;
  * @Description：
  * @Date： 2018/1/13
  */
-//@ComponentCustom(name = "dao2")
-//@ComponentCustom("dao2")
+//@ComponentCustom(name = "dao222")
+//@ComponentCustom("dao22")
 @ComponentCustom
 public class Dao2 {
     private String name2;
