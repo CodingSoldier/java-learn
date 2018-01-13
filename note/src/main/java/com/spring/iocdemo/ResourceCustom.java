@@ -6,9 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/1/10
+ * @Author：cpq
+ * @Description：自定义注解
  */
 //运行时执行
 @Retention(RetentionPolicy.RUNTIME)

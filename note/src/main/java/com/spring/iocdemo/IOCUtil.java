@@ -14,15 +14,14 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/1/12
+ * @Author：cpq
+ * @Description： IOC工具类
  */
 public class IOCUtil {
     //ioc容器
     Map<String, Object> beanContainer = new HashMap<String, Object>();
 
-    //读取xml配置的bean，并通过反射实例化bean
+    //使用dom4j读取xml配置的bean，并通过反射实例化bean
     private Map<String, Object> xmlBean(String path){
         try {
             //classLoader.getResourceAsStream默认定位到classpath根目录，因为斜杠/也表示根目录，所以path不能以斜杠/开头。
@@ -124,6 +123,7 @@ public class IOCUtil {
         return beanContainer.get(id);
     }
 
+    //运行此方法测试
     @Test
     public void t(){
         Service1 s = (Service1) getBean("service1");

@@ -3,9 +3,8 @@ package com.spring.iocdemo.scan;
 import com.spring.iocdemo.ComponentCustom;
 
 /**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/1/13
+ * @Author：cpq
+ * @Description： 通过注解加入到IOC容器中
  */
 //@ComponentCustom(name = "dao222")
 //@ComponentCustom("dao22")

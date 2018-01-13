@@ -3,9 +3,8 @@ package com.spring.iocdemo;
 import com.spring.iocdemo.scan.Dao2;
 
 /**
- * @Author：陈丕迁
+ * @Author：cpq
  * @Description：
- * @Date： 2018/1/10
  */
 public class Service1 {
     //@ResourceCustom(name = "dao1")
