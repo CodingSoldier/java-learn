@@ -1,0 +1,2 @@
+需求：查看进程中 和 vim相关的进程，并保留头部文字，以便确认哪个进程号是pid，哪个是ppid
+命令：ps -ef|head -n 1;ps -ef|grep -i vim
