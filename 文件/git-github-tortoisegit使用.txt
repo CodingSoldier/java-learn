@@ -6,3 +6,5 @@ git 生成 sshkeys
 tortoisegit链接自己的仓库
 1、打开PuTTYgen，load自己的秘钥id_rsa，选择ECDSA，保存成XXX.ppk类型的秘钥
 2、右键tortoisegit —> settings —> Git —> Remote，Putty Key选择本地的秘钥.ppk。并填写URL、Push URL
+
+若没有秘钥是不是要使用tortoisegit生成一份秘钥、公钥，秘钥保存在本地，公钥上传到github？
