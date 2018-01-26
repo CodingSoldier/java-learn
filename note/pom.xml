@@ -23,6 +23,13 @@
       <version>1.8.13</version>
     </dependency>
 
+    <!--redis客户端，jedis-->
+    <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+      <version>2.9.0</version>
+    </dependency>
+
   </dependencies>
 
   <build>

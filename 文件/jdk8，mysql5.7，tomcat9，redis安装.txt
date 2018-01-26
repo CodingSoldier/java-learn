@@ -1,0 +1,369 @@
+*****************JDK*********************
+执行命令查看已经安装的java程序:
+rpm –qa | grep java
+
+卸载OPENJDK
+rpm -e --nodeps java-1.6.0-openjdk-1.6.0.0-1.66.1.13.0.el6.i686
+rpm -e --nodeps java-1.7.0-openjdk-1.7.0.45-2.4.3.3.el6.i686
+
+创建JDK的安装路径：
+在/usr/local/  创建文件夹java目录
+mkdir -p /usr/local/java
+
+上传安装文件到linux
+
+解压tar.gz，解压后就是安装完了，配置好环境变量就能用:
+tar -zxvf jdk-7u71-linux-i586.tar.gz -C /usr/local/java
+
+配置环境变量：
+vim /etc/profile
+添加：
+#set java environment
+JAVA_HOME=/usr/local/java/jdk1.8.0_162
+CLASSPATH=.:$JAVA_HOME/lib.tools.jar
+PATH=$JAVA_HOME/bin:$PATH
+export JAVA_HOME CLASSPATH PATH
+
+重新加载配置文件：【否则环境变量不会重新执行】
+source /etc/profile
+
+*****************JDK*********************
+
+
+*****************mysql*********************
+1 通过 SecureCRT 连接Linux；
+2 进入到目录 /usr/local/ 中：
+cd /usr/local/
+3 创建目录 /usr/local/tools，如果有则忽略： 
+mkdir -p tools
+4 创建 /usr/local/mysql 目录，如果已存在则忽略（这步似乎没用）：
+mkdir -p mysql
+5 进入到目录 /usr/local/tools 中：
+cd tools/
+
+6 查看系统中是否已安装 MySQL 服务：
+rpm -qa | grep mysql 或 yum list installed | grep mysql
+7 如果已安装则删除 MySQL 及其依赖的包：
+yum -y remove mysql-libs*****
+
+8 下载 mysql57-community-release-el7-8.noarch.rpm 的 YUM 源：
+wget http://repo.mysql.com/mysql57-community-release-el7-8.noarch.rpm
+
+9 安装 mysql57-community-release-el7-8.noarch.rpm：
+rpm -ivh mysql57-community-release-el7-8.noarch.rpm
+安装完后，得到如下两个包：
+mysql-community.repo
+mysql-community-source.repo
+
+10 安装 MySQL：
+yum install mysql-server
+遇到疑问的地方，一路 Y 下去即可；
+安装完毕后，在/var/log/mysqld.log 文件中会自动生成一个随机的密码，我们需要先取得这个随机密码，以用于登录 MySQL 服务端：
+grep "password" /var/log/mysqld.log
+打印如下内容：
+A temporary password is generated for root@localhost: hilX0U!9i3_6
+
+12 登录到 MySQL 服务端并更新用户 root 的密码：
+mysql -u root -p
+提示属于密码，选中密码，点击右键，回车。即：使用复制的方式输入密码，绝不要手输，手输密码就是个大坑。
+首次登录必须先设置新密码，
+SET PASSWORD = PASSWORD('Cpq.._123');
+改变validate_password_policy策略为0，仅校验密码长度，最小长度为8位
+set global validate_password_policy=0;
+再次改变密码
+SET PASSWORD = PASSWORD('cpq..123');
+
+设置用户 root 可以在任意 IP 下被访问：
+grant all privileges on *.* to root@"%" identified by "cpq..123";
+设置用户 root 可以在本地被访问：
+grant all privileges on *.* to root@"localhost" identified by "cpq..123";
+刷新权限使之生效：
+flush privileges;
+注意：由于 MySQL5.7 采用了密码强度验证插件 validate_password，故此我们需要设置一个有一定强度的密码；
+输入 exit 后用新密码再次登录看看吧！
+
+13  Centos7中Mysql远程访问的防火墙策略
+检测端口
+如果远程连接不上Mysql，检查下默认的3306端口是否允许访问：
+[root@localhost /]# iptables -L -n|grep 3306
+ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            state NEW tcp dpt:3306
+这表示允许访问
+
+如果没有，则需要允许此端口访问，这是临时的允许访问，需要保存防火墙的策略：
+[root@localhost /]# iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 3306 -j ACCEPT
+
+保存策略:
+[root@localhost /]# iptables-save > iptables.rules
+
+禁用firewall，因为Centos7的改动，把firewall禁用：
+[root@localhost /]# systemctl stop firewalld.service 
+[root@localhost /]# systemctl mask firewalld.service 
+
+安装iptables-services：
+[root@localhost /]# yum install iptables-services.x86_64 -y
+
+安装成功后，设置开机启动：
+[root@localhost /]# systemctl enable iptables.service 
+
+重新加载策略：
+[root@localhost /]# iptables-restore iptables.rules
+
+策略初始化保存：
+[root@localhost /]# /usr/libexec/iptables/iptables.init save
+
+总结，分成两部分，一是安装iptables-service，二是修改策略。
+安装iptables-service
+禁用firewall： systemctl stop firewalld.service / systemctl mask firewalld.service；
+安装iptables-services:yum install iptables-services；
+开机启动：systemctl enable iptables.service。
+
+修改策略
+检测端口访问：iptables -L -n|grep 3306；
+允许访问：iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 3306 -j ACCEPT
+保存策略：iptables-save > iptables.rules；
+加载策略：iptables-restore iptables.rules；
+初始化策略：/usr/libexec/iptables/iptables.init save
+
+作者：Impact
+链接：https://www.jianshu.com/p/b415c89f0e54
+
+
+
+14 启动 MySQL 服务：
+service mysqld start
+
+15 关闭 MySQL 服务：
+service mysqld stop
+
+16 重启 MySQL 服务：
+service mysqld restart
+
+17 查看 MySQL 的状态：
+service mysqld status
+
+18 查看 MySQL 的字符集：
+mysql> show variables like '%character%';
+
+查看指定的数据库中指定数据表的字符集，如查看 mysql 数据库中 servers 表的字符集：
+  show table status from mysql like '%servers%';
+查看指定数据库中指定表的全部列的字符集，如查看 mysql 数据库中 servers 表的全部的列的字符集：
+show full columns from servers;
+
+19 设置 MySQL 的字符集为 UTF-8：
+打开 /etc 目录下的 my.cnf 文件（此文件是 MySQL 的主配置文件）：
+/etc/my.cnf
+在 [mysqld] 前添加如下代码：
+[client]
+default-character-set=utf8
+在 [mysqld] 后添加如下代码：
+character_set_server=utf8
+再次查看字符集：
+mysql> show variables like '%character%';
++--------------------------+----------------------------+
+| Variable_name            | Value                      |
++--------------------------+----------------------------+
+| character_set_client    | utf8                      |
+| character_set_connection | utf8                      |
+| character_set_database  | utf8                      |
+| character_set_filesystem | binary                    |
+| character_set_results    | utf8                      |
+| character_set_server    | utf8                      |
+| character_set_system    | utf8                      |
+| character_sets_dir      | /usr/share/mysql/charsets/ |
++--------------------------+----------------------------+
+8 rows in set (0.01 sec)
+
+20 /var/lib/mysql 是存放数据库文件的目录；
+
+21 /var/log 目录下的 mysqld.log 文件记录 MySQL 的日志；
+
+22 MySQL 采用的 TCP/IP 协议传输数据，默认端口号为 3306，我们可以通过如下命令查看：
+netstat -anp
+
+23 忘记密码时，可用如下方法重置：
+# service mysqld stop
+# mysqld_safe --user=root --skip-grant-tables --skip-networking &
+# mysql -u root 
+mysql> use mysql;
+mysql> update user set password=password("new_password") where user="root"; 
+mysql> flush privileges;
+
+*****************mysql，end*********************
+
+
+
+
+*****************tomcat，start*********************
+1、apache-tomcat-9.0.2.tar.gz上传到/usr/local/tools
+2、创建tomcat目录  mkdir /usr/local/tomcat
+3、解压 tar -zxvf tools/apache-tomcat-9.0.2.tar.gz -C tomcat/
+4、查看8080端口是否开启  iptables -L -n|grep 8080
+5、开启8080端口  iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 8080 -j ACCEPT
+保存策略：iptables-save > iptables.rules
+重新加载策略：iptables-restore iptables.rules
+策略初始化保存： /usr/libexec/iptables/iptables.init save
+
+6、打开文件 /etc 目录下的 profile 文件：
+   vim /etc/profile
+   将如下代码追加到 profile 文件末尾：
+# cpq - tomcat9 config start
+CATALINA_HOME=/usr/local/tomcat/apache-tomcat-9.0.2
+CATALINA_BASE=/usr/local/tomcat/apache-tomcat-9.0.2
+PATH=$PATH:$CATALINA_BASE/bin
+export PATH CATALINA_BASE
+# cpq - tomcat9 config end
+
+7、修改 tomcat 的字符编码
+cd /usr/local/tomcat/apache-tomcat-9.0.2/conf
+vim server.xml
+找到如下代码：
+<Connector port="8080" protocol="HTTP/1.1" connectionTimeout="20000" redirectPort="8443" />
+添加字符编码 URIEncoding="UTF-8",修改后如下：
+<Connector port="8080" protocol="HTTP/1.1" connectionTimeout="20000" redirectPort="8443" URIEncoding="UTF-8" />
+
+8、将 tomcat9 加入到系统服务列表中，前后井号#的注释不能少
+# idea - tomcat config start
+#!/bin/bash
+ # description: Tomcat Start Stop Restart
+ # processname: tomcat
+ # chkconfig: 2345 20 80
+ JAVA_HOME=/usr/local/java/jdk1.8.0_162
+ export JAVA_HOME
+ PATH=$JAVA_HOME/bin:$PATH
+ export PATH
+ CATALINA_HOME=/usr/local/tomcat/apache-tomcat-9.0.2
+
+ case $1 in
+ start)
+   sh $CATALINA_HOME/bin/startup.sh
+ ;;
+ stop)
+   sh $CATALINA_HOME/bin/shutdown.sh
+ ;;
+ restart)
+   sh $CATALINA_HOME/bin/shutdown.sh
+   sh $CATALINA_HOME/bin/startup.sh
+ ;;
+ esac
+ exit 0
+ #chmod 755 tomcat
+ #chkconfig --add tomcat
+ #chkconfig --level 2345 tomcat on
+ #chkconfig --list tomcat
+# idea - tomcat config end 
+
+9 为 tomcat9 分配可执行权限：
+ chmod +x tomcat9
+
+10 将 tomcat9 纳入到系统的服务列表中，即添加 tomcat9 为系统服务：
+ chkconfig --add tomcat9
+
+11 查看当前系统服务都有哪些：
+ chkconfig --list
+ 也可以查看指定的系统服务，如这里我们指定 tomcat9 这个服务：
+  chkconfig --list tomcat9
+ 打印如下信息：
+  tomcat9         0:off   1:off   2:on    3:on    4:on    5:on    6:off
+ 则表明已将 tomcat9 设置为系统服务，2、3、4、5 都为 on 表示可随系统自动启动；
+
+12 我们可以在任意目录下执行关闭、启动、重启 Tomcat9 服务啦：
+关闭 tomcat9 服务：
+service tomcat9 stop
+启动 tomcat9 服务：
+service tomcat9 start
+重启 tomcat9 服务：
+service tomcat9 restart
+
+打包：
+将idea打出来的散包：web-whole:war exploded上传到/usr/local/tomcat/apache-tomcat-9.0.2/webapps
+通过  http://192.168.40.129:8080/web-whole/  访问主页的jsp
+*****************tomcat，end*********************
+
+
+
+
+*********************************redis，start**********************************
+redis是C语言开发，需要gcc
+yum install -y gcc-c++ 
+
+1、将redis-4.0.7.tar.gz上传到Linux /usr/local/tools。cd /usr/local/tools
+2、解压 tar -zxvf redis-4.0.7.tar.gz
+3、cd redis-4.0.7。执行编译 make
+4、安装 make PREFIX=/usr/local/redis install  若redis目录不存在，会自动创建
+5、cd /usr/local/redis  拷贝编译目录的配置文件到安装目录 cp /usr/local/tools/redis-4.0.7/redis.conf /usr/local/redis
+6、修改配置文件为服务端启动 vim redis.conf  将daemonize 改为 yes
+7、redis服务端启动，需要根据配置文件启动  ./bin/redis-server ./redis.conf
+8、新开一个会话 cd /usr/local/redis  开启redis客户端，不需要配置文件就可开启客户端 ./bin/redis-cli
+9、redis服务关闭 ./bin/redis-cli shutdown
+10、将redis纳入到系统服务列表。vim /etc/init.d/redis  填入下面的信息
+
+# chkconfig: 2345 10 90
+# description: Start and Stop redis
+
+PATH=/usr/local/bin:/sbin:/usr/bin:/bin
+
+REDISPORT=6379 #实际环境而定
+EXEC=/usr/local/redis/bin/redis-server #实际环境而定
+REDIS_CLI=/usr/local/redis/bin/redis-cli #实际环境而定
+
+#在redis启动后会生成，有可能是/var/run/redis.pid
+PIDFILE=/var/run/redis_${REDISPORT}.pid  
+CONF="/usr/local/redis/redis.conf" #实际环境而定
+
+case "$1" in
+        start)
+                if [ -f $PIDFILE ]
+                then
+                        echo "$PIDFILE exists, process is already running or crashed."
+                else
+                        echo "Starting Redis server..."
+                        $EXEC $CONF
+                fi
+                if [ "$?"="0" ]
+                then
+                        echo "Redis is running..."
+                fi
+                ;;
+        stop)
+                if [ ! -f $PIDFILE ]
+                then
+                        echo "$PIDFILE exists, process is not running."
+                else
+                        PID=$(cat $PIDFILE)
+                        echo "Stopping..."
+                        $REDIS_CLI -p $REDISPORT SHUTDOWN
+                        while [ -x $PIDFILE ]
+                        do
+                                echo "Waiting for Redis to shutdown..."
+                                sleep 1
+                        done
+                        echo "Redis stopped"
+                fi
+                ;;
+        restart|force-reload)
+                ${0} stop
+                ${0} start
+                ;;
+        *)
+                echo "Usage: /etc/init.d/redis {start|stop|restart|force-reload}" >&2
+                exit 1
+esac
+
+11、chmod +x /etc/init.d/redis
+12、# 尝试启动或停止redis
+	service redis start
+	service redis stop
+13、设置开机启动未能成功
+
+14、java和redis整合，使用Jedis，
+	查看6379端口是否开启  iptables -L -n|grep 6379
+	开启6379端口  iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 6379 -j ACCEPT
+	保存策略：iptables-save > iptables.rules
+	重新加载策略：iptables-restore iptables.rules
+	策略初始化保存： /usr/libexec/iptables/iptables.init save
+
+	vim /usr/local/redis/redis.conf  
+	注释掉 #bind 127.0.0.1
+	将保护模式设置为no  protected-mode no
+
+
