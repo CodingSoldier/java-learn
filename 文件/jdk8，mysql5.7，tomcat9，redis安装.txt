@@ -365,6 +365,6 @@ esac
 	vim /usr/local/redis/redis.conf  
 	注释掉 #bind 127.0.0.1
 	将保护模式设置为no  protected-mode no
-	1
+
 
 
