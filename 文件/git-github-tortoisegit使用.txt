@@ -3,8 +3,6 @@ git 生成 sshkeys
 2、ssh-keygen -t rsa -C "tfz9011@163.com"
 3、id_rsa是秘钥，保存在本地。id_rsa.pub是公钥，添加到github
 
-tortoisegit 生成sshkeys
-1、打开PuTTYgen，选择ECDSA —> Generate —> 滑动鼠标生成pubic key
-2、将ecdsa-sha2-nistp256 公钥添加到github
-3、Save private key 到/.ssh
-4、右键tortoisegit —> settings —> Git —> Remote，Putty Key选择本地的秘钥.ppk。并填写URL、Push URL
+tortoisegit链接自己的仓库
+1、打开PuTTYgen，load自己的秘钥id_rsa，选择ECDSA，保存成XXX.ppk类型的秘钥
+2、右键tortoisegit —> settings —> Git —> Remote，Putty Key选择本地的秘钥.ppk。并填写URL、Push URL
