@@ -1,0 +1,338 @@
+redis是C语言开发，需要gcc
+yum install -y gcc-c++ 
+
+1、将redis-4.0.7.tar.gz上传到Linux /usr/local/tools。cd /usr/local/tools
+2、解压 tar -zxvf redis-4.0.7.tar.gz
+3、cd redis-4.0.7。执行编译 make
+4、安装 make PREFIX=/usr/local/redis install  若redis目录不存在，会自动创建
+5、cd /usr/local/redis  拷贝编译目录的配置文件到安装目录 cp /usr/local/tools/redis-4.0.7/redis.conf /usr/local/redis
+6、修改配置文件为服务端启动 vim redis.conf  将daemonize 改为 yes
+7、redis服务端启动，需要根据配置文件启动  ./bin/redis-server ./redis.conf
+8、新开一个会话 cd /usr/local/redis  开启redis客户端，不需要配置文件就可开启客户端 ./bin/redis-cli
+9、redis服务关闭 ./bin/redis-cli shutdown。 关闭指定端口 ./bin/redis-cli -p XXXX shutdown
+10、将redis纳入到系统服务列表。vim /etc/init.d/redis  填入下面的信息
+
+# chkconfig: 2345 10 90
+# description: Start and Stop redis
+
+PATH=/usr/local/bin:/sbin:/usr/bin:/bin
+
+REDISPORT=6379 #实际环境而定
+EXEC=/usr/local/redis/bin/redis-server #实际环境而定
+REDIS_CLI=/usr/local/redis/bin/redis-cli #实际环境而定
+
+#在redis启动后会生成，有可能是/var/run/redis.pid
+PIDFILE=/var/run/redis_${REDISPORT}.pid  
+CONF="/usr/local/redis/redis.conf" #实际环境而定
+
+case "$1" in
+        start)
+                if [ -f $PIDFILE ]
+                then
+                        echo "$PIDFILE exists, process is already running or crashed."
+                else
+                        echo "Starting Redis server..."
+                        $EXEC $CONF
+                fi
+                if [ "$?"="0" ]
+                then
+                        echo "Redis is running..."
+                fi
+                ;;
+        stop)
+                if [ ! -f $PIDFILE ]
+                then
+                        echo "$PIDFILE exists, process is not running."
+                else
+                        PID=$(cat $PIDFILE)
+                        echo "Stopping..."
+                        $REDIS_CLI -p $REDISPORT SHUTDOWN
+                        while [ -x $PIDFILE ]
+                        do
+                                echo "Waiting for Redis to shutdown..."
+                                sleep 1
+                        done
+                        echo "Redis stopped"
+                fi
+                ;;
+        restart|force-reload)
+                ${0} stop
+                ${0} start
+                ;;
+        *)
+                echo "Usage: /etc/init.d/redis {start|stop|restart|force-reload}" >&2
+                exit 1
+esac
+
+11、chmod +x /etc/init.d/redis
+12、# 尝试启动或停止redis
+	service redis start
+	service redis stop
+13、设置开机启动未能成功
+
+14、java和redis整合，使用Jedis，
+	查看6379端口是否开启  iptables -L -n|grep 6379
+	开启6379端口  iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 6379 -j ACCEPT
+	保存策略：iptables-save > iptables.rules
+	重新加载策略：iptables-restore iptables.rules
+	策略初始化保存： /usr/libexec/iptables/iptables.init save
+
+	vim /usr/local/redis/redis.conf  
+	注释掉 #bind 127.0.0.1
+	将保护模式设置为no  protected-mode no
+
+
+5、扩展知识-消息订阅与发布（了解）
+ /usr/local/redis/bin/redis-cli --raw 启动可以解决读取中文乱码问题
+订阅新闻，新闻发布
+subscribe channel：订阅频道，例：subscribe mychat，订阅mychat这个频道
+psubscribe channel*：批量订阅频道，例：psubscribe s*，订阅以”s”开头的频道
+publish channel content：在指定的频道中发布消息，如 publish mychat ‘today is a newday’
+
+6、扩展知识-多数据库（了解）
+MySQL-数据库可以自己用语句自定义创建
+	create database xxxx;
+
+redis-也是有数据库的。 Redis已经提前创建好了。
+Redis默认有16个数据库。0，1，2…….15
+
+在redis上所做的所有数据操作，都是默认在0号数据库上操作
+数据库和数据库之间，不能共享键值对。
+
+切换数据库：
+select 数据库名;
+
+把某个键值对进行数据库移植：
+move newkey 1：将当前库的key移植到1号库中
+
+慎用
+清空当前数据库：flushdb
+和redis服务器数据的清空：flushall
+
+7、扩展知识-redis批量操作-事务（了解）
+MySQL-事务： 目的为了保证数据完整性，安全。
+Redis-事务：  目的为了进行redis语句的批量化执行
+
+multi：开启事务用于标记事务的开始，其后执行的命令都将被存入命令队列，直到执行EXEC时，这些命令才会被原子的执行，类似与关系型数据库中的：begin transaction
+exec：提交事务，类似与关系型数据库中的：commit        执行批量化
+discard：事务回滚，类似与关系型数据库中的：rollback     不执行批量化操作
+
+redis事物：
+	语法错误，在队列中运行的时候就报错。只要有一个命令有语法错误，整个队列中的命令都不会执行。
+	get key           得到结果是1111
+	multi  
+	set key value     返回QUEUED
+	set key           语法错误，提示参数不正确
+	exec  
+	get key           得到结果是1111，队列中的命令没有执行
+
+	运行错误，在队列中执行时没有报错，但是执行命令时发生错误，不影响队列中的其他命令，其他命令依旧执行。
+	get key           得到结果是11a
+	multi 
+	set key value     返回QUEUED，ps:若key没有初始化，则此队列发生运行错误，这此队列也不会执行
+	incr key          返回QUEUED，未提示错误
+	set key ffff      返回QUEUED
+	exec
+	get key           得到fff
+
+
+8、扩展知识-redis了解命令（了解）
+quit   退出客户端
+  ctrl+c
+
+dbsize
+返回当前数据库中key 的数目
+  
+info    查看redis数据
+
+
+9、扩展知识-redis持久化（了解）
+内存（兔子）：高效、断电数据就会消失
+硬盘（乌龟）：读写速度慢于内存的，断电数据依旧存在
+
+持久化：把数据保存在硬盘上
+
+关系型数据库MySQL-持久化：
+	任何增删改语句，都是在硬盘上做的操作
+	断电以后，硬盘上的数据还是存在。
+
+
+非关系型数据库redis：
+	默认情况下，所有的增删改，数据都是在内存中进行操作。
+	断电以后，内存中的数据不存在的。
+
+	断电以后，redis的部分数据会丢失，丢失的数据是保存在内存中的数据。
+	
+Redis存在持久化操作的。
+
+
+
+
+Redis有两种持久化策略：
+
+RDB:是redis的默认持久化机制。
+		RDB相当于照快照。保存的是一种状态。
+		20G数据----几kb快照
+
+		优点：①快照保存数据速度极快，还原数据速度极快
+			  ②适用于灾难备份
+
+		缺点：①小内存机器不适合使用。
+RDB机制符合要求就会照快照。（随时随地启动），会占用一部分系统资源（突然的）,很可能内存不足直接宕机。（宕机后，服务器会关闭，非正常关闭）
+	服务器正常关闭时 照快照
+	Key满足一定条件，照快照
+			
+	适用于：内存比较充裕的计算机。
+
+	RDB何时进行照快照：
+	①服务器正常关闭时，会照一次快照   ./bin/redis-cli shutdown
+		②key满足一定条件，会照一次快照
+redis默认快照策略在redis.conf中配置		
+vim /usr/local/redis/redis.conf 			
+save 900 1 #每900秒(15分钟)至少有1个key发生变化，则dump内存快照。
+save 300 10 #每300秒(5分钟)至少有10个key发生变化，则dump内存快照
+save 60 10000 #每60秒(1分钟)至少有10000个key发生变化，则dump内存快照
+
+key发生变化（key数据添加、修改、删除）
+例如1：12:00 – 12:15  ，有1个key发生变化，在12:15就照一次快照保存
+	    12:00 – 12:15  ，没有任何key发生变化，在12:15不会照快照
+
+		例如2：12:00 – 12:05  ，有11个key发生变化，12:05就照一次快照保存
+				12:00 – 12:05  ，有9个key发生变化，12:05不会照快站，12:15 会照快照
+
+		例如3:  12:00 – 12:01  ，有15000个key发生变化，12:01会照一次快照保存
+				12:00 – 12:01  ，有1000个key发生变化，12:01不会照快站，12:05会照快照
+
+
+AOF: 使用日志功能保存数据操作。
+	默认AOF机制关闭的。
+		每秒同步（默认）：每秒进行一次AOF保存数据。               安全性低，比较节省系统资源
+		每修改同步：只要有key变化语句，就进行AOF保存数据。比较安全，但是极为浪费效率
+		不同步：不进行任何持久化操作                不安全
+
+	  AOF操作：
+				只会保存导致key变化的语句
+
+	 AOF配置：
+		always    #每次有数据修改发生时都会写入AOF文件
+		everysec  #每秒钟同步一次，该策略为AOF的缺省策略
+		no       #从不同步。高效但是数据不会被持久化
+
+
+开启AOF机制
+貌似要先删除原有的dump.rdb，才有效
+vim redis.conf
+# 是否开启AOF，默认关闭（no）  
+appendonly yes  
+# 指定 AOF 文件名  
+appendfilename appendonly.aof  
+# Redis支持三种不同的刷写模式：  
+# appendfsync always #每次收到写命令就立即强制写入磁盘，是最有保证的完全的持久化，但速度也是最慢的，一般不推荐使用。  
+appendfsync everysec #每秒钟强制写入磁盘一次，在性能和持久化方面做了很好的折中，是受推荐的方式。  
+# appendfsync no     #完全依赖OS的写入，一般为30秒左右一次，性能最好但是持久化最没有保证，不被推荐。  
+
+策略的选择：
+		优点：①持续性占用极少量的内存资源
+		缺点：①日志文件会特别大，不适用于灾难恢复
+			  ②恢复效率远远低于RDB
+			
+		适用于：内存比较小的计算机
+
+
+redis集群
+
+1、主从复制
+一个redis服务可以有多个该服务的复制品，这个redis服务成为Master，其他复制品称为slaves
+master会一直将自己的数据更新同步给slaves，保证主从同步
+只有master可以执行写命令，slaves只能执行读命令
+cd redis根目录
+#启动redis从服务器
+./bin/redis-server --port 6380 --slaveof 127.0.0.1 6379	
+#新建会话，打开从服务器客户端
+./bin/redis-cli -p 6380 --raw 
+
+	1.1 sentinel哨兵模式
+		在redis根目录新建sentinel.conf，写入脚本
+		port 26379
+		sentinel monitor bjsxt 127.0.0.1 6381 1  #bjsxt可以任意写
+	1.2启动redis服务，默认6379端口
+		service redis start
+	1.3启动两个redis从服务，
+		./bin/redis-server --port 6380 --slaveof 127.0.0.1 6379
+		./bin/redis-server --port 6381 --slaveof 127.0.0.1 6379
+	1.4启动sentinel哨兵服务
+		./bin/redis-server sentinel.conf --sentinel
+	1.5shutdown主服务器
+		./bin/redis-cli -p 6379 shutdown
+	1.6结果是6379服务器停了，6380、6381中的一个从服务成为主服务器，主服务其可以执行set操作，从服务器只能执行get操作。
+	1.7当哨兵服务器停掉，则哨兵模式不再起效果，可以在多台服务器上各部署一个哨兵，共同监控redis
+
+2、twemproxy模式
+	1.1 拷贝m4-1.4.18.tar.gz、autoconf-2.69.tar.gz、automake-1.15.tar.gz、twemproxy-0.4.1.tar.gz到tools    
+	1.2 安装autoconf
+			tar xf autoconf-2.69.tar.gz 
+			cd autoconf-2.69
+			./configure --prefix=/usr
+			make && make install
+			若安装失败可尝试安装m4、per
+			1.2.1 安装m4
+				cd /usr/local/tools  
+			  tar -zvxf m4-1.4.18.tar.gz  
+			  cd m4-1.4.18
+			  ./configure --prefix=/usr/ 
+			  make && make install 
+			1.2.2 yum install perl*
+
+	1.3 安装automake
+			tar -zvxf automake-1.15.tar.gz 
+			cd automake-1.15
+			./configure --prefix=/usr/ 
+			make && make install 
+	1.4 安装libtool
+			tar -zvxf libtool-2.4.5.tar.gz 
+			cd libtool-2.4.5
+			./configure --prefix=/usr/ 
+			make && make install 
+	1.5 安装twemproxy
+			tar -zvxf twemproxy-0.4.1.tar.gz  
+			cd twemproxy-0.4.1
+			mkdir -p /usr/local/twemproxy  
+			autoreconf -fvi  
+			./configure --prefix=/usr/local/twemproxy/
+			make && make install 
+			1.5.1 # 配置环境变量  http://blog.csdn.net/kk185800961/article/details/53364334
+				echo "PATH=$PATH:/usr/local/twemproxy/sbin/" >> /etc/profile 
+				source /etc/profile 
+				# 配置文件 nutcracker.yml
+				mkdir -p /etc/nutcracker 
+				cd conf
+				cp nutcracker.yml /etc/nutcracker/
+				vim /etc/nutcracker/nutcracker.yml
+				进入paste 模式:set paste清空文件:dG
+				填入
+				lpha:
+				  listen: 192.168.40.129:22121         #twemproxy监听的端口  
+				  hash: fnv1a_64                #md5/crc16/crc32/crc32a/fnv1_64/fnv1a_64/fnv1_32/fnv1a_32/hsieh/murmur/jenkins  
+				  distribution: ketama          #ketama/modula/random  
+				  auto_eject_hosts: true        #自动临时剔除不可用节点  
+				  redis: true                   #监控是否为redis  
+				  server_retry_timeout: 10000   #剔除节点尝试恢复时间间隔(毫秒)  
+				  server_failure_limit: 2       #节点访问失败N次则被自动剔除  
+				  servers:                      #（IP:端口号:权重）  
+				   - 192.168.40.129:6379:1
+				   - 192.168.40.129:6380:1
+				   - 192.168.40.129:6381:1
+				# 测试配置文件
+				nutcracker -t -c /etc/nutcracker/nutcracker.yml 
+				结果为configuration file '/etc/nutcracker/nutcracker.yml' syntax is ok  
+				# 后台运行nutcracker
+				nutcracker -d -c /etc/nutcracker/nutcracker.yml  
+				#查看  192.168.40.129:22121 是否已经启动
+				ss -tanl
+				运行3个redis服务，确保每个redis服务都是主，若不是则使用slaveof on one变成主
+				#运行twemproxy代理客户端
+				./bin/redis-cli -p 22121 -h 192.168.40.129
+				set a 12345
+				在3个redis实例中必有一个redis实例存下了a的值12345
+
+

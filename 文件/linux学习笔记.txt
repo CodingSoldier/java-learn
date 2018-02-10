@@ -1,2 +1,12 @@
 需求：查看进程中 和 vim相关的进程，并保留头部文字，以便确认哪个进程号是pid，哪个是ppid
 命令：ps -ef|head -n 1;ps -ef|grep -i vim
+
+VMware配置固定ip为192.168.40.129
+编辑 ——> 虚拟网路编辑器 ——> 点击更改设置 ——> 点击NAT模式 ——> DHCP设置 
+——> 起始IP地址 192.168.40.129 结束IP地址 192.168.40.130
+http://blog.csdn.net/ekey_code/article/details/73824214
+
+进入paste 模式
+:set paste
+清空文件
+:dG
