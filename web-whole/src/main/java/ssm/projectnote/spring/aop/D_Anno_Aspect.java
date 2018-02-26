@@ -1,12 +1,9 @@
 package ssm.projectnote.spring.aop;
 
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.Method;
 
 @Aspect
 @Component
@@ -31,37 +28,37 @@ public class D_Anno_Aspect {
         //System.out.println("@Around环绕通知，方法执行后");
     }
 
-    @After("aspect()")
-    public void after(JoinPoint joinPoint){
-        //System.out.println("@After后置通知");
-        String targetName = joinPoint.getTarget().getClass().getName();
-        String methodName = joinPoint.getSignature().getName();
-        Object[] arguments = joinPoint.getArgs();
-        String operationType = "";
-        String operationName = "";
-
-        try{
-            Class targetClass = Class.forName(targetName);
-            Method[] methods = targetClass.getMethods();
-            for(Method method:methods){
-                if(StringUtils.equals(methodName, method.getName())){
-                    Class[] clazz = method.getParameterTypes();
-                    if(clazz.length == arguments.length){
-                        operationType = method.getAnnotation(DAnnoLog.class).operationType();
-                        operationName = method.getAnnotation(DAnnoLog.class).operationName();
-                        //break;
-                    }
-                }
-            }
-            System.out.println(targetName);
-            System.out.println(methodName);
-            System.out.println(arguments);
-            System.out.println(operationType);
-            System.out.println(operationName);
-        }catch (Exception e){
-            System.out.println("@After后置通知异常");
-        }
-    }
+    //@After("aspect()")
+    //public void after(JoinPoint joinPoint){
+    //    //System.out.println("@After后置通知");
+    //    String targetName = joinPoint.getTarget().getClass().getName();
+    //    String methodName = joinPoint.getSignature().getName();
+    //    Object[] arguments = joinPoint.getArgs();
+    //    String operationType = "";
+    //    String operationName = "";
+    //
+    //    try{
+    //        Class targetClass = Class.forName(targetName);
+    //        Method[] methods = targetClass.getMethods();
+    //        for(Method method:methods){
+    //            if(StringUtils.equals(methodName, method.getName())){
+    //                Class[] clazz = method.getParameterTypes();
+    //                if(clazz.length == arguments.length){
+    //                    operationType = method.getAnnotation(DAnnoLog.class).operationType();
+    //                    operationName = method.getAnnotation(DAnnoLog.class).operationName();
+    //                    //break;
+    //                }
+    //            }
+    //        }
+    //        System.out.println(targetName);
+    //        System.out.println(methodName);
+    //        System.out.println(arguments);
+    //        System.out.println(operationType);
+    //        System.out.println(operationName);
+    //    }catch (Exception e){
+    //        System.out.println("@After后置通知异常");
+    //    }
+    //}
 
     @AfterReturning("aspect()")
     public void afterReturning(JoinPoint joinPoint){

@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 自定义注解方式实现aop
  * http://www.cnblogs.com/jianjianyang/p/4910851.html
@@ -19,6 +22,7 @@ public class D_Anno_Aspect_Test {
 
     @Test
     public void t(){
-        dCtrl.add();
+        Map<String, Object> r = dCtrl.add(null,new HashMap<String, Object>());
+        System.out.println(r.toString());
     }
 }
