@@ -9,6 +9,21 @@
     <artifactId>web-whole</artifactId>
     <packaging>war</packaging>
 
+    <dependencies>
+        <!--quartz-->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz-jobs</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
+    </dependencies>
+
     <build>
         <!--解决idea不会将java源码目录中的xml文件打包的问题-->
         <resources>
