@@ -51,11 +51,7 @@
     <property name="maxUploadSize" value="5242880"/> <!-- 设置上传文件的最大尺寸为5MB -->
   </bean>
 
-  <!--定时器开关-->
-<!--  <task:annotation-driven/>
-  <task:scheduled-tasks>
-    &lt;!&ndash;预处理定时器&ndash;&gt;
-    <task:scheduled ref="quartzSpring" method="say" cron="0/1 * * * * ?"></task:scheduled>
-  </task:scheduled-tasks>-->
+  <!--与quartz整合，导入quartz的配置文件-->
+  <import resource="classpath:config/quartz-spring.xml"/>
 
 </beans>

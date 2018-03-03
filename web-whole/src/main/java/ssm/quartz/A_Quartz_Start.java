@@ -1,0 +1,43 @@
+package ssm.quartz;
+
+import org.quartz.*;
+import org.quartz.impl.StdSchedulerFactory;
+
+/**
+ * @Author：陈丕迁
+ * @Description：
+ * @Date： 2018/3/3
+ *
+ * https://www.yiibai.com/quartz/quartz-helloworld.html#
+ */
+
+
+public class A_Quartz_Start {
+
+    public static void main(String[] args) throws Exception{
+
+        //定义job任务
+        JobDetail job = JobBuilder.newJob(A_HelloJob.class)
+                .withIdentity("dummyJobName", "group01").build();
+
+        //定义一个trigger触发器
+        Trigger trigger = TriggerBuilder.newTrigger()
+                .withIdentity("dummyTriggerName", "group01")
+                .withSchedule(CronScheduleBuilder.cronSchedule("0/5 * * * * ?"))
+                .build();
+
+        //调度器将job和trigger连接在一起并执行
+        Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+        scheduler.start();
+        scheduler.scheduleJob(job, trigger);
+    }
+}
+
+
+
+
+
+
+
+
+

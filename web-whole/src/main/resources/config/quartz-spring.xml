@@ -1,0 +1,36 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+  <!--导入job任务具体业务类-->
+  <bean id="c_QuartzSpring_Job" class="ssm.quartz.C_QuartzSpring_Job"/>
+
+  <!--配置一个jobDetail，
+      指定targetObject为c_QuartzSpring_Job，
+      指定targetMethod为c_QuartzSpring_Job中的execute方法-->
+  <bean id="jobDetail01"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    <property name="targetObject" ref="c_QuartzSpring_Job"></property>
+    <property name="targetMethod" value="execute"></property>
+  </bean>
+
+  <!--配置一个Trigger
+      指定jobDetail为前面配置的jobDetail01，
+      设置触发时间cronExpression为5秒运行一次（0/5 * * * * ?）-->
+  <bean id="trigger01"
+        class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="jobDetail" ref="jobDetail01"></property>
+    <property name="cronExpression" value="0/5 * * * * ?"></property>
+  </bean>
+
+  <!--配置scheduler，填入前面配置的trigger01-->
+  <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <property name="triggers">
+      <list>
+        <ref bean="trigger01"/>
+      </list>
+    </property>
+  </bean>
+
+</beans>
