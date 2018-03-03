@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 通过mapper代理开发，namespace的值必须是对应mapper类的全名 -->
+<mapper namespace="ssm.module01.mapper.UserCustomMapper">
+
+	<select id="findUserNoteById" parameterType="int" resultType="ssm.module01.pojo.UserCustom">
+		SELECT u.*, (SELECT o1.note FROM orders o1 WHERE o1.user_id = u.id) note
+		FROM USER u, orders o
+		WHERE u.id = o.`user_id` AND u.`id` = #{id}
+	</select>
+	
+</mapper>
+
+

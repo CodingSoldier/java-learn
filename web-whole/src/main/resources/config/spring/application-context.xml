@@ -52,10 +52,10 @@
   </bean>
 
   <!--定时器开关-->
-  <task:annotation-driven/>
+<!--  <task:annotation-driven/>
   <task:scheduled-tasks>
-    <!--预处理定时器-->
+    &lt;!&ndash;预处理定时器&ndash;&gt;
     <task:scheduled ref="quartzSpring" method="say" cron="0/1 * * * * ?"></task:scheduled>
-  </task:scheduled-tasks>
+  </task:scheduled-tasks>-->
 
 </beans>

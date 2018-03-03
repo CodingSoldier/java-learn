@@ -25,7 +25,7 @@
 		</javaTypeResolver>
 
 		<!-- PO类的位置 -->
-		<javaModelGenerator targetPackage="ssm.projectweb.fileupdown.model"
+		<javaModelGenerator targetPackage="ssm.fileupdown.model"
 			targetProject="src/main/java">
 			<!-- enableSubPackages:是否让schema作为包的后缀 -->
 			<property name="enableSubPackages" value="false" />
@@ -34,14 +34,14 @@
 		</javaModelGenerator>
 
 		<!-- mapper映射文件生成的位置 -->
-		<sqlMapGenerator targetPackage="ssm.projectweb.fileupdown.mapper"
+		<sqlMapGenerator targetPackage="ssm.fileupdown.mapper"
 			targetProject="src/main/java">
 			<!-- enableSubPackages:是否让schema作为包的后缀 -->
 			<property name="enableSubPackages" value="false" />
 		</sqlMapGenerator>
 
 		<!-- mapper接口生成的位置 -->
-		<javaClientGenerator targetPackage="ssm.projectweb.fileupdown.mapper"
+		<javaClientGenerator targetPackage="ssm.fileupdown.mapper"
 			targetProject="src/main/java" type="XMLMAPPER">
 			<!-- enableSubPackages:是否让schema作为包的后缀 -->
 			<property name="enableSubPackages" value="false" />

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="projectnote.tree.treepath.mapper.TreepathExpandMapper">
+
+
+  <resultMap id="BaseResultMap" type="projectnote.tree.treepath.TreepathExpand">
+    <id column="id" jdbcType="INTEGER" property="id" />
+
+    <!--新建expandMapper的时候也要写resultMap不然parent_id不能对应为parentId-->
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+  </resultMap>
+
+  <select id="queryByPath" parameterType="string" resultMap="BaseResultMap">
+    SELECT * FROM treepath WHERE path LIKE CONCAT(#{path},"%");
+  </select>
+
+</mapper>
