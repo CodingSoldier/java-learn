@@ -16,6 +16,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>4.12</junit.version>
     <spring.version>5.0.1.RELEASE</spring.version>
+    <quartz.scheduler.version>2.3.0</quartz.scheduler.version>
   </properties>
 
   <!-- dependencyManagement只是声明依赖，不实现引入，要子模块手动引入。
