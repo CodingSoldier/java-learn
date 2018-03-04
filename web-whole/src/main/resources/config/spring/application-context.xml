@@ -51,7 +51,7 @@
     <property name="maxUploadSize" value="5242880"/> <!-- 设置上传文件的最大尺寸为5MB -->
   </bean>
 
-  <!--与quartz整合，导入quartz的配置文件-->
-  <import resource="classpath:config/quartz-spring.xml"/>
+  <!--与quartz整合，导入quartz的配置文件，使用C_QuartzSpring_Job时需要打开-->
+  <!--<import resource="classpath:config/quartz-spring-c.xml"/>-->
 
 </beans>

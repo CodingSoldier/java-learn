@@ -1,5 +1,10 @@
 package ssm.quartz;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import ssm.module01.service.ServiceHtmlToSql;
+
+import java.util.Date;
+
 /**
  * quartz与spring整合
  * 1、maven添加依赖
@@ -24,8 +29,13 @@ package ssm.quartz;
  */
 public class C_QuartzSpring_Job {
 
-    public void execute(){
-        System.out.println("**********调度*********execute方法**********");
+    //测试注入，成功
+    @Autowired
+    private ServiceHtmlToSql serviceHtmlToSql;
+
+    public void execute() throws Exception{
+        System.out.println("**********调度*********execute方法**********"+new Date());
+        System.out.println(serviceHtmlToSql.testFindUser(1).toString());
     }
 
 }

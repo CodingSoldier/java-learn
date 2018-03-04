@@ -16,8 +16,9 @@ import java.util.List;
 public class B_Quartz {
 
     public static void main(String[] args) throws Exception {
-        /* JobDetail 定义的是任务数据，而真正的执行逻辑是在Job中。 为什么设计成JobDetail + Job，不直接使用Job？这是因为任务是有可能并发执行，如果Scheduler直接使用Job，就会存在对同一个Job实例并发访问的问题。而JobDetail & Job 方式，scheduler每次执行，都会根据JobDetail创建一个新的Job实例，这样就可以规避并发访问的问题。*/
-        //jobDetail和Trigger都有name、group。name是jobDetail、Trigger在scheduler里面的唯一标识。
+        /* 1、JobDetail 定义的是任务数据，而真正的执行逻辑是在Job中。 为什么设计成JobDetail + Job，不直接使用Job？这是因为任务是有可能并发执行，如果Scheduler直接使用Job，就会存在对同一个Job实例并发访问的问题。而JobDetail & Job 方式，scheduler每次执行，都会根据JobDetail创建一个新的Job实例，这样就可以规避并发访问的问题。
+        2、jobDetail和Trigger都有name、group。name和group可以组成JobKey、TriggerKey。key是jobDetail、Trigger值scheduler中的唯一标示*/
+
         JobKey jobKey = new JobKey("dummyJobName", "group01");
         JobDetail jobDetail = JobBuilder.newJob(B_HelloJob.class)
                 .withIdentity(jobKey).build();

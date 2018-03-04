@@ -1,5 +1,8 @@
 package ssm.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * @Author：陈丕迁
  * @Description：
@@ -39,5 +42,12 @@ public class Utils {
 
         }
         return false;
+    }
+
+    /**
+     * formatStr: yyyy年，MM/M月，dd/d日，HH/H小时，mm/m分钟，ss/s秒。
+     */
+    public String getDate(Date date, String formatStr){
+        return new SimpleDateFormat("yyyy").format(date);
     }
 }
