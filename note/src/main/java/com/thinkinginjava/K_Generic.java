@@ -632,7 +632,7 @@ class T111{
 
     }
 
-    public static void test(Collection<TT1> t){
+    public static void test(Collection<T> t){
         System.out.println(t);
     }
 
