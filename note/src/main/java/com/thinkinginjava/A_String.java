@@ -11,6 +11,13 @@ import java.math.BigDecimal;
  */
 public class A_String {
 
+    public static void print(Object o){
+        System.out.println(o.toString());
+    }
+    public static void printnb(Object o){
+        System.out.println(o.toString());
+    }
+
     public static final String TEST_H = "h";
 
     String[] arr1;

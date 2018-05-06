@@ -1,2 +1,4 @@
 http://idea.lanyus.com/ilanyu
 lanyu19950316@gmail.com
+
+JRebel 关闭 Report usage statistics to Zero Turnaround
