@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      username: CodingSoldier
+      password: chang to my password
+      server:
+        git:
+          uri: https://github.com/CodingSoldier/spring-cloud-config-git.git
+
+# 浏览器打开 http://localhost:1201/config-client/dev/master
+# 加载的是https://github.com/CodingSoldier/spring-cloud-config-git.git
+# master分支中的 config-client-dev.yml配置文件
+
+# 若打开 http://localhost:1201/config-client/master
+# 加载的是https://github.com/CodingSoldier/spring-cloud-config-git.git
+# master分支中的 config-client.yml配置文件
+
+server:
+  port: 1201
