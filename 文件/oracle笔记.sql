@@ -16,6 +16,9 @@ http://www.linuxidc.com/Linux/2017-05/144045p3.htm
 打开数据库
 https://jingyan.baidu.com/article/a65957f4e6e3dc24e67f9b12.html
 
+以DBA身份进入sqlplus
+sqlplus sys/change_on_intall as sysdba
+
 
 navicat premium连接oracle提示连接超时，说明ip没问题，可能是端口有问题
 #查看1521是否允许外部访问
@@ -36,6 +39,7 @@ navicat连接Linux oracle步骤：
 
 
 
+
 ************************oracle sql 部分**************************
 
 SELECT empno, ename, sal, deptno FROM EMP;  
@@ -48,5 +52,11 @@ SELECT SYSDATE FROM DUAL
 #dual是oracle中的一张虚拟表，oracle引入dual是为了符合语法，如为了查询出当前时间
 SELECT * FROM "EMP" WHERE SAL between 1300 AND 1600
 #1300<=SAL<=1600,MYSQL也适用
+SELECT * FROM "EMP" WHERE SAL not between 1300 AND 1600
+#SAL<1300 SAL>1600, MYSQL TOO
+
+
+
+
 
 
