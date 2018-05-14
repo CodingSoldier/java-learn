@@ -7,7 +7,7 @@
 */.project
 */.classpath
 /*.iml
-*/*.iml
+**/*.iml
 /web-whole/src/main/resources/rebel.xml
 /web-whole/.rebel.xml.bak
 /spring-cloud-learn/consul-client/consul-server/consul.exe
