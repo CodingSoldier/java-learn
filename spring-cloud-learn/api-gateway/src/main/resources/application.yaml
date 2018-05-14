@@ -15,5 +15,8 @@ eureka:
 #转发到 eureka-client实例
 #即 http://localhost:1101/eureka-client-01/dc 转发到 http://localhost:2001/dc
 zuul:
+  #将api-gateway中将Cookie,Set-Cookie,Authorization传递给下游服务
+  #https://blog.csdn.net/chenqipc/article/details/53322830
+  sensitiveHeaders:
   routes:
     eureka-client: /eureka-client-01/**
