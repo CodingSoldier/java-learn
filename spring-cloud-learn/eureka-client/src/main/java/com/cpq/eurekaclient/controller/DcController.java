@@ -12,7 +12,8 @@ public class DcController {
     DiscoveryClient discoveryClient;
 
     @GetMapping("/dc")
-    public String dc() {
+    public String dc() throws Exception{
+        //Thread.sleep(5000L);  //睡眠，相当于其他服务调用时弄个错误
         String services = "Services: " + discoveryClient.getServices();
         System.out.println(services);
         return services;

@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: api-gateway
+
+server:
+  port: 1101
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1001/eureka/
+
+
+#访问本网管的请求http://localhost:1101/eureka-client-01/**
+#转发到 eureka-client实例
+#即 http://localhost:1101/eureka-client-01/dc 转发到 http://localhost:2001/dc
+zuul:
+  routes:
+    eureka-client: /eureka-client-01/**
