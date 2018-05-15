@@ -1,0 +1,5 @@
+打包：
+    1、Idea -> Maven Project -> 本项目 —> Lifecycle -> package
+    2、找到jar包运行
+        java -jar 名称.jar --spring.profiles.active=prod
+        即使application.properties已经配置了spring.profiles.active的值，此配置值依旧会被命令行参数覆盖

@@ -15,6 +15,9 @@ public class AppProp {
     @Value("${ds.url}")
     private String url;
 
+    @Value("${variable.a}")
+    private String a;
+
 
     @Autowired
     private Environment environment;
@@ -23,36 +26,50 @@ public class AppProp {
         return userName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getA() {
+        return a;
+    }
+
+    public void setA(String a) {
+        this.a = a;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
     }
 
     public void setEnvironment(Environment environment) {
         this.environment = environment;
     }
 
-    public void show() {
-        System.out.println("ds.userName:" + this.userName);
-        System.out.println("ds.password:" + this.environment.getProperty("ds.password"));
+    @Override
+    public String toString() {
+        return "AppProp{" +
+                "userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", url='" + url + '\'' +
+                ", a='" + a + '\'' +
+                ", environment=" + environment +
+                '}';
     }
 }

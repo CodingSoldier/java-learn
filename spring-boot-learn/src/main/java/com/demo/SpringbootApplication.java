@@ -17,6 +17,6 @@ public class SpringbootApplication {
     public static void main(String[] args) {
         context = SpringApplication.run(SpringbootApplication.class, args);
         AppProp appProp = context.getBean(AppProp.class);
-        appProp.show();
+        appProp.toString();
     }
 }
