@@ -2,7 +2,7 @@
 
 
 安装界面管理插件
-    打开命令行，进行入安装目录，如：C:\Program Files\RabbitMQ Server\rabbitmq_server-3.6.5\sbin
+    在开始菜单找到RabbitMQ Command Prompt
     输入：rabbitmq-plugins enable rabbitmq_management命令安装插件
 
 启动Rabbitmq
