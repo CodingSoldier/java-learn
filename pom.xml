@@ -252,7 +252,7 @@
   <modules>
     <module>web-whole</module>
     <module>activiti</module>
-    <module>note</module>
+    <!--<module>note</module>-->
   </modules>
 
 </project>
