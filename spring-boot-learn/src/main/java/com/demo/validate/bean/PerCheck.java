@@ -5,6 +5,14 @@ public class PerCheck {
     private Boolean isPass;
     private String msg;
 
+    public PerCheck() {
+    }
+
+    public PerCheck(Boolean isPass, String msg) {
+        this.isPass = isPass;
+        this.msg = msg;
+    }
+
     public Boolean getPass() {
         return isPass;
     }

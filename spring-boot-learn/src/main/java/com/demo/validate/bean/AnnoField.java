@@ -2,18 +2,15 @@ package com.demo.validate.bean;
 
 public class AnnoField {
 
-    private Boolean isGet;
-
-    //ParamsValidate注解中的成员
     private String file;
     private String keyName;
 
-    public Boolean getGet() {
-        return isGet;
+    public AnnoField() {
     }
 
-    public void setGet(Boolean get) {
-        isGet = get;
+    public AnnoField(String file, String keyName) {
+        this.file = file;
+        this.keyName = keyName;
     }
 
     public String getFile() {
