@@ -56,7 +56,7 @@ public class ResourceController {
      */
     @GetMapping("/json/custom")
     public String getJson() throws Exception{
-        String path = "config/validate.json";
+        String path = "config/validate/validate.json";
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(path);
         BufferedReader in = new BufferedReader(new InputStreamReader(is));
         StringBuffer buffer = new StringBuffer();

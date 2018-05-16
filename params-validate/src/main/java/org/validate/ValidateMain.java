@@ -1,16 +1,16 @@
-package validate;
+package org.validate;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import org.junit.Test;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class MainUtils {
-    @Test
+@Component
+public class ValidateMain {
     public void test1() throws IOException {
         String path = "config/validate.json";
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(path);
@@ -24,4 +24,6 @@ public class MainUtils {
         JSONObject jsonObject = JSON.parseObject(jsonStr);
         System.out.println(jsonObject.toString());
     }
+
+
 }

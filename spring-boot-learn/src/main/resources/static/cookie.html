@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>cookie页面</h1>
+
+    <button id="btn1">获取后端生成的token</button>
+    <div>展示后端数据：</div>
+    <div id="btn1-show-msg"></div>
+    <br/><br/><br/>
+
+    <button id="btn11">设置token到cookie中</button>
+    <h1>cookie中的数据会在所有请求中带到后端，请到main.html页面发送ajax查看</h1>
+
+    <script src="jquery-2.0.3.js"></script>
+    <script>
+
+        function setCookie(objName, objValue, objDays) {//可直接用
+            if (objDays && objDays > 0) {
+                var exp = new Date();
+                exp.setTime(exp.getTime() + objDays * 24 * 60 * 60 * 1000);
+                document.cookie = objName + "=" + encodeURI(objValue) + ";expires=" + exp.toGMTString();
+            }
+            document.cookie = objName + "=" + encodeURI(objValue);
+        }
+
+        function getCookie(objName)//取cookies函数
+        {
+            var regExp = new RegExp("(^| )" + objName + "=([^;]*)(;|$)");
+            var arr = document.cookie.match(regExp);
+            if (arr != null) return decodeURI(arr[2]); return null;
+        }
+
+        var token;
+        $("#btn1").on("click", function(){
+            $.ajax({
+                url: "/cookie/post",
+                type: "post",
+            }).done(function(r){
+                $("#btn1-show-msg").text(r.token);
+                token = r.token;
+            })
+        });
+
+        $("#btn11").on("click", function(){
+            if (token){
+                setCookie("token", token);
+            }
+        });
+
+    </script>
+</body>
+</html>

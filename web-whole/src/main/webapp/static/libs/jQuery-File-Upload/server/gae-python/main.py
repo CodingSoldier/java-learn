@@ -44,7 +44,7 @@ class UploadHandler(webapp2.RequestHandler):
             'Access-Control-Allow-Headers'
         ] = 'Content-Type, Content-Range, Content-Disposition'
 
-    def validate(self, file):
+    def org.validate(self, file):
         if file['size'] < MIN_FILE_SIZE:
             file['error'] = 'File is too small'
         elif file['size'] > MAX_FILE_SIZE:
@@ -85,7 +85,7 @@ class UploadHandler(webapp2.RequestHandler):
             )
             result['type'] = fieldStorage.type
             result['size'] = self.get_file_size(fieldStorage.file)
-            if self.validate(result):
+            if self.org.validate(result):
                 blob_key = str(
                     self.write_blob(fieldStorage.value, result)
                 )

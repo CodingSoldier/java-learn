@@ -27,6 +27,9 @@
     <div id="btn4-show-msg"></div>
     <br/><br/><br/><br/>
 
+    <button id="btn5">发送请求测试cookie中的token</button>
+    <br/><br/><br/><br/>
+
 
 
     <script src="jquery-2.0.3.js"></script>
@@ -64,6 +67,14 @@
                 type: "get"
             }).done(function(r){
                 $("#btn4-show-msg").text(r);
+            })
+        });
+
+        $("#btn5").on("click", function(){
+            $.ajax({
+                url: "/main/cookie",
+                type: "get"
+            }).done(function(r){
             })
         });
 

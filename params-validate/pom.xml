@@ -5,22 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.cpq</groupId>
-    <artifactId>parameters-validate</artifactId>
+    <artifactId>params-validate</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <parent>
+        <artifactId>java-learn</artifactId>
+        <groupId>org.cpq</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
     <dependencies>
-
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.41</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-        </dependency>
 
     </dependencies>
 

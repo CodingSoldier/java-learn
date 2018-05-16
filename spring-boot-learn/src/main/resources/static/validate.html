@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>校验页面</h1>
+
+    <button id="btn1">/post/map</button>
+    <br/>
+
+<script src="jquery-2.0.3.js"></script>
+<script>
+
+    $("#btn1").on("click", function(){
+        $.ajax({
+            url: "/validate/post/map",
+            type: "post",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({
+                "c1": 1245,
+                "c2": "sdfad"
+            })
+        }).done(function(r){
+            console.log(r.toString())
+        })
+    });
+
+</script>
+</body>
+</html>

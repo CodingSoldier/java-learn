@@ -26,7 +26,7 @@ public class DCtrl {
     }
 
 
-    @DAnnoLog
+    @DAnnoLog(operationType = "add操作", operationName = "add名字")
     public Map<String, Object> add(HttpServletRequest request, Map<String, Object> map){
         System.out.println("Ctrl1使用@Log注解");
         dService.addUser();
