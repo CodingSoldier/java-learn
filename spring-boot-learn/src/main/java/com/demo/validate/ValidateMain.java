@@ -1,11 +1,12 @@
 package com.demo.validate;
 
+import com.alibaba.fastjson.JSONObject;
 import com.demo.validate.bean.AnnoField;
-import com.demo.validate.bean.PerCheck;
+import com.demo.validate.bean.ResultCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @Component
 public class ValidateMain {
@@ -15,25 +16,41 @@ public class ValidateMain {
     @Autowired
     private ParamsValidateInterface paramsValidateInterface;
 
-    public PerCheck checkParam(Object params, AnnoField paramBean) {
-        PerCheck perCheck = new PerCheck(true, "");
+    //校验params
+    public ResultCheck checkHandle(AnnoField annoField, Map<String, Object> requestMap, Object bodyObj) {
 
-        return perCheck;
+        if (isMerge(requestMap, bodyObj)){
+            //已经合并到requestMap
+        }else{
+
+        }
+
+        return new ResultCheck();
     }
 
-    public PerCheck checkRequest(HttpServletRequest request, AnnoField paramBean) {
-        PerCheck perCheck = new PerCheck();
-
-        return perCheck;
+    //是否合并
+    private boolean isMerge(Map<String, Object> requestMap, Object bodyObj){
+        boolean isMerge = false;
+        if (bodyObj != null && bodyObj instanceof Map){
+            Map<String, Object> temp = (Map<String, Object>)bodyObj;
+            for (String key: temp.keySet()){
+                requestMap.put(key, temp.get(key));
+            }
+            isMerge = true;
+        }
+        return isMerge;
     }
 
-    //读取注解中设置的json文件
-    //private JSONObject getJSONObjectByKey(AnnoField annoField){
-    //    String keyName = annoField.getKeyName();
-    //    String filePath = Util.makeFilePath(basePath, annoField.getFile());
-    //    JSONObject jsonObject = Util.readFileToJSONObject(filePath);
-    //    if ()
-    //    return
-    //}
+    //获取需要校验的json
+    private JSONObject getValidateJson(AnnoField annoField){
+        String keyName = annoField.getKeyName();
+        String filePath = Util.makeFilePath(basePath, annoField.getFile());
+        JSONObject validateJson = Util.readFileToJSONObject(filePath);
+        if (Util.isNotBlank(annoField.getKeyName())){
+            validateJson = validateJson.getObject(annoField.getKeyName(), JSONObject.class);
+        }
+        return validateJson;
+    }
+
 
 }

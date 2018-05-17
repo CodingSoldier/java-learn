@@ -14,7 +14,25 @@
       "minLength": 2,
       "maxLength": 1000000,
       "regex": "[a-zA-Z0-9]+",
-      message: "字符"
+      message: "字符",
+      aa: {
+        "param02": {
+          "c21": {
+            "request": true,
+            "minLength": 1,
+            "maxLength": 1000000,
+            "regex": "\\w",
+            message: "必填，字符"
+          },
+          "c22": {
+            "request": false,
+            "minLength": 2,
+            "maxLength": 1000000,
+            "regex": "[a-zA-Z][a-zA-Z0-9]+",
+            message: "字母开头，字符\\"
+          },
+        },
+      }
     },
   },
   "param02": {
@@ -30,7 +48,7 @@
       "minLength": 2,
       "maxLength": 1000000,
       "regex": "[a-zA-Z][a-zA-Z0-9]+",
-      message: "字母开头，字符\\"
+      message: "字母开头，字符\\",
     },
   },
 }
