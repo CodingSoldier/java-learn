@@ -1,7 +1,7 @@
 package com.demo.validate;
 
-import com.alibaba.fastjson.JSONObject;
 import com.demo.validate.bean.AnnoField;
+import com.demo.validate.bean.PerCheck;
 import com.demo.validate.bean.ResultCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,18 +18,19 @@ public class ValidateMain {
 
     //校验params
     public ResultCheck checkHandle(AnnoField annoField, Map<String, Object> requestMap, Object bodyObj) {
-
-        if (isMerge(requestMap, bodyObj)){
-            //已经合并到requestMap
-        }else{
-
+        Map<String, Object> json = getValidateJson(annoField);
+        //requestMap会被修改
+        boolean merge = executeMerge(requestMap, bodyObj);
+        if (merge == false){
+            validateBodyObj(bodyObj, json);
         }
+        validateMap(requestMap, json);
 
         return new ResultCheck();
     }
 
     //是否合并
-    private boolean isMerge(Map<String, Object> requestMap, Object bodyObj){
+    private boolean executeMerge(Map<String, Object> requestMap, Object bodyObj){
         boolean isMerge = false;
         if (bodyObj != null && bodyObj instanceof Map){
             Map<String, Object> temp = (Map<String, Object>)bodyObj;
@@ -42,14 +43,29 @@ public class ValidateMain {
     }
 
     //获取需要校验的json
-    private JSONObject getValidateJson(AnnoField annoField){
+    private Map<String, Object> getValidateJson(AnnoField annoField){
         String keyName = annoField.getKeyName();
+        String basePath = paramsValidateInterface.basePath();
         String filePath = Util.makeFilePath(basePath, annoField.getFile());
-        JSONObject validateJson = Util.readFileToJSONObject(filePath);
+        Map<String, Object> json = Util.readFileToMap(filePath);
         if (Util.isNotBlank(annoField.getKeyName())){
-            validateJson = validateJson.getObject(annoField.getKeyName(), JSONObject.class);
+            json = (Map<String, Object>)json.get(annoField.getKeyName());
         }
-        return validateJson;
+        return json;
+    }
+
+    private PerCheck validateMap(Map<String, Object> requestMap, Map<String, Object> json){
+        if (json != null){
+            for (String key:json.keySet()){
+                // TODO 校验
+            }
+        }
+        return new PerCheck();
+    }
+
+    private PerCheck validateBodyObj(Object bodyObj, Map<String, Object> json){
+
+        return new PerCheck();
     }
 
 

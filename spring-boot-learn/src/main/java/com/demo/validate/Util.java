@@ -1,10 +1,11 @@
 package com.demo.validate;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 
 import java.io.IOException;
-import java.util.Set;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Util<T> extends org.springframework.util.StringUtils{
 
@@ -68,58 +69,59 @@ public class Util<T> extends org.springframework.util.StringUtils{
 
     //返回文件路径
     public static String makeFilePath(String basePath, String file) {
-        basePath = trimBeginEndChar(basePath, '/');
+        basePath = trimBeginEndChar(basePath, '/') + "/";
         file = trimBeginChar(file, '/');
         return basePath + file;
     }
 
-    //数组元素添加到Set中
-    public static <T> Set<T> putArrElemToSet(Set<T> set, T[] arr) {
-        if (arr != null && set != null){
-            for (T e:arr){
-                set.add(e);
-            }
-        }
-        return set;
-    }
+    ////数组元素添加到Set中
+    //public static <T> Set<T> putArrElemToSet(Set<T> set, T[] arr) {
+    //    if (arr != null && set != null){
+    //        for (T e:arr){
+    //            set.add(e);
+    //        }
+    //    }
+    //    return set;
+    //}
 
-    //获取set中的一个元素，适用于只有一个元素的set
-    public static <T> T getElemOne(Set<T> set) {
-        T result = null;
-        if (set != null){
-            for (T elem:set){
-                result = elem;
-                break;
-            }
-        }
-        return result;
-    }
+    ////获取set中的一个元素，适用于只有一个元素的set
+    //public static <T> T getElemOne(Set<T> set) {
+    //    T result = null;
+    //    if (set != null){
+    //        for (T elem:set){
+    //            result = elem;
+    //            break;
+    //        }
+    //    }
+    //    return result;
+    //}
 
     //是否为bean
-    public boolean isBean (Object obj) {
-        if (obj == null){
-            return false;
-        }
-        boolean result = true;
-
-        //if (obj instanceof )
-
-        return result;
-    }
+    //public boolean isBean (Object obj) {
+    //    if (obj == null){
+    //        return false;
+    //    }
+    //    boolean result = true;
+    //
+    //    if (obj instanceof )
+    //
+    //    return result;
+    //}
 
     //读取json文件到JSONObject
-    public static JSONObject readFileToJSONObject(String filePath){
+    public static Map<String, Object> readFileToMap(String filePath){
+        Map<String, Object> json = new HashMap<String, Object>();
         if (isEmpty(filePath)){
-            return null;
+            return json;
         }
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = JSON.parseObject(Util.class.getClassLoader()
-                    .getResourceAsStream(filePath), JSONObject.class);
+        try (InputStream is = Util.class.getClassLoader().getResourceAsStream(filePath)){
+            if (is != null){
+                json = JSON.parseObject(is, Map.class);
+            }
         }catch (IOException e){
             e.printStackTrace();
         }
-        return jsonObject;
+        return json;
     }
 
 }
