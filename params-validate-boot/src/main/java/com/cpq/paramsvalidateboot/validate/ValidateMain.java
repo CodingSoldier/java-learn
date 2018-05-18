@@ -6,7 +6,9 @@ import com.cpq.paramsvalidateboot.validate.bean.ResultCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Component
 public class ValidateMain {
@@ -64,15 +66,24 @@ public class ValidateMain {
     private PerCheck validateMap(Map<String, Object> requestMap, Map<String, Object> json){
         if (json != null){
             for (String key:json.keySet()){
-                // TODO 校验
+
             }
         }
         return new PerCheck();
     }
 
-    private PerCheck validateBodyObj(Object bodyObj, Map<String, Object> json){
+    private Set<String> validateBodyObj(Object bodyObj, Map<String, Object> json){
+        Set<String> errorMsgSet = new HashSet<>();
 
-        return new PerCheck();
+        return errorMsgSet;
+    }
+
+    private void checkVal(Object val, Map<String, Object> json, Set<String> msgSet){
+        if (val == null || json == null || msgSet == null){
+            return;
+        }
+
+        //if ()
     }
 
 

@@ -1,7 +1,9 @@
-package com.demo.validate;
+package com.cpq.paramsvalidateboot.validate;
 
-import com.demo.validate.bean.AnnoField;
-import com.demo.validate.bean.ResultCheck;
+
+import com.alibaba.fastjson.JSON;
+import com.cpq.paramsvalidateboot.validate.bean.AnnoField;
+import com.cpq.paramsvalidateboot.validate.bean.ResultCheck;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -14,6 +16,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -21,14 +26,14 @@ import java.util.Map;
 
 @Aspect
 @Component
-public class ValidteAspect {
+public class ValidateAspect {
 
     @Autowired
     ValidateMain validateMain;
     @Autowired
     ParamsValidateInterface paramsValidateInterface;
 
-    @Pointcut("@annotation(com.demo.validate.ParamsValidate)")
+    @Pointcut("@annotation(com.cpq.paramsvalidateboot.validate.ParamsValidate)")
     public void aspect(){}
 
     @Around("aspect()")
@@ -51,10 +56,11 @@ public class ValidteAspect {
     //校验结果
     private ResultCheck validateResult(JoinPoint joinPoint) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+
         Method method = getCurrentMethod(joinPoint);
         AnnoField annoField = getAnnoFields(method);
-        Map<String, Object> requestMap = getParamFromRequest(request);
         Object bodyObj = getBodyParam(joinPoint);
+        Map<String, Object> requestMap = getParamFromRequest(request);
 
         return validateMain.checkHandle(annoField, requestMap, bodyObj);
     }
@@ -116,15 +122,14 @@ public class ValidteAspect {
                     }else{
                         temp = "";
                         for (String elem:value){
-                            temp = elem + ",";
+                            temp += elem + ",";
                         }
-                        temp = value.length > 0 ? temp.substring(0, value.length -1) : temp;
+                        temp = value.length > 0 ? temp.substring(0, temp.length() -1) : temp;
                         resultMap.put(key, temp);
                     }
                 }
             }
         }
-
         return resultMap;
     }
 
