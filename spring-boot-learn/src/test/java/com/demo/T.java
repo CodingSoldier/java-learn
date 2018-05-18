@@ -237,9 +237,20 @@ class User{
 }
 
 class ResultCheckVo extends ResultCheck{
+    private Boolean isPass;
     private String a;
     private String bb;
     private User user;
+
+    @Override
+    public Boolean getPass() {
+        return isPass;
+    }
+
+    @Override
+    public void setPass(Boolean pass) {
+        isPass = pass;
+    }
 
     public String getA() {
         return a;

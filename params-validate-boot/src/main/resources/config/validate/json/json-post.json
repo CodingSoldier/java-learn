@@ -1,0 +1,53 @@
+{
+    id: {
+        "request": true,
+        "minValue": 1,
+        "maxValue": 123456789,
+        "minLength": 1,
+        "maxLength": 1000000,
+        "regex": "\\d",
+        message: "id:必填，为数字"
+    },
+    "name": {
+        "request": true,
+        "minLength": 1,
+        "maxLength": 20,
+        "regex": "\\w",
+        message: "name:错误提示"
+    },
+    "birthday": {
+        "request": true,
+        message: "birthday：必填"
+    },
+    "salaryNum": {
+        "request": "false",
+        "regex": "REGEX_FLOAT_10_2",
+    },
+    "girl": {
+        "name": {
+            "request": "false",
+            "minLength": 10,
+            "maxLength": 20,
+            "regex": "REGEX_START_LETTER_NUM"
+        }
+    },
+    "dreamList": [{
+        "txt": {
+            "request": "true",
+            "minLength": 10,
+            "maxLength": 20
+        },
+        "exe": {
+            "request": "true",
+            "minLength": 10,
+            "maxLength": 20
+        },
+        "money": {
+            "request": "false",
+            "minLength": 10,
+            "maxLength": 20,
+            "regex": "REGEX_NUM"
+        },
+    }]
+
+}

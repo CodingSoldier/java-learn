@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="jquery-2.0.3.js"></script>
+</head>
+<body>
+    <h1>POST校验</h1>
+
+    <br/>
+    <button id="p1">/p1/map</button>
+    <div>结果：</div>
+    <div id="r1"></div>
+    <script >
+        $("#p1").on("click", function(){
+            $.ajax({
+                url: "/post/p1/map",
+                type: "post",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify({
+                    id: 122324,
+                    name: "name111",
+                    birthday: new Date().getTime(),
+                    isSingle: true,
+                    salaryNum: 11111111111111.444,
+                    girl: {
+                        isMarry: false,
+                        name: "girlname"
+                    },
+                    dreamList:[{
+                        txt: "中国梦",
+                        exe: "改变世界",
+                        time: new Date().getTime(),
+                        money: 12013154546.41564,
+                    }]
+                })
+            }).done(function(r){
+                $("#r1").text(r.toString());
+            })
+        });
+    </script>
+
+    <br/>
+    <button id="p2">/post/p2/vo</button>
+    <div>结果：</div>
+    <div id="r2"></div>
+    <script >
+        $("#p2").on("click", function(){
+            $.ajax({
+                url: "/post/p2/vo",
+                type: "post",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify({
+                    id: 122324,
+                    name: "name111",
+                    birthday: new Date().getTime(),
+                    isSingle: true,
+                    salaryNum: 11111111111111.444,
+                    girl: {
+                        isMarry: false,
+                        name: "girlname"
+                    },
+                    dreamList:[{
+                        txt: "中国梦",
+                        exe: "改变世界",
+                        time: new Date().getTime(),
+                        money: 12013154546.41564,
+                    }]
+                })
+            }).done(function(r){
+                $("#r2").text(r.toString());
+            })
+        });
+    </script>
+
+    <br/>
+    <button id="p3">/post/p3/vo也有param</button>
+    <div>结果：</div>
+    <div id="r3"></div>
+    <script >
+        $("#p3").on("click", function(){
+            $.ajax({
+                url: "/post/pg3/vo?s1=12323&i1=11111",
+                type: "post",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify({
+                    id: 122324,
+                    name: "name111",
+                    birthday: new Date().getTime(),
+                    isSingle: true,
+                    salaryNum: 11111111111111.444,
+                    girl: {
+                        isMarry: false,
+                        name: "girlname"
+                    },
+                    dreamList:[{
+                        txt: "中国梦",
+                        exe: "改变世界",
+                        time: new Date().getTime(),
+                        money: 12013154546.41564,
+                    }]
+                })
+            }).done(function(r){
+                $("#r3").text(r.toString());
+            })
+        });
+    </script>
+
+
+    <br/>
+    <div>
+        <h2>formdata上传表单Vo</h2>
+        <form name="form" id="form" enctype="multipart/form-data">
+            <input type="file" name="picFile">
+            <span>name</span>
+            <input type="text" name="name"/>
+            <span>salaryNum</span>
+            <input type="text" name="salaryNum">
+        </form>
+        <button id="form-submit">提交formdata</button>
+    </div>
+    <div>结果：</div>
+    <div id="r4"></div>
+    <script >
+        $("#form-submit").on("click", function(){
+            $.ajax({
+                url: "/post/form-data/vo",
+                type: "post",
+                contentType: false,
+                processData: false,
+                data: new FormData($("#form").get(0))
+            }).done(function(r){
+                $("#r4").text(r.toString());
+            })
+        });
+    </script>
+
+    <br/>
+    <div>
+        <h2>formdata上传表单Map</h2>
+        <form name="form1" id="form1" enctype="multipart/form-data">
+            <input type="file" name="picFile">
+            <span>name</span>
+            <input type="text" name="name"/>
+            <span>salaryNum</span>
+            <input type="text" name="salaryNum">
+        </form>
+        <button id="form1-submit">提交formdata</button>
+    </div>
+    <div>结果：</div>
+    <div id="r5"></div>
+    <script >
+        $("#form1-submit").on("click", function(){
+            $.ajax({
+                url: "/post/form-data/map",
+                type: "post",
+                contentType: false,
+                processData: false,
+                data: new FormData($("#form1").get(0))
+            }).done(function(r){
+                $("#r5").text(r.toString());
+            })
+        });
+    </script>
+
+</body>
+</html>
