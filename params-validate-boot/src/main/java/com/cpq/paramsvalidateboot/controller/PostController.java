@@ -35,6 +35,13 @@ public class PostController {
         return new HashMap<String, Object>(){{put("vo", userVo); put("p", param);}};
     }
 
+    @PostMapping("/pg4/json-obj")
+    //@ParamsValidate(file = "json-post.json")
+    public Object pg4(HttpServletRequest request, HttpServletResponse response, @RequestBody Map json, @RequestParam Map<String, Object> param) throws Exception{
+
+        return new HashMap<String, Object>(){{put("json", json); put("p", param);}};
+    }
+
     @RequestMapping("/form-data/vo")
     //@ParamsValidate(file = "/v1/json-test.json", keyName="map01")
     public Object formData(HttpServletRequest request, @RequestParam("picFile") MultipartFile picFile,  @ModelAttribute UserVo vo) throws Exception {

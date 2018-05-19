@@ -2,22 +2,26 @@ package com.cpq.paramsvalidateboot.validate.bean;
 
 public class PerCheck {
 
-    private Boolean isPass;
+    private boolean isPass;
     private String msg;
 
     public PerCheck() {
     }
 
-    public PerCheck(Boolean isPass, String msg) {
+    public PerCheck(boolean isPass) {
+        this.isPass = isPass;
+    }
+
+    public PerCheck(boolean isPass, String msg) {
         this.isPass = isPass;
         this.msg = msg;
     }
 
-    public Boolean getPass() {
+    public boolean getPass() {
         return isPass;
     }
 
-    public void setPass(Boolean pass) {
+    public void setPass(boolean pass) {
         isPass = pass;
     }
 

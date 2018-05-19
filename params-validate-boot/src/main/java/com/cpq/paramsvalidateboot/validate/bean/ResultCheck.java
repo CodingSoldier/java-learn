@@ -4,22 +4,15 @@ import java.util.Set;
 
 public class ResultCheck {
 
-    private Boolean isPass;
+    private boolean isPass;
 
     private Set<String> msgSet;
 
-    public ResultCheck() {
-    }
-
-    public ResultCheck(Boolean isPass) {
-        this.isPass = isPass;
-    }
-
-    public Boolean getPass() {
+    public boolean isPass() {
         return isPass;
     }
 
-    public void setPass(Boolean pass) {
+    public void setPass(boolean pass) {
         isPass = pass;
     }
 

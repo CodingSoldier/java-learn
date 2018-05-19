@@ -1,9 +1,9 @@
 package com.cpq.paramsvalidateboot.validate;
 
 
-import com.alibaba.fastjson.JSON;
 import com.cpq.paramsvalidateboot.validate.bean.AnnoField;
 import com.cpq.paramsvalidateboot.validate.bean.ResultCheck;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -16,12 +16,11 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 @Aspect
@@ -38,11 +37,10 @@ public class ValidateAspect {
 
     @Around("aspect()")
     public Object around(JoinPoint joinPoint){
-        System.out.println("@Around环绕通知，方法执行前");
         Object obj = null;
         try {
             ResultCheck resultCheck = this.validateResult(joinPoint);
-            if (resultCheck.getPass() != false){
+            if (resultCheck.isPass() != false){
                 obj = ((ProceedingJoinPoint) joinPoint).proceed();
             }else{
                 obj = paramsValidateInterface.validateNotPass(resultCheck);
@@ -54,15 +52,21 @@ public class ValidateAspect {
     }
 
     //校验结果
-    private ResultCheck validateResult(JoinPoint joinPoint) {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-
-        Method method = getCurrentMethod(joinPoint);
-        AnnoField annoField = getAnnoFields(method);
-        Object bodyObj = getBodyParam(joinPoint);
-        Map<String, Object> requestMap = getParamFromRequest(request);
-
-        return validateMain.checkHandle(annoField, requestMap, bodyObj);
+    private ResultCheck validateResult(JoinPoint joinPoint){
+        ResultCheck resultCheck = new ResultCheck();
+        try {
+            Method method = getCurrentMethod(joinPoint);
+            AnnoField annoField = getAnnoFields(method);
+            Map<String, Object> allParam = mergeParams(joinPoint);
+            resultCheck = validateMain.checkHandle(annoField, allParam);
+        }catch (IOException e){
+            resultCheck.setPass(false);
+            resultCheck.setMsgSet(new HashSet<String>(){{
+                add("@ParamsValidate无法处理请求参数");
+            }});
+            e.printStackTrace();
+        }
+        return resultCheck;
     }
 
     //获取当前方法
@@ -107,9 +111,9 @@ public class ValidateAspect {
     //从request中获取请求参数
     private Map<String, Object> getParamFromRequest(HttpServletRequest request){
         if (request == null){
-            return new HashMap<String, Object>();
+            return new HashMap<>();
         }
-        Map<String, Object> resultMap = new HashMap<String, Object>();
+        Map<String, Object> resultMap = new HashMap<>();
         String[] value = null;
         String temp = "";
         Map<String, String[]> paramMap = request.getParameterMap();
@@ -131,6 +135,28 @@ public class ValidateAspect {
             }
         }
         return resultMap;
+    }
+
+    //合并请求参数
+    private Map<String, Object> mergeParams(JoinPoint joinPoint) throws IOException{
+        Object body = getBodyParam(joinPoint);
+        Map<String, Object> bodyMap = objToMap(body);
+
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        Map<String, Object> paramMap = getParamFromRequest(request);
+
+        for (String key:bodyMap.keySet()){
+            paramMap.put(key, bodyMap.get(key));
+        }
+        return paramMap;
+    }
+
+    //对象变成map
+    private Map<String, Object> objToMap(Object obj) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(obj);
+        Map<String, Object> result = mapper.readValue(json, Map.class);
+        return result != null ? result : new HashMap<>();
     }
 
 }
