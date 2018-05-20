@@ -75,6 +75,8 @@ public class T {
         set.add("sss11");
         set.add("ss2222");
 
+        //new BigDecimal()
+
     }
 
     @Test
@@ -83,12 +85,13 @@ public class T {
         ObjectMapper mapper = new ObjectMapper();
         InputStream is = this.getClass().getResourceAsStream(filePath);
         Map<String, Object> map = mapper.readValue(is, Map.class);
-        System.out.println(map);
+        System.out.println(Double.parseDouble(""));
     }
 
     @Test
     public void w22() throws Exception{
-        System.out.println(Integer.parseInt(""));
+        boolean matcher = Pattern.matches("\\d+", "11242");
+        System.out.println(matcher);
     }
 
     @Test

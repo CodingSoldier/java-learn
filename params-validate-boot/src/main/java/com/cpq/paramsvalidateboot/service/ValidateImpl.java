@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class ValidateImpl implements ParamsValidateInterface {
     @Override
     public String basePath() {
-        return "config/validate/json/";
+        return "config/validate/json";
     }
 
     @Override

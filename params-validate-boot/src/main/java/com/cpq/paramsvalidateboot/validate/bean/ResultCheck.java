@@ -8,6 +8,13 @@ public class ResultCheck {
 
     private Set<String> msgSet;
 
+    public ResultCheck() {
+    }
+
+    public ResultCheck(boolean isPass) {
+        this.isPass = isPass;
+    }
+
     public boolean isPass() {
         return isPass;
     }

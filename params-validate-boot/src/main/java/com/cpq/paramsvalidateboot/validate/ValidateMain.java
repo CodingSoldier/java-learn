@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.regex.Pattern;
 
 @Component
 public class ValidateMain {
@@ -23,22 +24,15 @@ public class ValidateMain {
     public static final String REGEX = "regex";
     public static final String MESSAGE = "message";
 
+    public static final String REGEX_COMMON_JSON = "regex-common-json.json";
+    public static final String REGEX_BEGIN = "REGEX_";
+
     @Autowired
     private ParamsValidateInterface paramsValidateInterface;
 
     //校验params
     public ResultCheck checkHandle(AnnoField annoField, Map<String, Object> requestMap) {
-        ResultCheck resultCheck = new ResultCheck();
-
-        try {
-            getRegexCommon();
-        }catch (IOException e){
-            resultCheck.setPass(false);
-            resultCheck.setMsgSet(new HashSet<String>(){{
-                add("初始化regex-common-json.json失败");
-            }});
-            e.printStackTrace();
-        }
+        ResultCheck resultCheck = new ResultCheck(true);
 
         Map<String, Object> json = new HashMap<>();
         try {
@@ -54,7 +48,10 @@ public class ValidateMain {
 
         Set<String> msgSet = new TreeSet<>();
         validateParam(requestMap, json, msgSet);
-
+        if (msgSet.size() > 0){
+            resultCheck.setPass(false);
+            resultCheck.setMsgSet(msgSet);
+        }
 
         return resultCheck;
     }
@@ -69,28 +66,39 @@ public class ValidateMain {
         //Set<String> keySet = json.keySet();
         //Object perRule = null;
         for (String key:json.keySet()){
-            Map<String, Object> jsonVal = (Map<String, Object>)json.get(key);
-            //json.key对应的值是map
-            if (jsonVal instanceof  Map){
-                Map<String, Object> jsonValSub = (Map<String, Object>)jsonVal.get(key);
-                Set<String> subKeySet = jsonValSub.keySet();
-                if (subKeySet.size() == 1){
-                    //json.key是bean引用名，json.key引用的值是此bean的属性名
-                    validateParam((Map<String, Object>)paramMap.get(key),jsonVal, msgSet);
-                }else{
-                    //json.key是bean中属性的名称，json.key引用的值是校验规则
-                    checkValRule(paramMap.get(key), jsonVal, msgSet);
-                }
-            }else if (jsonVal instanceof List){
-                // TODO 暂时不考虑list
-                //List listParam = (List)paramMap.get(key);
-                //List listRule = (List)paramMap.get(key);
-                //if (listParam != null && listParam.size() > 0){
-                //    if ()
+            Object jsonVal = json.get(key);
+            if (jsonVal instanceof Map){
+                jsonValIsMap((Map<String, Object>)jsonVal, paramMap, key, msgSet);
+                //Map<String, Object> jsonValMap = (Map<String, Object>)jsonVal;
+                //Set<String> subKeySet = jsonValMap.keySet();
+                //if (subKeySet.size() == 1){
+                //    //json.key是bean引用名，json.key引用的值是此bean的属性名
+                //    validateParam((Map<String, Object>)paramMap.get(key),jsonValMap, msgSet);
+                //}else{
+                //    //json.key是bean中属性的名称，json.key引用的值是校验规则
+                //    checkValRule(paramMap.get(key), jsonValMap, msgSet);
                 //}
+            }else if (jsonVal instanceof List){
+                List jsonValList = (List)jsonVal;
+                for (Object elem:jsonValList){
+                    if (elem instanceof Map){
+                    //TODO
+                    }
+                }
             }
         }
 
+    }
+
+    private void jsonValIsMap(Map<String, Object> jsonValMap, Map<String, Object> paramMap, String key, Set<String> msgSet){
+        Set<String> subKeySet = jsonValMap.keySet();
+        if (subKeySet.size() == 1){
+            //json.key是bean引用名，json.key引用的值是此bean的属性名
+            validateParam((Map<String, Object>)paramMap.get(key), jsonValMap, msgSet);
+        }else{
+            //json.key是bean中属性的名称，json.key引用的值是校验规则
+            checkValRule(paramMap.get(key), jsonValMap, msgSet);
+        }
     }
 
 
@@ -115,7 +123,7 @@ public class ValidateMain {
         }
     }
 
-    //
+    //详细规则校验
     private void checkDetail(Object val, Map<String, Object> jsonRule, Set<String> msgSet){
         Object minValue = jsonRule.get(MIN_VALUE);
         Object maxValue = jsonRule.get(MAX_VALUE);
@@ -123,7 +131,34 @@ public class ValidateMain {
         Object maxLength = jsonRule.get(MAX_LENGTH);
         String regex = Util.objToStr(jsonRule.get(REGEX));
         String message = Util.objToStr(jsonRule.get(MESSAGE));
-        //if (minValue != null && )
+
+        //校验不通过
+        if (minValue != null && minValue != "" && Util.getDouble(val) < Util.getDouble(minValue)
+            || maxValue != null && maxValue != "" && Util.getBigDecimal(val).compareTo(Util.getBigDecimal(maxValue)) >= 1
+            || minLength != null && minLength != "" && Util.objToStr(val).length() < Util.getDouble(minLength)
+            || maxLength != null && maxLength != "" && Util.objToStr(val).length() > Util.getDouble(maxLength)){
+
+            msgSet.add(message);
+            return;
+        }
+
+        //正则校验
+        if (regex != ""){
+            if ( regex.startsWith(REGEX_BEGIN)){
+                try {
+                    regex = getRegexCommon().get(regex);
+                }catch (IOException e){
+                    msgSet.add("初始化regex-common-json.json失败");
+                    e.printStackTrace();
+                }
+            }
+
+            if (Pattern.matches(regex, Util.objToStr(val)) == false){
+                msgSet.add(message);
+                return;
+            }
+        }
+
     }
 
     //获取需要校验的json
@@ -146,8 +181,7 @@ public class ValidateMain {
         }
         ObjectMapper mapper = new ObjectMapper();
         String basePath = paramsValidateInterface.basePath();
-        String filePath = Util.trimBeginEndChar(basePath, '/')
-                + "regex-common-json.json";
+        String filePath = Util.trimBeginEndChar(basePath, '/') + "/"+ REGEX_COMMON_JSON;
         try (InputStream is = this.getClass().getClassLoader().getResourceAsStream(filePath)){
             regexCommon = is != null ? mapper.readValue(is, Map.class) : new HashMap<>();
         }

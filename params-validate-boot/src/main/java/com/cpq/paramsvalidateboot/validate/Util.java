@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -83,43 +84,19 @@ public class Util<T> extends org.springframework.util.StringUtils{
                 || obj instanceof Date;
     }
 
-    ////数组元素添加到Set中
-    //public static <T> Set<T> putArrElemToSet(Set<T> set, T[] arr) {
-    //    if (arr != null && set != null){
-    //        for (T e:arr){
-    //            set.add(e);
-    //        }
-    //    }
-    //    return set;
-    //}
-
-    ////获取set中的一个元素，适用于只有一个元素的set
-    //public static <T> T getElemOne(Set<T> set) {
-    //    T result = null;
-    //    if (set != null){
-    //        for (T elem:set){
-    //            result = elem;
-    //            break;
-    //        }
-    //    }
-    //    return result;
-    //}
-
-    //是否为bean
-    //public boolean isBean (Object obj) {
-    //    if (obj == null){
-    //        return false;
-    //    }
-    //    boolean result = true;
-    //
-    //    if (obj instanceof )
-    //
-    //    return result;
-    //}
-
     //校验规则，是否必填
     public static boolean isRequest(Map<String, Object> rule){
         return Boolean.parseBoolean(Util.objToStr(rule.get(ValidateMain.REQUEST)));
+    }
+
+    //字符串转数字，数字转double
+    public static double getDouble(Object value){
+        return value instanceof String ? Double.parseDouble(objToStr(value)) : ((Number)value).doubleValue();
+    }
+
+    //字符串转数字，数字转double
+    public static BigDecimal getBigDecimal(Object value){
+        return new BigDecimal(getDouble(value));
     }
 
     //读取json文件到Map<String, Object>

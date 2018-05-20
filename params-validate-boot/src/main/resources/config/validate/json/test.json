@@ -1,8 +1,8 @@
 {
     "id": {
         "request": true,
-        "minValue": 1,
-        "maxValue": 123456789,
+        "minValue": 14543546546576543515.1254415646,
+        "maxValue": 12345678914574567436543547687643465768765,
         "minLength": 1,
         "maxLength": 1000000,
         "regex": "\\d",

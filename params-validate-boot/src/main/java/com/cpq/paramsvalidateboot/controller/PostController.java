@@ -15,7 +15,7 @@ import java.util.Map;
 public class PostController {
 
     @PostMapping("/p1/map")
-    //@ParamsValidate(file = "/v1/json-test.json", keyName="map01")
+    @ParamsValidate(file = "/json-post.json")
     public Object p1(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, Object> map) throws Exception{
 
         return map;
