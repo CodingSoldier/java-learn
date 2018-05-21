@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.validation.constraints.Null;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,10 +43,8 @@ public class T {
 
     @Test
     public void test1() {
-        //JSONObject jsonObject = Util.readFileToJSONObject("config/validate/v1/postMap.json");
-        //System.out.println(jsonObject);
-
-        System.out.println(Util.isEmpty("  ") || "".equals("  ".trim()));
+        Double d = 12345678901.123456d;
+        System.out.println(new BigDecimal(d.toString()).toPlainString());
     }
 
     @Test
@@ -62,6 +61,7 @@ public class T {
 
         System.out.println(Boolean.parseBoolean(null));
 
+        Set<String> msgSet = new TreeSet<>();
 
     }
 

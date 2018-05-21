@@ -7,6 +7,7 @@ public class UserVo extends User {
     private float salaryNum;
     private Girl girl;
     private List<Dream> dreamList;
+    private List<String> hobbyList;
     private BigDecimal bigNum;
 
     public float getSalaryNum() {
@@ -39,5 +40,13 @@ public class UserVo extends User {
 
     public void setBigNum(BigDecimal bigNum) {
         this.bigNum = bigNum;
+    }
+
+    public List<String> getHobbyList() {
+        return hobbyList;
+    }
+
+    public void setHobbyList(List<String> hobbyList) {
+        this.hobbyList = hobbyList;
     }
 }

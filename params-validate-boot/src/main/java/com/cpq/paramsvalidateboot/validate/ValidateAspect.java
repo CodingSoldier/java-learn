@@ -1,7 +1,7 @@
 package com.cpq.paramsvalidateboot.validate;
 
 
-import com.cpq.paramsvalidateboot.validate.bean.AnnoField;
+import com.cpq.paramsvalidateboot.validate.bean.AnnotationField;
 import com.cpq.paramsvalidateboot.validate.bean.ResultCheck;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.JoinPoint;
@@ -40,11 +40,8 @@ public class ValidateAspect {
         Object obj = null;
         try {
             ResultCheck resultCheck = this.validateResult(joinPoint);
-            if (resultCheck.isPass() != false){
-                obj = ((ProceedingJoinPoint) joinPoint).proceed();
-            }else{
-                obj = paramsValidateInterface.validateNotPass(resultCheck);
-            }
+            obj = resultCheck.isPass() != false ? ((ProceedingJoinPoint) joinPoint).proceed()
+                    : paramsValidateInterface.validateNotPass(resultCheck);
         }catch (Throwable e){
             e.printStackTrace();
         }
@@ -53,12 +50,14 @@ public class ValidateAspect {
 
     //校验结果
     private ResultCheck validateResult(JoinPoint joinPoint){
-        ResultCheck resultCheck = new ResultCheck();
+        ResultCheck resultCheck = new ResultCheck(true);
         try {
             Method method = getCurrentMethod(joinPoint);
-            AnnoField annoField = getAnnoFields(method);
-            Map<String, Object> allParam = mergeParams(joinPoint);
-            resultCheck = validateMain.checkHandle(annoField, allParam);
+            AnnotationField annoField = getAnnoFields(method);
+            if (Util.isNotBlankObj(annoField.getFile())){
+                Map<String, Object> allParam = mergeParams(joinPoint);
+                resultCheck = validateMain.checkHandle(annoField, allParam);
+            }
         }catch (IOException e){
             resultCheck.setPass(false);
             resultCheck.setMsgSet(new HashSet<String>(){{
@@ -77,8 +76,8 @@ public class ValidateAspect {
     }
 
     //获取校验注解@ParamsValidate设置的值
-    private AnnoField getAnnoFields(Method method){
-        AnnoField annoField = new AnnoField();
+    private AnnotationField getAnnoFields(Method method){
+        AnnotationField annoField = new AnnotationField();
         if (method.getAnnotation(ParamsValidate.class) != null){
             String file = method.getAnnotation(ParamsValidate.class).file();
             String keyName = method.getAnnotation(ParamsValidate.class).keyName();
@@ -110,27 +109,17 @@ public class ValidateAspect {
 
     //从request中获取请求参数
     private Map<String, Object> getParamFromRequest(HttpServletRequest request){
-        if (request == null){
+        if (request == null)
             return new HashMap<>();
-        }
+
         Map<String, Object> resultMap = new HashMap<>();
         String[] value = null;
-        String temp = "";
         Map<String, String[]> paramMap = request.getParameterMap();
         if (paramMap != null){
             for (String key:paramMap.keySet()){
-                if (Util.isNotBlank(key)){
+                if (Util.isNotBlankObj(key)){
                     value = paramMap.get(key);
-                    if (value == null){
-                        resultMap.put(key, value);
-                    }else{
-                        temp = "";
-                        for (String elem:value){
-                            temp += elem + ",";
-                        }
-                        temp = value.length > 0 ? temp.substring(0, temp.length() -1) : temp;
-                        resultMap.put(key, temp);
-                    }
+                    resultMap.put(key, value);
                 }
             }
         }

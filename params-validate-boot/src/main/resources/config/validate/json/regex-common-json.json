@@ -8,7 +8,8 @@
     "REGEX_IP_PORT": "^(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})(:(\\d{1,3}))?$",
     "REGEX_LETTER_NUM": "^[a-zA-Z0-9]+$",
     "REGEX_NO_NEGATIVE": "^\\d+(\\.\\d+)?$",
-    "REGEX_NUM": "^\\d+$",
+    "REGEX_POSITIVE_NUM": "^\\d+$",
+    "REGEX_DECIMALS": "(-?\\d*)\\.?\\d+",
     "REGEX_PHONE": "^[\\+\\-\\d]{7,20}$",
     "REGEX_PASSWORD": "^[a-zA-Z0-9_\\`\\=\\;\\,\\~\\!\\@\\#\\$\\%\\^\\*\\-\\+\\}\\{\\:\\?\\(\\)\\.\\/\\[\\]]{6,}$",
     "REGEX_START_LETTER_NUM": "^[a-zA-Z][a-zA-Z0-9_]+$"

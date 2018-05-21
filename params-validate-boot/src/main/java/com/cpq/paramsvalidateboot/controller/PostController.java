@@ -15,14 +15,14 @@ import java.util.Map;
 public class PostController {
 
     @PostMapping("/p1/map")
-    @ParamsValidate(file = "/json-post.json")
+    @ParamsValidate(file = "json-post.json")
     public Object p1(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, Object> map) throws Exception{
 
         return map;
     }
 
     @PostMapping("/p2/vo")
-    //@ParamsValidate(file = "/v1/json-test.json", keyName="map01")
+    //@ParamsValidate(file = "v1/json-test.json", keyName="map01")
     public Object p2(HttpServletRequest request, HttpServletResponse response,@RequestBody UserVo userVo) throws Exception{
 
         return userVo;
@@ -43,14 +43,14 @@ public class PostController {
     }
 
     @RequestMapping("/form-data/vo")
-    //@ParamsValidate(file = "/v1/json-test.json", keyName="map01")
+    //@ParamsValidate(file = "v1/json-test.json", keyName="map01")
     public Object formData(HttpServletRequest request, @RequestParam("picFile") MultipartFile picFile,  @ModelAttribute UserVo vo) throws Exception {
 
         return vo;
     }
 
     @RequestMapping("/form-data/map")
-    //@ParamsValidate(file = "/v1/json-test.json", keyName="map01")
+    //@ParamsValidate(file = "v1/json-test.json", keyName="map01")
     public Object formData(HttpServletRequest request, @RequestParam("picFile") MultipartFile picFile,  @RequestParam Map<String, Object> map) throws Exception {
 
         return map;

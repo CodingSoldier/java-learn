@@ -17,7 +17,7 @@ public class Util<T> extends org.springframework.util.StringUtils{
     }
 
     //非空、非空格
-    public static boolean isNotBlank(String str1) {
+    public static boolean isNotBlankObj(String str1) {
         return !isBlank(str1);
     }
 
@@ -36,6 +36,16 @@ public class Util<T> extends org.springframework.util.StringUtils{
         return str1 != null && str2 != null && str1.equals(str2);
     }
 
+    //字符非blank且相等
+    public static boolean strNotBlankEquals(String str1, String str2) {
+        return str1 != null && !"".equals(str1) && str2 != null && !"".equals(str2) && str1.equals(str2);
+    }
+
+    //非空、非""
+    public static boolean isNotBlankObj(Object obj) {
+        return obj != null && !"".equals(obj);
+    }
+
     //字符相等忽略大小写
     public static boolean strEqualsIgnoreCase(String str1, String str2) {
         return str1 != null && str2 != null && str1.equalsIgnoreCase(str2);
@@ -43,7 +53,15 @@ public class Util<T> extends org.springframework.util.StringUtils{
 
     //对象转字符串
     public static String objToStr(Object object){
-        return object == null ? "" : String.valueOf(object);
+        String r = "";
+        if (object == null){
+            r = "";
+        }else if (object instanceof Number){
+            r = new BigDecimal(String.valueOf(object)).toPlainString();
+        }else{
+            r = String.valueOf(object);
+        }
+        return r;
     }
 
     //删除字符串两端指定字符

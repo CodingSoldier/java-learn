@@ -15,25 +15,26 @@
     <script >
         $("#p1").on("click", function(){
             $.ajax({
-                url: "/post/p1/map",
+                url: "/post/p1/map?s1=12323&i1=11111",
                 type: "post",
                 contentType: "application/json",
                 dataType: "json",
                 data: JSON.stringify({
-                    id: 122324,
+                    id: 123456789,
                     name: "name111",
                     birthday: new Date().getTime(),
                     isSingle: true,
-                    salaryNum: 11111111111111.444,
+                    salaryNum: 12345678.44,
                     girl: {
                         isMarry: false,
                         name: "girlname"
                     },
+                    hobbyList: ["吃","喝","玩","乐"],
                     dreamList:[{
-                        txt: "中国梦",
+                        txt: "中国梦234345325645645756",
                         exe: "改变世界",
                         time: new Date().getTime(),
-                        money: 12013154546.41564,
+                        money: 12345678901.123456,
                     }]
                 })
             }).done(function(r){
@@ -49,7 +50,7 @@
     <script >
         $("#p2").on("click", function(){
             $.ajax({
-                url: "/post/p2/vo",
+                url: "/post/p2/vo?s1=12323&i1=11111",
                 type: "post",
                 contentType: "application/json",
                 dataType: "json",
