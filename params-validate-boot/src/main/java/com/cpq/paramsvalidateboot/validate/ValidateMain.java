@@ -75,57 +75,37 @@ public class ValidateMain {
             Map<String, Object> jsonVal = (Map<String, Object>)json.get(key);
             Object paramVal = paramMap.get(key);
             Set<String> subKeySet = jsonVal.keySet();
-            if (RULE_KEY_SET.containsAll(subKeySet)){  //jsonVal是校验规则Rule
+            if(paramVal == null){
+                isJsonChildRequest(jsonVal, msgSet);
+            }else if(RULE_KEY_SET.containsAll(subKeySet)){  //jsonVal是校验规则Rule
                 //paramVal就是前台输入值（基本类型、List<基本类型>），jsonVal是校验规则Map(Rule)
                 checkHandleRequest(jsonVal, paramVal, msgSet);
-            }else{
-                if (paramVal != null && paramVal instanceof List){
-                    //paramVal是List<Bean>
-                    for (Object elem: (List)paramVal){
-                        validateParam(jsonVal, (Map<String, Object>)elem, msgSet);
-                    }
-                }else{  //paramVal是对象
-                    validateParam(jsonVal, (Map<String, Object>)paramVal, msgSet);
+            }else if (paramVal instanceof List){
+                //paramVal是List<Bean>
+                for (Object elem: (List)paramVal){
+                    validateParam(jsonVal, (Map<String, Object>)elem, msgSet);
                 }
+            }else{
+                //paramVal是对象
+                validateParam(jsonVal, (Map<String, Object>)paramVal, msgSet);
             }
         }
     }
 
-    //json值不是校验规则，而是一个List
-    //private void jsonValIsList(List jsonValList, List paramValList, Set<String> msgSet){
-    //    for (Object jsonElem:jsonValList){
-    //        for (Object paramElem:paramValList){
-    //            if (jsonElem instanceof Map){
-    //                Map<String, Object> subJsonMap = (Map<String, Object>)jsonElem;
-    //                Map<String, Object> subParamMap = (Map<String, Object>)paramElem;
-    //                validateParam(subJsonMap, subParamMap, msgSet);
-    //                //for (String JsonKey:subJsonMap.keySet()){
-    //                //    for (String paramKey:subParamMap.keySet()){
-    //                //        if (Util.strNotBlankEquals(JsonKey, paramKey)){
-    //                //            validateParam(subJsonMap, subParamMap, msgSet);
-    //                //        }
-    //                //    }
-    //                //}
-    //            }else if (jsonElem instanceof List){
-    //                List subJsonList = (List)jsonElem;
-    //                List subParamList = (List)paramElem;
-    //                jsonValIsList(subJsonList, subParamList, msgSet);
-    //            }
-    //        }
-    //    }
-    //}
-
-    //json值不是校验规则，而是一个对象map
-    //private void jsonValIsMap( Map<String, Object> jsonValMap, Object paramVal, Set<String> msgSet){
-    //    Set<String> subKeySet = jsonValMap.keySet();
-    //    if (subKeySet.size() == 1){
-    //        //json.key是bean引用名，json.key引用的值是此bean的属性名
-    //        validateParam(jsonValMap, (Map<String, Object>)paramVal, msgSet);
-    //    }else{
-    //        //json.key是bean中属性的名称，json.key引用的值是校验规则
-    //        checkHandleRequest(jsonValMap, paramVal, msgSet);
-    //    }
-    //}
+    //请求参数是空，校验json子级有request
+    private void isJsonChildRequest(Object jsonVal, Set<String> msgSet){
+        if (jsonVal instanceof Map){
+            Map<String, Object> jsonRule = (Map<String, Object>)jsonVal;
+            Set<String> keySet = jsonRule.keySet();
+            if (RULE_KEY_SET.containsAll(keySet) && Util.isRequest(jsonRule)){
+                msgSet.add(Util.objToStr(jsonRule.get(MESSAGE)));
+            }else{
+                for (String key:keySet){
+                    isJsonChildRequest(jsonRule.get(key), msgSet);
+                }
+            }
+        }
+    }
 
     //校验是否必填
     private void checkHandleRequest(Map<String, Object> jsonRule, Object paramVal, Set<String> msgSet){
@@ -186,13 +166,11 @@ public class ValidateMain {
                 }
             }
 
-            // TODO 获取值需要修改
             if (Pattern.matches(regex, Util.objToStr(val)) == false){
                 msgSet.add(message);
                 return;
             }
         }
-
     }
 
     //获取需要校验的json
