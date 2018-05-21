@@ -13,7 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.validation.constraints.Null;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,7 +43,7 @@ public class T {
     @Test
     public void test1() {
         Double d = 12345678901.123456d;
-        System.out.println(new BigDecimal(d.toString()).toPlainString());
+        System.out.println(null == d);
     }
 
     @Test
