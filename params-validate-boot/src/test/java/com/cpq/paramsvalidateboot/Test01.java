@@ -3,6 +3,7 @@ package com.cpq.paramsvalidateboot;
 import com.cpq.paramsvalidateboot.bean.Dream;
 import com.cpq.paramsvalidateboot.bean.Girl;
 import com.cpq.paramsvalidateboot.bean.UserVo;
+import com.cpq.paramsvalidateboot.bean2.ResultCheckVo;
 import com.cpq.paramsvalidateboot.validate.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -10,6 +11,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.constraints.Null;
@@ -33,8 +36,31 @@ public class Test01 {
     }
 
     @Test
-    public void d22(){
-        //redisTemplate.opsForHash().
+    public void d22() throws Exception{
+        ResultCheckVo vo = new ResultCheckVo();
+        vo.setA("aaaaaaaa");
+        vo.setBb("bbbbbb");
+        vo.setPass(false);
+        HashSet<String> set = new HashSet<String>();
+        set.add("sss11");
+        set.add("ss2222");
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashKeySerializer(new Jackson2JsonRedisSerializer(Object.class));
+        String jsonstr = new ObjectMapper().writeValueAsString(vo);
+        //redisTemplate.opsForValue().set("bean1", jsonstr);
+        redisTemplate.opsForValue().set("bean1", jsonstr);
+    }
+    @Test
+    public void d223(){
+        Map<String, Object> map1 = new HashMap<String, Object>();
+        Map<String, Object> map22 = new HashMap<String, Object>();
+        map1.put("a1", "a11111");
+        map22.put("a222", "a2222");
+        map1.put("a2", map22);
+        map1.put("l1", Arrays.asList(1,2,"1sd"));
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashKeySerializer(new Jackson2JsonRedisSerializer(Object.class));
+        redisTemplate.opsForValue().set("bean1", map1);
     }
 
     public static String trimBegin(String args, char beTrim) {
@@ -295,67 +321,6 @@ public class Test01 {
 
     }
 }
-
-
-class User{
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-}
-
-class ResultCheckVo extends User {
-    private Boolean isPass;
-    private String a;
-    private String bb;
-    private String name;
-
-    public String getA() {
-        return a;
-    }
-
-    public void setA(String a) {
-        this.a = a;
-    }
-
-    public String getBb() {
-        return bb;
-    }
-
-    public void setBb(String bb) {
-        this.bb = bb;
-    }
-
-    public Boolean getPass() {
-        return isPass;
-    }
-
-    public void setPass(Boolean pass) {
-        isPass = pass;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-}
-
-
-
-
-
-
-
 
 
 
