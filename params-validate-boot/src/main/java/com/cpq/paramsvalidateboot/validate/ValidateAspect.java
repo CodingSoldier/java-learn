@@ -2,7 +2,7 @@ package com.cpq.paramsvalidateboot.validate;
 
 
 import com.cpq.paramsvalidateboot.validate.bean.AnnotationField;
-import com.cpq.paramsvalidateboot.validate.bean.ResultCheck;
+import com.cpq.paramsvalidateboot.validate.bean.ResultValidate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -30,7 +30,7 @@ public class ValidateAspect {
     @Autowired
     ValidateMain validateMain;
     @Autowired
-    ParamsValidateInterface paramsValidateInterface;
+    ValidateInterface validateInterface;
 
     @Pointcut("@annotation(com.cpq.paramsvalidateboot.validate.ParamsValidate)")
     public void aspect(){}
@@ -39,9 +39,9 @@ public class ValidateAspect {
     public Object around(JoinPoint joinPoint){
         Object obj = null;
         try {
-            ResultCheck resultCheck = this.validateResult(joinPoint);
-            obj = resultCheck.isPass() != false ? ((ProceedingJoinPoint) joinPoint).proceed()
-                    : paramsValidateInterface.validateNotPass(resultCheck);
+            ResultValidate resultValidate = this.validateResult(joinPoint);
+            obj = resultValidate.isPass() != false ? ((ProceedingJoinPoint) joinPoint).proceed()
+                    : validateInterface.validateNotPass(resultValidate);
         }catch (Throwable e){
             e.printStackTrace();
         }
@@ -49,23 +49,23 @@ public class ValidateAspect {
     }
 
     //校验结果
-    private ResultCheck validateResult(JoinPoint joinPoint){
-        ResultCheck resultCheck = new ResultCheck(true);
+    private ResultValidate validateResult(JoinPoint joinPoint){
+        ResultValidate resultValidate = new ResultValidate(true);
         try {
             Method method = getCurrentMethod(joinPoint);
             AnnotationField annoField = getAnnoFields(method);
-            if (Util.isNotBlankObj(annoField.getFile())){
+            if (Utils.isNotBlankObj(annoField.getFile())){
                 Map<String, Object> allParam = mergeParams(joinPoint);
-                resultCheck = validateMain.checkHandle(annoField, allParam);
+                resultValidate = validateMain.validateHandle(annoField, allParam);
             }
         }catch (IOException e){
-            resultCheck.setPass(false);
-            resultCheck.setMsgSet(new HashSet<String>(){{
+            resultValidate.setPass(false);
+            resultValidate.setMsgSet(new HashSet<String>(){{
                 add("@ParamsValidate无法处理请求参数");
             }});
             e.printStackTrace();
         }
-        return resultCheck;
+        return resultValidate;
     }
 
     //获取当前方法
@@ -117,7 +117,7 @@ public class ValidateAspect {
         Map<String, String[]> paramMap = request.getParameterMap();
         if (paramMap != null){
             for (String key:paramMap.keySet()){
-                if (Util.isNotBlankObj(key)){
+                if (Utils.isNotBlankObj(key)){
                     value = paramMap.get(key);
                     resultMap.put(key, value);
                 }

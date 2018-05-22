@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Util<T> extends org.springframework.util.StringUtils{
+public class Utils<T> extends org.springframework.util.StringUtils{
 
     //空、空格
     public static boolean isBlank(String str1) {
@@ -66,7 +66,7 @@ public class Util<T> extends org.springframework.util.StringUtils{
 
     //删除字符串两端指定字符
     private static String trimBeginEndCharBase(String args, char beTrim, boolean b, boolean e) {
-        if (Util.isEmpty(args) || Util.isEmpty(beTrim)){
+        if (Utils.isEmpty(args) || Utils.isEmpty(beTrim)){
             return "";
         }
         int st = 0;
@@ -104,7 +104,7 @@ public class Util<T> extends org.springframework.util.StringUtils{
 
     //校验规则，是否必填
     public static boolean isRequest(Map<String, Object> rule){
-        return Boolean.parseBoolean(Util.objToStr(rule.get(ValidateMain.REQUEST)));
+        return Boolean.parseBoolean(Utils.objToStr(rule.get(ValidateMain.REQUEST)));
     }
 
     //字符串转数字，数字转double
@@ -124,7 +124,7 @@ public class Util<T> extends org.springframework.util.StringUtils{
             return json;
         }
 
-        try (InputStream is = Util.class.getClassLoader().getResourceAsStream(filePath)){
+        try (InputStream is = Utils.class.getClassLoader().getResourceAsStream(filePath)){
             if (is != null){
                 ObjectMapper mapper = new ObjectMapper();
                 json = mapper.readValue(is, Map.class);

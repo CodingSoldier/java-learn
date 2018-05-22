@@ -3,7 +3,7 @@ package com.cpq.paramsvalidateboot;
 import com.cpq.paramsvalidateboot.bean.Dream;
 import com.cpq.paramsvalidateboot.bean.Girl;
 import com.cpq.paramsvalidateboot.bean.UserVo;
-import com.cpq.paramsvalidateboot.validate.Util;
+import com.cpq.paramsvalidateboot.validate.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 public class T {
 
     public static String trimBegin(String args, char beTrim) {
-        if (Util.isEmpty(args) || Util.isEmpty(beTrim)){
+        if (Utils.isEmpty(args) || Utils.isEmpty(beTrim)){
             return "";
         }
 

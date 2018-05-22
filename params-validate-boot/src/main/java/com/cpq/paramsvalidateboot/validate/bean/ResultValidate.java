@@ -2,16 +2,16 @@ package com.cpq.paramsvalidateboot.validate.bean;
 
 import java.util.Set;
 
-public class ResultCheck {
+public class ResultValidate {
 
     private boolean isPass;
 
     private Set<String> msgSet;
 
-    public ResultCheck() {
+    public ResultValidate() {
     }
 
-    public ResultCheck(boolean isPass) {
+    public ResultValidate(boolean isPass) {
         this.isPass = isPass;
     }
 

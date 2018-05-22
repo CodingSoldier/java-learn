@@ -22,7 +22,7 @@ public class PostController {
     }
 
     @PostMapping("/p2/vo")
-    //@ParamsValidate(file = "v1/json-test.json", keyName="map01")
+    @ParamsValidate(file = "json-post.json", keyName="jsonKeyP2")
     public Object p2(HttpServletRequest request, HttpServletResponse response,@RequestBody UserVo userVo) throws Exception{
 
         return userVo;
