@@ -1,6 +1,6 @@
 package com.cpq.paramsvalidateboot.validate;
 
-import com.cpq.paramsvalidateboot.validate.bean.AnnotationField;
+import com.cpq.paramsvalidateboot.validate.bean.Config;
 import com.cpq.paramsvalidateboot.validate.bean.ResultValidate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +41,13 @@ public class ValidateMain {
     private ValidateInterface validateInterface;
 
     //校验params
-    public ResultValidate validateHandle(AnnotationField annoField, Map<String, Object> requestMap) {
+    public ResultValidate validateHandle(Config config, Map<String, Object> requestMap) {
         ResultValidate resultValidate = new ResultValidate(true);
 
         //读取@ParamsValidate中的file
         Map<String, Object> json = new HashMap<>();
         try {
-            json = getValidateJson(annoField);
+            json = getValidateJson(config);
         }catch (IOException e){
             resultValidate.setPass(false);
             resultValidate.setMsgSet(new HashSet<String>(){{
@@ -175,29 +175,33 @@ public class ValidateMain {
     }
 
     //获取需要校验的json
-    private Map<String, Object> getValidateJson(AnnotationField annoField) throws IOException{
+    private Map<String, Object> getValidateJson(Config config) throws IOException{
         String basePath = validateInterface.basePath();
         String filePath = Utils.trimBeginEndChar(basePath, '/') + "/"
-                + Utils.trimBeginChar(annoField.getFile(), '/');
-        Map<String, Object> json = Utils.readFileToMap(filePath);
+                + Utils.trimBeginChar(config.getFile(), '/');
 
-        if (Utils.isNotBlankObj(annoField.getKeyName())){
-            json = (Map<String, Object>)json.get(annoField.getKeyName());
-        }else{
-            Iterator<String> it = json.keySet().iterator();
-            String key = "";
-            while (it.hasNext()){
-                key = it.next();
-                if (key.startsWith(JSON_KEY)){
-                    json.remove(key);
+        Map<String, Object> json = validateInterface.getCache(config);
+        if (json == null || json.size() == 0){
+            json = Utils.readFileToMap(filePath);
+            if (Utils.isNotBlankObj(config.getKeyName())){
+                json = (Map<String, Object>)json.get(config.getKeyName());
+            }else{
+                Iterator<String> it = json.keySet().iterator();
+                String key = "";
+                while (it.hasNext()){
+                    key = it.next();
+                    if (key.startsWith(JSON_KEY)){
+                        json.remove(key);
+                    }
                 }
             }
+            validateInterface.setCache(config, json);
         }
         return json;
     }
 
     //读取regex-common-json.json文件到regexCommon
-    public Map<String, String> getRegexCommon() throws IOException{
+    private Map<String, String> getRegexCommon() throws IOException{
         if (regexCommon != null)
             return regexCommon;
 

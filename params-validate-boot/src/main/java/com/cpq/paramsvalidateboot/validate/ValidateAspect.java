@@ -1,7 +1,7 @@
 package com.cpq.paramsvalidateboot.validate;
 
 
-import com.cpq.paramsvalidateboot.validate.bean.AnnotationField;
+import com.cpq.paramsvalidateboot.validate.bean.Config;
 import com.cpq.paramsvalidateboot.validate.bean.ResultValidate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.JoinPoint;
@@ -53,10 +53,10 @@ public class ValidateAspect {
         ResultValidate resultValidate = new ResultValidate(true);
         try {
             Method method = getCurrentMethod(joinPoint);
-            AnnotationField annoField = getAnnoFields(method);
-            if (Utils.isNotBlankObj(annoField.getFile())){
+            Config config = getconfigs(method);
+            if (Utils.isNotBlankObj(config.getFile())){
                 Map<String, Object> allParam = mergeParams(joinPoint);
-                resultValidate = validateMain.validateHandle(annoField, allParam);
+                resultValidate = validateMain.validateHandle(config, allParam);
             }
         }catch (IOException e){
             resultValidate.setPass(false);
@@ -76,15 +76,15 @@ public class ValidateAspect {
     }
 
     //获取校验注解@ParamsValidate设置的值
-    private AnnotationField getAnnoFields(Method method){
-        AnnotationField annoField = new AnnotationField();
+    private Config getconfigs(Method method){
+        Config config = new Config();
         if (method.getAnnotation(ParamsValidate.class) != null){
             String file = method.getAnnotation(ParamsValidate.class).file();
             String keyName = method.getAnnotation(ParamsValidate.class).keyName();
-            annoField.setFile(file);
-            annoField.setKeyName(keyName);
+            config.setFile(file);
+            config.setKeyName(keyName);
         }
-        return annoField;
+        return config;
     }
 
     //获取@RequestBody的参数

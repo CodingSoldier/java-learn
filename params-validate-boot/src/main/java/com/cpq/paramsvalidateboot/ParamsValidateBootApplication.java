@@ -9,4 +9,6 @@ public class ParamsValidateBootApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ParamsValidateBootApplication.class, args);
 	}
+
+
 }

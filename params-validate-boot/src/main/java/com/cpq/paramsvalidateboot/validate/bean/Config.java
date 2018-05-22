@@ -1,14 +1,14 @@
 package com.cpq.paramsvalidateboot.validate.bean;
 
-public class AnnotationField {
+public class Config {
 
     private String file;
     private String keyName;
 
-    public AnnotationField() {
+    public Config() {
     }
 
-    public AnnotationField(String file, String keyName) {
+    public Config(String file, String keyName) {
         this.file = file;
         this.keyName = keyName;
     }

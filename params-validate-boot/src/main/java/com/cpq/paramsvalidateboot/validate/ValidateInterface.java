@@ -1,6 +1,9 @@
 package com.cpq.paramsvalidateboot.validate;
 
+import com.cpq.paramsvalidateboot.validate.bean.Config;
 import com.cpq.paramsvalidateboot.validate.bean.ResultValidate;
+
+import java.util.Map;
 
 public interface ValidateInterface {
     /**
@@ -15,5 +18,19 @@ public interface ValidateInterface {
      * @return 返回给客户端的数据
      */
     Object validateNotPass(ResultValidate resultValidate);
+
+    /**
+     * 获取缓存中的校验规则
+     * @param config
+     * @return  校验规则
+     */
+    Map<String, Object> getCache(Config config);
+
+    /**
+     * 设置校验规则到缓存中
+     * @param config
+     * @param json 校验规则
+     */
+    void setCache(Config config, Map<String, Object> json);
 
 }

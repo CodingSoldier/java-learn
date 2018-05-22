@@ -7,7 +7,9 @@ import com.cpq.paramsvalidateboot.validate.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.constraints.Null;
@@ -19,7 +21,21 @@ import java.util.regex.Pattern;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class T {
+public class Test01 {
+
+    @Autowired
+    RedisTemplate redisTemplate;
+
+    @Test
+    public void t11(){
+        redisTemplate.opsForValue().set("a:b:c", "资质");
+        System.out.println(redisTemplate.opsForValue().get("a:b:c"));
+    }
+
+    @Test
+    public void d22(){
+        //redisTemplate.opsForHash().
+    }
 
     public static String trimBegin(String args, char beTrim) {
         if (Utils.isEmpty(args) || Utils.isEmpty(beTrim)){
