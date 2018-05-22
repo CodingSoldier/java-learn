@@ -8,7 +8,6 @@ import com.cpq.paramsvalidateboot.validate.bean.ResultValidate;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -35,31 +34,12 @@ public class ValidateImpl implements ValidateInterface, InitializingBean {
     @Override
     public Map<String, Object> getCache(Config config) {
         String key = createKey(config);
-        //Map<String, Object> r = new HashMap<>();
-        //try {
-        //    ObjectMapper mapper = new ObjectMapper();
-        //    String jsonStr = redisTemplate.opsForValue().get(key);
-        //    if (Utils.isNotBlankObj(jsonStr)){
-        //        r = mapper.readValue(jsonStr, Map.class);
-        //    }
-        //}catch (IOException e){
-        //    e.printStackTrace();
-        //}
         return redisTemplate.opsForHash().entries(key);
     }
 
     @Override
     public void setCache(Config config, Map<String, Object> json) {
         String key = createKey(config);
-        //try {
-        //    ObjectMapper mapper = new ObjectMapper();
-        //    //String r = mapper.writeValueAsString(json);
-        //
-        //}catch (IOException e){
-        //    e.printStackTrace();
-        //}
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
         redisTemplate.opsForHash().putAll(key, json);
     }
 

@@ -63,8 +63,22 @@ public class RedisConfig {
     public RedisTemplate redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate template = new RedisTemplate();
         template.setConnectionFactory(factory);
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setHashKeySerializer(new Jackson2JsonRedisSerializer(Object.class));
+
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        template.setKeySerializer(stringRedisSerializer);
+        template.setHashKeySerializer(stringRedisSerializer);
+
+
+
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(Object.class);
+        //template.setEnableDefaultSerializer(false);
+        //template.setDefaultSerializer(jackson2JsonRedisSerializer);
+        /**
+         * Value统一用Jackson2JsonRedisSerializer，opsForList()、opsForSet()中的元素不必都为String类型。
+         * 对于opsForValue()来说，值会多加一个双引号
+         */
+        template.setValueSerializer(jackson2JsonRedisSerializer);
+        template.setHashValueSerializer(jackson2JsonRedisSerializer);
         return template;
     }
 

@@ -11,8 +11,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.constraints.Null;
@@ -32,6 +30,7 @@ public class Test01 {
     @Test
     public void t11(){
         redisTemplate.opsForValue().set("a:b:c", "资质");
+        redisTemplate.opsForValue().set("a:b:a", "a");
         System.out.println(redisTemplate.opsForValue().get("a:b:c"));
     }
 
@@ -44,12 +43,13 @@ public class Test01 {
         HashSet<String> set = new HashSet<String>();
         set.add("sss11");
         set.add("ss2222");
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashKeySerializer(new Jackson2JsonRedisSerializer(Object.class));
-        String jsonstr = new ObjectMapper().writeValueAsString(vo);
+        //redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        //redisTemplate.setHashKeySerializer(new Jackson2JsonRedisSerializer(Object.class));
+        //String jsonstr = new ObjectMapper().writeValueAsString(vo);
         //redisTemplate.opsForValue().set("bean1", jsonstr);
-        redisTemplate.opsForValue().set("bean1", jsonstr);
+        redisTemplate.opsForHash().put("bea","bean1", vo);
     }
+
     @Test
     public void d223(){
         Map<String, Object> map1 = new HashMap<String, Object>();
@@ -58,9 +58,17 @@ public class Test01 {
         map22.put("a222", "a2222");
         map1.put("a2", map22);
         map1.put("l1", Arrays.asList(1,2,"1sd"));
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashKeySerializer(new Jackson2JsonRedisSerializer(Object.class));
-        redisTemplate.opsForValue().set("bean1", map1);
+        redisTemplate.opsForHash().put("map","map1", map1);
+    }
+
+    @Test
+    public void d33(){
+        redisTemplate.opsForList().rightPushAll("list1",Arrays.asList(1,2,"1sd"));
+    }
+
+    @Test
+    public void d44(){
+        redisTemplate.opsForSet().add("s2",Arrays.asList(0,1,"2","1sd"));
     }
 
     public static String trimBegin(String args, char beTrim) {
