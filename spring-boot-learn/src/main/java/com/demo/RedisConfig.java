@@ -1,0 +1,85 @@
+package com.demo;
+
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+import redis.clients.jedis.JedisPoolConfig;
+
+
+@Configuration
+public class RedisConfig {
+
+    @Value("${spring.redis.database}")
+    private int database;
+
+    @Value("${spring.redis.host}")
+    private String host;
+
+    @Value("${spring.redis.port}")
+    private int port;
+
+    @Value("${spring.redis.timeout}")
+    private int timeout;
+
+    @Value("${spring.redis.pool.max-idle}")
+    private int maxidle;
+
+    @Value("${spring.redis.pool.min-idle}")
+    private int minidle;
+
+    @Value("${spring.redis.pool.max-active}")
+    private int maxActive;
+
+    @Value("${spring.redis.pool.max-wait}")
+    private long maxWait;
+
+    @Bean
+    JedisConnectionFactory jedisConnectionFactory() {
+        JedisPoolConfig config = new JedisPoolConfig();
+//      最大空闲连接数, 默认8个
+        config.setMaxIdle(maxidle);
+//      最小空闲连接数, 默认0
+        config.setMinIdle(minidle);
+//      最大连接数, 默认8个
+        config.setMaxTotal(maxActive);
+//      获取连接时的最大等待毫秒数(如果设置为阻塞时BlockWhenExhausted),如果超时就抛异常, 小于零:阻塞不确定的时间,  默认-1
+        config.setMaxWaitMillis(maxWait);
+
+        JedisConnectionFactory factory = new JedisConnectionFactory();
+        factory.setDatabase(database);
+        factory.setHostName(host);
+        factory.setPort(port);
+        factory.setTimeout(timeout);
+        factory.setPoolConfig(config);
+        return factory;
+    }
+
+    @Bean
+    public RedisTemplate redisTemplate(RedisConnectionFactory factory) {
+        RedisTemplate template = new RedisTemplate();
+        template.setConnectionFactory(factory);
+
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        template.setKeySerializer(stringRedisSerializer);
+        template.setHashKeySerializer(stringRedisSerializer);
+
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(Object.class);
+        //template.setEnableDefaultSerializer(false);
+        //template.setDefaultSerializer(jackson2JsonRedisSerializer);
+        /**
+         * Value统一用Jackson2JsonRedisSerializer，opsForList()、opsForSet()中的元素不必都为String类型。
+         * 对于opsForValue()来说，值会多加一个双引号
+         */
+        template.setValueSerializer(jackson2JsonRedisSerializer);
+        template.setHashValueSerializer(jackson2JsonRedisSerializer);
+        return template;
+    }
+
+
+}
