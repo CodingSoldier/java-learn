@@ -1,6 +1,9 @@
 package org.validate;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 
 //运行时执行
@@ -8,6 +11,6 @@ import java.lang.annotation.*;
 //用于描述类、接口(包括注解类型) 或enum声明
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface ParamsValidate {
-    public String operationType() default "";
-    public String operationName() default "";
+    public String file() default "";
+    public String keyName() default "";
 }
