@@ -1,11 +1,11 @@
-package org.validate;
+package com.cpq.validatetest.validate;
 
 
+import com.cpq.validatetest.validate.bean.Config;
+import com.cpq.validatetest.validate.bean.ResultValidate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.validate.bean.Config;
-import org.validate.bean.ResultValidate;
 
 import java.io.IOException;
 import java.io.InputStream;

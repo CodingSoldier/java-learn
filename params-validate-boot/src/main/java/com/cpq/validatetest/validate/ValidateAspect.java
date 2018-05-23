@@ -1,6 +1,8 @@
-package org.validate;
+package com.cpq.validatetest.validate;
 
 
+import com.cpq.validatetest.validate.bean.Config;
+import com.cpq.validatetest.validate.bean.ResultValidate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -12,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.validate.bean.Config;
-import org.validate.bean.ResultValidate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class ValidateAspect {
     @Autowired
     ValidateInterface validateInterface;
 
-    @Pointcut("@annotation(org.validate.ParamsValidate)")
+    @Pointcut("@annotation(com.cpq.validatetest.validate.ParamsValidate)")
     public void aspect(){}
 
     @Around("aspect()")
