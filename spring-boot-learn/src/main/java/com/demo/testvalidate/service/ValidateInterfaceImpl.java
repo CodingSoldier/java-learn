@@ -1,7 +1,10 @@
 package com.demo.testvalidate.service;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.parser.Feature;
 import com.demo.paramsvalidate.ValidateInterface;
+import com.demo.paramsvalidate.bean.Parser;
 import com.demo.paramsvalidate.bean.ResultValidate;
 import com.demo.paramsvalidate.bean.ValidateConfig;
 import org.springframework.beans.factory.InitializingBean;
@@ -30,6 +33,19 @@ public class ValidateInterfaceImpl implements ValidateInterface, InitializingBea
         r.put("success", resultValidate.isPass());
         r.put("msg", resultValidate.getMsgSet());
         return r;
+    }
+
+    /**
+     * json解析器
+     * 1、使用默认解析器jackson，直接返回null即可
+     * 2、使用gson，请返回 new Parser(Gson.class);
+     * 3、使用fastjson，请返回new Parser(JSON.class, Feature[].class)
+     * 为了支持fastjson，搞得好坑爹
+     */
+    public Parser getParser(){
+        //return null;
+        //return new Parser(Gson.class);
+        return new Parser(JSON.class, Feature[].class);
     }
 
     //不使用缓存，返回空map即可

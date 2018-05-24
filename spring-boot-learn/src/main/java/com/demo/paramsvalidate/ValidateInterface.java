@@ -1,8 +1,9 @@
 package com.demo.paramsvalidate;
 
 
-import com.demo.paramsvalidate.bean.ValidateConfig;
+import com.demo.paramsvalidate.bean.Parser;
 import com.demo.paramsvalidate.bean.ResultValidate;
+import com.demo.paramsvalidate.bean.ValidateConfig;
 
 import java.util.Map;
 
@@ -19,6 +20,15 @@ public interface ValidateInterface {
      * @return 返回给客户端的数据
      */
     Object validateNotPass(ResultValidate resultValidate);
+
+    /**
+     * json解析器
+     * 1、使用默认解析器jackson，直接返回null即可。
+     * 2、使用gson，请返回 new Parser(Gson.class)。
+     * 3、使用fastjson，请返回new Parser(JSON.class, Feature[].class)。
+     * 为了支持fastjson，搞得好坑爹。
+     */
+    Parser getParser();
 
     /**
      * 获取缓存中的校验规则

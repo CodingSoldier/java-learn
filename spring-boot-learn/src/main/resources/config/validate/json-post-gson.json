@@ -1,17 +1,22 @@
 {
-    "id": {
-        "request": true,
-        "minValue": 1,
-        "maxValue": 1000000000,
-        "regex": "REGEX_POSITIVE_NUM",
-        "message": "id:必填，为数字"
-    },
-    "name": {
-        "request": true,
+//    "id": {
+//        "request": true,
+//        "minValue": 1,
+//        "maxValue": 1000000000,
+//        "regex": "REGEX_POSITIVE_NUM",
+//        "message": "id:必填，为数字"
+//    },
+
+/*
+使用gson
+ValidateInterface#getParser()需返回 new Parser(Gson.class)
+*/
+    name: {
+        request: true,   //gson能写注释，key可以不加双引号
         "minLength": 1,
-        "maxLength": 20,
+        "maxLength": 200,
         "regex": "REGEX_CHAR",
-        "message": "name:错误提示"
+        "message": "name:错误提示"  //gson不不不支持在此加逗号,
     },
     "birthday": {
         "request": true,
@@ -31,7 +36,6 @@
         }
     },
 
-
     "jsonKeyFormData": {
         "name": {
             "request": true,
@@ -46,6 +50,7 @@
             "message": "薪水填写错误"
         }
     },
+
     "hobbyList": {
         "request": "true",
         "maxLength": 20

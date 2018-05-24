@@ -25,17 +25,17 @@
                     birthday: new Date().getTime(),
                     isSingle: true,
                     salaryNum: 12345678.44,
-                    // girl: {
-                    //     isMarry: false,
-                    //     name: "girlname"
-                    // },
+                    girl: {
+                        isMarry: false,
+                        name: "girlname"
+                    },
                     hobbyList: ["吃","喝","玩","乐"],
-                    // dreamList:[{
-                    //     txt: "中国梦",
-                    //     exe: "改变世界",
-                    //     time: new Date().getTime(),
-                    //     money: 12345678901.123456,
-                    // }]
+                    dreamList:[{
+                        txt: "中国梦",
+                        exe: "改变世界",
+                        time: new Date().getTime(),
+                        money: 12345678901.123456,
+                    }]
                 })
             }).done(function(r){
                 $("#r1").text(r.toString());

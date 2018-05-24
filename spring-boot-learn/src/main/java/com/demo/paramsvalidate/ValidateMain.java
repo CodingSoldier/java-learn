@@ -1,14 +1,16 @@
 package com.demo.paramsvalidate;
 
 
-import com.demo.paramsvalidate.bean.ValidateConfig;
+import com.demo.paramsvalidate.bean.Parser;
 import com.demo.paramsvalidate.bean.ResultValidate;
+import com.demo.paramsvalidate.bean.ValidateConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -49,10 +51,10 @@ public class ValidateMain {
         Map<String, Object> json = new HashMap<>();
         try {
             json = getValidateJson(validateConfig);
-        }catch (IOException e){
+        }catch (Exception e){
             resultValidate.setPass(false);
             resultValidate.setMsgSet(new HashSet<String>(){{
-                add("@ParamsValidate读取file失败");
+                add("@ParamsValidate读取、解析json文件失败");
             }});
             e.printStackTrace();
         }
@@ -100,7 +102,7 @@ public class ValidateMain {
             Map<String, Object> jsonRule = (Map<String, Object>)jsonVal;
             Set<String> keySet = jsonRule.keySet();
             if (RULE_KEY_SET.containsAll(keySet) && Utils.isRequest(jsonRule)){
-                msgSet.add(Utils.objToStr(jsonRule.get(MESSAGE)));
+                msgSet.add(dealWithMessage(jsonRule));
             }else{
                 for (String key:keySet){
                     isJsonChildRequest(jsonRule.get(key), msgSet);
@@ -115,13 +117,13 @@ public class ValidateMain {
             return;
 
         if (Utils.isRequest(jsonRule)){
-            if (Utils.isBlankStrObj(paramVal)){
-                msgSet.add(Utils.objToStr(jsonRule.get(MESSAGE))); //必填&&无值
+            if (Utils.isBlankObj(paramVal)){
+                msgSet.add(dealWithMessage(jsonRule)); //必填&&无值
             }else {
                 manageParamVal(jsonRule, paramVal, msgSet); //必填&&有值
             }
         }else{
-            if (Utils.isNotBlankStrObj(paramVal)){
+            if (Utils.isNotBlankObj(paramVal)){
                 manageParamVal(jsonRule, paramVal, msgSet); //非必填&&有值
             }
         }
@@ -145,7 +147,6 @@ public class ValidateMain {
         Object minLength = jsonRule.get(MIN_LENGTH);
         Object maxLength = jsonRule.get(MAX_LENGTH);
         String regex = Utils.objToStr(jsonRule.get(REGEX));
-        String message = Utils.objToStr(jsonRule.get(MESSAGE));
 
         //校验不通过
         if (Utils.isNotBlankObj(minValue) && Utils.getDouble(val) < Utils.getDouble(minValue)
@@ -153,7 +154,7 @@ public class ValidateMain {
             ||  Utils.isNotBlankObj(minLength) && Utils.objToStr(val).length() < Utils.getDouble(minLength)
             || Utils.isNotBlankObj(maxLength) && Utils.objToStr(val).length() > Utils.getDouble(maxLength)){
 
-            msgSet.add(message);
+            msgSet.add(dealWithMessage(jsonRule));
             return;
         }
 
@@ -169,30 +170,102 @@ public class ValidateMain {
             }
 
             if (Pattern.matches(regex, Utils.objToStr(val)) == false){
-                msgSet.add(message);
+                msgSet.add(dealWithMessage(jsonRule));
                 return;
             }
         }
     }
 
+    //处理message为空的情况
+    private String dealWithMessage(Map<String, Object> jsonRule){
+        String message = Utils.objToStr(jsonRule.get(MESSAGE));
+        if (Utils.isBlank(message)){
+            Object minValue = jsonRule.get(MIN_VALUE);
+            Object maxValue = jsonRule.get(MAX_VALUE);
+            Object minLength = jsonRule.get(MIN_LENGTH);
+            Object maxLength = jsonRule.get(MAX_LENGTH);
+            String regex = Utils.objToStr(jsonRule.get(REGEX));
+
+            message = "某参数未通过此规则校验";
+            if (Utils.isRequest(jsonRule)){
+                message += "；request: true";
+            }
+            if (Utils.isNotBlankObj(minValue)){
+                message += ("；minValue: " + minValue);
+            }
+            if (Utils.isNotBlankObj(maxValue)){
+                message += ("；maxValue: " + maxValue);
+            }
+            if (Utils.isNotBlankObj(minValue)){
+                message += ("；minLength: " + minLength);
+            }
+            if (Utils.isNotBlankObj(minValue)){
+                message += ("；maxLength: " + maxLength);
+            }
+            if (Utils.isNotBlankObj(regex)){
+                message += ("；regex: " + regex);
+            }
+        }
+        return message;
+    }
+
+    //读取json文件到Map<String, Object>
+    private Map<String, Object> readFileToMap(String filePath) throws Exception{
+        Map<String, Object> json = new HashMap<String, Object>();
+        if (Utils.isEmpty(filePath)){
+            return json;
+        }
+        Parser parser = validateInterface.getParser();
+        try (InputStream is = Utils.class.getClassLoader().getResourceAsStream(filePath)){
+            if (is != null){
+                if (parser != null && parser.getParserClass() != null){
+                    Class parserClazz = parser.getParserClass();
+                    Class featureArrClass = parser.getFeatureArrClass();
+                    if ("com.google.gson.Gson".equals(parserClazz.getName())){
+                        //使用gson解析
+                        Object gson = parserClazz.newInstance();
+                        Method method = parserClazz.getMethod("fromJson", Reader.class, Class.class);
+                        json = (Map<String, Object>)method
+                                .invoke(gson, new InputStreamReader(new BufferedInputStream(is)), Map.class );
+                    }else if ("com.alibaba.fastjson.JSON".equals(parserClazz.getName())
+                            && featureArrClass != null
+                            && "Feature[]".equals(featureArrClass.getSimpleName())){
+                        //使用fastjson解析
+                        Method method = parserClazz.getMethod("parseObject", InputStream.class, Type.class, featureArrClass);
+                        json = (Map<String, Object>)method.invoke(null, is, Map.class, null);
+                    }else {
+                        throw new Exception("ValidateInterface#getParser()设置的解析器不符合规范");
+                    }
+                }else{
+                    //使用Jackson解析
+                    ObjectMapper mapper = new ObjectMapper();
+                    json = mapper.readValue(is, Map.class);
+                }
+            }else{
+                throw new IOException("@ParamsValidate读取file失败");
+            }
+        }
+        return json;
+    }
+
     //获取需要校验的json
-    private Map<String, Object> getValidateJson(ValidateConfig validateConfig) throws IOException{
+    private Map<String, Object> getValidateJson(ValidateConfig validateConfig) throws Exception{
         String basePath = validateInterface.basePath();
         String filePath = Utils.trimBeginEndChar(basePath, '/') + "/"
                 + Utils.trimBeginChar(validateConfig.getFile(), '/');
 
         Map<String, Object> json = validateInterface.getCache(validateConfig);
         if (json == null || json.size() == 0){
-            json = Utils.readFileToMap(filePath);
-            if (Utils.isNotBlankObj(validateConfig.getKeyName())){
+            json = readFileToMap(filePath);
+            if (Utils.isNotBlank(validateConfig.getKeyName())){
                 json = (Map<String, Object>)json.get(validateConfig.getKeyName());
             }else{
-                Iterator<String> it = json.keySet().iterator();
-                String key = "";
+                Iterator<Map.Entry<String, Object>> it = json.entrySet().iterator();
+                Map.Entry<String, Object> entry = null;
                 while (it.hasNext()){
-                    key = it.next();
-                    if (key.startsWith(JSON_KEY)){
-                        json.remove(key);
+                    entry = it.next();
+                    if (entry.getKey().startsWith(JSON_KEY)){
+                        it.remove();
                     }
                 }
             }

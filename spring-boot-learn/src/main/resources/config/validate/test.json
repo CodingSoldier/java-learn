@@ -1,20 +1,20 @@
 {
-    "id": {
-        "request": true,
-        "minValue": 14543546546576543515.1254415646,
-        "maxValue": 12345678914574567436543547687643465768765,
-        "minLength": 1,
-        "maxLength": 1000000,
-        "regex": "\\d",
-        "message": "id:必填，为数字"
-    },
-    "name": {
-        "request": true,
+//    "id": {
+//        "request": true,
+//        "minValue": 14543546546576543515.1254415646,
+//        "maxValue": 12345678914574567436543547687643465768765,
+//        "minLength": 1,
+//        "maxLength": 1000000,
+//        "regex": "\\d",
+//        "message": "id:必填，为数字"
+//    },
+    "name": {       //gson能写注释、key可以不加双引号
+        request: true,  //gson： key可以不加双引号
         "minLength": 1,
         "maxLength": 20,
         "regex": "\\w",
-        "message": "name:错误提示"
-    },
+        "message": "name:错误提示"  //gson不支持在此加逗号,
+    },  //gson不支持在此加逗号,
     "birthday": {
         "request": true,
         "message": "birthday：必填"
@@ -31,8 +31,8 @@
             "regex": "REGEX_START_LETTER_NUM"
         }
     },
-    "dreamList": ["safsdfa", [{
-        "txt": {
+    dreamList: ["safsdfa", [{
+        txt: {
             "request": "true",
             "minLength": 10,
             "maxLength": 20

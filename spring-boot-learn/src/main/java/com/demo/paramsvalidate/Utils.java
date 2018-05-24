@@ -1,12 +1,7 @@
 package com.demo.paramsvalidate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Utils<T> extends org.springframework.util.StringUtils{
@@ -17,18 +12,18 @@ public class Utils<T> extends org.springframework.util.StringUtils{
     }
 
     //非空、非空格
-    public static boolean isNotBlankObj(String str1) {
+    public static boolean isNotBlank(String str1) {
         return !isBlank(str1);
     }
 
     //空字符、空对象
-    public static boolean isBlankStrObj(Object obj) {
+    public static boolean isBlankObj(Object obj) {
         return obj == null || isBlank(objToStr(obj));
     }
 
-    //非空字符&&非空对象
-    public static boolean isNotBlankStrObj(Object obj) {
-        return !isBlankStrObj(obj);
+    //非空、非""
+    public static boolean isNotBlankObj(Object obj) {
+        return !isBlankObj(obj);
     }
 
     //字符相等
@@ -39,11 +34,6 @@ public class Utils<T> extends org.springframework.util.StringUtils{
     //字符非blank且相等
     public static boolean strNotBlankEquals(String str1, String str2) {
         return str1 != null && !"".equals(str1) && str2 != null && !"".equals(str2) && str1.equals(str2);
-    }
-
-    //非空、非""
-    public static boolean isNotBlankObj(Object obj) {
-        return obj != null && !"".equals(obj);
     }
 
     //字符相等忽略大小写
@@ -117,22 +107,5 @@ public class Utils<T> extends org.springframework.util.StringUtils{
         return new BigDecimal(getDouble(value));
     }
 
-    //读取json文件到Map<String, Object>
-    public static Map<String, Object> readFileToMap(String filePath) throws IOException{
-        Map<String, Object> json = new HashMap<String, Object>();
-        if (isEmpty(filePath)){
-            return json;
-        }
-
-        try (InputStream is = Utils.class.getClassLoader().getResourceAsStream(filePath)){
-            if (is != null){
-                ObjectMapper mapper = new ObjectMapper();
-                json = mapper.readValue(is, Map.class);
-            }else{
-                throw new IOException("@ParamsValidate读取file失败");
-            }
-        }
-        return json;
-    }
 
 }
