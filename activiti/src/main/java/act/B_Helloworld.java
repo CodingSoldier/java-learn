@@ -9,11 +9,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/11/26
- */
 public class B_Helloworld {
     /*获取流程引擎，默认获取classpath下的activiti.cfg.xml配置文件。resources = classLoader.getResources("activiti.cfg.xml");*/
     ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();

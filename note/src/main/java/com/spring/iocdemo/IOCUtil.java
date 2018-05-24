@@ -13,10 +13,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * @Author：cpq
- * @Description： IOC工具类
- */
 public class IOCUtil {
     //ioc容器
     Map<String, Object> beanContainer = new HashMap<String, Object>();

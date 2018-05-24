@@ -20,11 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/16
- */
 @Controller
 @RequestMapping("/fileUpDown")
 public class FileUpDown {

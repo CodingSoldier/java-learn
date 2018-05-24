@@ -16,11 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/11/18
- */
 @Controller
 @RequestMapping("/test_html_to_sql")
 public class CtrlHtmlToSql {

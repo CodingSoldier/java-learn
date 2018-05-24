@@ -4,11 +4,6 @@ import org.junit.Test;
 
 import java.io.*;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/16
- */
 //  http://blog.csdn.net/zhaoyanjun6/article/details/54923506
 public class E_In_Re_Ou_Wr {
 

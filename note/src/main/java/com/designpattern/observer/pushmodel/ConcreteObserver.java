@@ -1,10 +1,5 @@
 package com.designpattern.observer.pushmodel;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/1/15
- */
 //具体观察者
 public class ConcreteObserver implements Observer {
     //观察者状态

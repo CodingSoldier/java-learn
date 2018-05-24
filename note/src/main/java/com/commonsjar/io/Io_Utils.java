@@ -9,11 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/15
- */
 //  http://blog.csdn.net/zhaoyanjun6/article/details/55051917
 //    https://www.cnblogs.com/xing901022/p/5978989.html
 public class Io_Utils {

@@ -2,10 +2,6 @@ package com.spring.iocdemo;
 
 import com.spring.iocdemo.scan.Dao2;
 
-/**
- * @Author：cpq
- * @Description：
- */
 public class Service1 {
     //@ResourceCustom(name = "dao1")
     //@ResourceCustom("dao1")

@@ -2,11 +2,6 @@ package com.thinkinginjava;
 
 import org.junit.Test;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/3/27
- */
 class Useful{
     public void f(){};
     public void g(){};

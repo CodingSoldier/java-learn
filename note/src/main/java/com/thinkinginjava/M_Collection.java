@@ -5,11 +5,7 @@ import java.util.*;
 import static java.util.Collections.binarySearch;
 import static org.eclipse.osgi.internal.debug.Debug.print;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018-04-23
- */
+
 public class M_Collection {
 }
 

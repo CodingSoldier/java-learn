@@ -3,11 +3,6 @@ package com.designpattern.observer.pushmodel;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/1/15
- */
 //抽象主题对象，虽然是抽象类，但是却没有抽象方法
 public abstract class Subject {
     //List<Observer>用于保存注册的观察者

@@ -5,12 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 /**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/10
- */
-
-/**
  * lang3要求JDK为1.5以上
  * http://blog.csdn.net/xuxiaoxie/article/details/52095930
  * CommonLang3中的StringUtils最全解析

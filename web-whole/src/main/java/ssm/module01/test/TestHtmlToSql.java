@@ -8,11 +8,6 @@ import ssm.module01.service.ServiceHtmlToSql;
 
 import javax.annotation.Resource;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/11/19
- */
 public class TestHtmlToSql extends BaseTest {
     @Resource
     private ServiceHtmlToSql serviceHtmlToSql;

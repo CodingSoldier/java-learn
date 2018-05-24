@@ -1,10 +1,5 @@
 package com.designpattern.observer.pullmodel;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/1/15
- */
 public class ConcreteSubject extends Subject{
     private String state;
 

@@ -8,11 +8,7 @@ import org.junit.Test;
 
 import java.io.InputStream;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/11/27
- */
+
 public class I_ParallelGateWay {
 
     private ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();

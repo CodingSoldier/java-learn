@@ -2,12 +2,6 @@ package com.thinkinginjava;
 
 import org.junit.Test;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/3/20
- */
-
 class A{
     public A(){
         System.out.println("AAAAA构造函数执行");

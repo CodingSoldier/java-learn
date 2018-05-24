@@ -3,11 +3,6 @@ package com.thinkinginjava;
 import com.commonsjar.beanutils.User;
 import org.junit.Test;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/3/18
- */
 public class C_Init{
     public void up(int i){
         System.out.println(i);

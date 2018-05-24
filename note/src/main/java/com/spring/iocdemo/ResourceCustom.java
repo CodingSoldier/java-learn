@@ -5,10 +5,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * @Author：cpq
- * @Description：自定义注解
- */
 //运行时执行
 @Retention(RetentionPolicy.RUNTIME)
 //适用于成员变量、方法

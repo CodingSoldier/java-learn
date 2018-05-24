@@ -5,11 +5,6 @@ import org.junit.Test;
 
 import java.util.Random;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/3/16
- */
 public class B_Operator {
 
     @Test

@@ -2,11 +2,6 @@ package com.commonsjar.beanutils;
 
 import java.util.Date;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/10
- */
 public class User {
     private String name;
     private String id;

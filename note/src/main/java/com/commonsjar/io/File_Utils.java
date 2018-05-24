@@ -5,11 +5,6 @@ import org.junit.Test;
 
 import java.io.File;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/16
- */
 // http://blog.csdn.net/zhaoyanjun6/article/details/54972773
 public class File_Utils {
 

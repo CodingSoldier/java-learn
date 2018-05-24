@@ -5,12 +5,6 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/1/26
- */
-
 /*
  java和redis整合，使用Jedis。
 

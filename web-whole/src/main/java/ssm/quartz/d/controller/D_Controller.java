@@ -12,11 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/3/4
- */
 @RequestMapping("/quartz")
 @Controller
 public class D_Controller {

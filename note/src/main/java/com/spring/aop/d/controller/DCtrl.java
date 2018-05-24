@@ -10,11 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/30
- */
 @Controller
 public class DCtrl {
     @Autowired

@@ -4,11 +4,6 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/3/11
- */
 public class A_String {
 
     public static void print(Object o){

@@ -4,11 +4,6 @@ import org.junit.Test;
 
 import java.io.File;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/15
- */
 //  http://blog.csdn.net/zhaoyanjun6/article/details/54581478
 //  http://www.runoob.com/java/java-file.html
 public class B_File {

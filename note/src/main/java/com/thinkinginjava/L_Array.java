@@ -3,11 +3,6 @@ package com.thinkinginjava;
 import java.util.Arrays;
 import java.util.Collections;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018-04-20
- */
 public class L_Array {
 }
 

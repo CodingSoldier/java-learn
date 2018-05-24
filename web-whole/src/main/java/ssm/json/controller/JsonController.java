@@ -10,11 +10,6 @@ import ssm.utils.OutPutData;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/18
- */
 @RequestMapping("/json")
 @Controller
 public class JsonController {

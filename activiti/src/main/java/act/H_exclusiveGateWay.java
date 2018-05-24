@@ -10,11 +10,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/11/27
- */
+
 public class H_exclusiveGateWay {
 
     private ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();

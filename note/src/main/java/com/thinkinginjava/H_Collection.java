@@ -4,12 +4,6 @@ import org.junit.Test;
 
 import java.util.*;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/3/31
- */
-
 class Snow{}
 class Powder extends Snow{}
 class Light extends Powder{}

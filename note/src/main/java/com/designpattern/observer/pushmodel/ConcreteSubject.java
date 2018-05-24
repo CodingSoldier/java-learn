@@ -1,10 +1,5 @@
 package com.designpattern.observer.pushmodel;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/1/15
- */
 //具体观察者角色类
 public class ConcreteSubject extends Subject {
     private String state;

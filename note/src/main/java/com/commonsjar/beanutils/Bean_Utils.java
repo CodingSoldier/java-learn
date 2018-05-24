@@ -11,10 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/10
- *
  * http://m.blog.csdn.net/u012426327/article/details/77744415
  * 第六十篇：commons-beanutils使用介绍
  */

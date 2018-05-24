@@ -2,10 +2,6 @@ package com.spring.iocdemo.scan;
 
 import com.spring.iocdemo.ComponentCustom;
 
-/**
- * @Author：cpq
- * @Description： 通过注解加入到IOC容器中
- */
 //@ComponentCustom(name = "dao222")
 //@ComponentCustom("dao22")
 @ComponentCustom

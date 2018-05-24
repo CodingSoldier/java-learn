@@ -15,11 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipInputStream;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/11/26
- */
+
 public class C_ProcessDefinition {
     ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
 

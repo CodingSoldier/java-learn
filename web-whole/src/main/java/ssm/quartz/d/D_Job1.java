@@ -8,11 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/3/4
- */
 @Service
 public class D_Job1 implements Job{
     @Override

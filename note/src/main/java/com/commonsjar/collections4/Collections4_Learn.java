@@ -11,11 +11,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/22
- */
+
 public class Collections4_Learn {
 
     //collections4提供了泛型，collection没提供

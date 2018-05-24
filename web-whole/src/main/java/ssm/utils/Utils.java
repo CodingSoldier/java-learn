@@ -3,11 +3,6 @@ package ssm.utils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/9
- */
 public class Utils {
     /**
      * 比较两个数字的值是否相等，==比较的是值， 1 == 1.00 的结果是 true

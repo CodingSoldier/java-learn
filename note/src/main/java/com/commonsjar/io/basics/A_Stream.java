@@ -5,11 +5,6 @@ import org.junit.Test;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/15
- */
 //  http://blog.csdn.net/zhaoyanjun6/article/details/54292148
 public class A_Stream {
     //FileInputStream将本地文件读取到内存

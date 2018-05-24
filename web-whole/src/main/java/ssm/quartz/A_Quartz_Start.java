@@ -4,10 +4,6 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 /**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/3/3
- *
  * https://www.yiibai.com/quartz/quartz-helloworld.html#
  */
 

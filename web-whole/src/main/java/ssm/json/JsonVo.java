@@ -5,11 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/18
- */
 public class JsonVo implements Serializable{
     private String p1;
     private List<String> l1;

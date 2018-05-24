@@ -10,11 +10,6 @@ import ssm.utils.OutPutData;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/11/25
- */
 @Controller
 @RequestMapping("/transactional")
 public class CtrlTransactional {

@@ -1,10 +1,5 @@
 package ssm.utils;
 
-/**
- * @Author：Chenpq
- * @Description：
- * @Date： 2017/11/9
- */
 public class OutPutData {
     private Object data;
     private boolean success;

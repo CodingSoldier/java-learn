@@ -3,11 +3,6 @@ package com.designpattern.observer.pullmodel;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/1/15
- */
 //抽象主题类
 public abstract class Subject {
     private List<Observer> list = new ArrayList<Observer>();

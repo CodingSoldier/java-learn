@@ -7,11 +7,6 @@ import org.junit.Test;
 
 import javax.annotation.Resource;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/11/25
- */
 public class T extends BaseTest {
     @Resource
     HrDepartmentMapper mapper;

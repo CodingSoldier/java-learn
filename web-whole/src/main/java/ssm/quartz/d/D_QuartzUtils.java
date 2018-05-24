@@ -7,11 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/3/4
- */
 @Component
 public class D_QuartzUtils {
     private static Scheduler scheduler;

@@ -7,11 +7,6 @@ import ssm.utils.BaseTest;
 
 import javax.annotation.Resource;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/11/25
- */
 public class TestTransactional extends BaseTest {
     @Resource
     private CtrlTransactional controller;

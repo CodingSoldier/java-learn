@@ -8,11 +8,6 @@ import org.quartz.impl.matchers.KeyMatcher;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/3/3
- */
 public class B_Quartz {
 
     public static void main(String[] args) throws Exception {

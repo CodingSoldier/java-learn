@@ -4,11 +4,6 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.junit.Test;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/11/5
- */
 public class A_createTableAndProcessEngine {
     /**
      * 通过代码的方式创建Activiti数据表（共25张表）和 流程引擎配置对象ProcessEngineConfiguration

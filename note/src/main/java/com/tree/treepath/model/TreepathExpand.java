@@ -2,11 +2,6 @@ package com.tree.treepath.model;
 
 import java.util.List;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/9
- */
 public class TreepathExpand extends Treepath{
     private List<TreepathExpand> childrenList;
 

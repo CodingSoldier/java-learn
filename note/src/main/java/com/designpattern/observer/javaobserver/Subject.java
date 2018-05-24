@@ -2,11 +2,6 @@ package com.designpattern.observer.javaobserver;
 
 import java.util.Vector;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/1/16
- */
 public class Subject {
     private boolean changed = false;
     private Vector obs;

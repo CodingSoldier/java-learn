@@ -13,11 +13,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/11/28
- */
+
 public class E_ProcessVariables {
     // 自动读取classPath里面的activiti.cfg.xml文件直接加载对应的资源
     private ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine(); // 所有对象都要使用的

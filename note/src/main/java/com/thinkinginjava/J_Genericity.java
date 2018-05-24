@@ -4,11 +4,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/4/7
- */
 public class J_Genericity {}
 
 class ClassAP<T> {}

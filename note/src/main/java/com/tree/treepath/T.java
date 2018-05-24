@@ -9,11 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/9
- */
 public class T extends BaseTest {
     @Autowired
     TreepathExpandMapper mapper;

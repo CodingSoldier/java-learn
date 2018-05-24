@@ -2,11 +2,6 @@ package ssm.quartz.d;
 
 import java.util.Map;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/3/4
- */
 public class D_QuartzModel {
     private String jobName;
     private String jobGroupName;

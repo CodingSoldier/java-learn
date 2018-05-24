@@ -4,11 +4,6 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/1/11
- */
 class MyBean {
     private String message;
 

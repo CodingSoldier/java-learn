@@ -3,11 +3,6 @@ package com.spring.aoplog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2018/1/13
- */
 @Controller
 public class Ctrl1 {
 

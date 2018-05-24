@@ -7,11 +7,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/12/16
- */
 //  http://blog.csdn.net/zhaoyanjun6/article/details/54911237
 public class D_Reader_Writer {
     /**

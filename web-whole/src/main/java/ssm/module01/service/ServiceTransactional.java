@@ -7,11 +7,6 @@ import ssm.module01.pojo.User;
 
 import javax.annotation.Resource;
 
-/**
- * @Author：陈丕迁
- * @Description： 事物测试
- * @Date： 2017/11/25
- */
 @Service
 public class ServiceTransactional {
     @Resource

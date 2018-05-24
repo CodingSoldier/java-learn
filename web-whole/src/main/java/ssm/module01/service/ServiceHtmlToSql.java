@@ -6,11 +6,6 @@ import ssm.module01.pojo.User;
 
 import javax.annotation.Resource;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/11/19
- */
 @Service
 public class ServiceHtmlToSql {
     @Resource

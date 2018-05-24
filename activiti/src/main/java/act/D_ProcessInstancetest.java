@@ -13,11 +13,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
-/**
- * @Author：陈丕迁
- * @Description：
- * @Date： 2017/11/27
- */
+
 public class D_ProcessInstancetest {
 
     // 自动读取classPath里面的activiti.cfg.xml文件直接加载对应的资源
