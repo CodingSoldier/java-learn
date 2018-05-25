@@ -1,0 +1,9 @@
+{
+    "num": {
+        "request": true,
+        "minValue": 1,
+        "maxValue": 1000000000,
+        "regex": "^\\d+$",
+        "message": "num:必填、正整数"
+    }
+}

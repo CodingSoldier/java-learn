@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>validateparams01</title>
+    <script src="/static/libs/jquery-2.0.3.js"></script>
+</head>
+<body>
+http://localhost:8080/static/page/validate.html
+    <br/>
+    <button id="g1">校验</button>
+    <div>结果：</div>
+    <div id="r1"></div>
+    <script >
+        $("#g1").on("click", function(){
+            $.ajax({
+                url: "/test01",
+                type: "get",
+                dataType: "json",
+                data: {
+                    // num: "123242",   //符合校验规则
+                    num: "12324232434535345",  //不不不符合校验规则
+                }
+            }).done(function(r){
+                $("#r1").text(r);
+            })
+        });
+    </script>
+
+</body>
+</html>
