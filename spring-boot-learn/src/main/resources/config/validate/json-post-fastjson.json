@@ -15,7 +15,7 @@
         request: true,   //fastjson能写注释，key可以不加双引号
         "minLength": 1,
         "maxLength": 2000,
-        "regex": "REGEX_FLOAT_10_2",
+        "regex": "REGEX_CHAR",
         "message": "name:错误提示",  //fastjson支持在此加逗号
     },
     "birthday": {

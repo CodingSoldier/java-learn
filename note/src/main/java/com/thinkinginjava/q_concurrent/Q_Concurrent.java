@@ -1,5 +1,7 @@
 package com.thinkinginjava.q_concurrent;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -2275,6 +2277,7 @@ class Test11 {
             new Writer(barrier).start();
     }
     static class Writer extends Thread{
+        static int num = 0;
         private CyclicBarrier cyclicBarrier;
         public Writer(CyclicBarrier cyclicBarrier) {
             this.cyclicBarrier = cyclicBarrier;
@@ -2282,17 +2285,22 @@ class Test11 {
 
         @Override
         public void run() {
-            System.out.println("线程"+Thread.currentThread().getName()+"正在写入数据...");
+            System.out.println(Thread.currentThread().getName()+"线程，"+"正在写入数据...");
             try {
                 Thread.sleep(5000);      //以睡眠来模拟写入数据操作
-                System.out.println("线程"+Thread.currentThread().getName()+"写入数据完毕，等待其他线程写入完毕");
-                cyclicBarrier.await();
+                System.out.println(Thread.currentThread().getName()+"线程，"+"写入数据完毕，等待其他线程写入完毕");
+                num = Integer.parseInt(StringUtils.substring(Thread.currentThread().getName(), -1));
+
+                //只有线程0、1、2执行await，但是线程3没有等待，线程3会继续往下执行。线程0、1、2一直卡住
+                if (num == 0 || num == 1 || num == 2){
+                    cyclicBarrier.await();
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }catch(BrokenBarrierException e){
                 e.printStackTrace();
             }
-            System.out.println("所有线程写入完毕，继续处理其他任务...");
+            System.out.println(Thread.currentThread().getName()+"线程，"+"继续处理其他任务...");
         }
     }
 }
@@ -2332,6 +2340,100 @@ class Test12 {
         }
     }
 }
+
+
+
+
+class Te334 {
+    public static void main(String[] args) {
+        int N = 4;
+        CyclicBarrier barrier  = new CyclicBarrier(N);
+
+        for(int i=0;i<N;i++) {
+            if(i<N-1)
+                new Writer(barrier).start();
+            else {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                new Writer(barrier).start();
+            }
+        }
+    }
+    static class Writer extends Thread{
+        private CyclicBarrier cyclicBarrier;
+        public Writer(CyclicBarrier cyclicBarrier) {
+            this.cyclicBarrier = cyclicBarrier;
+        }
+
+        @Override
+        public void run() {
+            System.out.println("线程"+Thread.currentThread().getName()+"正在写入数据...");
+            try {
+                Thread.sleep(5000);      //以睡眠来模拟写入数据操作
+                System.out.println("线程"+Thread.currentThread().getName()+"写入数据完毕，等待其他线程写入完毕");
+                try {
+                    cyclicBarrier.await(2000, TimeUnit.MILLISECONDS);
+                } catch (TimeoutException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }catch(BrokenBarrierException e){
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread().getName()+"所有线程写入完毕，继续处理其他任务...");
+        }
+    }
+}
+
+
+
+
+class Tessst {
+    public static void main(String[] args) {
+        int N = 4;
+        CyclicBarrier barrier  = new CyclicBarrier(N);
+        for(int i=0;i<N;i++) {
+            new Writer(barrier).start();
+        }
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("CyclicBarrier重用");
+        for(int i=0;i<N;i++) {
+            new Writer(barrier).start();
+        }
+    }
+    static class Writer extends Thread{
+        private CyclicBarrier cyclicBarrier;
+        public Writer(CyclicBarrier cyclicBarrier) {
+            this.cyclicBarrier = cyclicBarrier;
+        }
+        @Override
+        public void run() {
+            System.out.println("线程"+Thread.currentThread().getName()+"正在写入数据...");
+            try {
+                Thread.sleep(5000);      //以睡眠来模拟写入数据操作
+                System.out.println("线程"+Thread.currentThread().getName()+"写入数据完毕，等待其他线程写入完毕");
+
+                cyclicBarrier.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }catch(BrokenBarrierException e){
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread().getName()+"所有线程写入完毕，继续处理其他任务...");
+        }
+    }
+}
+
+
 
 // P724
 class Horse implements Runnable {
@@ -2415,4 +2517,6 @@ class HorseRace {
         new HorseRace(nHorses, pause);
     }
 }
+
+
 

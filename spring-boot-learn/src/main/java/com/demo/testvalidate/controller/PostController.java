@@ -18,7 +18,7 @@ public class PostController {
     @PostMapping("/p1/map")
     //@ParamsValidate(file = "json-post.json")    //getParser()也要修改
     //@ParamsValidate(file = "json-post-gson.json")   //getParser()也要修改
-    @ParamsValidate(file = "json-post-fastjson.json")  //getParser()也要修改
+    @ParamsValidate("json-post-fastjson.json")  //getParser()也要修改
     public Object p1(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, Object> map) throws Exception{
 
         return map;
