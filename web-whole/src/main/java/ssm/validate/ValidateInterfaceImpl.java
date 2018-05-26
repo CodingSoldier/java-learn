@@ -1,19 +1,17 @@
-package com.demo.testvalidate.service;
+package ssm.validate;
 
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.parser.Feature;
-import com.demo.paramsvalidate.ValidateInterface;
-import com.demo.paramsvalidate.bean.Parser;
-import com.demo.paramsvalidate.bean.ResultValidate;
-import com.demo.paramsvalidate.bean.ValidateConfig;
+import com.github.codingsoldier.paramsvalidate.ValidateInterface;
+import com.github.codingsoldier.paramsvalidate.bean.Parser;
+import com.github.codingsoldier.paramsvalidate.bean.ResultValidate;
+import com.github.codingsoldier.paramsvalidate.bean.ValidateConfig;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
+@Service
 public class ValidateInterfaceImpl implements ValidateInterface, InitializingBean {
 
     //不使用缓存
@@ -43,9 +41,9 @@ public class ValidateInterfaceImpl implements ValidateInterface, InitializingBea
      * 为了支持fastjson，搞得好坑爹
      */
     public Parser getParser(){
-        //return null;
+        return null;
         //return new Parser(Gson.class);
-        return new Parser(JSON.class, Feature[].class);
+        //return new Parser(JSON.class, Feature[].class);
     }
 
     //不使用缓存，返回空map即可
