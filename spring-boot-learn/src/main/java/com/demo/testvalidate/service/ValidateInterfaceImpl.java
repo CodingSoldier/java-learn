@@ -8,17 +8,22 @@ import com.demo.paramsvalidate.bean.Parser;
 import com.demo.paramsvalidate.bean.ResultValidate;
 import com.demo.paramsvalidate.bean.ValidateConfig;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Component
 public class ValidateInterfaceImpl implements ValidateInterface, InitializingBean {
 
     //不使用缓存
-    //@Autowired
-    //RedisTemplate redisTemplate;
+    @Autowired
+    RedisTemplate redisTemplate;
 
     //返回json文件基础路径。init.json文件必须放在此目录下
     @Override
@@ -60,11 +65,11 @@ public class ValidateInterfaceImpl implements ValidateInterface, InitializingBea
 
     }
 
-    //不使用缓存，可以不实现InitializingBean，不必实现本方法
-    @Override
-    public void afterPropertiesSet() throws Exception {
-
-    }
+    ////不使用缓存，可以不实现InitializingBean，不必实现本方法
+    //@Override
+    //public void afterPropertiesSet() throws Exception {
+    //
+    //}
 
 
     ////获取redis缓存中的校验规则
@@ -81,18 +86,19 @@ public class ValidateInterfaceImpl implements ValidateInterface, InitializingBea
     //    redisTemplate.opsForHash().putAll(key, json);
     //}
     //
-    ////项目启动时，删除redis缓存校验规则
-    //@Override
-    //public void afterPropertiesSet() throws Exception {
-    //    ExecutorService es = Executors.newFixedThreadPool(1);
-    //    es.submit(new Runnable() {
-    //        @Override
-    //        public void run() {
-    //            Set<String> keys = redisTemplate.keys(basePath().replace("/",":") + "*");
-    //            redisTemplate.delete(keys);
-    //        }
-    //    });
-    //}
+    //项目启动时，删除redis缓存校验规则
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        ExecutorService es = Executors.newFixedThreadPool(1);
+        es.execute(new Runnable() {
+            @Override
+            public void run() {
+                Set<String> keys = redisTemplate.keys(basePath().replace("/",":") + "*");
+                redisTemplate.delete(keys);
+            }
+        });
+        es.shutdown();
+    }
     //
     ////创建缓存key
     //private String createKey(ValidateConfig validateConfig){

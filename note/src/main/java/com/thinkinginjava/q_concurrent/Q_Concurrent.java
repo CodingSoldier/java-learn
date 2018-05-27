@@ -610,16 +610,67 @@ class EvenGenerator extends IntGenerator {
         EvenChecker.test(new EvenGenerator()); //new EvenGenerator()是公共资源，next()方法操作同一个变量
     }
 
-    //public synchronized int next() {  //死锁
-    //    ++currentEvenValue;
-    //    Thread.yield();
+    public synchronized int next() {  //死锁
+        ++currentEvenValue;
+        Thread.yield();   //导致死锁，他持有锁，又让步，其他线程根本不能拿到锁运行。只有当自己再次进入运行状态才能运行下去。
+        ++currentEvenValue;
+        System.out.println("*********");
+        return currentEvenValue;
+    }
+    //public int next() {
+    //    ++currentEvenValue; // Danger point here!
     //    ++currentEvenValue;
     //    return currentEvenValue;
     //}
-    public int next() {
-        ++currentEvenValue; // Danger point here!
-        ++currentEvenValue;
-        return currentEvenValue;
+}
+
+
+
+
+
+class AttemptLocking {
+    private ReentrantLock lock = new ReentrantLock();
+    public void untimed() {
+        /*tryLock()方法是有返回值的，它表示用来尝试获取锁，如果获取成功，则返回true，如果获取失败（即锁已被其他线程获取），则返回false，这个方法无论如何都会立即返回。在拿不到锁时不不不不不会一直在那等待。*/
+        boolean captured = lock.tryLock();
+        try {
+            System.out.println("tryLock(): " + captured);
+        } finally {
+            if(captured)
+                lock.unlock();
+        }
+    }
+    public void timed() {
+        boolean captured = false;
+        try {
+            captured = lock.tryLock(2, TimeUnit.SECONDS);
+        } catch(InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            System.out.println("tryLock(2, TimeUnit.SECONDS): " +
+                    captured);
+        } finally {
+            if(captured)
+                lock.unlock();
+        }
+    }
+    public static void main(String[] args) throws Exception{
+        final AttemptLocking al = new AttemptLocking();
+        al.untimed(); // True -- lock is available
+        al.timed();   // True -- lock is available
+        // Now create a separate task to grab the lock:
+        new Thread() {
+            { setDaemon(true); }
+            public void run() {
+                al.lock.lock();
+                System.out.println("acquired");
+            }
+        }.start();
+        TimeUnit.SECONDS.sleep(4);
+        Thread.yield(); // Give the 2nd task a chance
+        al.untimed(); // False -- lock grabbed by task
+        al.timed();   // False -- lock grabbed by task
     }
 }
 
