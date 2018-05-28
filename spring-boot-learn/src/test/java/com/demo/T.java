@@ -3,6 +3,7 @@ package com.demo;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.Feature;
+import com.demo.config.AppProp;
 import com.demo.paramsvalidate.Utils;
 import com.demo.testgenerator.mapper.TestGeneratorMapper;
 import com.demo.testgenerator.model.TestGenerator;
@@ -27,6 +28,8 @@ import java.util.Map;
 public class T {
 
     @Autowired
+    AppProp appProp;
+    @Autowired
     TestGeneratorMapper testGeneratorMapper;
 
     @Test
@@ -39,7 +42,7 @@ public class T {
 
     @Test
     public void test() {
-        System.out.println(JSON.parseObject(new StringBuffer().toString()));
+        System.out.println(appProp.getA());
     }
 
     @Test

@@ -1,0 +1,8 @@
+server:
+   port: 8081
+logging:
+  level:
+    root: info, WARN, DEBUG
+
+variable:
+  a: 开发环境
