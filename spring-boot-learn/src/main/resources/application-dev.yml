@@ -3,6 +3,8 @@ server:
 logging:
   level:
     root: info, WARN, DEBUG
+    com:
+      demo: DEBUG  #打印sql
 
 variable:
   a: 生产环境

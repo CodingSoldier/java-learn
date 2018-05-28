@@ -3,6 +3,7 @@ package com.demo.testvalidate.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.Feature;
+import com.demo.paramsvalidate.Utils;
 import com.demo.paramsvalidate.ValidateInterface;
 import com.demo.paramsvalidate.bean.Parser;
 import com.demo.paramsvalidate.bean.ResultValidate;
@@ -14,9 +15,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Component
 public class ValidateInterfaceImpl implements ValidateInterface, InitializingBean {
@@ -53,17 +51,17 @@ public class ValidateInterfaceImpl implements ValidateInterface, InitializingBea
         return new Parser(JSON.class, Feature[].class);
     }
 
-    //不使用缓存，返回空map即可
-    @Override
-    public Map<String, Object> getCache(ValidateConfig validateConfig) {
-        return new HashMap<>();
-    }
-
-    //不使用缓存，本方法可不处理
-    @Override
-    public void setCache(ValidateConfig validateConfig, Map<String, Object> json) {
-
-    }
+    ////不使用缓存，返回空map即可
+    //@Override
+    //public Map<String, Object> getCache(ValidateConfig validateConfig) {
+    //    return new HashMap<>();
+    //}
+    //
+    ////不使用缓存，本方法可不处理
+    //@Override
+    //public void setCache(ValidateConfig validateConfig, Map<String, Object> json) {
+    //
+    //}
 
     ////不使用缓存，可以不实现InitializingBean，不必实现本方法
     //@Override
@@ -72,43 +70,45 @@ public class ValidateInterfaceImpl implements ValidateInterface, InitializingBea
     //}
 
 
-    ////获取redis缓存中的校验规则
-    //@Override
-    //public Map<String, Object> getCache(ValidateConfig validateConfig) {
-    //    String key = createKey(validateConfig);
-    //    return redisTemplate.opsForHash().entries(key);
-    //}
-    //
-    ////设置redis校验规则到缓存中
-    //@Override
-    //public void setCache(ValidateConfig validateConfig, Map<String, Object> json) {
-    //    String key = createKey(validateConfig);
-    //    redisTemplate.opsForHash().putAll(key, json);
-    //}
-    //
+    //获取redis缓存中的校验规则
+    @Override
+    public Map<String, Object> getCache(ValidateConfig validateConfig) {
+        String key = createKey(validateConfig);
+        return redisTemplate.opsForHash().entries(key);
+    }
+
+    //设置redis校验规则到缓存中
+    @Override
+    public void setCache(ValidateConfig validateConfig, Map<String, Object> json) {
+        String key = createKey(validateConfig);
+        redisTemplate.opsForHash().putAll(key, json);
+    }
+
+
+    //创建缓存key
+    private String createKey(ValidateConfig validateConfig){
+        String basePath = Utils.trimBeginEndChar(basePath(), '/') + "/";
+        String fileName = validateConfig.getFile().substring(0, validateConfig.getFile().lastIndexOf(".json"));
+        fileName = Utils.trimBeginEndChar(fileName, '/');
+        String jsonKey = validateConfig.getKeyName();
+        jsonKey = Utils.isBlank(jsonKey) ? jsonKey : (":"+jsonKey);
+        String temp = basePath + fileName + jsonKey;
+        return temp.replaceAll("[\\/\\-]",":");
+    }
+
     //项目启动时，删除redis缓存校验规则
     @Override
     public void afterPropertiesSet() throws Exception {
-        ExecutorService es = Executors.newFixedThreadPool(1);
-        es.execute(new Runnable() {
-            @Override
-            public void run() {
-                Set<String> keys = redisTemplate.keys(basePath().replace("/",":") + "*");
-                redisTemplate.delete(keys);
-            }
-        });
-        es.shutdown();
+        //ExecutorService es = Executors.newFixedThreadPool(1);
+        //es.execute(new Runnable() {
+        //    @Override
+        //    public void run() {
+        //        Set<String> keys = redisTemplate.keys(basePath().replace("/",":") + "*");
+        //        redisTemplate.delete(keys);
+        //    }
+        //});
+        //es.shutdown();
     }
-    //
-    ////创建缓存key
-    //private String createKey(ValidateConfig validateConfig){
-    //    String basePath = Utils.trimBeginEndChar(basePath(), '/') + "/";
-    //    String fileName = validateConfig.getFile().substring(0, validateConfig.getFile().lastIndexOf(".json"));
-    //    fileName = Utils.trimBeginEndChar(fileName, '/');
-    //    String jsonKey = validateConfig.getKeyName();
-    //    jsonKey = Utils.isBlank(jsonKey) ? jsonKey : (":"+jsonKey);
-    //    String temp = basePath + fileName + jsonKey;
-    //    return temp.replaceAll("[\\/\\-]",":");
-    //}
+
 
 }
