@@ -7,12 +7,12 @@ import org.springframework.core.env.Environment;
 
 @Configuration
 public class AppProp {
-    @Value("${ds.userName}")
+    @Value("${spring.datasource.username}")
     private String userName;
-    @Value("${ds.password}")
+    @Value("${spring.datasource.password}")
     private String password;
 
-    @Value("${ds.url}")
+    @Value("${spring.datasource.url}")
     private String url;
 
     @Value("${variable.a}")

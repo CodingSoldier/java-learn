@@ -4,20 +4,38 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.Feature;
 import com.demo.paramsvalidate.Utils;
+import com.demo.testgenerator.mapper.TestGeneratorMapper;
+import com.demo.testgenerator.model.TestGenerator;
+import com.demo.testgenerator.model.TestGeneratorExample;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class T {
 
+    @Autowired
+    TestGeneratorMapper testGeneratorMapper;
 
+    @Test
+    public void test11(){
+        TestGeneratorExample example = new TestGeneratorExample();
+
+        List<TestGenerator> l = testGeneratorMapper.selectByExample(example);
+        System.out.println(l);
+    }
 
     @Test
     public void test() {

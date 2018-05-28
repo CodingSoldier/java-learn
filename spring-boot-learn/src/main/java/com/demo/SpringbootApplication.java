@@ -3,6 +3,7 @@ package com.demo;
 
 import com.demo.config.AppProp;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -11,7 +12,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  * 自动装配 web 依赖的环境
  **/
 //@ComponentScan("com.demo")
-//@EnableAutoConfiguration
+@EnableAutoConfiguration
 @SpringBootApplication
 public class SpringbootApplication {
     public static ConfigurableApplicationContext context;
