@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.boy.mapper.BoyMapper">
+  <cache type="com.demo.redis.MybatisRedisCache"/>
+  <resultMap id="BaseResultMap" type="com.demo.boy.model.Boy">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="big_name" jdbcType="VARCHAR" property="bigName" />
+    <result column="loyalty" jdbcType="INTEGER" property="loyalty" />
+    <result column="yan_val" jdbcType="REAL" property="yanVal" />
+    <result column="small_name" jdbcType="VARCHAR" property="smallName" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, big_name, loyalty, yan_val, small_name
+  </sql>
+  <select id="selectByExample" parameterType="com.demo.boy.model.BoyExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from boy
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from boy
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from boy
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.demo.boy.model.BoyExample">
+    delete from boy
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.demo.boy.model.Boy">
+    insert into boy (id, big_name, loyalty, 
+      yan_val, small_name)
+    values (#{id,jdbcType=VARCHAR}, #{bigName,jdbcType=VARCHAR}, #{loyalty,jdbcType=INTEGER}, 
+      #{yanVal,jdbcType=REAL}, #{smallName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.demo.boy.model.Boy">
+    insert into boy
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="bigName != null">
+        big_name,
+      </if>
+      <if test="loyalty != null">
+        loyalty,
+      </if>
+      <if test="yanVal != null">
+        yan_val,
+      </if>
+      <if test="smallName != null">
+        small_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="bigName != null">
+        #{bigName,jdbcType=VARCHAR},
+      </if>
+      <if test="loyalty != null">
+        #{loyalty,jdbcType=INTEGER},
+      </if>
+      <if test="yanVal != null">
+        #{yanVal,jdbcType=REAL},
+      </if>
+      <if test="smallName != null">
+        #{smallName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.demo.boy.model.BoyExample" resultType="java.lang.Long">
+    select count(*) from boy
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update boy
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bigName != null">
+        big_name = #{record.bigName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loyalty != null">
+        loyalty = #{record.loyalty,jdbcType=INTEGER},
+      </if>
+      <if test="record.yanVal != null">
+        yan_val = #{record.yanVal,jdbcType=REAL},
+      </if>
+      <if test="record.smallName != null">
+        small_name = #{record.smallName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update boy
+    set id = #{record.id,jdbcType=VARCHAR},
+      big_name = #{record.bigName,jdbcType=VARCHAR},
+      loyalty = #{record.loyalty,jdbcType=INTEGER},
+      yan_val = #{record.yanVal,jdbcType=REAL},
+      small_name = #{record.smallName,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.demo.boy.model.Boy">
+    update boy
+    <set>
+      <if test="bigName != null">
+        big_name = #{bigName,jdbcType=VARCHAR},
+      </if>
+      <if test="loyalty != null">
+        loyalty = #{loyalty,jdbcType=INTEGER},
+      </if>
+      <if test="yanVal != null">
+        yan_val = #{yanVal,jdbcType=REAL},
+      </if>
+      <if test="smallName != null">
+        small_name = #{smallName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.demo.boy.model.Boy">
+    update boy
+    set big_name = #{bigName,jdbcType=VARCHAR},
+      loyalty = #{loyalty,jdbcType=INTEGER},
+      yan_val = #{yanVal,jdbcType=REAL},
+      small_name = #{smallName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

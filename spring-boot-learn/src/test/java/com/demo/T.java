@@ -3,11 +3,22 @@ package com.demo;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.Feature;
+import com.demo.boy.mapper.BoyExpandMapper;
+import com.demo.boy.mapper.BoyMapper;
+import com.demo.boy.model.Boy;
+import com.demo.boy.model.BoyExample;
 import com.demo.config.AppProp;
+import com.demo.girl.mapper.GirlExpandMapper;
+import com.demo.girl.mapper.GirlMapper;
 import com.demo.paramsvalidate.Utils;
+import com.demo.sysresource.mapper.SysResourceMapper;
+import com.demo.sysresource.model.SysResource;
+import com.demo.sysresource.model.SysResourceExample;
+import com.demo.sysrole.mapper.SysRoleMapper;
+import com.demo.sysuser.mapper.SysUserExpandMapper;
+import com.demo.sysuser.mapper.SysUserMapper;
+import com.demo.sysuser.model.SysUser;
 import com.demo.testgenerator.mapper.TestGeneratorMapper;
-import com.demo.testgenerator.model.TestGenerator;
-import com.demo.testgenerator.model.TestGeneratorExample;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.junit.Test;
@@ -31,13 +42,110 @@ public class T {
     AppProp appProp;
     @Autowired
     TestGeneratorMapper testGeneratorMapper;
+    @Autowired
+    SysUserExpandMapper sysUserExpandMapper;
+    @Autowired
+    SysUserMapper sysUserMapper;
+    @Autowired
+    SysRoleMapper sysRoleMapper;
+    @Autowired
+    SysResourceMapper sysResourceMapper;
+    @Autowired
+    BoyMapper boyMapper;
+    @Autowired
+    BoyExpandMapper boyExpandMapper;
+    @Autowired
+    GirlMapper girlMapper;
+    @Autowired
+    GirlExpandMapper girlExpandMapper;
 
     @Test
-    public void test11(){
-        TestGeneratorExample example = new TestGeneratorExample();
+    public void selectBoth1(){
+        List<Map<String, Object>> l = girlExpandMapper.selectBoth(60f);
+        System.out.println(l.toString());
 
-        List<TestGenerator> l = testGeneratorMapper.selectByExample(example);
-        System.out.println(l);
+        Boy boy = new Boy();
+        boy.setLoyalty(0);
+        BoyExample example = new BoyExample();
+        BoyExample.Criteria criteria = example.createCriteria();
+        criteria.andBigNameEqualTo("野猪佩奇");
+        boyMapper.updateByExampleSelective(boy, example);
+
+        l =  girlExpandMapper.selectBoth(60f);
+        System.out.println(l.toString());
+
+    }
+
+    @Test
+    public void changLoyaltyByName(){
+
+        Boy boy = new Boy();
+        boy.setLoyalty(11);
+        BoyExample example = new BoyExample();
+        BoyExample.Criteria criteria = example.createCriteria();
+        criteria.andBigNameEqualTo("野猪佩奇");
+        //criteria.andSmallNameEqualTo("佩奇");
+
+        boyMapper.updateByExampleSelective(boy, example);
+
+    }
+
+    @Test
+    public void test22(){
+        //List<Map<String, Object>> l = sysUserExpandMapper.selectUserRole(0002);
+        //System.out.println(l.toString());
+    }
+
+    @Test
+    public void test44(){
+        //List<Map<String, Object>> l = sysUserExpandMapper.selectUserRole(0002);
+        //System.out.println(l.toString());
+    }
+
+
+    @Test
+    public void test33(){
+        SysUser sysUser = new SysUser();
+        sysUser.setPassword("ppppppppppp");
+        sysUser.setId("GASY04");
+        sysUserMapper.updateByPrimaryKeySelective(sysUser);
+    }
+
+    @Test
+    public void test3344(){
+        SysUser sysUser = new SysUser();
+        sysUser.setPassword("ppppppppppp");
+        sysUser.setId("GASY0411111111");
+        sysUserMapper.insertSelective(sysUser);
+    }
+
+    //缓存失效测试
+    @Test
+    public void t55555(){
+        SysResource sysResource = new SysResource();
+        sysResource.setpId("1");
+        SysResourceExample example = new SysResourceExample();
+        SysResourceExample.Criteria criteria = example.createCriteria();
+        criteria.andSysTypeEqualTo(1111);
+        sysResourceMapper.updateByExampleSelective(sysResource, example);
+
+        //List<Map<String, Object>> l = sysUserExpandMapper.selectUserRole("0002");
+        //System.out.println(l.toString());
+
+    }
+    //缓存失效测试
+    @Test
+    public void t666(){
+
+        List<Map<String, Object>> l = sysUserExpandMapper.selectUserRole("0002");
+        System.out.println(l.toString());
+
+        //SysRole sysRole = new SysRole();
+        //sysRole.setId("0001");
+        ////sysRole.setSysType(2);
+        //sysRole.setRemark("2");
+        //sysRoleMapper.updateByPrimaryKey(sysRole);
+
     }
 
     @Test

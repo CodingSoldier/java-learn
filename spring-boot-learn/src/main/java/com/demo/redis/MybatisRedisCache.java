@@ -65,7 +65,6 @@ public class MybatisRedisCache implements Cache {
     }
     /**
      * Remove cached query result from redis
-     *
      * @param key
      * @return
      */
