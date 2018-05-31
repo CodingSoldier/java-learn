@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.testgenerator.mapper.TestGeneratorMapper">
+
+  <cache type="com.demo.redis.MybatisRedisCache"/>
+
+  <resultMap id="BaseResultMap" type="com.demo.testgenerator.model.TestGenerator">
+    <id column="id_test" jdbcType="VARCHAR" property="idTest" />
+    <result column="idUpChar" jdbcType="VARCHAR" property="idUpChar" />
+    <result column="UpTwoInt" jdbcType="TINYINT" property="upTwoInt" />
+    <result column="lower_Up_Date" jdbcType="DATE" property="lowerUpDate" />
+    <result column="ID_ALL_DOUBLE" jdbcType="DOUBLE" property="idAllDouble" />
+    <result column="First_two_Three" jdbcType="INTEGER" property="firstTwoThree" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id_test, idUpChar, UpTwoInt, lower_Up_Date, ID_ALL_DOUBLE, First_two_Three
+  </sql>
+  <select id="selectByExample" parameterType="com.demo.testgenerator.model.TestGeneratorExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from test_generator
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from test_generator
+    where id_test = #{idTest,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from test_generator
+    where id_test = #{idTest,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.demo.testgenerator.model.TestGeneratorExample">
+    delete from test_generator
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.demo.testgenerator.model.TestGenerator">
+    insert into test_generator (id_test, idUpChar, UpTwoInt, 
+      lower_Up_Date, ID_ALL_DOUBLE, First_two_Three
+      )
+    values (#{idTest,jdbcType=VARCHAR}, #{idUpChar,jdbcType=VARCHAR}, #{upTwoInt,jdbcType=TINYINT}, 
+      #{lowerUpDate,jdbcType=DATE}, #{idAllDouble,jdbcType=DOUBLE}, #{firstTwoThree,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.demo.testgenerator.model.TestGenerator">
+    insert into test_generator
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="idTest != null">
+        id_test,
+      </if>
+      <if test="idUpChar != null">
+        idUpChar,
+      </if>
+      <if test="upTwoInt != null">
+        UpTwoInt,
+      </if>
+      <if test="lowerUpDate != null">
+        lower_Up_Date,
+      </if>
+      <if test="idAllDouble != null">
+        ID_ALL_DOUBLE,
+      </if>
+      <if test="firstTwoThree != null">
+        First_two_Three,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="idTest != null">
+        #{idTest,jdbcType=VARCHAR},
+      </if>
+      <if test="idUpChar != null">
+        #{idUpChar,jdbcType=VARCHAR},
+      </if>
+      <if test="upTwoInt != null">
+        #{upTwoInt,jdbcType=TINYINT},
+      </if>
+      <if test="lowerUpDate != null">
+        #{lowerUpDate,jdbcType=DATE},
+      </if>
+      <if test="idAllDouble != null">
+        #{idAllDouble,jdbcType=DOUBLE},
+      </if>
+      <if test="firstTwoThree != null">
+        #{firstTwoThree,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.demo.testgenerator.model.TestGeneratorExample" resultType="java.lang.Long">
+    select count(*) from test_generator
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update test_generator
+    <set>
+      <if test="record.idTest != null">
+        id_test = #{record.idTest,jdbcType=VARCHAR},
+      </if>
+      <if test="record.idUpChar != null">
+        idUpChar = #{record.idUpChar,jdbcType=VARCHAR},
+      </if>
+      <if test="record.upTwoInt != null">
+        UpTwoInt = #{record.upTwoInt,jdbcType=TINYINT},
+      </if>
+      <if test="record.lowerUpDate != null">
+        lower_Up_Date = #{record.lowerUpDate,jdbcType=DATE},
+      </if>
+      <if test="record.idAllDouble != null">
+        ID_ALL_DOUBLE = #{record.idAllDouble,jdbcType=DOUBLE},
+      </if>
+      <if test="record.firstTwoThree != null">
+        First_two_Three = #{record.firstTwoThree,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update test_generator
+    set id_test = #{record.idTest,jdbcType=VARCHAR},
+      idUpChar = #{record.idUpChar,jdbcType=VARCHAR},
+      UpTwoInt = #{record.upTwoInt,jdbcType=TINYINT},
+      lower_Up_Date = #{record.lowerUpDate,jdbcType=DATE},
+      ID_ALL_DOUBLE = #{record.idAllDouble,jdbcType=DOUBLE},
+      First_two_Three = #{record.firstTwoThree,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.demo.testgenerator.model.TestGenerator">
+    update test_generator
+    <set>
+      <if test="idUpChar != null">
+        idUpChar = #{idUpChar,jdbcType=VARCHAR},
+      </if>
+      <if test="upTwoInt != null">
+        UpTwoInt = #{upTwoInt,jdbcType=TINYINT},
+      </if>
+      <if test="lowerUpDate != null">
+        lower_Up_Date = #{lowerUpDate,jdbcType=DATE},
+      </if>
+      <if test="idAllDouble != null">
+        ID_ALL_DOUBLE = #{idAllDouble,jdbcType=DOUBLE},
+      </if>
+      <if test="firstTwoThree != null">
+        First_two_Three = #{firstTwoThree,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id_test = #{idTest,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.demo.testgenerator.model.TestGenerator">
+    update test_generator
+    set idUpChar = #{idUpChar,jdbcType=VARCHAR},
+      UpTwoInt = #{upTwoInt,jdbcType=TINYINT},
+      lower_Up_Date = #{lowerUpDate,jdbcType=DATE},
+      ID_ALL_DOUBLE = #{idAllDouble,jdbcType=DOUBLE},
+      First_two_Three = #{firstTwoThree,jdbcType=INTEGER}
+    where id_test = #{idTest,jdbcType=VARCHAR}
+  </update>
+</mapper>

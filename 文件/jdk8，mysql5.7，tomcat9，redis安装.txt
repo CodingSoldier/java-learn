@@ -19,10 +19,10 @@ tar -zxvf jdk-7u71-linux-i586.tar.gz -C /usr/local/java
 vim /etc/profile
 添加：
 #set java environment
-JAVA_HOME=/usr/local/java/jdk1.8.0_162
-CLASSPATH=.:$JAVA_HOME/lib.tools.jar
-PATH=$JAVA_HOME/bin:$PATH
-export JAVA_HOME CLASSPATH PATH
+export JAVA_HOME=/usr/local/java/jdk1.8.0_171
+export JRE_HOME=${JAVA_HOME}/jre
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+export  PATH=${JAVA_HOME}/bin:$PATH
 
 重新加载配置文件：【否则环境变量不会重新执行】
 source /etc/profile
@@ -193,6 +193,75 @@ mysql> flush privileges;
 
 
 
+
+*****************linux6, mysql5.5*********************
+
+下载MySql
+wget https://cdn.mysql.com//Downloads/MySQL-5.5/MySQL-5.5.60-1.el6.x86_64.rpm-bundle.tar
+解压
+tar -xvf MySQL-5.5.60-1.el6.x86_64.rpm-bundle.tar
+安装server
+rmp -ivh MySQL-server-5.5.60-1.el6.x86_64.rpm
+安装client
+rpm -ivh MySQL-client-5.5.60-1.el6.x86_64.rpm
+启动mysql
+cd /usr/bin
+./mysqld_safe &
+登录mysql
+	mysql -u root -p  回车，输入密码，默认密码为空
+再次改变密码
+SET PASSWORD = PASSWORD('cpq..123');
+
+远程登录。检测端口
+如果远程连接不上Mysql，检查下默认的3306端口是否允许访问：
+[root@localhost /]# iptables -L -n|grep 3306
+ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            state NEW tcp dpt:3306
+这表示允许访问
+
+如果没有，则需要允许此端口访问，这是临时的允许访问，需要保存防火墙的策略：
+[root@localhost /]# iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 3306 -j ACCEPT
+
+保存策略:
+[root@localhost /]# iptables-save > iptables.rules
+
+重新加载策略：
+[root@localhost /]# iptables-restore iptables.rules
+
+显示服务列表
+chkconfig --list
+如果看到mysql的服务，并且3,4,5都是on的话则成功
+
+设置 MySQL 的字符集为 UTF-8：
+vim /etc/my.cnf，加入下边设置：
+	[client]
+	default-character-set=utf8
+	[mysql]
+	default-character-set=utf8
+	[mysqld]
+	collation-server = utf8_unicode_ci
+	init-connect=’SET NAMES utf8′
+	character-set-server = utf8
+
+再次查看字符集：
+mysql> show variables like '%character%';
++--------------------------+----------------------------+
+| Variable_name            | Value                      |
++--------------------------+----------------------------+
+| character_set_client    | utf8                      |
+| character_set_connection | utf8                      |
+| character_set_database  | utf8                      |
+| character_set_filesystem | binary                    |
+| character_set_results    | utf8                      |
+| character_set_server    | utf8                      |
+| character_set_system    | utf8                      |
+| character_sets_dir      | /usr/share/mysql/charsets/ |
++--------------------------+----------------------------+
+
+*****************linux6, mysql5.5*********************
+
+
+
+
 *****************tomcat，start*********************
 1、apache-tomcat-9.0.2.tar.gz上传到/usr/local/tools
 2、创建tomcat目录  mkdir /usr/local/tomcat
@@ -292,6 +361,9 @@ yum install -y gcc-c++
 4、安装 make PREFIX=/usr/local/redis install  若redis目录不存在，会自动创建
 5、cd /usr/local/redis  拷贝编译目录的配置文件到安装目录 cp /usr/local/tools/redis-4.0.7/redis.conf /usr/local/redis
 6、修改配置文件为服务端启动 vim redis.conf  将daemonize 改为 yes
+   允许远程链接：
+        注释掉  bind 127.0.0.1
+        protected-mode 改为 no
 7、redis服务端启动，需要根据配置文件启动  ./bin/redis-server ./redis.conf
 8、新开一个会话 cd /usr/local/redis  开启redis客户端，不需要配置文件就可开启客户端 ./bin/redis-cli
 9、redis服务关闭 ./bin/redis-cli shutdown
@@ -300,62 +372,63 @@ yum install -y gcc-c++
 # chkconfig: 2345 10 90
 # description: Start and Stop redis
 
-PATH=/usr/local/bin:/sbin:/usr/bin:/bin
+REDISPORT=6379
+EXEC=/usr/local/redis/bin/redis-server
+CLIEXEC=/usr/local/redis/bin/redis-cli
 
-REDISPORT=6379 #实际环境而定
-EXEC=/usr/local/redis/bin/redis-server #实际环境而定
-REDIS_CLI=/usr/local/redis/bin/redis-cli #实际环境而定
-
-#在redis启动后会生成，有可能是/var/run/redis.pid
-PIDFILE=/var/run/redis_${REDISPORT}.pid  
-CONF="/usr/local/redis/redis.conf" #实际环境而定
+PIDFILE=/var/run/redis_${REDISPORT}.pid
+CONF="/usr/local/redis/redis.conf"
 
 case "$1" in
-        start)
-                if [ -f $PIDFILE ]
-                then
-                        echo "$PIDFILE exists, process is already running or crashed."
-                else
-                        echo "Starting Redis server..."
-                        $EXEC $CONF
-                fi
-                if [ "$?"="0" ]
-                then
-                        echo "Redis is running..."
-                fi
-                ;;
-        stop)
-                if [ ! -f $PIDFILE ]
-                then
-                        echo "$PIDFILE exists, process is not running."
-                else
-                        PID=$(cat $PIDFILE)
-                        echo "Stopping..."
-                        $REDIS_CLI -p $REDISPORT SHUTDOWN
-                        while [ -x $PIDFILE ]
-                        do
-                                echo "Waiting for Redis to shutdown..."
-                                sleep 1
-                        done
-                        echo "Redis stopped"
-                fi
-                ;;
-        restart|force-reload)
-                ${0} stop
-                ${0} start
-                ;;
-        *)
-                echo "Usage: /etc/init.d/redis {start|stop|restart|force-reload}" >&2
-                exit 1
+    start)
+        if [ -f $PIDFILE ]
+        then
+                echo "$PIDFILE exists, process is already running or crashed"
+        else
+                echo "Starting Redis server..."
+                $EXEC $CONF &
+        fi
+        ;;
+    stop)
+        if [ ! -f $PIDFILE ]
+        then
+                echo "$PIDFILE does not exist, process is not running"
+        else
+                PID=$(cat $PIDFILE)
+                echo "Stopping ..."
+                $CLIEXEC -p $REDISPORT shutdown
+                while [ -x /proc/${PID} ]
+                do
+                    echo "Waiting for Redis to shutdown ..."
+                    sleep 1
+                done
+                echo "Redis stopped"
+        fi
+        ;;
+    restart)
+        "$0" stop
+        sleep 3
+        "$0" start
+        ;;
+    *)
+        echo "Please use start or stop or restart as first argument"
+        ;;
 esac
 
-11、chmod +x /etc/init.d/redis
-12、# 尝试启动或停止redis
+
+11、chmod a+x /etc/init.d/redis
+   	a+x 是给所有人加上可执行权限，包括所有者，所属组，和其他人
+   	o+x 只是给其他人加上可执行权限
+
+12、 设置为开机自启动服务器
+    chkconfig redis on
+
+13、# 尝试启动或停止redis
 	service redis start
 	service redis stop
-13、设置开机启动未能成功
+14、设置开机启动未能成功
 
-14、java和redis整合，使用Jedis，
+15、java和redis整合，使用Jedis，
 	查看6379端口是否开启  iptables -L -n|grep 6379
 	开启6379端口  iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 6379 -j ACCEPT
 	保存策略：iptables-save > iptables.rules
