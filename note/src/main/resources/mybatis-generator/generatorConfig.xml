@@ -14,7 +14,7 @@
 
 		<!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://localhost:3306/mybatis?useUnicode=false&amp;characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT" userId="root"
+			connectionURL="jdbc:mysql://184.170.220.217:3306/cpq?useUnicode=false&amp;characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT" userId="root"
 			password="cpq..123">
 		</jdbcConnection>
 
