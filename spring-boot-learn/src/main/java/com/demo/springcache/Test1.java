@@ -21,7 +21,8 @@ public class Test1 {
 
     @Test
     public void get(){
-        springCacheService.selectByPrimaryKey("f450a389-fd4b-4a24-87ec-ae4188fccfab");
+        SpringCache sc = springCacheService.selectByPrimaryKey("2626218d-c370-4817-be18-e6c60d096268");
+        System.out.println(sc.toString());
     }
 
     @Test
@@ -38,8 +39,8 @@ public class Test1 {
     @Test
     public void update(){
         SpringCache springCache = new SpringCache();
-        springCache.setId("acec0fe6-9591-42e3-87f8-c64799b04153");
-        springCache.setName("dfgadf333");
+        springCache.setId("2626218d-c370-4817-be18-e6c60d096268");
+        springCache.setName("nnnnnnnnnnnn111111111");
         springCache.setNum(new Random().nextInt(100));
         springCache.setIsTrue(new Random().nextInt(100) % 2 == 0);
         springCache.setDate(new Date());
@@ -48,7 +49,7 @@ public class Test1 {
 
     @Test
     public void delete(){
-        springCacheService.deleteByPrimaryKey("2b1a3605-0197-455e-98bd-6950006539d4");
+        springCacheService.deleteByPrimaryKey("2626218d-c370-4817-be18-e6c60d096268");
     }
 
     @Test

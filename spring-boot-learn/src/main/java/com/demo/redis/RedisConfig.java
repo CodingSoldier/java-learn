@@ -18,7 +18,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 
 @Configuration
-@EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
 
     //@Value("${spring.redis.database}")
@@ -59,20 +58,20 @@ public class RedisConfig extends CachingConfigurerSupport {
             return sb.toString();
         };
     }
-
-    @Bean
-    public KeyGenerator keyGeneratorCustom() {
-        return (target, method, params) -> {
-            //StringBuffer是线程安全的
-            StringBuffer sb = new StringBuffer();
-            sb.append(target.getClass().getName());
-            sb.append(method.getName());
-            for (Object obj : params) {
-                sb.append(obj.toString());
-            }
-            return sb.toString();
-        };
-    }
+    //
+    //@Bean
+    //public KeyGenerator keyGeneratorCustom() {
+    //    return (target, method, params) -> {
+    //        //StringBuffer是线程安全的
+    //        StringBuffer sb = new StringBuffer();
+    //        sb.append(target.getClass().getName());
+    //        sb.append(method.getName());
+    //        for (Object obj : params) {
+    //            sb.append(obj.toString());
+    //        }
+    //        return sb.toString();
+    //    };
+    //}
 
     @Bean
     public CacheManager cacheManager(RedisTemplate redisTemplate) {

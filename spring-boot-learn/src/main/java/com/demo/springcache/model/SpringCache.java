@@ -55,4 +55,15 @@ public class SpringCache implements Serializable {
     public void setIsTrue(Boolean isTrue) {
         this.isTrue = isTrue;
     }
+
+    @Override
+    public String toString() {
+        return "SpringCache{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", num=" + num +
+                ", date=" + date +
+                ", isTrue=" + isTrue +
+                '}';
+    }
 }
