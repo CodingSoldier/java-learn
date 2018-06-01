@@ -15,12 +15,14 @@ public class SpringCacheService {
     @Autowired
     SpringCacheMapper springCacheMapper;
 
+    //通过@来查找bean
     @Cacheable(value = RedisConst.SPRING_CACHE, key = "@redisConst.SPRING_CACHE + #id" )
     public SpringCache selectByPrimaryKey(String id){
         return springCacheMapper.selectByPrimaryKey(id);
     }
 
-    @CachePut(value = RedisConst.SPRING_CACHE, key = "@redisConst.SPRING_CACHE + #record.getId()")
+    //@CachePut(value = RedisConst.SPRING_CACHE, key = "@redisConst.SPRING_CACHE + #record.getId()")
+    @CachePut(value = RedisConst.SPRING_CACHE)
     public SpringCache insertSelective(SpringCache record){
         springCacheMapper.insertSelective(record);
         return record;

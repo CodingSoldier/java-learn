@@ -20,58 +20,22 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig extends CachingConfigurerSupport {
 
-    //@Value("${spring.redis.database}")
-    //private int database;
-    //
-    //@Value("${spring.redis.host}")
-    //private String host;
-    //
-    //@Value("${spring.redis.port}")
-    //private int port;
-    //
-    //@Value("${spring.redis.timeout}")
-    //private int timeout;
-    //
-    //@Value("${spring.redis.pool.max-idle}")
-    //private int maxidle;
-    //
-    //@Value("${spring.redis.pool.min-idle}")
-    //private int minidle;
-    //
-    //@Value("${spring.redis.pool.max-active}")
-    //private int maxActive;
-    //
-    //@Value("${spring.redis.pool.max-wait}")
-    //private long maxWait;
-
-    //默认key生成策略为类全名+方法名+参数
+    //不建议使用，默认key生成策略为类全名+方法名+参数
     @Bean
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
             //StringBuffer是线程安全的
             StringBuffer sb = new StringBuffer();
             sb.append(target.getClass().getName());
+            sb.append(":");
             sb.append(method.getName());
             for (Object obj : params) {
+                sb.append(":");
                 sb.append(obj.toString());
             }
-            return sb.toString();
+            return sb.toString().replaceAll("\\.", ":");
         };
     }
-    //
-    //@Bean
-    //public KeyGenerator keyGeneratorCustom() {
-    //    return (target, method, params) -> {
-    //        //StringBuffer是线程安全的
-    //        StringBuffer sb = new StringBuffer();
-    //        sb.append(target.getClass().getName());
-    //        sb.append(method.getName());
-    //        for (Object obj : params) {
-    //            sb.append(obj.toString());
-    //        }
-    //        return sb.toString();
-    //    };
-    //}
 
     @Bean
     public CacheManager cacheManager(RedisTemplate redisTemplate) {
