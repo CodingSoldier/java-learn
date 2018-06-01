@@ -1,19 +1,25 @@
 package com.demo.redis;
 
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import redis.clients.jedis.JedisPoolConfig;
 
 
 @Configuration
-public class RedisConfig {
+@EnableCaching
+public class RedisConfig extends CachingConfigurerSupport {
 
     @Value("${spring.redis.database}")
     private int database;
@@ -39,25 +45,29 @@ public class RedisConfig {
     @Value("${spring.redis.pool.max-wait}")
     private long maxWait;
 
-    @Bean
-    JedisConnectionFactory jedisConnectionFactory() {
-        JedisPoolConfig config = new JedisPoolConfig();
-//      最大空闲连接数, 默认8个
-        config.setMaxIdle(maxidle);
-//      最小空闲连接数, 默认0
-        config.setMinIdle(minidle);
-//      最大连接数, 默认8个
-        config.setMaxTotal(maxActive);
-//      获取连接时的最大等待毫秒数(如果设置为阻塞时BlockWhenExhausted),如果超时就抛异常, 小于零:阻塞不确定的时间,  默认-1
-        config.setMaxWaitMillis(maxWait);
+    //默认key生成策略为类全名+方法名+参数
+    //@Bean
+    //public KeyGenerator keyGenerator() {
+    //    return new KeyGenerator() {
+    //        @Override
+    //        public Object generate(Object target, Method method, Object... params) {
+    //            //StringBuffer是线程安全的
+    //            StringBuffer sb = new StringBuffer();
+    //            sb.append(target.getClass().getName());
+    //            sb.append(method.getName());
+    //            for (Object obj : params) {
+    //                sb.append(obj.toString());
+    //            }
+    //            return sb.toString();
+    //        }
+    //    };
+    //}
 
-        JedisConnectionFactory factory = new JedisConnectionFactory();
-        factory.setDatabase(database);
-        factory.setHostName(host);
-        factory.setPort(port);
-        factory.setTimeout(timeout);
-        factory.setPoolConfig(config);
-        return factory;
+    @Bean
+    public CacheManager cacheManager(RedisTemplate redisTemplate) {
+        RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
+        cacheManager.setDefaultExpiration(1000 * 1000 * 24 * 30);
+        return cacheManager;
     }
 
     @Bean
@@ -65,19 +75,21 @@ public class RedisConfig {
         RedisTemplate template = new RedisTemplate();
         template.setConnectionFactory(factory);
 
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-        template.setKeySerializer(stringRedisSerializer);
-        template.setHashKeySerializer(stringRedisSerializer);
+        //key使用StringRedisSerializer
+        StringRedisSerializer strSerializer = new StringRedisSerializer();
+        template.setKeySerializer(strSerializer);
+        template.setHashKeySerializer(strSerializer);
 
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(Object.class);
-        //template.setEnableDefaultSerializer(false);
-        //template.setDefaultSerializer(jackson2JsonRedisSerializer);
-        /**
-         * Value统一用Jackson2JsonRedisSerializer，opsForList()、opsForSet()中的元素不必都为String类型。
-         * 对于opsForValue()来说，值会多加一个双引号
-         */
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jackson2JsonRedisSerializer.setObjectMapper(om);
+
+        //value使用Jackson2JsonRedisSerializer
         template.setValueSerializer(jackson2JsonRedisSerializer);
         template.setHashValueSerializer(jackson2JsonRedisSerializer);
+
         return template;
     }
 
