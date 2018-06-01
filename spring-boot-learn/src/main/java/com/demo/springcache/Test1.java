@@ -20,6 +20,11 @@ public class Test1 {
     SpringCacheService springCacheService;
 
     @Test
+    public void get(){
+        springCacheService.selectByPrimaryKey("f450a389-fd4b-4a24-87ec-ae4188fccfab");
+    }
+
+    @Test
     public void insert(){
         SpringCache springCache = new SpringCache();
         springCache.setId(UUID.randomUUID().toString());
@@ -42,8 +47,13 @@ public class Test1 {
     }
 
     @Test
-    public void get(){
-        springCacheService.selectByPrimaryKey("acec0fe6-9591-42e3-87f8-c64799b04153");
+    public void delete(){
+        springCacheService.deleteByPrimaryKey("2b1a3605-0197-455e-98bd-6950006539d4");
+    }
+
+    @Test
+    public void deleteAll(){
+        springCacheService.deleteAllEntries();
     }
 
 }
