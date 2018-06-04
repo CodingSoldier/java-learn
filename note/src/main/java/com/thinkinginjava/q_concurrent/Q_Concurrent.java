@@ -365,12 +365,8 @@ class SimpleDaemons implements Runnable {
 }
 
 
-class DI1{
-
-}
 
 class Daemon1{
-
     public static void main(String[] args) throws Exception {
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -380,8 +376,8 @@ class Daemon1{
                     public void run() {
                         while (true){
                             try {
-                                TimeUnit.SECONDS.sleep(3L);
-                                System.out.println("内部线程运行");
+                                TimeUnit.MILLISECONDS.sleep(400L);
+                                System.out.println("内部线程在运行");
                             }catch (Exception e){
                                 e.printStackTrace();
                             }
@@ -389,25 +385,28 @@ class Daemon1{
                         }
                     }
                 });
+                threadInner.setDaemon(true);
                 threadInner.start();
+                System.out.println("thread从run()方法返回");
             }
         });
-        /**
-         * thread不设置为守护线程，程序不会停下来
-         * thread设置为守护线程，在Thread中创建的线程也是守护线程，当主线程结束，守护线程也都结束了，程序结束
-         *
-         */
-        //thread.setDaemon(true);
-        thread.start();
 
+        thread.start();
         try {
-            TimeUnit.SECONDS.sleep(5L);
+            TimeUnit.MILLISECONDS.sleep(200);
         }catch (Exception e){
             e.printStackTrace();
         }
+        //任务（可以理解为线程）死亡的通常方式是从run()方法返回。
+        // thread线程死亡/终止，thread内部创建的后台线程threadInner仍然在运行，即后台线程不会随着它的创建者死亡而死亡。直到所有非后台线程死亡，后台线程才死亡。
+        System.out.println("thread is alive："+thread.isAlive());
 
+        try {
+            TimeUnit.SECONDS.sleep(2L);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
-
 }
 
 
