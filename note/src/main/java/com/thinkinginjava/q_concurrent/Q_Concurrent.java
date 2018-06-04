@@ -1,11 +1,13 @@
 package com.thinkinginjava.q_concurrent;
 
+import com.mysql.cj.api.Session;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Connection;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -769,6 +771,57 @@ class SerialNumberChecker {
         System.exit(0);
     }
 }
+
+
+
+
+class TL{
+    ThreadLocal<Long> longLocal = new ThreadLocal<>();
+    ThreadLocal<String> stringLocal = new ThreadLocal<>();
+
+    private static ThreadLocal<Connection> connectionHolder = new ThreadLocal<>();
+
+    private static final ThreadLocal<Session> threadSession = new ThreadLocal<>();
+
+    public void set(){
+        longLocal.set(Thread.currentThread().getId());
+        stringLocal.set(Thread.currentThread().getName());
+    }
+
+    public Long getLong(){
+        return longLocal.get();
+    }
+
+    public String getString(){
+        return stringLocal.get();
+    }
+
+    public static void main(String[] args) throws Exception{
+        final TL tl = new TL();
+        tl.set();
+        System.out.println(tl.getLong());
+        System.out.println(tl.getString());
+
+        Thread thread1 = new Thread(){
+            public void run(){
+                tl.set();
+                System.out.println(tl.getLong());
+                System.out.println(tl.getString());
+            }
+        };
+        thread1.start();
+        thread1.join();  //等待thread1执行完之后再执行后面的代码
+
+        System.out.println(tl.getLong());
+        System.out.println(tl.getString());
+
+    }
+
+}
+
+
+
+
 
 
 

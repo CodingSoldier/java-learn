@@ -360,7 +360,9 @@ yum install -y gcc-c++
 3、cd redis-4.0.7。执行编译 make
 4、安装 make PREFIX=/usr/local/redis install  若redis目录不存在，会自动创建
 5、cd /usr/local/redis  拷贝编译目录的配置文件到安装目录 cp /usr/local/tools/redis-4.0.7/redis.conf /usr/local/redis
-6、修改配置文件为服务端启动 vim redis.conf  将daemonize 改为 yes
+6、修改配置文件为服务端启动 vim redis.conf
+   daemonize 改为 yes
+   config set stop-writes-on-bgsave-error no
    允许远程链接：
         注释掉  bind 127.0.0.1
         protected-mode 改为 no
