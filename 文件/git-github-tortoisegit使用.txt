@@ -9,4 +9,11 @@ tortoisegit链接自己的仓库
 
 idea使用git若失败，可将SSH executable 改成 Native。
 
-若没有秘钥是不是要使用tortoisegit生成一份秘钥、公钥，秘钥保存在本地，公钥上传到github？
+
+
+********************子模块********************
+git clone <repository> --recursive   //递归的方式克隆整个项目
+git submodule add <repository> <path>   //添加子模块
+git submodule init   //初始化子模块
+git submodule update   //更新子模块
+git submodule foreach   //git pull 拉取所有子模块
