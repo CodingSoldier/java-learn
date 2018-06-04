@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 @Component
 public class ValidateMain {
 
+    private static final Object LOCK = new Object();
     private static Map<String, String> regexCommon = null;
 
     public static final String REQUEST = "request";
