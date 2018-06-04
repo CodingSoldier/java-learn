@@ -678,11 +678,44 @@ class AttemptLocking {
 
 
 
+//684
+class T1 {
+    public volatile int inc = 0;
 
+    public void increase() {
+        inc++;
+    }
+
+    public static void main(String[] args) {
+        final T1 test = new T1();
+        for(int i=0;i<10;i++){
+            new Thread(){
+                public void run() {
+                    for(int j=0;j<1000;j++)
+                        test.increase();
+                };
+            }.start();
+        }
+
+        while(Thread.activeCount()>1)  //保证前面的线程都执行完
+            Thread.yield();
+        System.out.println(test.inc);
+    }
+}
+
+/*
+刚才的inc++操作来说，这个操作其实细分为三步，读inc的值给temp，将temp+1，赋值给inc。
+1、当线程1将inc读入内存，然后被阻塞。
+2、线程2也将inc读入内存中，然后执行过第二步，temp+1，然后被阻塞。
+3、线程1被唤醒，此时并没有对inc执行写操作，所以线程1不需要重新从内存读，所以执行完+1操作被赋值后重新写入主存中。
+4、线程2被唤醒，由于inc执行了写操作，导致线程2中的inc缓存失效，所以从内存中重新读进来此时的inc值，由于已经执行过第二步了，此时将最新的temp赋值给inc，然后重新写入内存。就在刚才那一步发生了数据不一致性，此时的inc总共被加了一次。
+* */
+
+//684
 class SerialNumberGenerator {
     private static volatile int serialNumber = 0;
     public static int nextSerialNumber() {
-        System.out.println(serialNumber);   //比方说现在值是1111，还没加，另一个线程跑进来++并返回，则1112重复
+        //System.out.println(serialNumber);   //比方说现在值是1111，还没加，另一个线程跑进来++并返回，则1112重复
         return serialNumber++; // Not thread-safe
     }
 }
@@ -727,15 +760,13 @@ class SerialNumberChecker {
         }
     }
     public static void main(String[] args) throws Exception {
-        args = new String[]{"100"};
         for(int i = 0; i < SIZE; i++)
             exec.execute(new SerialChecker());
+
         // Stop after n seconds if there's an argument:
-        if(args.length > 0) {
-            TimeUnit.SECONDS.sleep(new Integer(args[0]));
-            System.out.println("No duplicates detected");
-            System.exit(0);
-        }
+        TimeUnit.SECONDS.sleep(60*10);
+        System.out.println("No duplicates detected");
+        System.exit(0);
     }
 }
 
@@ -3484,34 +3515,3 @@ abstract class Tester<C> {
 
 
 
-class T1 {
-    public volatile int inc = 0;
-
-    public void increase() {
-        inc++;
-    }
-
-    public static void main(String[] args) {
-        final T1 test = new T1();
-        for(int i=0;i<10;i++){
-            new Thread(){
-                public void run() {
-                    for(int j=0;j<1000;j++)
-                        test.increase();
-                };
-            }.start();
-        }
-
-        while(Thread.activeCount()>1)  //保证前面的线程都执行完
-            Thread.yield();
-        System.out.println(test.inc);
-    }
-}
-
-/*
-刚才的inc++操作来说，这个操作其实细分为三步，读inc的值给temp，将temp+1，赋值给inc。
-1、当线程1将inc读入内存，然后被阻塞。
-2、线程2也将inc读入内存中，然后执行过第二步，temp+1，然后被阻塞。
-3、线程1被唤醒，此时并没有对inc执行写操作，所以线程1不需要重新从内存读，所以执行完+1操作被赋值后重新写入主存中。
-4、线程2被唤醒，由于inc执行了写操作，导致线程2中的inc缓存失效，所以从内存中重新读进来此时的inc值，由于已经执行过第二步了，此时将最新的temp赋值给inc，然后重新写入内存。就在刚才那一步发生了数据不一致性，此时的inc总共被加了一次。
-* */
