@@ -365,6 +365,53 @@ class SimpleDaemons implements Runnable {
 }
 
 
+class DI1{
+
+}
+
+class Daemon1{
+
+    public static void main(String[] args) throws Exception {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Thread threadInner = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (true){
+                            try {
+                                TimeUnit.SECONDS.sleep(3L);
+                                System.out.println("内部线程运行");
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
+                });
+                threadInner.start();
+            }
+        });
+        /**
+         * thread不设置为守护线程，程序不会停下来
+         * thread设置为守护线程，在Thread中创建的线程也是守护线程，当主线程结束，守护线程也都结束了，程序结束
+         *
+         */
+        //thread.setDaemon(true);
+        thread.start();
+
+        try {
+            TimeUnit.SECONDS.sleep(5L);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+}
+
+
+
 //P664
 class Daemon implements Runnable {
     private Thread[] t = new Thread[10];
@@ -626,6 +673,106 @@ class EvenGenerator extends IntGenerator {
     //}
 }
 
+
+
+
+
+
+class LockTest{
+    private List<Integer> list = new ArrayList<>();
+    private static final Lock LOCK = new ReentrantLock();
+
+    public void insert(Thread thread){
+        LOCK.lock();
+        try {
+            System.out.println(thread.getName()+"得到锁");
+            for (int i=0; i<5; i++){
+                list.add(i);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            System.out.println(thread.getName()+"释放锁");
+            LOCK.unlock();
+            System.out.println(list.toString());
+        }
+    }
+
+    public static void main(String[] args)  {
+        final LockTest lt = new LockTest();
+
+        new Thread(){
+            public void run(){
+                lt.insert(Thread.currentThread());
+            }
+        }.start();
+
+        new Thread(){
+            public void run(){
+                lt.insert(Thread.currentThread());
+            }
+        }.start();
+    }
+}
+
+
+
+
+
+
+class Test22 {
+
+    private Lock lock = new ReentrantLock();
+
+    public static void main(String[] args)  {
+        Test22 test22 = new Test22();
+        MyThread thread1 = new MyThread(test22);
+        MyThread thread2 = new MyThread(test22);
+        thread1.start();
+        thread2.start();
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        thread2.interrupt();
+    }
+
+    public void insert(Thread thread) throws InterruptedException{
+        lock.lockInterruptibly();   //注意，如果需要正确中断等待锁的线程，必须将获取锁放在外面，然后将InterruptedException抛出
+        try {
+            System.out.println(thread.getName()+"得到了锁");
+            long startTime = System.currentTimeMillis();
+            for(    ;     ;) {
+                if(System.currentTimeMillis() - startTime >= Integer.MAX_VALUE)
+                    break;
+                //插入数据
+            }
+        }
+        finally {
+            System.out.println(Thread.currentThread().getName()+"执行finally");
+            lock.unlock();
+            System.out.println(thread.getName()+"释放了锁");
+        }
+    }
+}
+
+class MyThread extends Thread {
+    private Test22 test22 = null;
+    public MyThread(Test22 test22) {
+        this.test22 = test22;
+    }
+    @Override
+    public void run() {
+
+        try {
+            test22.insert(Thread.currentThread());
+        } catch (InterruptedException e) {
+            System.out.println(Thread.currentThread().getName()+"被中断");
+        }
+    }
+}
 
 
 
