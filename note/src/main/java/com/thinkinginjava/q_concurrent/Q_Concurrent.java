@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.thinkinginjava.A_String.print;
 import static com.thinkinginjava.A_String.printnb;
@@ -729,9 +730,8 @@ class Test22 {
         MyThread thread2 = new MyThread(test22);
         thread1.start();
         thread2.start();
-
         try {
-            Thread.sleep(2000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -739,7 +739,8 @@ class Test22 {
     }
 
     public void insert(Thread thread) throws InterruptedException{
-        lock.lockInterruptibly();   //注意，如果需要正确中断等待锁的线程，必须将获取锁放在外面，然后将InterruptedException抛出
+        lock.lockInterruptibly();
+        //注意，如果需要正确中断等待锁的线程，必须将获取锁放在外面，然后将InterruptedException抛出
         try {
             System.out.println(thread.getName()+"得到了锁");
             long startTime = System.currentTimeMillis();
@@ -748,8 +749,7 @@ class Test22 {
                     break;
                 //插入数据
             }
-        }
-        finally {
+        }finally {
             System.out.println(Thread.currentThread().getName()+"执行finally");
             lock.unlock();
             System.out.println(thread.getName()+"释放了锁");
@@ -764,7 +764,6 @@ class MyThread extends Thread {
     }
     @Override
     public void run() {
-
         try {
             test22.insert(Thread.currentThread());
         } catch (InterruptedException e) {
@@ -772,6 +771,270 @@ class MyThread extends Thread {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+class TT{
+    private ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
+    public static void main(String[] args)  {
+        final TT tt = new TT();
+        new Thread(){
+            public void run(){
+                tt.get(Thread.currentThread());
+            }
+        }.start();
+
+        new Thread(){
+            public void run(){
+                tt.get(Thread.currentThread());
+            }
+        }.start();
+    }
+
+    public void get(Thread thread){
+        rwl.readLock().lock();
+        try {
+            long start = System.currentTimeMillis();
+            while (System.currentTimeMillis() - start <=10){
+                Thread.yield();
+                System.out.println(thread.getName() + "正在进行读操作");
+            }
+            System.out.println(thread.getName()+"读操作完毕");
+        }finally {
+            rwl.readLock().unlock();
+        }
+    }
+}
+
+
+
+
+class AA{
+    static Object LOCK = new Object();
+    static Vector<Integer> vector = new Vector<>();
+    public static void main(String[] args) throws Exception {
+        while (true){
+            for (int i=0; i<10; i++){
+                vector.add(i);
+            }
+            Thread thread = new Thread(){
+                public void run(){
+                    synchronized (LOCK){
+                        for (int i=0; i<vector.size(); i++){
+                            vector.remove(i);
+                        }
+                    }
+                }
+            };
+
+            Thread thread2 = new Thread(){
+                public void run(){
+                    synchronized (LOCK){
+                        for (int i=0; i<vector.size(); i++){
+                            vector.get(i);
+                        }
+                    }
+                }
+            };
+
+            thread.start();
+            thread2.start();
+
+            while (Thread.activeCount() > 10){
+
+            }
+
+        }
+    }
+}
+
+
+
+
+
+class T11 {
+    public static void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+        list.add(5);
+
+        Thread thread0 = new Thread(){
+            public void run(){
+                Iterator<Integer> iterator =list.iterator();
+                while (iterator.hasNext()){
+                    Integer elem = iterator.next();
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(100L);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        Thread thread1 = new Thread(){
+            public void run(){
+                Iterator<Integer> iterator =list.iterator();
+                while (iterator.hasNext()){
+                    Integer elem = iterator.next();
+                    if (elem == 2)
+                        iterator.remove();
+                }
+            }
+        };
+        thread0.start();
+        thread1.start();
+    }
+}
+
+
+
+
+
+
+
+
+
+/*
+class PC {
+    private int queueSize = 10;
+    private PriorityQueue<Integer> queue = new PriorityQueue<Integer>(queueSize);
+
+    public static void main(String[] args)  {
+        PC pc = new PC();
+        Producer producer = pc.new Producer();
+        Consumer consumer = pc.new Consumer();
+
+        producer.start();
+        consumer.start();
+    }
+
+    class Consumer extends Thread{
+
+        @Override
+        public void run() {
+            consume();
+        }
+
+        private void consume() {
+            while(true){
+                synchronized (queue) {
+                    while(queue.size() == 0){
+                        try {
+                            System.out.println("队列空，等待数据");
+                            queue.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            queue.notify();
+                        }
+                    }
+                    queue.poll();          //每次移走队首元素
+                    queue.notify();
+                    System.out.println("从队列取走一个元素，队列剩余"+queue.size()+"个元素");
+                }
+            }
+        }
+    }
+
+    class Producer extends Thread{
+
+        @Override
+        public void run() {
+            produce();
+        }
+
+        private void produce() {
+            while(true){
+                synchronized (queue) {
+                    while(queue.size() == queueSize){
+                        try {
+                            System.out.println("队列满，等待有空余空间");
+                            queue.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            queue.notify();
+                        }
+                    }
+                    queue.offer(1);        //每次插入一个元素
+                    queue.notify();
+                    System.out.println("向队列取中插入一个元素，队列剩余空间："+(queueSize-queue.size()));
+                }
+            }
+        }
+    }
+}
+*/
+
+
+
+class PC{
+    private int queueSize = 10;
+    private ArrayBlockingQueue<Integer> queue = new ArrayBlockingQueue<>(queueSize);
+    public static void main(String[] args)  {
+        PC pc = new PC();
+        Consumer consumer = pc.new Consumer();
+        Producer producer = pc.new Producer();
+
+        producer.start();
+        consumer.start();
+    }
+
+    class Consumer extends Thread{
+        @Override
+        public void run() {
+            consumer();
+        }
+
+        private void consumer(){
+            while (true){
+                try {
+                    queue.take();
+                    System.out.println("取走一个元素，队列剩余个数："+queue.size());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    class Producer extends Thread{
+        @Override
+        public void run() {
+            produce();
+        }
+
+        private void produce(){
+            while (true){
+                try {
+                    queue.put(1);
+                    System.out.println("队列插入一元素");
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
+
+
+
+
+class T3{
+    public static void main(String[] args) {
+        int i=1; int j=2;
+        if ((i=j) == 2){
+            System.out.println(22222222);
+        }
+    }
+}
+
 
 
 
