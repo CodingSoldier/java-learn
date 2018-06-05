@@ -7,6 +7,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousCloseException;
+import java.nio.channels.ClosedByInterruptException;
+import java.nio.channels.SocketChannel;
 import java.sql.Connection;
 import java.util.*;
 import java.util.concurrent.*;
@@ -1761,6 +1768,69 @@ class Interrupting {
     }
 }
 
+class CloseResource {
+    public static void main(String[] args) throws Exception {
+        ExecutorService exec = Executors.newCachedThreadPool();
+        ServerSocket server = new ServerSocket(8080);
+        InputStream socketInput =
+                new Socket("localhost", 8080).getInputStream();
+        exec.execute(new IOBlocked(socketInput));
+        exec.execute(new IOBlocked(System.in));
+        TimeUnit.MILLISECONDS.sleep(100);
+        print("Shutting down all threads");
+        exec.shutdownNow();
+        TimeUnit.SECONDS.sleep(1);
+        print("Closing " + socketInput.getClass().getName());
+        socketInput.close(); // Releases blocked thread
+        TimeUnit.SECONDS.sleep(1);
+        print("Closing " + System.in.getClass().getName());
+        System.in.close(); // Releases blocked thread
+    }
+}
+
+
+
+
+
+class NIOBlocked implements Runnable {
+    private final SocketChannel sc;
+    public NIOBlocked(SocketChannel sc) { this.sc = sc; }
+    public void run() {
+        try {
+            print("Waiting for read() in " + this);
+            sc.read(ByteBuffer.allocate(1));
+        } catch(ClosedByInterruptException e) {
+            print("ClosedByInterruptException");
+        } catch(AsynchronousCloseException e) {
+            print("AsynchronousCloseException");
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+        print("Exiting NIOBlocked.run() " + this);
+    }
+}
+
+class NIOInterruption {
+    public static void main(String[] args) throws Exception {
+        ExecutorService exec = Executors.newCachedThreadPool();
+        ServerSocket server = new ServerSocket(8080);
+        InetSocketAddress isa =
+                new InetSocketAddress("localhost", 8080);
+        SocketChannel sc1 = SocketChannel.open(isa);
+        SocketChannel sc2 = SocketChannel.open(isa);
+        Future<?> f = exec.submit(new NIOBlocked(sc1));
+        exec.execute(new NIOBlocked(sc2));
+        exec.shutdown();
+        TimeUnit.SECONDS.sleep(1);
+        // Produce an interrupt via cancel:
+        f.cancel(true);
+        TimeUnit.SECONDS.sleep(1);
+        // Release the block by closing the channel:
+        sc2.close();
+    }
+}
+
+
 
 // P699
 class NonTask {
@@ -1881,6 +1951,17 @@ class LiftOff2 implements Runnable {
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
 class E20_InterruptCachedThreadPool {
     public static void main(String[] args) {
         ExecutorService exec = Executors.newCachedThreadPool();
@@ -1892,9 +1973,37 @@ class E20_InterruptCachedThreadPool {
 }
 
 
-//P700 https://www.zhihu.com/question/36771163
+
+class MultiLock {
+    public synchronized void f1(int count) {
+        if(count-- > 0) {
+            print("f1() calling f2() with count " + count);
+            f2(count);
+        }
+    }
+    public synchronized void f2(int count) {
+        if(count-- > 0) {
+            print("f2() calling f1() with count " + count);
+            f1(count);
+        }
+    }
+    public static void main(String[] args) throws Exception {
+        final MultiLock multiLock = new MultiLock();
+        new Thread() {
+            public void run() {
+                multiLock.f1(10);
+            }
+        }.start();
+    }
+}
+
+
+
+
+
+
 class BlockedMutex {
-    private Lock lock = new ReentrantLock();
+    public static final Lock lock = new ReentrantLock();
 
     public BlockedMutex() {
         //创建对象的时候就获取锁，并且不释放锁。
@@ -1903,11 +2012,16 @@ class BlockedMutex {
 
     public void f() {
         try {
+            System.out.println(Thread.holdsLock(lock));
             // 调用后一直阻塞到获得锁，但是接受中断信号。由于构造函数一直没有释放锁，所以线程一直处于阻塞状态。
-            lock.lockInterruptibly();
-            print("lock acquired in f()");
-        } catch (InterruptedException e) {
-            print("BlockedMutex.f()发生中断，并且能获取锁");
+            //lock.lockInterruptibly();
+
+            System.out.println(Thread.currentThread().getName()+"线程持有锁lock:"+Thread.holdsLock(BlockedMutex.lock));
+            //普通lock同步线程，只有线程处于休眠状态才能被中断。执行到这句代码时,锁被main线程持有，线程一直处于Runnable(就绪)状态，无法被被中断
+            lock.lock();
+            print(Thread.currentThread().getName()+"线程等到锁lock");
+        } catch (Exception e) {
+            print("BlockedMutex.f()发生中断，释放锁");
         }
     }
 }
@@ -1916,9 +2030,10 @@ class Blocked2 implements Runnable {
     BlockedMutex blocked = new BlockedMutex();
 
     public void run() {
+
         print("BlockedMutex.f()开始执行");
         blocked.f();
-        print("Broken out of blocked call");
+        print("退出run，线程死亡");
     }
 }
 
