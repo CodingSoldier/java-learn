@@ -2002,6 +2002,11 @@ class MultiLock {
 
 
 
+
+
+
+
+
 class BlockedMutex {
     public static final Lock lock = new ReentrantLock();
 
@@ -2012,16 +2017,18 @@ class BlockedMutex {
 
     public void f() {
         try {
-            System.out.println(Thread.holdsLock(lock));
-            // 调用后一直阻塞到获得锁，但是接受中断信号。由于构造函数一直没有释放锁，所以线程一直处于阻塞状态。
-            //lock.lockInterruptibly();
 
-            System.out.println(Thread.currentThread().getName()+"线程持有锁lock:"+Thread.holdsLock(BlockedMutex.lock));
-            //普通lock同步线程，只有线程处于休眠状态才能被中断。执行到这句代码时,锁被main线程持有，线程一直处于Runnable(就绪)状态，无法被被中断
-            lock.lock();
-            print(Thread.currentThread().getName()+"线程等到锁lock");
+            //由于main线程一直持有锁lock，不释放，本线程一直处于Runnable(就绪)状态
+
+            //普通lock同步代码，只有线程处于休眠状态（sleep）才能被中断。本线程处于Runnable状态，无法响应中断
+            //lock.lock();
+
+            // 线程处于等待、睡眠状态时可以响应中断
+             lock.lockInterruptibly();
+
+            System.out.println("本线程永远得不到锁，此代码无法执行");
         } catch (Exception e) {
-            print("BlockedMutex.f()发生中断，释放锁");
+            System.out.println("线程响应中断，抛出异常，释放锁");
         }
     }
 }
@@ -2031,9 +2038,9 @@ class Blocked2 implements Runnable {
 
     public void run() {
 
-        print("BlockedMutex.f()开始执行");
+        System.out.println("BlockedMutex.f()开始执行");
         blocked.f();
-        print("退出run，线程死亡");
+        System.out.println("退出run，线程死亡");
     }
 }
 
@@ -2046,6 +2053,14 @@ class Interrupting2 {
         t.interrupt();
     }
 }
+
+
+
+
+
+
+
+
 
 
 // P701
