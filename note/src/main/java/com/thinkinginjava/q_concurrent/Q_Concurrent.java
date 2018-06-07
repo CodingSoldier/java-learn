@@ -374,48 +374,48 @@ class SimpleDaemons implements Runnable {
 
 
 
-class Daemon1{
-    public static void main(String[] args) throws Exception {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Thread threadInner = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (true){
-                            try {
-                                TimeUnit.MILLISECONDS.sleep(400L);
-                                System.out.println("内部线程在运行");
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-
-                        }
-                    }
-                });
-                threadInner.setDaemon(true);
-                threadInner.start();
-                System.out.println("thread从run()方法返回");
-            }
-        });
-
-        thread.start();
-        try {
-            TimeUnit.MILLISECONDS.sleep(200);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        //任务（可以理解为线程）死亡的通常方式是从run()方法返回。
-        // thread线程死亡/终止，thread内部创建的后台线程threadInner仍然在运行，即后台线程不会随着它的创建者死亡而死亡。直到所有非后台线程死亡，后台线程才死亡。
-        System.out.println("thread is alive："+thread.isAlive());
-
-        try {
-            TimeUnit.SECONDS.sleep(2L);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-}
+//class Daemon1{
+//    public static void main(String[] args) throws Exception {
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Thread threadInner = new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        while (true){
+//                            try {
+//                                TimeUnit.MILLISECONDS.sleep(400L);
+//                                System.out.println("内部线程在运行");
+//                            }catch (Exception e){
+//                                e.printStackTrace();
+//                            }
+//
+//                        }
+//                    }
+//                });
+//                threadInner.setDaemon(true);
+//                threadInner.start();
+//                System.out.println("thread从run()方法返回");
+//            }
+//        });
+//
+//        thread.start();
+//        try {
+//            TimeUnit.MILLISECONDS.sleep(200);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        //任务（可以理解为线程）死亡的通常方式是从run()方法返回。
+//        // thread线程死亡/终止，thread内部创建的后台线程threadInner仍然在运行，即后台线程不会随着它的创建者死亡而死亡。直到所有非后台线程死亡，后台线程才死亡。
+//        System.out.println("thread is alive："+thread.isAlive());
+//
+//        try {
+//            TimeUnit.SECONDS.sleep(2L);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//    }
+//}
 
 
 
@@ -2006,7 +2006,7 @@ class MultiLock {
 
 
 
-
+// lock()、lockInterruptibly()的区别
 class BlockedMutex {
     public static final Lock lock = new ReentrantLock();
 
@@ -2018,12 +2018,13 @@ class BlockedMutex {
     public void f() {
         try {
 
-            //由于main线程一直持有锁lock，不释放，本线程一直处于Runnable(就绪)状态
+            //由于main线程一直持有锁lock，不释放，本线程一直处于锁互斥阻塞状态。
 
-            //普通lock同步代码，只有线程处于休眠状态（sleep）才能被中断。本线程处于Runnable状态，无法响应中断
+            //普通lock同步代码，因调用wait(),join(),sleep()而导致处于阻塞状态，此时可以响应中断。
+            // 本线程一直处于获取锁的状态，即因拿不到锁而阻塞，此时不会响应中断
             //lock.lock();
 
-            // 线程处于等待、睡眠状态时可以响应中断
+            // 使用lockInterruptibly()，当线程处于获取锁的状态时也可以响应中断。
              lock.lockInterruptibly();
 
             System.out.println("本线程永远得不到锁，此代码无法执行");
@@ -2037,19 +2038,19 @@ class Blocked2 implements Runnable {
     BlockedMutex blocked = new BlockedMutex();
 
     public void run() {
-
         System.out.println("BlockedMutex.f()开始执行");
         blocked.f();
         System.out.println("退出run，线程死亡");
     }
 }
 
+
 class Interrupting2 {
     public static void main(String[] args) throws Exception {
         Thread t = new Thread(new Blocked2());
         t.start();
         TimeUnit.SECONDS.sleep(1);
-        System.out.println("线程t，发出中断");
+        System.out.println("线程t，发出中断，线程是否响应？");
         t.interrupt();
     }
 }
@@ -2059,7 +2060,49 @@ class Interrupting2 {
 
 
 
+class Daemon1{
+    public static void main(String[] args) throws Exception {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Thread threadInner = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (true){
+                            try {
+                                TimeUnit.MILLISECONDS.sleep(400L);
+                                System.out.println("内部线程在运行");
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
 
+                        }
+                    }
+                });
+                threadInner.setDaemon(true);
+                threadInner.start();
+                System.out.println("thread从run()方法返回");
+            }
+        });
+
+        thread.start();
+        try {
+            TimeUnit.MILLISECONDS.sleep(200);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        //任务（可以理解为线程）死亡的通常方式是从run()方法返回。
+        // thread线程死亡/终止，thread内部创建的后台线程threadInner仍然在运行，即后台线程不会随着它的创建者死亡而死亡。
+        // 直到所有非后台线程死亡，后台线程才死亡。
+        System.out.println("thread is alive："+thread.isAlive());
+
+        try {
+            TimeUnit.SECONDS.sleep(2L);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+}
 
 
 
