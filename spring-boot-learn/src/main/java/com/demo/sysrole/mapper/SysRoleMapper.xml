@@ -246,7 +246,7 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.demo.sysrole.model.SysRole">
     update sys_role
     <set>
-      <if test="name != null">
+      <if test="name != null and name != ''">
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="sysType != null">
