@@ -1,7 +1,8 @@
 git 生成 sshkeys
 1、cd到/.ssh
 2、ssh-keygen -t rsa -C "tfz9011@163.com"
-3、id_rsa是秘钥，保存在本地。id_rsa.pub是公钥，添加到github
+3、提示输入密码，不要输入，一路回车即可。
+4、id_rsa是秘钥，保存在本地。id_rsa.pub是公钥，添加到github
 
 tortoisegit链接自己的仓库
 1、打开PuTTYgen，load自己的秘钥id_rsa，选择ECDSA，保存成XXX.ppk类型的秘钥
