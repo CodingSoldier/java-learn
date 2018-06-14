@@ -29,7 +29,7 @@ public class Test1 {
     public void insert(){
         SpringCache springCache = new SpringCache();
         springCache.setId(UUID.randomUUID().toString());
-        springCache.setName("name1111");
+        springCache.setName("0000");
         springCache.setNum(new Random().nextInt(100));
         springCache.setIsTrue(new Random().nextInt(100) % 2 == 0);
         springCache.setDate(new Date());

@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SpringCacheService {
@@ -21,13 +22,21 @@ public class SpringCacheService {
         return springCacheMapper.selectByPrimaryKey(id);
     }
 
-    //@CachePut(value = RedisConst.SPRING_CACHE, key = "@redisConst.SPRING_CACHE + #record.getId()")
-    @CachePut(value = RedisConst.SPRING_CACHE)
+    @Transactional
+    @CachePut(value = RedisConst.SPRING_CACHE, key = "@redisConst.SPRING_CACHE + #record.getId()")
+    //@CachePut(value = RedisConst.SPRING_CACHE)
     public SpringCache insertSelective(SpringCache record){
         springCacheMapper.insertSelective(record);
+
+        record.setId("16c54764-2e66-450e-8517-0a18b74c2c8f");
+        record.setName(record.getName()+"名字000");
+        updateByPrimaryKey(record);
+        Integer a=1, b = 0;
+        Integer c = a/b;
         return record;
     }
 
+    @Transactional
     @CachePut(value = RedisConst.SPRING_CACHE, key = "@redisConst.SPRING_CACHE + #record.getId()")
     public SpringCache updateByPrimaryKey(SpringCache record){
         springCacheMapper.updateByPrimaryKey(record);

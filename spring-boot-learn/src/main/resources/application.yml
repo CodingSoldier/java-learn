@@ -15,8 +15,8 @@ spring:
     # redis数据库索引（默认为0）
     database: 0
     # redis服务器地址（默认为localhost）
-    host: 184.170.220.217
-    #host: localhost
+#    host: 184.170.220.217
+    host: localhost
     # redis端口（默认为6379）
     port: 6379
     # redis访问密码（默认为空）
