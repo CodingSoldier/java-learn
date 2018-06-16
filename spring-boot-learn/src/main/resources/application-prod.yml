@@ -5,4 +5,4 @@ logging:
     root: info, WARN, DEBUG
 
 variable:
-  a: 开发环境
+  a: 生产环境

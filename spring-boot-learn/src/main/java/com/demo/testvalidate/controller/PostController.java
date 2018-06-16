@@ -1,8 +1,10 @@
 package com.demo.testvalidate.controller;
 
 
+import com.demo.config.AppProp;
 import com.demo.paramsvalidate.ParamsValidate;
 import com.demo.testvalidate.bean.UserVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,12 +17,16 @@ import java.util.Map;
 @RequestMapping("/post")
 public class PostController {
 
+    @Autowired
+    AppProp appProp;
+
     @PostMapping("/p1/map")
     //@ParamsValidate(file = "json-post.json")    //getParser()也要修改
     //@ParamsValidate(file = "json-post-gson.json")   //getParser()也要修改
     @ParamsValidate("json-post-fastjson.json")  //getParser()也要修改
     public Object p1(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, Object> map) throws Exception{
-
+        Map<String, Object> map1 = new HashMap<>();
+        System.out.println(appProp.getA());
         return map;
     }
 

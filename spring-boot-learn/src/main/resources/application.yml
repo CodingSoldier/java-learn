@@ -1,8 +1,8 @@
 #yml代码提示需要添加YAML/Ansible support插件
 
 spring:
-  profiles:
-    active: dev  # 此处可选择，依据你的配置文件名称而定。我的是 [dev | prod]
+  #profiles:
+    #active: prod  # 此处可选择，依据你的配置文件名称而定。我的是 [dev | prod]
   # 数据库配置
   datasource:
     #url: jdbc:mysql://184.170.220.217:3306/cpq

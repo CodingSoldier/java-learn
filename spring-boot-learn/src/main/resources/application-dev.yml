@@ -7,4 +7,4 @@ logging:
       demo: DEBUG  #打印sql
 
 variable:
-  a: 生产环境
+  a: 开发环境
