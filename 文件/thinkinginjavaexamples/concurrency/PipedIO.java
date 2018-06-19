@@ -23,7 +23,6 @@ class Sender implements Runnable {
     }
   }
 }
-
 class Receiver implements Runnable {
   private PipedReader in;
   public Receiver(Sender sender) throws IOException {
@@ -40,7 +39,6 @@ class Receiver implements Runnable {
     }
   }
 }
-
 public class PipedIO {
   public static void main(String[] args) throws Exception {
     Sender sender = new Sender();
@@ -51,7 +49,9 @@ public class PipedIO {
     TimeUnit.SECONDS.sleep(4);
     exec.shutdownNow();
   }
-} /* Output: (65% match)
+}
+
+/* Output: (65% match)
 Read: A, Read: B, Read: C, Read: D, Read: E, Read: F, Read: G, Read: H, Read: I, Read: J, Read: K, Read: L, Read: M, java.lang.InterruptedException: sleep interrupted Sender sleep interrupted
 java.io.InterruptedIOException Receiver read exception
 *///:~
