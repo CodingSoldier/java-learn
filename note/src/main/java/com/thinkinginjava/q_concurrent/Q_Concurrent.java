@@ -4253,3 +4253,47 @@ abstract class Tester<C> {
 
 
 
+
+
+
+// p755  CopyOnWriteArrayList
+class BlackList{
+    //private static ArrayList<Integer> copyList = new ArrayList<>();
+    private static CopyOnWriteArrayList<Integer> copyList = new CopyOnWriteArrayList<>();
+
+    public static void main(String[] args){
+        copyList.add(1);
+        copyList.add(2);
+        copyList.add(2);
+        copyList.add(2);
+
+        ExecutorService service = Executors.newFixedThreadPool(100);
+        for (int i=0; i<1000; i++){
+            service.execute(new Runnable() {
+                @Override
+                public void run() {
+                    copyList.add(new Random().nextInt(100));
+                }
+            });
+            service.execute(new Runnable() {
+                @Override
+                public void run() {
+                    int length = 0;
+                    synchronized (this){
+                        length = copyList.size()-1 > 0 ? copyList.size()-1 : 0;
+                    }
+                    copyList.remove(new Random().nextInt(length));
+                }
+            });
+            service.execute(new Runnable() {
+                @Override
+                public void run() {
+                    copyList.forEach(elem -> {
+                        System.out.println(elem);
+                    });
+                }
+            });
+        }
+        service.shutdown();
+    }
+}
