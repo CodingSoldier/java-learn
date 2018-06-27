@@ -27,12 +27,10 @@ public class SpringCacheService {
     //@CachePut(value = RedisConst.SPRING_CACHE)
     public SpringCache insertSelective(SpringCache record){
         springCacheMapper.insertSelective(record);
-
-        record.setId("16c54764-2e66-450e-8517-0a18b74c2c8f");
         record.setName(record.getName()+"名字000");
-        updateByPrimaryKey(record);
-        Integer a=1, b = 0;
-        Integer c = a/b;
+        //updateByPrimaryKey(record);
+        //Integer a=1, b = 0;
+        //Integer c = a/b;
         return record;
     }
 

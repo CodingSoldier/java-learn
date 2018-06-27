@@ -15,6 +15,9 @@
     <button id="btn11">设置token到cookie中</button>
     <h1>cookie中的数据会在所有请求中带到后端，请到main.html页面发送ajax查看</h1>
 
+    <button id="btn22">测试后台cookie</button>
+    <h1>测试后台cookie</h1>
+
     <script src="jquery-2.0.3.js"></script>
     <script>
 
@@ -49,6 +52,13 @@
             if (token){
                 setCookie("token", token);
             }
+        });
+
+        $("#btn22").on("click", function(){
+            $.ajax({
+                url: "/main/cookie",
+                type: "get",
+            })
         });
 
     </script>
