@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:mysql://184.170.220.217:3306/cpq
+    #url: jdbc:mysql://localhost:3306/cpq
+    username: root
+    password: cpq..123
+    driver-class-name: com.mysql.jdbc.Driver
+
+logging:
+  pattern:
+    #console: %d{yyyy/MM/dd-HH:mm:ss} [%thread] %-5level %logger- %msg%n
+    console: '%msg%n'
+

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace的值为对应**Mapper.java的全路径-->
+<mapper namespace="com.mybatis.wunao.springcache.mapper.SpringCacheExpandMapper">
+
+  <!--resultMap继承SpringCacheMapper.xml中的resultMap
+  通过extends继承基础mapper，值为SpringCacheMapper.xml的namespace的值 加上 resultMap的id-->
+  <resultMap id="BaseResultMap"
+     type="com.mybatis.wunao.springcache.model.SpringCacheExpand"
+     extends="com.mybatis.wunao.springcache.mapper.SpringCacheMapper.BaseResultMap">
+
+      <result column="relevance_text" jdbcType="VARCHAR" property="relevanceText" />
+
+  </resultMap>
+
+  <select id="selectNameEqual" resultMap="BaseResultMap">
+    SELECT sc.*, scr.relevance_text FROM spring_cache sc, spring_cache_relevance scr  WHERE sc.name=scr.name
+  </select>
+
+</mapper>

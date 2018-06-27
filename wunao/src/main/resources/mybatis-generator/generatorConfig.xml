@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+		PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+		"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<context id="testTables" targetRuntime="MyBatis3">
+		<!--序列化bean，方便做缓存、远程调用-->
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://184.170.220.217:3306/cpq?useUnicode=false&amp;characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT" userId="root"
+			password="cpq..123">
+		</jdbcConnection>
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<javaModelGenerator targetPackage="com.mybatis.wunao.springcacherelevance.model"
+			targetProject="src/main/java">
+			<property name="enableSubPackages" value="false" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<sqlMapGenerator targetPackage="com.mybatis.wunao.springcacherelevance.mapper"
+			targetProject="src/main/java">
+			<property name="enableSubPackages" value="false" />
+		</sqlMapGenerator>
+
+		<javaClientGenerator targetPackage="com.mybatis.wunao.springcacherelevance.mapper"
+			targetProject="src/main/java" type="XMLMAPPER">
+			<property name="enableSubPackages" value="false" />
+		</javaClientGenerator>
+
+		<table tableName="spring_cache_relevance"
+			   enableUpdateByExample="false"> <!--不生成updateByExample-->
+
+			<property name="useActualColumnNames" value="false"/>
+		</table>
+
+	</context>
+</generatorConfiguration>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
