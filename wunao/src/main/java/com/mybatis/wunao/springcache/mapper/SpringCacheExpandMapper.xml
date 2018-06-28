@@ -4,6 +4,21 @@
 <!--namespace的值为对应**Mapper.java的全路径-->
 <mapper namespace="com.mybatis.wunao.springcache.mapper.SpringCacheExpandMapper">
 
+    <select id="selectNameEqualMap" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT
+        sc.id,
+        sc.name,
+        sc.num,
+        sc.date,
+        sc.is_true isTrue,
+        scr.relevance_text relevanceText
+        FROM
+        spring_cache sc,
+        spring_cache_relevance scr
+        WHERE
+        sc.name=#{name} AND sc.NAME = scr.NAME
+    </select>
+
   <!--resultMap继承SpringCacheMapper.xml中的resultMap
   通过extends继承基础mapper，值为SpringCacheMapper.xml的namespace的值 加上 resultMap的id-->
   <resultMap id="BaseResultMap"
@@ -17,5 +32,6 @@
   <select id="selectNameEqual" resultMap="BaseResultMap">
     SELECT sc.*, scr.relevance_text FROM spring_cache sc, spring_cache_relevance scr  WHERE sc.name=scr.name
   </select>
+
 
 </mapper>
