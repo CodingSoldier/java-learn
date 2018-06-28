@@ -6,7 +6,6 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
@@ -15,7 +14,6 @@ import org.springframework.context.ConfigurableApplicationContext;
  **/
 @MapperScan("com.demo.*.mapper")  //扫描mapper
 @EnableAutoConfiguration
-@EnableCaching
 @SpringBootApplication
 public class SpringbootApplication {
     public static ConfigurableApplicationContext context;

@@ -32,13 +32,6 @@ public class RedisService<T> {
 
     @PostConstruct
     public void init() {
-        //entityClass = GenericsUtil.getSuperClassGenricType(RedisService.class, 0);
-        //redisTemplate.setKeySerializer(new StringRedisSerializer());
-
-//        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<T>(entityClass));
-//        redisTemplate.setValueSerializer(new StringRedisSerializer());
-//        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-//        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
         valueOperations = redisTemplate.opsForValue();
         hashOperations = redisTemplate.opsForHash();
     }
@@ -47,80 +40,64 @@ public class RedisService<T> {
         return redisTemplate;
     }
 
+    // 没用到
     public Object hgetAll(String key, String filed) {
         return hashOperations.get(key, filed);
     }
 
     @SuppressWarnings("unchecked")
+    //通过 com.demo.springcache.TestBean#hgetAllKeys
     public Set<String> hgetAllKeys(String hkey) throws DataAccessException {
         return hashOperations.keys(hkey);
     }
 
+    //通过 com.demo.springcache.TestBean#hset
     public void hset(String hkey, String field, String value, long expire) throws DataAccessException {
         if (null == value) {
             value = "";
         }
-        hashOperations.put(hkey, field, value);
+        hashOperations.put(hkey, field, value);  // hkey指向一个hashMap{field: value}
         if (expire != -1) {
             redisTemplate.expire(hkey, expire, TimeUnit.SECONDS);
         }
     }
 
+    //通过  com.demo.redis.RedisService#hsetForObject
     public void hsetForObject(String hkey, Object object, long expire){
-        //List<Map<String, String>> list = ObjectUtil.getFiledsInfo(object);
-        //if (null != list && list.size() > 0) {
-        //    Map<String, Object> keyMap = new HashMap<String, Object>();
-        //    for (Map<String, String> map : list) {
-        //        if (null != map.get("value")) {
-        //            keyMap.put(map.get("name"), String.valueOf(map.get("value")));
-        //        }
-        //    }
-        //    hashOperations.putAll(hkey, keyMap);
-        //    if (expire != -1) {
-        //        redisTemplate.expire(hkey, expire, TimeUnit.SECONDS);
-        //    }
-        //}
         redisTemplate.opsForValue().set(hkey, object);
+        if (expire != -1) {
+            redisTemplate.expire(hkey, expire, TimeUnit.SECONDS);
+        }
     }
 
+    //通过  com.demo.redis.RedisService#hgetAllForObject
     public T hgetAllForObject(String hkey, Class<T> clazz){
-
-        //Map<String, Object> map = hashOperations.entries(hkey);
-        //if (null == map || map.size() <= 0) {
-        //    return null;
-        //}
-        //Object object = clazz.newInstance();
-        //List<Map<String, String>> list = ObjectUtil.getFiledsInfo(object);
-        //if (null != list && list.size() > 0) {
-        //    for (int i = 0; i < list.size(); i++) {
-        //        try {
-        //            ObjectUtil.setProperty(object, list.get(i).get("name"), map.get(list.get(i).get("name")));
-        //        } catch (Exception e) {
-        //            e.printStackTrace();
-        //        }
-        //    }
-        //}
-
         return (T)redisTemplate.opsForValue().get(hkey);
     }
 
+
+    // 没用到
     public void hremove(String hkey, String field) throws DataAccessException {
         hashOperations.delete(hkey, field);
     }
 
+    // 通过 com.demo.springcache.TestBean#delete1
     public void delete(String key) throws DataAccessException {
         redisTemplate.delete(key);
     }
 
+    // 通过 com.demo.springcache.TestBean#hentries
     public Map<String, Object> hentries(String key) throws DataAccessException {
         return hashOperations.entries(key);
     }
 
+    //通过 com.demo.springcache.TestBean#setString
     public void setString(String key, String value, long expire) throws DataAccessException {
         logger.info("set redis value:" + value);
         valueOperations.set(key, value, expire, TimeUnit.SECONDS);
     }
 
+    // 通过  com.demo.springcache.TestBean#getString
     public Object getString(String key) throws DataAccessException {
         Object val = valueOperations.get(key);
 
@@ -132,10 +109,12 @@ public class RedisService<T> {
         return val;
     }
 
+    // 通过 com.demo.springcache.TestBean#set
     public void set(String key, String value, long expire) throws DataAccessException {
         stringRedisTemplate.opsForValue().set(key, value, expire, TimeUnit.SECONDS);
     }
 
+    // 通过 com.demo.springcache.TestBean#getstr
     public Object get(String key) throws DataAccessException {
         Object val = stringRedisTemplate.opsForValue().get(key);
         if (val != null) {

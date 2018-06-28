@@ -18,6 +18,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 
 @Configuration
+@EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
 
     //不建议使用，默认key生成策略为类全名+方法名+参数
