@@ -16,14 +16,14 @@ public class DcController {
     @GetMapping("/dc")
     public String dc(HttpServletRequest request) throws Exception{
 
-        request.getHeader("null point exception").length();
+        //request.getHeader("null point exception").length();
 
         //Thread.sleep(5000L);  //睡眠，相当于其他服务调用时弄个错误
 
-        System.out.println(request.getCookies());
+        //System.out.println(request.getCookies());
 
         String services = "Services: " + discoveryClient.getServices();
-        System.out.println(services);
+        //System.out.println(services);
         return services;
     }
 
