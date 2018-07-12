@@ -35,12 +35,18 @@ public class WunaoApplicationTests {
 	public void test2() {
 		SpringCacheExample example = new SpringCacheExample();
 		SpringCacheExample.Criteria criteria = example.createCriteria();
-        // date倒序排列
-        example.setOrderByClause("date DESC");
-        //num小于100
-        criteria.andNumLessThan( 100);
-        //is_true为true
-        criteria.andIsTrueEqualTo(true);
+		// date倒序排列
+		example.setOrderByClause("date DESC");
+		Integer num = 100;
+		Boolean isTrue = true;
+		//num小于100
+		if (num != null){
+			criteria.andNumLessThan( num);
+		}
+		//is_true为true
+		if (isTrue != null){
+		criteria.andIsTrueEqualTo(isTrue);
+		}
 		List<SpringCache> list = springCacheExpandMapper.selectByExample(example);
 		System.out.println(list);
 	}
