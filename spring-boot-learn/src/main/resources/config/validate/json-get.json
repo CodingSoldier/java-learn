@@ -2,20 +2,20 @@
     "id": {
         "request": true,
         "minValue": 1,
-        "maxValue": 1000000000,
+        "maxValue": 1,
         "regex": "REGEX_POSITIVE_NUM",
-        "message": "id:必填，为数字"
+//        "message": "id:必填，为数字"
     },
     "name": {
         "request": true,
         "minLength": 1,
-        "maxLength": 20,
+        "maxLength": 1,
         "regex": "REGEX_CHAR",
-        "message": "name:错误"
+//        "message": "name:错误"
     },
     "birthday": {
         "request": true,
-        "message": "birthday：必填"
+//        "message": "birthday：必填"
     },
     "isSingle": {
         "request": true,

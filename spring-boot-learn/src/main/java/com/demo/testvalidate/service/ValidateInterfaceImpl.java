@@ -15,6 +15,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Component
 public class ValidateInterfaceImpl implements ValidateInterface, InitializingBean {
@@ -99,15 +102,15 @@ public class ValidateInterfaceImpl implements ValidateInterface, InitializingBea
     //项目启动时，删除redis缓存校验规则
     @Override
     public void afterPropertiesSet() throws Exception {
-        //ExecutorService es = Executors.newFixedThreadPool(1);
-        //es.execute(new Runnable() {
-        //    @Override
-        //    public void run() {
-        //        Set<String> keys = redisTemplate.keys(basePath().replace("/",":") + "*");
-        //        redisTemplate.delete(keys);
-        //    }
-        //});
-        //es.shutdown();
+        ExecutorService es = Executors.newFixedThreadPool(1);
+        es.execute(new Runnable() {
+            @Override
+            public void run() {
+                Set<String> keys = redisTemplate.keys(basePath().replace("/",":") + "*");
+                redisTemplate.delete(keys);
+            }
+        });
+        es.shutdown();
     }
 
 
