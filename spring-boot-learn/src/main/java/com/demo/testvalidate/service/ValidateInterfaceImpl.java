@@ -3,7 +3,7 @@ package com.demo.testvalidate.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.Feature;
-import com.demo.paramsvalidate.Utils;
+import com.demo.paramsvalidate.ValidateUtils;
 import com.demo.paramsvalidate.ValidateInterface;
 import com.demo.paramsvalidate.bean.Parser;
 import com.demo.paramsvalidate.bean.ResultValidate;
@@ -90,11 +90,11 @@ public class ValidateInterfaceImpl implements ValidateInterface, InitializingBea
 
     //创建缓存key
     private String createKey(ValidateConfig validateConfig){
-        String basePath = Utils.trimBeginEndChar(basePath(), '/') + "/";
+        String basePath = ValidateUtils.trimBeginEndChar(basePath(), '/') + "/";
         String fileName = validateConfig.getFile().substring(0, validateConfig.getFile().lastIndexOf(".json"));
-        fileName = Utils.trimBeginEndChar(fileName, '/');
+        fileName = ValidateUtils.trimBeginEndChar(fileName, '/');
         String jsonKey = validateConfig.getKeyName();
-        jsonKey = Utils.isBlank(jsonKey) ? jsonKey : (":"+jsonKey);
+        jsonKey = ValidateUtils.isBlank(jsonKey) ? jsonKey : (":"+jsonKey);
         String temp = basePath + fileName + jsonKey;
         return temp.replaceAll("[\\/\\-]",":");
     }

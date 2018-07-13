@@ -2,11 +2,16 @@ package com.demo.paramsvalidate.bean;
 
 import java.util.Set;
 
+/**
+ * author chenpiqian
+ */
 public class ResultValidate {
 
     private boolean isPass;
 
     private Set<String> msgSet;
+
+    private Throwable throwable;
 
     public ResultValidate() {
     }
@@ -29,5 +34,13 @@ public class ResultValidate {
 
     public void setMsgSet(Set<String> msgSet) {
         this.msgSet = msgSet;
+    }
+
+    public Throwable getThrowable() {
+        return throwable;
+    }
+
+    public void setThrowable(Throwable throwable) {
+        this.throwable = throwable;
     }
 }

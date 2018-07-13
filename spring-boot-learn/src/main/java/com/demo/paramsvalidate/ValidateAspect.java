@@ -1,8 +1,7 @@
 package com.demo.paramsvalidate;
 
-
-import com.demo.paramsvalidate.bean.ValidateConfig;
 import com.demo.paramsvalidate.bean.ResultValidate;
+import com.demo.paramsvalidate.bean.ValidateConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -23,10 +22,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Aspect
 @Component
 public class ValidateAspect {
+
+    private static final Logger LOGGER = Logger.getLogger("@ParamsValidate");
+
+    public static final String VALIDATE_EXCEPTION_MSG ="服务暂不可用";
 
     @Autowired
     ValidateMain validateMain;
@@ -37,38 +42,42 @@ public class ValidateAspect {
     public void aspect(){}
 
     @Around("aspect()")
-    public Object around(JoinPoint joinPoint){
+    public Object around(JoinPoint joinPoint) throws Throwable{
         Object obj = null;
-        ResultValidate resultValidate = new ResultValidate(true);
-        try {
-            resultValidate = this.validateResult(joinPoint);
-            obj = resultValidate.isPass() != false ? ((ProceedingJoinPoint) joinPoint).proceed()
-                    : validateInterface.validateNotPass(resultValidate);
-        }catch (Throwable e){
-            resultValidate.setPass(false);
-            resultValidate.setMsgSet(new HashSet(){{add("服务暂不可用");}});
+        ResultValidate resultValidate = this.validateResult(joinPoint);
+        if (resultValidate.isPass()){  //校验通过
+            obj = ((ProceedingJoinPoint) joinPoint).proceed();
+        }else {  //校验未通过
             obj = validateInterface.validateNotPass(resultValidate);
-            e.printStackTrace();
         }
         return obj;
     }
 
     //校验结果
     private ResultValidate validateResult(JoinPoint joinPoint){
+        //默认是校验通过
         ResultValidate resultValidate = new ResultValidate(true);
-        try {
-            Method method = getCurrentMethod(joinPoint);
-            ValidateConfig validateConfig = getConfigs(method);
-            if (Utils.isNotBlank(validateConfig.getFile())){
-                Map<String, Object> allParam = mergeParams(joinPoint);
-                resultValidate = validateMain.validateHandle(validateConfig, allParam);
+        Method method = getCurrentMethod(joinPoint);
+        ValidateConfig validateConfig = getConfigs(method);
+
+        //需要校验
+        if (ValidateUtils.isNotBlank(validateConfig.getFile())){
+            Map<String, Object> allParam = null;
+            try {
+                allParam = mergeParams(joinPoint);
+            }catch (IOException e){
+                //异常，无法处理请求参数，返回pass false
+                resultValidate.setPass(false);
+                resultValidate.setMsgSet(new HashSet<String>(){{
+                    add("@ParamsValidate无法处理请求参数");
+                }});
+                LOGGER.log(Level.SEVERE, "@ParamsValidate无法处理请求参数", e);
             }
-        }catch (IOException e){
-            resultValidate.setPass(false);
-            resultValidate.setMsgSet(new HashSet<String>(){{
-                add("@ParamsValidate无法处理请求参数");
-            }});
-            e.printStackTrace();
+
+           //正常获取请求参数，可校验
+           if (allParam != null)
+                resultValidate = validateMain.validateEntry(validateConfig, allParam);
+
         }
         return resultValidate;
     }
@@ -85,7 +94,7 @@ public class ValidateAspect {
         ValidateConfig validateConfig = new ValidateConfig();
         if (method.getAnnotation(ParamsValidate.class) != null){
             String file = method.getAnnotation(ParamsValidate.class).value();
-            file = Utils.isNotBlank(file) ? file : method.getAnnotation(ParamsValidate.class).file();
+            file = ValidateUtils.isNotBlank(file) ? file : method.getAnnotation(ParamsValidate.class).file();
             String keyName = method.getAnnotation(ParamsValidate.class).keyName();
             validateConfig.setFile(file);
             validateConfig.setKeyName(keyName);
@@ -123,7 +132,7 @@ public class ValidateAspect {
         Map<String, String[]> paramMap = request.getParameterMap();
         if (paramMap != null){
             for (String key:paramMap.keySet()){
-                if (Utils.isNotBlank(key)){
+                if (ValidateUtils.isNotBlank(key)){
                     value = paramMap.get(key);
                     if (value.length == 1){
                         resultMap.put(key, value[0]);
@@ -139,7 +148,7 @@ public class ValidateAspect {
     //合并请求参数
     private Map<String, Object> mergeParams(JoinPoint joinPoint) throws IOException{
         Object body = getBodyParam(joinPoint);
-        Map<String, Object> bodyMap = objToMap(body);
+        Map<String, Object> bodyMap = bodyParamToMap(body);
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         Map<String, Object> paramMap = getParamFromRequest(request);
@@ -150,8 +159,8 @@ public class ValidateAspect {
         return paramMap;
     }
 
-    //对象变成map
-    private Map<String, Object> objToMap(Object obj) throws IOException {
+    //body中的参数添加到map
+    private Map<String, Object> bodyParamToMap(Object obj) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(obj);
         Map<String, Object> result = mapper.readValue(json, Map.class);

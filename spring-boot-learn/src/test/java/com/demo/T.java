@@ -10,7 +10,7 @@ import com.demo.boy.model.BoyExample;
 import com.demo.config.AppProp;
 import com.demo.girl.mapper.GirlExpandMapper;
 import com.demo.girl.mapper.GirlMapper;
-import com.demo.paramsvalidate.Utils;
+import com.demo.paramsvalidate.ValidateUtils;
 import com.demo.sysresource.mapper.SysResourceMapper;
 import com.demo.sysresource.model.SysResource;
 import com.demo.sysresource.model.SysResourceExample;
@@ -156,7 +156,7 @@ public class T {
     @Test
     public void jackson() throws IOException{
         String path = "config/validate/json-post.json";
-        InputStream is = Utils.class.getClassLoader().getResourceAsStream(path);
+        InputStream is = ValidateUtils.class.getClassLoader().getResourceAsStream(path);
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = new HashMap<>();
         map = mapper.readValue(is, Map.class);
@@ -165,7 +165,7 @@ public class T {
     @Test
     public void gson() throws Exception{
         String path = "config/validate/test-gson.json";
-        InputStream is = Utils.class.getClassLoader().getResourceAsStream(path);
+        InputStream is = ValidateUtils.class.getClassLoader().getResourceAsStream(path);
         Map<String, Object> map = new HashMap<>();
         Object gson = Gson.class.newInstance();
         Method method = Gson.class.getMethod("fromJson", Reader.class, Class.class);
@@ -181,7 +181,7 @@ public class T {
     public void fastjson() throws Exception{
         Class[] arr = {JSON.class, Feature[].class};
         String path = "config/validate/test-fast-json.json";
-        InputStream is = Utils.class.getClassLoader().getResourceAsStream(path);
+        InputStream is = ValidateUtils.class.getClassLoader().getResourceAsStream(path);
         Map<String, Object> map = new HashMap<>();
         Method method = arr[0].getMethod("parseObject", InputStream.class, Type.class, arr[1]);
         map = (Map<String, Object>)method.invoke(null, is, Map.class, null);

@@ -4,8 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
-public class Utils<T> extends org.springframework.util.StringUtils{
-
+public class ValidateUtils<T> extends org.springframework.util.StringUtils{
     //空、空格
     public static boolean isBlank(String str1) {
         return isEmpty(str1) || "".equals(str1.trim());
@@ -56,7 +55,7 @@ public class Utils<T> extends org.springframework.util.StringUtils{
 
     //删除字符串两端指定字符
     private static String trimBeginEndCharBase(String args, char beTrim, boolean b, boolean e) {
-        if (Utils.isEmpty(args) || Utils.isEmpty(beTrim)){
+        if (isEmpty(args) || isEmpty(beTrim)){
             return "";
         }
         int st = 0;
@@ -88,13 +87,13 @@ public class Utils<T> extends org.springframework.util.StringUtils{
     //是否非bean，list，map
     public static boolean isSingleType (Object obj) {
         return obj == null || obj instanceof Number
-                || obj instanceof CharSequence || obj instanceof Character
-                || obj instanceof Date;
+            || obj instanceof CharSequence || obj instanceof Character
+            || obj instanceof Date;
     }
 
     //校验规则，是否必填
     public static boolean isRequest(Map<String, Object> rule){
-        return Boolean.parseBoolean(Utils.objToStr(rule.get(ValidateMain.REQUEST)));
+        return Boolean.parseBoolean(objToStr(rule.get(ValidateMain.REQUEST)));
     }
 
     //字符串转数字，数字转double
@@ -106,6 +105,4 @@ public class Utils<T> extends org.springframework.util.StringUtils{
     public static BigDecimal getBigDecimal(Object value){
         return new BigDecimal(getDouble(value));
     }
-
-
 }

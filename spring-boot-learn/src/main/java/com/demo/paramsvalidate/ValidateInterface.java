@@ -1,12 +1,14 @@
 package com.demo.paramsvalidate;
 
-
 import com.demo.paramsvalidate.bean.Parser;
 import com.demo.paramsvalidate.bean.ResultValidate;
 import com.demo.paramsvalidate.bean.ValidateConfig;
 
 import java.util.Map;
 
+/**
+ * author chenpiqian
+ */
 public interface ValidateInterface {
     /**
      * 返回json文件基础路径。init.json文件必须放在此目录下

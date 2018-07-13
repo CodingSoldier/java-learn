@@ -11,13 +11,14 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-/**
- * author chenpiqian
- */
 @Component
 public class ValidateMain {
+
+    private static final Logger LOGGER = Logger.getLogger("@ParamsValidate");
 
     private static volatile Map<String, String> regexCommon;
 
@@ -50,19 +51,19 @@ public class ValidateMain {
     private ValidateInterface validateInterface;
 
     //校验params
-    public ResultValidate validateHandle(ValidateConfig validateConfig, Map<String, Object> requestMap) {
+    public ResultValidate validateEntry(ValidateConfig validateConfig, Map<String, Object> requestMap) {
         ResultValidate resultValidate = new ResultValidate(true);
 
         //读取@ParamsValidate中的file
         Map<String, Object> json = new HashMap<>();
         try {
-            json = getValidateJson(validateConfig);
+            json = ruleFileJsonToMap(validateConfig);
         }catch (Exception e){
             resultValidate.setPass(false);
             resultValidate.setMsgSet(new HashSet<String>(){{
                 add("@ParamsValidate读取、解析json文件失败");
             }});
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
 
         msgSet = new TreeSet<>();
@@ -80,70 +81,67 @@ public class ValidateMain {
     private void validateExecute(Map<String, Object> json, Map<String, Object> paramMap){
         if (json == null || json.size() == 0 || paramMap == null || paramMap.size() == 0)
             return ;
-        //循环校验json
-        for (String key:json.keySet()){
-            ruleKey = key;
-            Map<String, Object> jsonVal = (Map<String, Object>)json.get(key);
-            Object paramVal = paramMap.get(key);
-            Set<String> subKeySet = jsonVal.keySet();
-            if(paramVal == null){
-                isJsonChildRequest(jsonVal);
-            }else if(RULE_KEY_SET.containsAll(subKeySet)){  //jsonVal是校验规则Rule
-                //paramVal就是前台输入值（基本类型、List<基本类型>），jsonVal是校验规则Map(Rule)
-                checkParamRequest(jsonVal, paramVal);
-            }else if (paramVal instanceof List){
-                //paramVal是List<Bean>
-                for (Object elem: (List)paramVal){
-                    validateExecute(jsonVal, (Map<String, Object>)elem);
+
+        if (RULE_KEY_SET.containsAll(json.keySet())){
+            //paramMap只有一个key-value，json就是校验规则集合
+            for (Object paramVal:paramMap.values()){
+                checkRequest(json, paramVal);
+                break;
+            }
+        }else{
+            //循环校验json
+            for (String key:json.keySet()){
+                Map<String, Object> jsonVal = (Map<String, Object>)json.get(key);
+                Object paramVal = paramMap.get(key);
+                Set<String> subKeySet = jsonVal.keySet();
+                if(paramVal == null){
+                    checkChildRequest(jsonVal);
+                }else if(RULE_KEY_SET.containsAll(subKeySet)){  //jsonVal是校验规则Rule
+                    //paramVal就是前台输入值（基本类型、List<基本类型>），jsonVal是校验规则Map(Rule)
+                    checkRequest(jsonVal, paramVal);
+                }else if (paramVal instanceof List){
+                    //paramVal是List<Bean>
+                    for (Object elem: (List)paramVal){
+                        validateExecute(jsonVal, (Map<String, Object>)elem);
+                    }
+                }else{
+                    //paramVal是对象
+                    validateExecute(jsonVal, (Map<String, Object>)paramVal);
                 }
-            }else{
-                //paramVal是对象
-                validateExecute(jsonVal, (Map<String, Object>)paramVal);
             }
         }
     }
 
     //请求参数是空，校验json子级有request
-    private void isJsonChildRequest(Object jsonVal){
+    private void checkChildRequest(Object jsonVal){
         if (jsonVal instanceof Map){
             Map<String, Object> jsonRule = (Map<String, Object>)jsonVal;
             Set<String> keySet = jsonRule.keySet();
-            if (RULE_KEY_SET.containsAll(keySet) && Utils.isRequest(jsonRule)){
-                msgSet.add(dealWithMessage(jsonRule));
+            if (RULE_KEY_SET.containsAll(keySet) && ValidateUtils.isRequest(jsonRule)){
+                msgSet.add(messageReturn(jsonRule));
             }else{
                 for (String key:keySet){
-                    isJsonChildRequest(jsonRule.get(key));
+                    checkChildRequest(jsonRule.get(key));
                 }
             }
         }
     }
 
     //校验是否必填
-    private void checkParamRequest(Map<String, Object> jsonRule, Object paramVal){
+    private void checkRequest(Map<String, Object> jsonRule, Object paramVal){
         if (jsonRule == null)
             return;
 
-        if (Utils.isRequest(jsonRule)){
-            if (Utils.isBlankObj(paramVal)){
-                msgSet.add(dealWithMessage(jsonRule)); //必填&&无值
+        if (ValidateUtils.isRequest(jsonRule)){
+            if (ValidateUtils.isBlankObj(paramVal)){
+                msgSet.add(messageReturn(jsonRule)); //必填&&无值
             }else {
-                manageParamVal(jsonRule, paramVal); //必填&&有值
+                paramValToElem(jsonRule, paramVal); //必填&&有值
             }
         }else{
-            if (Utils.isNotBlankObj(paramVal)){
-                manageParamVal(jsonRule, paramVal); //非必填&&有值
+            if (ValidateUtils.isNotBlankObj(paramVal)){
+                paramValToElem(jsonRule, paramVal); //非必填&&有值
             }
-        }
-    }
-
-    //请求参数值可能是List<基本类型>
-    private void manageParamVal(Map<String, Object> jsonRule, Object paramVal){
-        if (paramVal instanceof List){   //前台提交值为List
-            for (Object elem:(List)paramVal){
-                checkDetail(jsonRule, elem);
-            }
-        }else{  //前台提交值非数组
-            checkDetail(jsonRule, paramVal);
         }
     }
 
@@ -153,61 +151,95 @@ public class ValidateMain {
         Object maxValue = jsonRule.get(MAX_VALUE);
         Object minLength = jsonRule.get(MIN_LENGTH);
         Object maxLength = jsonRule.get(MAX_LENGTH);
-        String regex = Utils.objToStr(jsonRule.get(REGEX));
+        String regex = ValidateUtils.objToStr(jsonRule.get(REGEX));
 
         //校验不通过
-        if (Utils.isNotBlankObj(minValue) && Utils.getDouble(val) < Utils.getDouble(minValue)
-            || Utils.isNotBlankObj(maxValue) && Utils.getBigDecimal(val).compareTo(Utils.getBigDecimal(maxValue)) >= 1
-            ||  Utils.isNotBlankObj(minLength) && Utils.objToStr(val).length() < Utils.getDouble(minLength)
-            || Utils.isNotBlankObj(maxLength) && Utils.objToStr(val).length() > Utils.getDouble(maxLength)){
+        if (ValidateUtils.isNotBlankObj(minValue) && ValidateUtils.getDouble(val) < ValidateUtils.getDouble(minValue)
+            || ValidateUtils.isNotBlankObj(maxValue) && ValidateUtils.getBigDecimal(val).compareTo(ValidateUtils.getBigDecimal(maxValue)) >= 1
+            ||  ValidateUtils.isNotBlankObj(minLength) && ValidateUtils.objToStr(val).length() < ValidateUtils.getDouble(minLength)
+            || ValidateUtils.isNotBlankObj(maxLength) && ValidateUtils.objToStr(val).length() > ValidateUtils.getDouble(maxLength)){
 
-            msgSet.add(dealWithMessage(jsonRule));
+            msgSet.add(messageReturn(jsonRule));
             return;
         }
 
         //正则校验
-        if (regex != ""){
+        if (ValidateUtils.isNotBlank(regex)){
             if ( regex.startsWith(REGEX_BEGIN)){
-                try {
-                    regex = getRegexCommon().get(regex);
-                }catch (IOException e){
+                Map<String, String> result = getRegexCommon();
+                if (result != null && result.size() != 0){
+                    regex = result.get(regex);
+                }else {
                     msgSet.add("初始化init.json失败");
-                    e.printStackTrace();
                 }
             }
 
-            if (Pattern.matches(regex, Utils.objToStr(val)) == false){
-                msgSet.add(dealWithMessage(jsonRule));
-                return;
+            if (Pattern.matches(regex, ValidateUtils.objToStr(val)) == false){
+                msgSet.add(messageReturn(jsonRule));
             }
+        }
+    }
+
+    //请求参数值可能是List<基本类型>
+    private void paramValToElem(Map<String, Object> jsonRule, Object paramVal){
+        if (paramVal instanceof List){   //前台提交值为List
+            for (Object elem:(List)paramVal){
+                checkDetail(jsonRule, elem);
+            }
+        }else{  //前台提交值非数组
+            checkDetail(jsonRule, paramVal);
         }
     }
 
     //处理message为空的情况
-    private String dealWithMessage(Map<String, Object> jsonRule){
-        String message = Utils.objToStr(jsonRule.get(MESSAGE));
-        if (Utils.isBlank(message)){
+    private String messageReturn(Map<String, Object> jsonRule){
+        String message = ValidateUtils.objToStr(jsonRule.get(MESSAGE));
+        if (ValidateUtils.isBlank(message)){
             String val = "";
             message = ruleKey + "未通过校验，校验规则：";
             for (String key:jsonRule.keySet()){
-                val = Utils.objToStr(jsonRule.get(key));
-                if (Utils.isNotBlank(val)){
+                val = ValidateUtils.objToStr(jsonRule.get(key));
+                if (ValidateUtils.isNotBlank(val)){
                     val = val.startsWith(REGEX_BEGIN) ? regexCommon.get(val) : val;
                     message += key + "：" + val + "; ";
                 }
             }
+            message = message.substring(0, message.length()-1);
         }
-        return message.substring(0, message.length()-1);
+        return message;
+    }
+
+    //获取需要校验的json
+    private Map<String, Object> ruleFileJsonToMap(ValidateConfig validateConfig) throws Exception{
+        String basePath = validateInterface.basePath();
+        String filePath = ValidateUtils.trimBeginEndChar(basePath, '/') + "/"
+            + ValidateUtils.trimBeginChar(validateConfig.getFile(), '/');
+
+        Map<String, Object> json = validateInterface.getCache(validateConfig);
+        if (json == null || json.size() == 0){
+            json = ruleFileRead(filePath);
+            if (ValidateUtils.isNotBlank(validateConfig.getKeyName())){
+                json = (Map<String, Object>)json.get(validateConfig.getKeyName());
+            }else{
+                Iterator<Map.Entry<String, Object>> it = json.entrySet().iterator();
+                Map.Entry<String, Object> entry = null;
+                while (it.hasNext()){
+                    entry = it.next();
+                    if (entry.getKey().startsWith(JSON_KEY)){
+                        it.remove();
+                    }
+                }
+            }
+            validateInterface.setCache(validateConfig, json);
+        }
+        return json;
     }
 
     //读取json文件到Map<String, Object>
-    private Map<String, Object> readFileToMap(String filePath) throws Exception{
-        Map<String, Object> json = new HashMap<String, Object>();
-        if (Utils.isEmpty(filePath)){
-            return json;
-        }
+    private Map<String, Object> ruleFileRead(String filePath) throws Exception{
+        Map<String, Object> json = new HashMap<>();
         Parser parser = validateInterface.getParser();
-        try (InputStream is = Utils.class.getClassLoader().getResourceAsStream(filePath)){
+        try (InputStream is = ValidateUtils.class.getClassLoader().getResourceAsStream(filePath)){
             if (is != null){
                 if (parser != null && parser.getParserClass() != null){
                     Class parserClazz = parser.getParserClass();
@@ -217,10 +249,10 @@ public class ValidateMain {
                         Object gson = parserClazz.newInstance();
                         Method method = parserClazz.getMethod("fromJson", Reader.class, Class.class);
                         json = (Map<String, Object>)method
-                                .invoke(gson, new InputStreamReader(new BufferedInputStream(is)), Map.class );
+                            .invoke(gson, new InputStreamReader(new BufferedInputStream(is)), Map.class );
                     }else if ("com.alibaba.fastjson.JSON".equals(parserClazz.getName())
-                            && featureArrClass != null
-                            && "Feature[]".equals(featureArrClass.getSimpleName())){
+                        && featureArrClass != null
+                        && "Feature[]".equals(featureArrClass.getSimpleName())){
                         //使用fastjson解析
                         Method method = parserClazz.getMethod("parseObject", InputStream.class, Type.class, featureArrClass);
                         json = (Map<String, Object>)method.invoke(null, is, Map.class, null);
@@ -239,47 +271,23 @@ public class ValidateMain {
         return json;
     }
 
-    //获取需要校验的json
-    private Map<String, Object> getValidateJson(ValidateConfig validateConfig) throws Exception{
-        String basePath = validateInterface.basePath();
-        String filePath = Utils.trimBeginEndChar(basePath, '/') + "/"
-                + Utils.trimBeginChar(validateConfig.getFile(), '/');
-
-        Map<String, Object> json = validateInterface.getCache(validateConfig);
-        if (json == null || json.size() == 0){
-            json = readFileToMap(filePath);
-            if (Utils.isNotBlank(validateConfig.getKeyName())){
-                json = (Map<String, Object>)json.get(validateConfig.getKeyName());
-            }else{
-                Iterator<Map.Entry<String, Object>> it = json.entrySet().iterator();
-                Map.Entry<String, Object> entry = null;
-                while (it.hasNext()){
-                    entry = it.next();
-                    if (entry.getKey().startsWith(JSON_KEY)){
-                        it.remove();
-                    }
-                }
-            }
-            validateInterface.setCache(validateConfig, json);
-        }
-        return json;
-    }
-
     //读取init.json文件到regexCommon
-    private Map<String, String> getRegexCommon() throws IOException{
+    private Map<String, String> getRegexCommon(){
         if (regexCommon != null)
             return regexCommon;
 
         synchronized (this){
             ObjectMapper mapper = new ObjectMapper();
             String basePath = validateInterface.basePath();
-            String filePath = Utils.trimBeginEndChar(basePath, '/') + "/"+ REGEX_COMMON_JSON;
+            String filePath = ValidateUtils.trimBeginEndChar(basePath, '/') + "/"+ REGEX_COMMON_JSON;
             try (InputStream is = this.getClass().getClassLoader().getResourceAsStream(filePath)){
-                regexCommon = is != null ? mapper.readValue(is, Map.class) : new HashMap<>();
+                regexCommon = is == null ? null : mapper.readValue(is, Map.class);
+            }catch (IOException e){
+                msgSet.add("初始化init.json失败");
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
             }
         }
 
         return regexCommon;
     }
-
 }
