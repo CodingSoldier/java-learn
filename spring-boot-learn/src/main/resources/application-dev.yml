@@ -5,5 +5,6 @@ logging:
     com:
       demo: DEBUG  #打印sql
 
+#variable后面也需要一个空格
 variable:
   a: 开发环境

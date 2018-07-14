@@ -3,22 +3,21 @@ package com.demo;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.Feature;
-import com.demo.boy.mapper.BoyExpandMapper;
-import com.demo.boy.mapper.BoyMapper;
-import com.demo.boy.model.Boy;
-import com.demo.boy.model.BoyExample;
+import com.demo.old.boy.mapper.BoyExpandMapper;
+import com.demo.old.boy.mapper.BoyMapper;
+import com.demo.old.boy.model.Boy;
+import com.demo.old.boy.model.BoyExample;
 import com.demo.config.AppProp;
-import com.demo.girl.mapper.GirlExpandMapper;
-import com.demo.girl.mapper.GirlMapper;
+import com.demo.old.girl.mapper.GirlExpandMapper;
+import com.demo.old.girl.mapper.GirlMapper;
 import com.demo.paramsvalidate.ValidateUtils;
-import com.demo.sysresource.mapper.SysResourceMapper;
-import com.demo.sysresource.model.SysResource;
-import com.demo.sysresource.model.SysResourceExample;
-import com.demo.sysrole.mapper.SysRoleMapper;
-import com.demo.sysuser.mapper.SysUserExpandMapper;
-import com.demo.sysuser.mapper.SysUserMapper;
-import com.demo.sysuser.model.SysUser;
-import com.demo.testgenerator.mapper.TestGeneratorMapper;
+import com.demo.old.sysresource.mapper.SysResourceMapper;
+import com.demo.old.sysresource.model.SysResource;
+import com.demo.old.sysresource.model.SysResourceExample;
+import com.demo.old.sysrole.mapper.SysRoleMapper;
+import com.demo.old.sysuser.mapper.SysUserExpandMapper;
+import com.demo.old.sysuser.mapper.SysUserMapper;
+import com.demo.old.sysuser.model.SysUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.junit.Test;
@@ -40,8 +39,6 @@ public class T {
 
     @Autowired
     AppProp appProp;
-    @Autowired
-    TestGeneratorMapper testGeneratorMapper;
     @Autowired
     SysUserExpandMapper sysUserExpandMapper;
     @Autowired

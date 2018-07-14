@@ -1,10 +1,33 @@
 package com.demo.paramsvalidate;
 
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * author chenpiqian 2018-05-25
+ */
 public class ValidateUtils<T> extends org.springframework.util.StringUtils{
+
+    private static final Logger LOGGER = Logger.getLogger("@ParamsValidate ERROR ");
+
+    public static void log(String msg, Throwable e){
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        msg = isBlank(msg) ? e.getMessage() : msg;
+        msg = "URI: "+request.getRequestURI()+". Exception Message: "+msg;
+        LOGGER.log(Level.SEVERE, msg, e);
+    }
+
+    public static void log(Throwable e){
+        log("", e);
+    }
+
     //空、空格
     public static boolean isBlank(String str1) {
         return isEmpty(str1) || "".equals(str1.trim());

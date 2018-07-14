@@ -22,14 +22,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+/**
+ * author chenpiqian 2018-05-25
+ */
 @Aspect
 @Component
 public class ValidateAspect {
-
-    private static final Logger LOGGER = Logger.getLogger("@ParamsValidate");
 
     public static final String VALIDATE_EXCEPTION_MSG ="服务暂不可用";
 
@@ -71,7 +70,7 @@ public class ValidateAspect {
                 resultValidate.setMsgSet(new HashSet<String>(){{
                     add("@ParamsValidate无法处理请求参数");
                 }});
-                LOGGER.log(Level.SEVERE, "@ParamsValidate无法处理请求参数", e);
+                ValidateUtils.log("@ParamsValidate无法处理请求参数", e);
             }
 
            //正常获取请求参数，可校验

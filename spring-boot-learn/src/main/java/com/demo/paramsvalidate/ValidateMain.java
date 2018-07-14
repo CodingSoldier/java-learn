@@ -11,14 +11,13 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+/**
+ * author chenpiqian 2018-05-25
+ */
 @Component
 public class ValidateMain {
-
-    private static final Logger LOGGER = Logger.getLogger("@ParamsValidate");
 
     private static volatile Map<String, String> regexCommon;
 
@@ -63,7 +62,7 @@ public class ValidateMain {
             resultValidate.setMsgSet(new HashSet<String>(){{
                 add("@ParamsValidate读取、解析json文件失败");
             }});
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            ValidateUtils.log(e);
         }
 
         msgSet = new TreeSet<>();
@@ -93,6 +92,7 @@ public class ValidateMain {
             for (String key:json.keySet()){
                 Map<String, Object> jsonVal = (Map<String, Object>)json.get(key);
                 Object paramVal = paramMap.get(key);
+                ruleKey = key;
                 Set<String> subKeySet = jsonVal.keySet();
                 if(paramVal == null){
                     checkChildRequest(jsonVal);
@@ -218,6 +218,9 @@ public class ValidateMain {
         Map<String, Object> json = validateInterface.getCache(validateConfig);
         if (json == null || json.size() == 0){
             json = ruleFileRead(filePath);
+            if (json == null)
+                throw new Exception("@ParamsValidate元素value、file错误");
+
             if (ValidateUtils.isNotBlank(validateConfig.getKeyName())){
                 json = (Map<String, Object>)json.get(validateConfig.getKeyName());
             }else{
@@ -230,7 +233,12 @@ public class ValidateMain {
                     }
                 }
             }
-            validateInterface.setCache(validateConfig, json);
+
+            if (json != null){
+                validateInterface.setCache(validateConfig, json);
+            }else{
+                throw new Exception("@ParamsValidate元素keyName错误");
+            }
         }
         return json;
     }
@@ -284,7 +292,7 @@ public class ValidateMain {
                 regexCommon = is == null ? null : mapper.readValue(is, Map.class);
             }catch (IOException e){
                 msgSet.add("初始化init.json失败");
-                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                ValidateUtils.log(e);
             }
         }
 

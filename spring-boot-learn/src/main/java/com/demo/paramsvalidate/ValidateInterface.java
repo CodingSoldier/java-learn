@@ -7,7 +7,7 @@ import com.demo.paramsvalidate.bean.ValidateConfig;
 import java.util.Map;
 
 /**
- * author chenpiqian
+ * author chenpiqian 2018-05-25
  */
 public interface ValidateInterface {
     /**

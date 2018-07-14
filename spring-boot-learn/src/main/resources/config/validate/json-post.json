@@ -26,8 +26,8 @@
         "name": {
             "request": "false",
             "minLength": 2,
-            "maxLength": 10,
-            "message": "2<=长度<=10"
+            "maxLength": 1,
+//            "message": "2<=长度<=10"
         }
     },
 
