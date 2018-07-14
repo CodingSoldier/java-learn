@@ -42,7 +42,6 @@ public class ValidateMain {
     public static final String REGEX_BEGIN = "REGEX_";
     public static final String JSON_KEY = "jsonKey";
 
-
     private Set<String> msgSet;  //错误提示信息
     private String ruleKey;  //规则的key
 
@@ -50,7 +49,7 @@ public class ValidateMain {
     private ValidateInterface validateInterface;
 
     //校验params
-    public ResultValidate validateEntry(ValidateConfig validateConfig, Map<String, Object> requestMap) {
+    public ResultValidate validateEntry(Method method, ValidateConfig validateConfig, Map<String, Object> requestMap) {
         ResultValidate resultValidate = new ResultValidate(true);
 
         //读取@ParamsValidate中的file
@@ -62,7 +61,7 @@ public class ValidateMain {
             resultValidate.setMsgSet(new HashSet<String>(){{
                 add("@ParamsValidate读取、解析json文件失败");
             }});
-            ValidateUtils.log(e);
+            ValidateUtils.log(method, e);
         }
 
         msgSet = new TreeSet<>();

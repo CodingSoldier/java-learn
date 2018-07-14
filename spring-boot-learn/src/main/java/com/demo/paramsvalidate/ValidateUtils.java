@@ -1,9 +1,6 @@
 package com.demo.paramsvalidate;
 
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
@@ -15,17 +12,23 @@ import java.util.logging.Logger;
  */
 public class ValidateUtils<T> extends org.springframework.util.StringUtils{
 
-    private static final Logger LOGGER = Logger.getLogger("@ParamsValidate ERROR ");
+    private static final Logger LOGGER = Logger.getLogger("@ParamsValidate");
 
-    public static void log(String msg, Throwable e){
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        msg = isBlank(msg) ? e.getMessage() : msg;
-        msg = "URI: "+request.getRequestURI()+". Exception Message: "+msg;
+    public static void log(String msg, Method method, Throwable e){
+        if (method != null){
+            msg = String.format("ERROR METHOD: %s.%s  Exception Message: %s",method.getDeclaringClass().getName(),method.getName(),msg);
+        }else {
+            msg = String.format("Exception Message: %s",msg);
+        }
         LOGGER.log(Level.SEVERE, msg, e);
     }
 
+    public static void log(Method method, Throwable e){
+        log(e.getMessage(), method, e);
+    }
+
     public static void log(Throwable e){
-        log("", e);
+        log(null, e);
     }
 
     //空、空格

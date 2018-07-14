@@ -70,12 +70,12 @@ public class ValidateAspect {
                 resultValidate.setMsgSet(new HashSet<String>(){{
                     add("@ParamsValidate无法处理请求参数");
                 }});
-                ValidateUtils.log("@ParamsValidate无法处理请求参数", e);
+                ValidateUtils.log("@ParamsValidate无法处理请求参数", method, e);
             }
 
            //正常获取请求参数，可校验
            if (allParam != null)
-                resultValidate = validateMain.validateEntry(validateConfig, allParam);
+                resultValidate = validateMain.validateEntry(method, validateConfig, allParam);
 
         }
         return resultValidate;

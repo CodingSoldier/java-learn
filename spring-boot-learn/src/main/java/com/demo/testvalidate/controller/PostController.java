@@ -30,12 +30,12 @@ public class PostController {
         return map;
     }
 
-    //@PostMapping("/p2/vo")
-    //@ParamsValidate(file = "json-post.json", keyName="jsonKeyP2")
-    //public Object p2(HttpServletRequest request, HttpServletResponse response,@RequestBody UserVo userVo) throws Exception{
-    //
-    //    return userVo;
-    //}
+    @PostMapping("/p2/vo")
+    @ParamsValidate(file = "json-post.json", keyName="jsonKeyP2")
+    public Object p2(HttpServletRequest request, HttpServletResponse response,@RequestBody UserVo userVo) throws Exception{
+
+        return userVo;
+    }
 
     @PostMapping("/pg3/vo")
     @ParamsValidate(file = "json-post.json")
