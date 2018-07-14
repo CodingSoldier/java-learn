@@ -32,3 +32,34 @@ public class C_Init{
         s.say();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+class Bean{
+    char c;
+
+    public char getC() {
+        return c;
+    }
+
+    public void setC(char c) {
+        this.c = c;
+    }
+}
+
+class C_Init2{
+    public static void main(String[] args){
+        //char c = ' ';
+        Bean bean = new Bean();
+        System.out.println("***"+bean.getC()+"***");
+        System.out.println(' ' == bean.getC());
+    }
+}

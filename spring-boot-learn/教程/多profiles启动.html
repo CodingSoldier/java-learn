@@ -1,0 +1,53 @@
+打包、运行指定profile：
+    1、pom.xml配置
+        <!--配置test、prod环境的profile-->
+        <profiles>
+            <profile>
+                <id>test</id>
+                <properties>
+                    <environment>test</environment>
+                </properties>
+            </profile>
+            <profile>
+                <id>prod</id>
+                <properties>
+                    <environment>prod</environment>
+                </properties>
+            </profile>
+        </profiles>
+
+        <!--resource资源文件打包-->
+        <resource>
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>**/*.*</include>
+            </includes>
+            <!--排除资源文件-->
+            <excludes>
+                <exclude>application-*.yml</exclude>
+                <exclude>mybatis-generator/</exclude>
+            </excludes>
+            <filtering>false</filtering>
+        </resource>
+        <!--打包application-XX.yml，${profile中properties的标签名}-->
+        <resource>
+            <filtering>true</filtering>
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>application-${environment}.yml</include>
+            </includes>
+        </resource>
+    2、运行maven打包命令：
+        打包test：mvn clean package -P test
+            这样打出来的包中yml文件只会包含：application.yml、application-test.yml
+        打包prod：mvn clean package -P prod
+            这样打出来的包中yml文件只会包含：application.yml、application-prod.yml
+    3、找到jar包运行
+        java -jar 名称.jar --spring.profiles.active=prod
+        即使application.properties已经配置了spring.profiles.active的值，此配置(spring.profiles.active)的值依旧会被命令行参数覆盖
+
+idea指定profile为dev启动：
+    Edit Configrations ——>  添加spring boot
+      	Name：起一个名字
+      	Main class: 选择Application启动类
+      	Active profiles: dev

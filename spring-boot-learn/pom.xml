@@ -117,24 +117,55 @@
         </dependency>
     </dependencies>
 
+    <!--配置test、prod环境的profile-->
+    <profiles>
+        <profile>
+            <id>test</id>
+            <properties>
+                <environment>test</environment>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <environment>prod</environment>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
+        <finalName>spring-boot-lean</finalName>
         <resources>
+            <!--mapper.xml打包-->
             <resource>
-                <!--解决resource中的资源文件不打包-->
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.*</include>
-                </includes>
-                <filtering>false</filtering>
-            </resource>
-            <resource>
-                <!--解决mapper.xml不打包-->
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.xml</include>
                 </includes>
                 <filtering>false</filtering>
             </resource>
+            <!--resource资源文件打包-->
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+                <!--排除资源文件-->
+                <excludes>
+                    <exclude>application-*.yml</exclude>
+                    <exclude>mybatis-generator/</exclude>
+                </excludes>
+                <filtering>false</filtering>
+            </resource>
+            <!--打包application-XX.yml，${profile中properties的标签名}-->
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>application-${environment}.yml</include>
+                </includes>
+            </resource>
+
         </resources>
 
         <plugins>

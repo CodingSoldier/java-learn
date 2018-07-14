@@ -1,9 +1,9 @@
 server:
-   port: 8080
+   port: 8081
 logging:
   level:
     com:
       demo: DEBUG  #打印sql
 
 variable:
-  a: 开发环境
+  a: 测试环境

@@ -38,11 +38,3 @@ spring:
 #  configuration:
 #    cacheEnabled: true
 
-logging:
-  level:
-    com:
-      demo: DEBUG  #打印sql
-
-variable:
-  a: 默认
-
