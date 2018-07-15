@@ -63,3 +63,36 @@ class C_Init2{
         System.out.println(' ' == bean.getC());
     }
 }
+
+
+
+
+
+
+
+class C_Init3{
+
+    public static void test1(int i, String... strings){
+        System.out.println(i);
+        System.out.println(strings.length);
+    }
+
+    public static void main(String[] args){
+        test1(1);
+        test1(1, "a");
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
