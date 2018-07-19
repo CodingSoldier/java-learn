@@ -120,6 +120,12 @@
     <!--配置test、prod环境的profile-->
     <profiles>
         <profile>
+            <id>dev</id>
+            <properties>
+                <environment>dev</environment>
+            </properties>
+        </profile>
+        <profile>
             <id>test</id>
             <properties>
                 <environment>test</environment>

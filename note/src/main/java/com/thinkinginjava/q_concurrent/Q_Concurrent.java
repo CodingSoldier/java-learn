@@ -1424,21 +1424,21 @@ class CriticalSection {
 class SingleSynch {
     public synchronized void f() {
         for (int i = 0; i < 5; i++) {
-            print("f()");
+            print("inFn()");
             Thread.yield();
         }
     }
 
     public synchronized void g() {
         for (int i = 0; i < 5; i++) {
-            print("g()");
+            print("outNotFill()");
             Thread.yield();
         }
     }
 
     public synchronized void h() {
         for (int i = 0; i < 5; i++) {
-            print("h()");
+            print("outFill()");
             Thread.yield();
         }
     }
@@ -1448,9 +1448,9 @@ class TripleSynch {
     private Object syncObjectG = new Object();
     private Object syncObjectH = new Object();
 
-    public synchronized void f() {    //this、syncObjectG、syncObjectH互不影响，一个线程执行public synchronized void f()的时候，其他线程可以执行public void g() 、 public void h()
+    public synchronized void f() {    //this、syncObjectG、syncObjectH互不影响，一个线程执行public synchronized void inFn()的时候，其他线程可以执行public void outNotFill() 、 public void outFill()
         for (int i = 0; i < 500; i++) {
-            print("f()");
+            print("inFn()");
             Thread.yield();
         }
     }
@@ -1458,7 +1458,7 @@ class TripleSynch {
     public void g() {
         synchronized (syncObjectG) {
             for (int i = 0; i < 500; i++) {
-                print("g()");
+                print("outNotFill()");
                 Thread.yield();
             }
         }
@@ -1467,7 +1467,7 @@ class TripleSynch {
     public void h() {
         synchronized (syncObjectH) {
             for (int i = 0; i < 500; i++) {
-                print("h()");
+                print("outFill()");
                 Thread.yield();
             }
         }
@@ -2035,7 +2035,7 @@ class Blocked2 implements Runnable {
     BlockedMutex blocked = new BlockedMutex();
 
     public void run() {
-        System.out.println("BlockedMutex.f()开始执行");
+        System.out.println("BlockedMutex.inFn()开始执行");
         blocked.f();
         System.out.println("退出run，线程死亡");
     }
@@ -4353,9 +4353,9 @@ class Reader implements Runnable {
     @Override
     public void run() {
         for (int i = 0; i < 10; i++) {
-            System.out.printf("%s: Price 1: %f\n", Thread.currentThread()
+            System.out.printf("%s: Price 1: %inFn\n", Thread.currentThread()
                     .getName(), pricesInfo.getPrice1());
-            System.out.printf("%s: Price 2: %f\n", Thread.currentThread()
+            System.out.printf("%s: Price 2: %inFn\n", Thread.currentThread()
                     .getName(), pricesInfo.getPrice2());
         }
     }

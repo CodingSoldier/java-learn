@@ -3,8 +3,8 @@ package com.demo.testvalidate.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.Feature;
+import com.demo.paramsvalidate.ValidateInterfaceAdapter;
 import com.demo.paramsvalidate.ValidateUtils;
-import com.demo.paramsvalidate.ValidateInterface;
 import com.demo.paramsvalidate.bean.Parser;
 import com.demo.paramsvalidate.bean.ResultValidate;
 import com.demo.paramsvalidate.bean.ValidateConfig;
@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Component
-public class ValidateInterfaceImpl implements ValidateInterface, InitializingBean {
+public class ValidateInterfaceImpl extends ValidateInterfaceAdapter implements  InitializingBean {
 
     //不使用缓存
     @Autowired
@@ -43,44 +43,30 @@ public class ValidateInterfaceImpl implements ValidateInterface, InitializingBea
 
     /**
      * json解析器
-     * 1、使用默认解析器jackson，直接返回null即可
+     * 1、使用默认解析器jackson，可不覆盖此方法
      * 2、使用gson，请返回 new Parser(Gson.class);
      * 3、使用fastjson，请返回new Parser(JSON.class, Feature[].class)
      * 为了支持fastjson，搞得好坑爹
      */
     public Parser getParser(){
-        //return null;
         //return new Parser(Gson.class);
         return new Parser(JSON.class, Feature[].class);
     }
 
-    ////不使用缓存，返回空map即可
-    //@Override
-    //public Map<String, Object> getCache(ValidateConfig validateConfig) {
-    //    return new HashMap<>();
-    //}
-    //
-    ////不使用缓存，本方法可不处理
-    //@Override
-    //public void setCache(ValidateConfig validateConfig, Map<String, Object> json) {
-    //
-    //}
-
-    ////不使用缓存，可以不实现InitializingBean，不必实现本方法
-    //@Override
-    //public void afterPropertiesSet() throws Exception {
-    //
-    //}
-
-
-    //获取redis缓存中的校验规则
+    /**
+     * 不使用缓存，可不覆盖此方法
+     * 获取redis缓存中的校验规则
+     */
     @Override
     public Map<String, Object> getCache(ValidateConfig validateConfig) {
         String key = createKey(validateConfig);
         return redisTemplate.opsForHash().entries(key);
     }
 
-    //设置redis校验规则到缓存中
+    /**
+     * 不使用缓存，可不覆盖此方法
+     * 设置redis校验规则到缓存中
+     */
     @Override
     public void setCache(ValidateConfig validateConfig, Map<String, Object> json) {
         String key = createKey(validateConfig);

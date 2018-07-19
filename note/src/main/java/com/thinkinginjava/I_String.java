@@ -26,7 +26,7 @@ public class I_String {
 class E10_CheckForMatch {
     public static void main(String[] args) {
         String source = "Java now has regular expressions";
-        String[] regEx = {"^Java", "\\Breg.*",  "n.w\\s+h(a|i)s", "s?", "s*", "s+", "s{4}", "s{1}.",  "s{0,3}"};
+        String[] regEx = {"^Java", "\\Breg.*",  "n.w\\s+outFill(a|i)s", "s?", "s*", "s+", "s{4}", "s{1}.",  "s{0,3}"};
         System.out.println("Source string: " + source);
         for(String pattern : regEx) {
             System.out.println("Regular expression: " + pattern + "\"");

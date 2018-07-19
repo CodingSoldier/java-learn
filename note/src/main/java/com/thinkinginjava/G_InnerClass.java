@@ -70,7 +70,7 @@ interface SimpleInterface{
 class Outer5 {
     private class Inner implements SimpleInterface {
         public void f() {
-            System.out.println("Outer5.Inner.f");
+            System.out.println("Outer5.Inner.inFn");
         }
     }
     public SimpleInterface get() { return new Inner(); }

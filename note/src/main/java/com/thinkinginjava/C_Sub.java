@@ -5,3 +5,6 @@ public class C_Sub {
         System.out.println("protected权限可以被同一包中的类访问，protected权限比默认（包访问）权限宽松，");
     }
 }
+
+
+

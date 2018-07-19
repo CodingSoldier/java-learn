@@ -60,7 +60,7 @@ class T{
 //143-144
 class Fi{
     private final void f(){
-        System.out.println("f");
+        System.out.println("inFn");
     }
     final void f1(){
         System.out.println("f1");
@@ -69,7 +69,7 @@ class Fi{
 
 class Fi1 extends Fi{
     private final void f(){
-        System.out.println("fi1#f");
+        System.out.println("fi1#inFn");
     }
     //void f1(){  //报错
     //    System.out.println("fi1#f1");

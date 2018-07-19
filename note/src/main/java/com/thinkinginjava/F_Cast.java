@@ -12,7 +12,7 @@ class MoreUseful extends Useful{
 
 
 abstract class NoAbstractMethods {
-    void f() { System.out.println("f()"); }
+    void f() { System.out.println("inFn()"); }
 }
 
 public class F_Cast {

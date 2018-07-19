@@ -112,7 +112,7 @@ class DynamicProxyHandler implements InvocationHandler {
 }
 class E22_SimpleDynamicProxyDemo {
     public static void main(String[] args) {
-        /**  Proxy.newProxyInstance()实现方式类似于通过 Constructor.newInstance(new Object[]{h}) 来实现
+        /**  Proxy.newProxyInstance()实现方式类似于通过 Constructor.newInstance(new Object[]{outFill}) 来实现
          Class c=Class.forName("A");
          //{ InvocationHandler.class }是new Class[]{InvocationHandler.class} 的简写，是一个元素为Class类型的数组
          Constructor c1=c.getDeclaredConstructor({ InvocationHandler.class });

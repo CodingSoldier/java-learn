@@ -65,3 +65,64 @@ public class D_Extend {
         new Stem();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Super {
+    public int field = 0;
+    private void privateFn1(){
+        System.out.println("父类私有方法");
+    }
+    protected void protectedFn1(){
+        System.out.println("父类protected方法");
+    }
+    public int getField() { return field; }
+}
+
+class Sub extends Super {
+    public int field = 1;
+    private void privateFn1(){
+        System.out.println("子类私有方法");
+    }
+    protected void protectedFn1(){
+        System.out.println("子类protected方法");
+    }
+    public int getField() { return field; }
+    public int getSuperField() { return super.field; }
+}
+
+class FieldAccess {
+    public static void main(String[] args) {
+        Super sup = new Sub(); // Upcast
+        sup.protectedFn1();
+        //System.out.println("sup.field = " + sup.field +
+        //    ", sup.getField() = " + sup.getField());
+        //Sub sub = new Sub();
+        //System.out.println("sub.field = " +
+        //    sub.field + ", sub.getField() = " +
+        //    sub.getField() +
+        //    ", sub.getSuperField() = " +
+        //    sub.getSuperField());
+    }
+}

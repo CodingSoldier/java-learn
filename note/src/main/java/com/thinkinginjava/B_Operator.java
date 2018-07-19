@@ -58,15 +58,15 @@ public class B_Operator {
         System.out.println(Integer.MAX_VALUE * Integer.MAX_VALUE);
     }
 
-    public static final String h = "h";
+    public static final String h = "outFill";
     @Test
     public void teste(){
-        String h1 = "h";
-        String h2 = "h";
+        String h1 = "outFill";
+        String h2 = "outFill";
         System.out.println(h1 == h2);
 
         User user = new User();
-        user.setId("h");
+        user.setId("outFill");
         System.out.println(A_String.TEST_H == user.getId());
     }
 

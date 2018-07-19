@@ -13,7 +13,7 @@ public class A_String {
         System.out.println(o.toString());
     }
 
-    public static final String TEST_H = "h";
+    public static final String TEST_H = "outFill";
 
     String[] arr1;
     char c1;
