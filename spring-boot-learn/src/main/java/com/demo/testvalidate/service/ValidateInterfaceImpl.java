@@ -3,6 +3,7 @@ package com.demo.testvalidate.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.Feature;
+import com.demo.paramsvalidate.ValidateAspect;
 import com.demo.paramsvalidate.ValidateInterfaceAdapter;
 import com.demo.paramsvalidate.ValidateUtils;
 import com.demo.paramsvalidate.bean.Parser;
@@ -35,9 +36,19 @@ public class ValidateInterfaceImpl extends ValidateInterfaceAdapter implements  
     //参数校验未通过, 返回自定义数据给客户端的数据
     @Override
     public Object validateNotPass(ResultValidate resultValidate) {
+        Set<String> msgSet = resultValidate.getMsgSet();
+        String msg = "";
+        if (msgSet != null && msgSet.size() == 1 && msgSet.contains(ValidateAspect.VALIDATE_EXCEPTION_MSG)){
+            msg = "服务暂不可用";
+        }else {
+            for (String str: msgSet){
+                msg += str.substring(0, str.indexOf("校验规则"));
+            }
+        }
+
         Map<String, Object> r = new HashMap<>();
         r.put("success", resultValidate.isPass());
-        r.put("msg", resultValidate.getMsgSet());
+        r.put("msg", msg);
         return r;
     }
 

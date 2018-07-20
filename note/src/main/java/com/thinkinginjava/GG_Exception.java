@@ -17,7 +17,6 @@ class Rethrowing {
             inFn();
         } catch (Exception e) {
             System.out.println("outNotFill未返回原来的异常，打印异常");
-            e.printStackTrace(System.out);
             throw e;
         }
     }
@@ -39,12 +38,7 @@ class Rethrowing {
             System.out.println("catch outNotFill");
             e.printStackTrace(System.out);
         }
-        try {
-            outFill();
-        } catch (Exception e) {
-            System.out.println("catch outFill");
-            e.printStackTrace(System.out);
-        }
+
     }
 }
 
@@ -62,25 +56,26 @@ class TwoException extends Exception {
 }
 
 class RethrowNew {
-    public static void f() throws OneException {
-        System.out.println("originating the exception in f()");
-        throw new OneException("thrown from f()");
+    public static void throwsOneException() throws OneException {
+        throw new OneException("OneException");
+    }
+
+    public static void catchOneThrowTwo() throws TwoException {
+        try {
+            throwsOneException();
+        } catch (OneException e) {
+            TwoException two = new TwoException("TwoException");
+
+            //把two和e这两个异常连接起来
+            two.initCause(e);
+            throw two;
+        }
     }
 
     public static void main(String[] args) {
         try {
-            try {
-                f();
-            } catch (OneException e) {
-                System.out.println(
-                    "Caught in inner try, e.printStackTrace()");
-                e.printStackTrace(System.out);
-                //catch异常之后，抛出一个新的异常TwoException，则外部再catch之后无法获取OneException的异常信息，只能获取TwoException
-                throw new TwoException("from inner try");
-            }
+            catchOneThrowTwo();
         } catch (TwoException e) {
-            System.out.println(
-                "Caught in outer try, e.printStackTrace()");
             e.printStackTrace(System.out);
         }
     }
@@ -91,6 +86,45 @@ class RethrowNew {
 
 
 
+class SubRuntimeException extends RuntimeException{
+    public SubRuntimeException(String s){
+        super(s);
+    }
+}
+
+class SubException extends Exception{
+    public SubException(String s){
+        super(s);
+    }
+}
+
+
+class CheckNoCheckException {
+
+    //RuntimeException为：不受检查异常。可以不catch、不抛出
+    public static void noCheckFn(){
+        throw new SubRuntimeException("可以不catch、不抛出");
+    }
+
+    //非RuntimeException的异常为：被检查的异常。要求程序员catch 或者 往上抛出
+    public static void checkFn() throws SubException{
+        throw new SubException("需要catch或抛出");
+    }
+
+    public static void main(String[] args) {
+
+        try {
+            checkFn();
+        }catch (SubException e){
+            e.printStackTrace(System.out);
+        }
+
+        System.out.println("**********catch异常后继续执行**********");
+
+        noCheckFn();
+
+    }
+}
 
 
 
@@ -209,3 +243,74 @@ class DynamicFields {
         return result;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+class VeryImportantException extends Exception {
+    public String toString() {
+        return "A very important exception!";
+    }
+}
+
+class HoHumException extends Exception {
+    public String toString() {
+        return "A trivial exception";
+    }
+}
+
+class LostMessage {
+    void f() throws VeryImportantException {
+        throw new VeryImportantException();
+    }
+    void dispose() throws HoHumException {
+        throw new HoHumException();
+    }
+    public static void main(String[] args) {
+
+        //try catch中有try finally，则里面finally中的异常会导致里层try的异常丢失
+        try {
+            LostMessage lm = new LostMessage();
+            try {
+                lm.f();
+            }finally {
+                lm.dispose();
+            }
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -117,13 +117,17 @@
         </dependency>
     </dependencies>
 
-    <!--配置test、prod环境的profile-->
+    <!--配置环境的profile-->
     <profiles>
+        <!--dev默认激活，使用idea Spring Boot 配置启动工程，需要dev的配置-->
         <profile>
             <id>dev</id>
             <properties>
                 <environment>dev</environment>
             </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
         <profile>
             <id>test</id>
