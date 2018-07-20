@@ -2,6 +2,8 @@ package com.thinkinginjava;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -70,5 +72,6 @@ class E20_Scanner {
         System.out.println(dh.getClass().getCanonicalName());
     }
 }
+
 
 
