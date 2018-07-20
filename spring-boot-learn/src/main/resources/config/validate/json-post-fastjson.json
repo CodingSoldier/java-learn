@@ -20,7 +20,8 @@
     },
     "birthday": {
         "request": true,
-        "message": "birthday：必填"
+        "maxLength": 1,
+//        "message": "birthday：必填"
     },
     "salaryNum": {
         "request": "false",
@@ -31,7 +32,7 @@
         "name": {
             "request": "false",
             "minLength": 2,
-            "maxLength": 11111,
+            "maxLength": 1,
 //            "message": "2<=长度<=10"
         }
     },

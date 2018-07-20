@@ -37,6 +37,4 @@ spring:
 #mybatis:
 #  configuration:
 #    cacheEnabled: true
-variable:
-  a: 开发环境
 
