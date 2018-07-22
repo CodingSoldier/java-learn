@@ -1,5 +1,6 @@
 package com.thinkinginjava;
 
+import com.alibaba.fastjson.JSON;
 import typeinfo.pets.Mouse;
 import typeinfo.pets.Pet;
 
@@ -35,28 +36,222 @@ class E01_PetsHolder {
 }
 
 
+// 泛型：参数化类型。
+class MyHolder<T>{
+    private T a;
 
+    public MyHolder(T a){this.a = a;}
+
+    public T get() {
+        return a;
+    }
+
+    public void set(T a) {
+        this.a = a;
+    }
+}
+class TestMyHolder {
+    public static void main(String[] args) {
+        MyHolder<String> s0 = new MyHolder<>("sss");
+        //MyHolder<String> s1 = new MyHolder<>(111);   //编译报错
+        System.out.println(s0.get());
+
+        MyHolder<Integer> i0 = new MyHolder<>(111);
+        //MyHolder<Integer> i1 = new MyHolder<>("sss");  //编译报错
+        System.out.println(i0.get());
+    }
+}
+
+//泛型：参数化类型
+/**
+可用T表示类型参数，用尖括号括住T，放在类名后面，这样类中的成员（属性和方法）就可以使用T了。
+ 当我们new出一个MyHolder实例时指定MyHolder持有类型参数为String，则MyHolder中的构造函数、set()能够访问到类上的类型参数T，知道T是String，可以将方法中的类型参数设置为String。同理，在MyHolder实例中，say()返回值类型的是String。
+
+ 创建第二个MyHolder实例i0时，指定类型参数T为Integer，与第一个MyHolder实例s0比较。T就像是一个参数，可以接各种类型。且只接受类型，不接受124，"afbc"等这些具体的值。所以T叫做类型参数。
+ */
+
+
+/**
+ * <T>叫做参数列表，列表中的类型参数可以有多个，如：<A, B>
+ * 将泛型参数列表置于返回值前的方法叫做泛型方法，如：
+ * static方法不能访问类上的类型参数，如果static方法需要使用泛型能力，就必须将static方法定义为泛型方法。
+ */
+class MyHolderStatic{
+    //在返回值前加上泛型参数列表<T>，say方法就成为了泛型方法
+    public static <T> T say(T params) {
+        System.out.println(params);
+        return params;
+    }
+
+}
+
+
+// 泛型擦除：在静态代码检查阶段jvm知道类型参数具体是什么类型，如：MyHolder<String>的类型参数是String，MyHolder<Integer>的类型参数是Integer。
+// 但是在运行时，jvm会将类型参数删掉，MyHolder<String>、MyHolder<Integer>都被擦除为原生类型MyHolder
+// 通过s0.getClass().getTypeParameters()可以知道，我们的本意是获取s0、i0的类型参数，但是在运行时仅能获取到类型参数的占位符T，而没能获取到String、Integer。
+// 在实际编程中，获取类型参数仅仅得到占位符，其实就相当于没有获取到任何有用的信息。
+class TestWipe {
+    public static void main(String[] args) {
+        MyHolder<String> s0 = new MyHolder<>("sss");
+        MyHolder<Integer> i0 = new MyHolder<>(111);
+        System.out.println("MyHolder<String> 和 MyHolder<Integer>在运行时，是同一类型吗？");
+        System.out.println(s0.getClass() == i0.getClass());
+        System.out.println("s0的类型参数：" + Arrays.toString(s0.getClass().getTypeParameters()));
+        System.out.println("i0的类型参数：" + Arrays.toString(i0.getClass().getTypeParameters()));
+    }
+}
+
+
+
+
+
+
+
+//p384
+class Generic<T> {}
+
+class ArrayOfGenericReference {
+    static Generic<Integer>[] gia;
+}
+
+class ArrayOfGeneric {
+    static final int SIZE = 100;
+    static Generic<Integer>[] gia;
+    //@SuppressWarnings("unchecked")
+    public static void main(String[] args) {
+        // Compiles; produces ClassCastException:
+        //gia = (Generic<Integer>[])new Object[SIZE];
+        // Runtime type is the raw (erased) type:
+        gia = (Generic<Integer>[])new Generic[SIZE];
+        System.out.println(gia.getClass().getSimpleName());
+        gia[0] = new Generic<Integer>();
+        //gia[1] = new Object(); // Compile-time error
+        // Discovers type mismatch at compile time:
+        //gia[2] = new Generic<Double>();
+    }
+}
+
+
+
+
+
+
+class GenericArray<T> {
+    private T[] array;
+    //@SuppressWarnings("unchecked")
+    public GenericArray(int sz) {
+        array = (T[])new Object[sz];
+    }
+    public void put(int index, T item) {
+        array[index] = item;
+    }
+    public T get(int index) { return array[index]; }
+    // Method that exposes the underlying representation:
+    public T[] rep() { return array; }
+
+    public static void main(String[] args) {
+        GenericArray<Integer> gai = new GenericArray<Integer>(10);
+        // This causes a ClassCastException:
+        //Integer[] ia = gai.rep();
+        // This is OK:
+        Object[] oa = gai.rep();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Building {}
+class House extends Building {}
+
+class ClassTypeCapture {
+
+    public static <T> List<T> parseArray(String response,Class<T> object){
+        List<T> modelList = JSON.parseArray(response, object);
+        return modelList;
+    }
+    Class kind;
+    public ClassTypeCapture(Class kind) {
+        this.kind = kind;
+    }
+    public boolean f(Object arg) {
+        return kind.isInstance(arg);
+    }
+
+    public static void main(String[] args) {
+        List<String> list = ClassTypeCapture.parseArray("[\"dsfas\",1123]",String.class);
+        System.out.println(list.toString());
+    }
+}
+
+
+
+
+
+
+
+
+
+
+class MyHolderBoundary<T extends List>{
+    private T a;
+
+    public MyHolderBoundary(T a){this.a = a;}
+
+    public T get() {
+        return a;
+    }
+
+    public void set(T a) {
+        this.a = a;
+    }
+}
+
+class TestMyHolderBoundary {
+    public static void main(String[] args) {
+        MyHolderBoundary<List> l0 = new MyHolderBoundary<>(new ArrayList());
+        // 有边界的类型参数，在运行时，类型参数仍然是T
+        System.out.println("l0的类型参数：" + Arrays.toString(l0.getClass().getTypeParameters()));
+    }
+}
+
+
+
+class TestMyHolderStatic111 {
+    public static void main(String[] args) {
+
+    }
+}
+
+
+
+/*
 
 //P357 实现一个堆栈存储类
 class LinkedStack<T> {
-    private class Node {
-        T item;
-        Node next;
-        Node() {
-            item = null;
-            next = null;
-        }
-        Node(T item, Node next) {
+    private static class Node<U> {
+        U item;
+        Node<U> next;
+        Node() { item = null; next = null; }
+        Node(U item, Node<U> next) {
             this.item = item;
             this.next = next;
         }
-        boolean end() {
-            return item == null && next == null;
-        }
+        boolean end() { return item == null && next == null; }
     }
-    private Node top = new Node(); // End sentinel
+    private Node<T> top = new Node<T>(); // End sentinel
     public void push(T item) {
-        top = new Node(item, top);
+        top = new Node<T>(item, top);
     }
     public T pop() {
         T result = top.item;
@@ -64,19 +259,80 @@ class LinkedStack<T> {
             top = top.next;
         return result;
     }
-
-    public static void main(String[] args){
+    public static void main(String[] args) {
         LinkedStack<String> lss = new LinkedStack<String>();
-        for (String s : new String[]{"str000", "str111", "str222"}){
+        for(String s : "Phasers on stun!".split(" "))
             lss.push(s);
-        }
-
         String s;
-        while ((s = lss.pop()) != null){
+        while((s = lss.pop()) != null)
             System.out.println(s);
-        }
     }
 }
+*/
+
+
+
+
+
+
+
+class LinkedStack<T> {
+    private static class Node<U> {
+        U item;
+        Node<U> next;
+        Node() { item = null; next = null; }
+        Node(U item, Node<U> next) {
+            this.item = item;
+            this.next = next;
+        }
+        boolean end() { return item == null && next == null; }
+    }
+
+    private Node<T> top = new Node<T>();
+
+    //添加数据
+    public void push(T item) {
+        top = new Node<T>(item, top);
+    }
+
+    //弹出数据
+    public T pop() {
+        T result = top.item;
+        if(!top.end())
+            top = top.next;
+        return result;
+    }
+}
+
+class testLinkedStack{
+
+    public static void main(String[] args) {
+        LinkedStack<String> lss = new LinkedStack<String>();
+        for(String s : "Phasers on stun!".split(" "))
+            lss.push(s);
+        String s;
+        while((s = lss.pop()) != null)
+            System.out.println(s);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -548,7 +804,7 @@ class T11{
         //flist.add(new Object());
         flist.add(null);
 
-        //Apple a = flist.get(0);
+        //Apple a = flist.say(0);
         Fruit f = flist.get(0);
         Object o = flist.get(0);
 
@@ -561,9 +817,9 @@ class T11{
 
         Object a = apples.get(0);
         //正确，Object 可以指向 List<? super Apple> 任何实体
-        //Fruit af = apples.get(0);
+        //Fruit af = apples.say(0);
         //错误，Fruit 不能指向 List<? super Apple> 中的FruitBrother类型
-        //Apple aa = apples.get(0);
+        //Apple aa = apples.say(0);
         //错误
     }
 }
@@ -627,7 +883,7 @@ class T111{
     public static void main(String[] args) {
         List l = new ArrayList<String>();
         l.add("1");
-        //String e = l.get(0);
+        //String e = l.say(0);
         Object e = l.get(0);
 
     }
@@ -665,7 +921,7 @@ class Wildcards {
          holder.set(new Wildcards()); // Same warning
 
         // Can't do this; don't have any 'T':
-        // T t = holder.get();
+        // T t = holder.say();
 
         // OK, but type information has been lost:
         Object obj = holder.get();
@@ -678,7 +934,7 @@ class Wildcards {
         // holder.set(new Wildcards()); // Same error
 
         // Can't do this; don't have any 'T':
-        // T t = holder.get();
+        // T t = holder.say();
 
         // OK, but type information has been lost:
         Object obj = holder.get();
@@ -702,7 +958,7 @@ class Wildcards {
     }
     static <T> void wildSupertype(Holder<? super T> holder, T arg) {
         holder.set(arg);
-        // T t = holder.get();  // Error:
+        // T t = holder.say();  // Error:
         //   Incompatible types: found Object, required T
 
         // OK, but type information has been lost:

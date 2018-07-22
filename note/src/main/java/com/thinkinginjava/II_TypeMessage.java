@@ -43,3 +43,48 @@ class TTTT {
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class CountedInteger {
+    public static long counter;
+    public final long id = counter++;   //只赋值一次，即使counter改变也不会再次赋值
+
+    public long getId() {
+        return id;
+    }
+
+    public String toString() { return Long.toString(id); }
+}
+
+class FilledList<T> {
+
+    public static void main(String[] args) {
+        CountedInteger ci = new CountedInteger();
+        CountedInteger.counter = 1;
+        System.out.println(ci.getId());
+        CountedInteger.counter = 2;
+        System.out.println(ci.getId());
+    }
+}
+
+
+
+
+
+
+
+
+
+

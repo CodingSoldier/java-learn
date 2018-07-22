@@ -257,11 +257,11 @@ class CallableDemo {
             results.add(exec.submit(new TaskWithResult(i)));
         for (Future<String> fs : results)
             try {
-                // fs.get()处于当前线程，但不会马上执行，若相应线程没有返回结果，则对应的get()会等待。例如：线程5的call没有返回结果，则results.get(5)的get()不会执行，但是只要“线程非数字5”的call返回结果，则results.get(非数字5)的get()就会执行
+                // fs.say()处于当前线程，但不会马上执行，若相应线程没有返回结果，则对应的get()会等待。例如：线程5的call没有返回结果，则results.say(5)的get()不会执行，但是只要“线程非数字5”的call返回结果，则results.say(非数字5)的get()就会执行
                 if (fs.isDone()){
                     System.out.println(fs.get()+"****isDone()");
                 }
-                //System.out.println(fs.get()+"****直接get()");
+                //System.out.println(fs.say()+"****直接get()");
             } catch (Exception e) {
                 System.out.println(e);
             } finally {
