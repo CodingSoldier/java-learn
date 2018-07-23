@@ -68,7 +68,7 @@ class CountedInteger {
     public String toString() { return Long.toString(id); }
 }
 
-class FilledList<T> {
+class FilledList1<T> {
 
     public static void main(String[] args) {
         CountedInteger ci = new CountedInteger();

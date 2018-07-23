@@ -6,6 +6,7 @@ import typeinfo.pets.Pet;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.*;
 
 import static com.thinkinginjava.Insect.print;
@@ -53,11 +54,11 @@ class MyHolder<T>{
 class TestMyHolder {
     public static void main(String[] args) {
         MyHolder<String> s0 = new MyHolder<>("sss");
-        //MyHolder<String> s1 = new MyHolder<>(111);   //编译报错
+        //MyHolder<String> s1 = new MyHolder<Integer>(111);   //编译报错，类型不兼容
         System.out.println(s0.get());
 
         MyHolder<Integer> i0 = new MyHolder<>(111);
-        //MyHolder<Integer> i1 = new MyHolder<>("sss");  //编译报错
+        //MyHolder<Integer> i1 = new MyHolder<String>("sss");  //编译报错，类型不兼容
         System.out.println(i0.get());
     }
 }
@@ -65,9 +66,9 @@ class TestMyHolder {
 //泛型：参数化类型
 /**
 可用T表示类型参数，用尖括号括住T，放在类名后面，这样类中的成员（属性和方法）就可以使用T了。
- 当我们new出一个MyHolder实例时指定MyHolder持有类型参数为String，则MyHolder中的构造函数、set()能够访问到类上的类型参数T，知道T是String，可以将方法中的类型参数设置为String。同理，在MyHolder实例中，say()返回值类型的是String。
+ 当我们new出一个MyHolder实例时指定MyHolder持有类型参数为String，则MyHolder中的构造函数、set()能够访问到类上的类型参数T，知道T是String，构造函数、set()只接受String类型的实参。同理，在MyHolder实例中，say()返回值类型的是String。
 
- 创建第二个MyHolder实例i0时，指定类型参数T为Integer，与第一个MyHolder实例s0比较。T就像是一个参数，可以接各种类型。且只接受类型，不接受124，"afbc"等这些具体的值。所以T叫做类型参数。
+ 创建第二个MyHolder实例i0时，指定类型参数T为Integer，与第一个MyHolder实例s0比较。MyHolder类名上的T就像是一个参数，可以接各种类型，且只接受类型，不接受123，"abc"等这些具体的值。所以T叫做类型参数。
  */
 
 
@@ -171,7 +172,7 @@ class GenericArray<T> {
 
 
 
-class Building {}
+class Building<T> {}
 class House extends Building {}
 
 class ClassTypeCapture {
@@ -191,6 +192,9 @@ class ClassTypeCapture {
     public static void main(String[] args) {
         List<String> list = ClassTypeCapture.parseArray("[\"dsfas\",1123]",String.class);
         System.out.println(list.toString());
+
+        List<? extends Building> l = new ArrayList<>();
+
     }
 }
 
@@ -1071,6 +1075,281 @@ class CaptureConversion {
 
 
 
+
+
+
+// P 408
+class Base {}
+class Derived extends Base {}
+
+interface OrdinaryGetter {
+    Base get();
+}
+
+interface DerivedGetter extends OrdinaryGetter {
+    // Return type of overridden method is allowed to vary:
+    Derived get();
+}
+
+class CovariantReturnTypes {
+    void test(DerivedGetter d) {
+        Derived d2 = d.get();
+    }
+}
+
+
+
+interface GenericGetter<T extends GenericGetter<T>> {
+    T get();
+}
+
+interface Getter extends GenericGetter<Getter> {}
+
+class GenericsAndReturnTypes {
+    void test(Getter g) {
+        Getter result = g.get();
+        GenericGetter gg = g.get(); // Also the base type
+    }
+}
+
+
+
+
+class OrdinarySetter {
+    void set(Base base) {
+        System.out.println("OrdinarySetter.set(Base)");
+    }
+}
+
+class DerivedSetter extends OrdinarySetter {
+    void set(Derived derived) {
+        System.out.println("DerivedSetter.set(Derived)");
+    }
+}
+
+class OrdinaryArguments {
+    public static void main(String[] args) {
+        Base base = new Base();
+        Derived derived = new Derived();
+        DerivedSetter ds = new DerivedSetter();
+        ds.set(derived);
+        ds.set(base); // Compiles: overloaded, not overridden!
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+interface TimeStamped { long getStamp(); }
+
+class TimeStampedImp implements TimeStamped {
+    private final long timeStamp;
+    public TimeStampedImp() {
+        timeStamp = new Date().getTime();
+    }
+    public long getStamp() { return timeStamp; }
+}
+
+interface SerialNumbered { long getSerialNumber(); }
+
+class SerialNumberedImp implements SerialNumbered {
+    private static long counter = 1;
+    private final long serialNumber = counter++;
+    public long getSerialNumber() { return serialNumber; }
+}
+
+interface Basic {
+    public void set(String val);
+    public String get();
+}
+
+class BasicImp implements Basic {
+    private String value;
+    public void set(String val) { value = val; }
+    public String get() { return value; }
+}
+
+class Mixin extends BasicImp implements TimeStamped, SerialNumbered {
+
+    private TimeStamped timeStamp = new TimeStampedImp();
+    private SerialNumbered serialNumber = new SerialNumberedImp();
+    public long getStamp() { return timeStamp.getStamp(); }
+    public long getSerialNumber() {
+        return serialNumber.getSerialNumber();
+    }
+}
+
+class Mixins {
+    public static void main(String[] args) {
+        Mixin mixin1 = new Mixin(), mixin2 = new Mixin();
+        mixin1.set("test string 1");
+        mixin2.set("test string 2");
+        System.out.println(mixin1.get() + " " +
+            mixin1.getStamp() +  " " + mixin1.getSerialNumber());
+        System.out.println(mixin2.get() + " " +
+            mixin2.getStamp() +  " " + mixin2.getSerialNumber());
+    }
+}
+
+
+
+
+
+
+
+
+
+class SimpleQueue<T> implements Iterable<T> {
+    private LinkedList<T> storage = new LinkedList<T>();
+    public void add(T t) { storage.offer(t); }
+    public T get() { return storage.poll(); }
+    public Iterator<T> iterator() {
+        return storage.iterator();
+    }
+}
+
+class Apply {
+    public static <T, S extends Iterable<? extends T>> void apply(S seq, Method f, Object... args) {
+        try {
+            for(T t: seq)
+                f.invoke(t, args);
+        } catch(Exception e) {
+            // Failures are programmer errors
+            throw new RuntimeException(e);
+        }
+    }
+}
+
+class Shape {
+    public void rotate() { print(this + " rotate"); }
+    public void resize(int newSize) {
+        print(this + " resize " + newSize);
+    }
+}
+
+class Square extends Shape {}
+
+class FilledList<T> extends ArrayList<T> {
+    public FilledList(Class<? extends T> type, int size) {
+        try {
+            for(int i = 0; i < size; i++)
+                // Assumes default constructor:
+                add(type.newInstance());
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+
+class ApplyTest {
+    public static void main(String[] args) throws Exception {
+        List<Shape> shapes = new ArrayList<Shape>();
+        for(int i = 0; i < 10; i++)
+            shapes.add(new Shape());
+        Apply.apply(shapes, Shape.class.getMethod("rotate"));
+        Apply.apply(shapes, Shape.class.getMethod("resize", int.class), 5);
+        List<Square> squares = new ArrayList<Square>();
+        for(int i = 0; i < 10; i++)
+            squares.add(new Square());
+        Apply.apply(squares, Shape.class.getMethod("rotate"));
+        Apply.apply(squares, Shape.class.getMethod("resize", int.class), 5);
+
+        Apply.apply(new FilledList<Shape>(Shape.class, 10), Shape.class.getMethod("rotate"));
+        Apply.apply(new FilledList<Shape>(Square.class, 10), Shape.class.getMethod("rotate"));
+
+        SimpleQueue<Shape> shapeQ = new SimpleQueue<Shape>();
+        for(int i = 0; i < 5; i++) {
+            shapeQ.add(new Shape());
+            shapeQ.add(new Square());
+        }
+        Apply.apply(shapeQ, Shape.class.getMethod("rotate"));
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+interface Addable<T> { void add(T t); }
+
+class Fill2 {
+    // Classtoken version:
+    public static <T> void fill(Addable<T> addable, Class<? extends T> classToken, int size) {
+        for(int i = 0; i < size; i++)
+            try {
+                addable.add(classToken.newInstance());
+            } catch(Exception e) {
+                throw new RuntimeException(e);
+            }
+    }
+    // Generator version:
+    public static <T> void fill(Addable<T> addable, Generator<T> generator, int size) {
+        for(int i = 0; i < size; i++)
+            addable.add(generator.next());
+    }
+}
+
+// To adapt a base type, you must use composition.
+// Make any Collection Addable using composition:
+class AddableCollectionAdapter<T> implements Addable<T> {
+    private Collection<T> c;
+    public AddableCollectionAdapter(Collection<T> c) {
+        this.c = c;
+    }
+    public void add(T item) { c.add(item); }
+}
+
+// A Helper to capture the type automatically:
+class Adapter {
+    public static <T> Addable<T> collectionAdapter(Collection<T> c) {
+        return new AddableCollectionAdapter<T>(c);
+    }
+}
+
+// To adapt a specific type, you can use inheritance.
+// Make a SimpleQueue Addable using inheritance:
+class AddableSimpleQueue<T> extends SimpleQueue<T> implements Addable<T> {
+    public void add(T item) { super.add(item); }
+}
+
+class Fill2Test {
+    public static void main(String[] args) {
+        // Adapt a Collection:
+        List<Coffee> carrier = new ArrayList<Coffee>();
+        Fill2.fill( new AddableCollectionAdapter<Coffee>(carrier), Coffee.class, 3);
+        // Helper method captures the type:
+        Fill2.fill(Adapter.collectionAdapter(carrier), Latte.class, 2);
+        for(Coffee c: carrier)
+            print(c.toString());
+        print("----------------------");
+        // Use an adapted class:
+        AddableSimpleQueue<Coffee> coffeeQueue = new AddableSimpleQueue<Coffee>();
+        Fill2.fill(coffeeQueue, Mocha.class, 4);
+        Fill2.fill(coffeeQueue, Latte.class, 1);
+        for(Coffee c: coffeeQueue)
+            print(c.toString());
+    }
+}
 
 
 
