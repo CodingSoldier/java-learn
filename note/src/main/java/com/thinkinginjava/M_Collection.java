@@ -12,6 +12,26 @@ public class M_Collection {
 
 
 
+
+
+
+
+
+class CCCCCCCC{
+    public static void main(String[] args) {
+        //List<String> l = new ArrayList<String>({"1","2"});
+    }
+}
+
+
+
+
+
+
+
+
+
+
 // Countries国家类
 class Countries {
     public static final String[][] DATA = {

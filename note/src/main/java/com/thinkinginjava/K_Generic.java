@@ -90,7 +90,7 @@ class MyHolderStatic{
 // 泛型擦除：在静态代码检查阶段jvm知道类型参数具体是什么类型，如：MyHolder<String>的类型参数是String，MyHolder<Integer>的类型参数是Integer。
 // 但是在运行时，jvm会将类型参数删掉，MyHolder<String>、MyHolder<Integer>都被擦除为原生类型MyHolder
 // 通过s0.getClass().getTypeParameters()可以知道，我们的本意是获取s0、i0的类型参数，但是在运行时仅能获取到类型参数的占位符T，而没能获取到String、Integer。
-// 在实际编程中，获取类型参数仅仅得到占位符，其实就相当于没有获取到任何有用的信息。
+// 在实际编程中，获取类型参数却仅仅得到占位符，其实就相当于没有获取到任何有用的信息。
 class TestWipe {
     public static void main(String[] args) {
         MyHolder<String> s0 = new MyHolder<>("sss");
