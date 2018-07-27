@@ -582,52 +582,6 @@ class E10_CustomSortedSet {
 
 
 
-// P483使用数组创建Map简单示例
-class MapDemo<K, V>{
-    private Object[][] pairs;
-    private int index;
-
-    public MapDemo(int length) {
-        this.pairs = new Object[length][2];
-    }
-    public void put(K key, V val){
-        if (index >= pairs.length){
-            throw new RuntimeException();
-        }
-        pairs[index++] = new Object[]{key, val};
-    }
-    public V get(K key){
-        for (int i=0; i<index; i++){
-            if(key.equals(pairs[i][0])){
-                return (V)pairs[i][1];
-            }
-        }
-        return null;
-    }
-
-    public static void main(String[] args) {
-        MapDemo<String, String> map = new MapDemo<String, String>(2);
-        map.put("sky", "blue");
-        map.put("grass", "green");
-        try {
-            map.put("extra", "object"); // Past the end
-        } catch(RuntimeException e) {
-            print("Too many objects!\n");
-        }
-        print(map.get("grass"));
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
 
 
 

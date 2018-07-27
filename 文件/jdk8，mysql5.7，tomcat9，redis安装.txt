@@ -82,6 +82,9 @@ flush privileges;
 注意：由于 MySQL5.7 采用了密码强度验证插件 validate_password，故此我们需要设置一个有一定强度的密码；
 输入 exit 后用新密码再次登录看看吧！
 
+MySQL补充：
+    1、用户必须要有super权限才可以访问数据库，执行MySQL命令
+
 13  Centos7中Mysql远程访问的防火墙策略
 检测端口
 如果远程连接不上Mysql，检查下默认的3306端口是否允许访问：
