@@ -40,7 +40,6 @@ public class ValidateMain {
 
     public static final String REGEX_COMMON_JSON = "init.json";
     public static final String REGEX_BEGIN = "REGEX_";
-    public static final String JSON_KEY = "jsonKey";
 
     private Set<String> msgSet;  //错误提示信息
     private String ruleKey;  //规则的key
@@ -222,21 +221,11 @@ public class ValidateMain {
 
             if (ValidateUtils.isNotBlank(validateConfig.getKeyName())){
                 json = (Map<String, Object>)json.get(validateConfig.getKeyName());
-            }else{
-                Iterator<Map.Entry<String, Object>> it = json.entrySet().iterator();
-                Map.Entry<String, Object> entry = null;
-                while (it.hasNext()){
-                    entry = it.next();
-                    if (entry.getKey().startsWith(JSON_KEY)){
-                        it.remove();
-                    }
+                if (json != null){
+                    validateInterface.setCache(validateConfig, json);
+                }else{
+                    throw new Exception("@ParamsValidate元素keyName错误");
                 }
-            }
-
-            if (json != null){
-                validateInterface.setCache(validateConfig, json);
-            }else{
-                throw new Exception("@ParamsValidate元素keyName错误");
             }
         }
         return json;

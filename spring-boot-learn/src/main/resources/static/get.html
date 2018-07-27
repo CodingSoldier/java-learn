@@ -15,7 +15,7 @@
     <script >
         $("#g1").on("click", function(){
             $.ajax({
-                url: "/get/g1?g1=gg111",
+                url: "/get/g1?id=gg111",
                 type: "get",
                 dataType: "json"
             }).done(function(r){
@@ -24,80 +24,6 @@
         });
     </script>
 
-    <br/>
-    <button id="g2">/g2/more</button>
-    <div>结果：</div>
-    <div id="r2"></div>
-    <script >
-        $("#g2").on("click", function(){
-            $.ajax({
-                url: "/get/g2/more?g1=gg111",
-                type: "get",
-                dataType: "json",
-                data: {
-                    i2: 1213,
-                    g3: "ggg333"
-                }
-            }).done(function(r){
-                $("#r2").text(r.d);
-            })
-        });
-    </script>
-
-    <br/>
-    <button id="g3">/get/g3/map</button>
-    <div>结果：</div>
-    <div id="r3"></div>
-    <script >
-        $("#g3").on("click", function(){
-            $.ajax({
-                url: "/get/g3/map?g1=gg111",
-                type: "get",
-                dataType: "json",
-                data: {
-                    g2: 1213,
-                    g3: "ggg333"
-                }
-            }).done(function(r){
-                $("#r3").text(r.d);
-            })
-        });
-    </script>
-
-    <br/>
-    <button id="g4">/g4/list</button>
-    <div>结果：</div>
-    <div id="r4"></div>
-    <script >
-        $("#g4").on("click", function(){
-            $.ajax({
-                url: "/get/g4/list",
-                type: "get",
-                dataType: "json",
-                data: {
-                    l1: [123, "abc"].toString()
-                }
-            }).done(function(r){
-                $("#r4").text(r.d);
-            })
-        });
-    </script>
-
-    <br/>
-    <button id="g5">/g5/path/123</button>
-    <div>结果：</div>
-    <div id="r5"></div>
-    <script >
-        $("#g5").on("click", function(){
-            $.ajax({
-                url: "/get/g5/path/123?name=gg111",
-                type: "get",
-                dataType: "json"
-            }).done(function(r){
-                $("#r5").text(r.d);
-            })
-        });
-    </script>
 
     <br/>
     <button id="g6">/get/user-vo</button>
