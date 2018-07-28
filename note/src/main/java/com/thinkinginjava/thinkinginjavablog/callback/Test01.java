@@ -1,4 +1,4 @@
-package com.thinkinginjavablog.callback;
+package com.thinkinginjava.thinkinginjavablog.callback;
 
 import org.junit.Test;
 

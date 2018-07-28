@@ -1,4 +1,4 @@
-package com.thinkinginjavablog;
+package com.thinkinginjava.thinkinginjavablog;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;

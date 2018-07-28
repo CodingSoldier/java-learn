@@ -1,4 +1,4 @@
-package com.thinkinginjavablog.callback;
+package com.thinkinginjava.thinkinginjavablog.callback;
 
 /**
  * 定义一个接口，

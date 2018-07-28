@@ -1,4 +1,4 @@
-package com.thinkinginjavablog;
+package com.thinkinginjava.thinkinginjavablog;
 
 import org.junit.Test;
 
