@@ -1,4 +1,3 @@
-/*
 package com.demo.controller;
 
 import org.dom4j.Document;
@@ -15,11 +14,7 @@ import java.net.URL;
 @RestController
 public class ResourceController {
 
-    */
-/**
-     * 读取jar包中的xml
-     *//*
-
+    //读取jar包中的xml
     @GetMapping("/xml/custom")
     public String getXml() throws Exception{
         String r = "";
@@ -35,12 +30,10 @@ public class ResourceController {
         //r = root.element("num").getText() + "\n 文件Path：" + path;
 
 
-        */
-/**
-         getResource()从classpath下找文件，不加 / 开头
+
+         /*getResource()从classpath下找文件，不加 / 开头
          不通过new File，通过read一个URL的方式也可以读取到jar包中的xml
-         url值举例：jar:file:/E:/workspace/java-learn/文件/spring-boot-learn-1.0-SNAPSHOT.jar!/BOOT-INF/classes!/config/custom.xml
-         *//*
+         url值举例：jar:file:/E:/workspace/java-learn/文件/spring-boot-learn-1.0-SNAPSHOT.jar!/BOOT-INF/classes!/config/custom.xml*/
 
         ClassLoader classLoader = getClass().getClassLoader();
         URL url = classLoader.getResource("config/custom.xml");
@@ -56,11 +49,7 @@ public class ResourceController {
         return r;
     }
 
-    */
-/**
-     * 读取jar包中的json文件
-     *//*
-
+     //读取jar包中的json文件
     @GetMapping("/json/custom")
     public String getJson() throws Exception{
         String path = "config/validate/validate.json";
@@ -80,4 +69,3 @@ public class ResourceController {
 
 
 }
-*/
