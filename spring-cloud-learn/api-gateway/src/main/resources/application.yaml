@@ -3,13 +3,25 @@ spring:
     name: api-gateway
 
 server:
-  port: 1101
+  port: 1001
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:1001/eureka/
+      defaultZone: http://localhost:1000/eureka/
 
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+            #设置API网关中路由转发请求的HystrixCommand执行超时时间
+
+ribbon:
+  ConnectTimeout: 10000 #设置路由转发请求的时候，创建请求连接的超时时间
+  ReadTimeout: 30000   #用来设置路由转发请求的超时时间
 
 #访问本网管的请求http://localhost:1101/eureka-client-01/**
 #转发到 eureka-client实例
@@ -19,4 +31,11 @@ zuul:
   #https://blog.csdn.net/chenqipc/article/details/53322830
   sensitiveHeaders:
   routes:
-    eureka-client: /eureka-client-01/**
+    eureka-client:
+      path: /eureka-client/**
+
+#    websocket失败
+    api-websocket:
+      path: /ws/**
+      serviceId: api-websocket
+#      url: http://localhost:1100/websocket

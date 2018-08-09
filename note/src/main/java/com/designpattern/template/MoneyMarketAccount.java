@@ -1,6 +1,7 @@
 package com.designpattern.template;
 
 public class MoneyMarketAccount extends Account {
+
     @Override
     protected String doCalculateAccountType() {
         return "Money Market";
@@ -10,4 +11,5 @@ public class MoneyMarketAccount extends Account {
     protected double doCalculateInterestRate() {
         return 0.045;
     }
+
 }
