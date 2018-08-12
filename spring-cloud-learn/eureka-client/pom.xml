@@ -33,6 +33,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -49,6 +53,7 @@
 
     <!--spring boot 与maven整合插件 -->
     <build>
+        <finalName>eureka-client</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
