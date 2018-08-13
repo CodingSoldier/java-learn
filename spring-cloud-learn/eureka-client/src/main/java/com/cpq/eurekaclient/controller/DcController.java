@@ -21,7 +21,7 @@ public class DcController {
         //Thread.sleep(5000L);  //睡眠，相当于其他服务调用时弄个错误
 
         //System.out.println(request.getCookies());
-
+        System.out.println(request.getServerPort());
         String services = "Services: " + discoveryClient.getServices();
         //System.out.println(services);
         return services;
