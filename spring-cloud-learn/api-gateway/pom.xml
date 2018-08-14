@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.4.RELEASE</version>
+        <version>1.5.13.RELEASE</version>
         <relativePath/>
     </parent>
 
@@ -38,6 +38,12 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!-- 重试机制 ，必须配，否则重试不生效 -->
+        <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+        </dependency>
+
         <!--websocket-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -51,7 +57,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Dalston.SR1</version>
+                <version>Edgware.SR4</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
