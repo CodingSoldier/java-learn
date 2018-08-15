@@ -166,7 +166,7 @@
   </dependencies>
 
   <build>
-    <!--pluginManagement的配置可被直接应用到子模块，子模块不需要再配置。但是本模块没能使用上本配置-->
+    <!--pluginManagement的配置可被直接应用到子模块，子模块不需要再配置。本模块需要此插件也需要在plugins导入，但是不用写版本-->
     <!--<pluginManagement>
         <plugins>
             <plugin>

@@ -10,14 +10,6 @@
     <packaging>war</packaging>
 
     <dependencies>
-        <dependency>
-            <groupId>com.github.codingsoldier</groupId>
-            <artifactId>params-validate</artifactId>
-            <version>1.2-RELEASE</version>
-            <!--最新版本请查看：
-            http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.codingsoldier%22-->
-        </dependency>
-
         <!--quartz定时任务-->
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
@@ -43,7 +35,22 @@
             <version>9.0.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.codingsoldier</groupId>
+            <artifactId>params-validate</artifactId>
+        </dependency>
     </dependencies>
+
+    <!--dependencyManagement中定义的依赖不会导入到项目中，需要在dependencies导入，但是不需要写版本，dependencyManagement起到统一版本的作用-->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.codingsoldier</groupId>
+                <artifactId>params-validate</artifactId>
+                <version>1.4-RELEASE</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <!--解决idea不会将java源码目录中的xml文件打包的问题-->
