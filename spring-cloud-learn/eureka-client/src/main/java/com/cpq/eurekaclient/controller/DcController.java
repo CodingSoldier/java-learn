@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 public class DcController {
@@ -38,8 +37,8 @@ public class DcController {
 
         //request.getHeader("null point exception").length();
 
-        System.out.println(sleepTime);
-        Thread.sleep(sleepTime);  //睡眠，相当于其他服务调用时弄个错误
+        //System.out.println(sleepTime);
+        //Thread.sleep(sleepTime);  //睡眠，相当于其他服务调用时弄个错误
 
         //System.out.println(request.getCookies());
         System.out.println(request.getServerPort());
@@ -51,7 +50,7 @@ public class DcController {
     @GetMapping("/dc3")
     public String dc3(HttpServletRequest request) throws Exception{
         System.out.println(new Date() +"  port: " +request.getServerPort());
-        TimeUnit.SECONDS.sleep(60000);
+        //TimeUnit.SECONDS.sleep(60000);
         System.out.println(request.getServerPort());
         String services = "Services: " + discoveryClient.getServices();
         return services;
@@ -60,7 +59,7 @@ public class DcController {
     @PostMapping("/p4")
     public String p4(HttpServletRequest request) throws Exception{
         System.out.println(new Date() +"   port: " +request.getServerPort());
-        TimeUnit.SECONDS.sleep(60000);
+        //TimeUnit.SECONDS.sleep(60000);
         System.out.println(request.getServerPort());
         String services = "Services: " + discoveryClient.getServices();
         return services;

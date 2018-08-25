@@ -1,11 +1,9 @@
+#从配置中心服务端获取git上的配置，必须使用bootstrap.yml
 spring:
-  application:
-    name: config-client
   cloud:
     config:
       uri: http://localhost:1201/
-      profile: default
+      name: config-client   #查看eureka-consumer笔记
+      profile: test  #配置文件的profile
       label: master
 
-server:
-  port: 2001
