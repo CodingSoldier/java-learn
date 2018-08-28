@@ -4,7 +4,7 @@ spring:
   cloud:
     config:
       username: CodingSoldier
-      password: dszgmml2ss103
+      password: 密码
       label: master
       server:
         git:
