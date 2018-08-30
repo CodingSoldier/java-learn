@@ -184,14 +184,14 @@
         </resources>
 
         <plugins>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <!--该配置必须-->
+                    &lt;!&ndash;该配置必须&ndash;&gt;
                     <fork>true</fork>
                 </configuration>
-            </plugin>
+            </plugin>-->
 
             <plugin>
                 <groupId>org.mybatis.generator</groupId>
