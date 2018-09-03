@@ -1,0 +1,42 @@
+#yml代码提示需要添加YAML/Ansible support插件
+
+spring:
+  application:
+    name: spring-boot-learn
+  #profiles:
+    #active: prod  # 此处可选择，依据你的配置文件名称而定。我的是 [dev | prod]
+  # 数据库配置
+  datasource:
+    #url: jdbc:mysql://184.170.220.217:3306/cpq
+    url: jdbc:mysql://localhost:3306/cpq
+    username: root
+    password: cpq..123
+    driver-class-name: com.mysql.jdbc.Driver
+
+  redis:
+    # redis数据库索引（默认为0）
+    database: 0
+    # redis服务器地址（默认为localhost）
+    host: 184.170.220.217
+    #host: localhost
+    # redis端口（默认为6379）
+    port: 6379
+    # redis访问密码（默认为空）
+    password:
+    # redis连接超时时间（单位为毫秒）
+    timeout: 0
+    # redis连接池配置
+    pool:
+      # 最大可用连接数（默认为8，负数表示无限）
+      max-active: 8
+      # 最大空闲连接数（默认为8，负数表示无限）
+      max-idle: 8
+      # 最小空闲连接数（默认为0，该值只有为正数才有作用）
+      min-idle: 0
+      # 从连接池中获取连接最大等待时间（默认为-1，单位为毫秒，负数表示无限）
+      max-wait: -1
+
+#mybatis:
+#  configuration:
+#    cacheEnabled: true
+

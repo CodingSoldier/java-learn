@@ -21,9 +21,9 @@ public class PostController {
     AppProp appProp;
 
     @PostMapping("/p1/map")
-    //@ParamsValidate(file = "json-post.json")    //getParser()也要修改
-    //@ParamsValidate(file = "json-post-gson.json")   //getParser()也要修改
-    @ParamsValidate("json-post-fastjson.json")  //getParser()也要修改
+    @ParamsValidate("json-post-one.json")
+    //@ParamsValidate(file = "json-post.json")
+    //@ParamsValidate(file = "json-post-gson.json")
     public Object p1(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, Object> map) throws Exception{
         Map<String, Object> map1 = new HashMap<>();
         System.out.println(appProp.getA());

@@ -9,6 +9,7 @@ import com.demo.paramsvalidate.ValidateUtils;
 import com.demo.paramsvalidate.bean.Parser;
 import com.demo.paramsvalidate.bean.ResultValidate;
 import com.demo.paramsvalidate.bean.ValidateConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -42,13 +43,13 @@ public class ValidateInterfaceImpl extends ValidateInterfaceAdapter implements  
             msg = "服务暂不可用";
         }else {
             for (String str: msgSet){
-                msg += str.substring(0, str.indexOf("校验规则"));
+                int end = str.indexOf("，校验规则");
+                msg += str.substring(0, end == -1 ? str.length() : end)+"，";
             }
         }
-
         Map<String, Object> r = new HashMap<>();
         r.put("success", resultValidate.isPass());
-        r.put("msg", msg);
+        r.put("msg", StringUtils.removeEnd(msg, "，"));
         return r;
     }
 

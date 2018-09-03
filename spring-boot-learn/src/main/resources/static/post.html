@@ -15,28 +15,11 @@
     <script >
         $("#p1").on("click", function(){
             $.ajax({
-                url: "/post/p1/map?s1=12323&i1=11111",
+                url: "/post/p1/map",
                 type: "post",
                 contentType: "application/json",
                 dataType: "json",
-                data: JSON.stringify({
-                    id: 123456789,
-                    name: "name111",
-                    birthday: new Date().getTime(),
-                    isSingle: true,
-                    salaryNum: 12345678.44,
-                    girl: {
-                        isMarry: false,
-                        name: "girlname"
-                    },
-                    hobbyList: ["吃","喝","玩","乐"],
-                    dreamList:[{
-                        txt: "中国梦",
-                        exe: "改变世界",
-                        time: new Date().getTime(),
-                        money: 12345678901.123456,
-                    }]
-                })
+                data: JSON.stringify({})
             }).done(function(r){
                 $("#r1").text(r.toString());
             })
