@@ -1,12 +1,9 @@
 package com.demo.testvalidate.service;
 
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.parser.Feature;
 import com.demo.paramsvalidate.ValidateAspect;
 import com.demo.paramsvalidate.ValidateInterfaceAdapter;
 import com.demo.paramsvalidate.ValidateUtils;
-import com.demo.paramsvalidate.bean.Parser;
 import com.demo.paramsvalidate.bean.ResultValidate;
 import com.demo.paramsvalidate.bean.ValidateConfig;
 import org.apache.commons.lang3.StringUtils;
@@ -60,30 +57,30 @@ public class ValidateInterfaceImpl extends ValidateInterfaceAdapter implements  
      * 3、使用fastjson，请返回new Parser(JSON.class, Feature[].class)
      * 为了支持fastjson，搞得好坑爹
      */
-    public Parser getParser(){
-        //return new Parser(Gson.class);
-        return new Parser(JSON.class, Feature[].class);
-    }
+    //public Parser getParser(){
+    //    //return new Parser(Gson.class);
+    //    return new Parser(JSON.class, Feature[].class);
+    //}
 
     /**
      * 不使用缓存，可不覆盖此方法
      * 获取redis缓存中的校验规则
      */
-    @Override
-    public Map<String, Object> getCache(ValidateConfig validateConfig) {
-        String key = createKey(validateConfig);
-        return redisTemplate.opsForHash().entries(key);
-    }
+    //@Override
+    //public Map<String, Object> getCache(ValidateConfig validateConfig) {
+    //    String key = createKey(validateConfig);
+    //    return redisTemplate.opsForHash().entries(key);
+    //}
 
     /**
      * 不使用缓存，可不覆盖此方法
      * 设置redis校验规则到缓存中
      */
-    @Override
-    public void setCache(ValidateConfig validateConfig, Map<String, Object> json) {
-        String key = createKey(validateConfig);
-        redisTemplate.opsForHash().putAll(key, json);
-    }
+    //@Override
+    //public void setCache(ValidateConfig validateConfig, Map<String, Object> json) {
+    //    String key = createKey(validateConfig);
+    //    redisTemplate.opsForHash().putAll(key, json);
+    //}
 
 
     //创建缓存key

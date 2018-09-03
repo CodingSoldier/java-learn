@@ -21,9 +21,8 @@ public class PostController {
     AppProp appProp;
 
     @PostMapping("/p1/map")
-    @ParamsValidate("json-post-one.json")
-    //@ParamsValidate(file = "json-post.json")
-    //@ParamsValidate(file = "json-post-gson.json")
+    //@ParamsValidate("json-post-one.json")
+    @ParamsValidate(value = "json-post-part-jackson.json", keyName = "vo1")
     public Object p1(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, Object> map) throws Exception{
         Map<String, Object> map1 = new HashMap<>();
         System.out.println(appProp.getA());

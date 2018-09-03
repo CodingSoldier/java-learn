@@ -143,6 +143,17 @@ public class ValidateMain {
         }
     }
 
+    //请求参数值可能是List<基本类型>
+    private void paramValToElem(Map<String, Object> jsonRule, Object paramVal){
+        if (paramVal instanceof List){   //前台提交值为List
+            for (Object elem:(List)paramVal){
+                checkDetail(jsonRule, elem);
+            }
+        }else{  //前台提交值非数组
+            checkDetail(jsonRule, paramVal);
+        }
+    }
+
     //请求参数是空，校验规则rule有request
     private void checkChildRequest(Object jsonVal){
         if (jsonVal instanceof Map){
@@ -173,17 +184,6 @@ public class ValidateMain {
             if (ValidateUtils.isNotBlankObj(paramVal)){
                 paramValToElem(jsonRule, paramVal); //非必填&&有值
             }
-        }
-    }
-
-    //请求参数值可能是List<基本类型>
-    private void paramValToElem(Map<String, Object> jsonRule, Object paramVal){
-        if (paramVal instanceof List){   //前台提交值为List
-            for (Object elem:(List)paramVal){
-                checkDetail(jsonRule, elem);
-            }
-        }else{  //前台提交值非数组
-            checkDetail(jsonRule, paramVal);
         }
     }
 
