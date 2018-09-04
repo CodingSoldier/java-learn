@@ -31,7 +31,6 @@
             }
         }
     },
-
     "vo2": {
         "id": {
             "request": true,

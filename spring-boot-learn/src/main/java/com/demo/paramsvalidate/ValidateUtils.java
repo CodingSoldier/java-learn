@@ -118,8 +118,8 @@ public class ValidateUtils<T> extends org.springframework.util.StringUtils{
     }
 
     //校验规则，是否必填
-    public static boolean isRequest(Map<String, Object> rule){
-        return Boolean.parseBoolean(objToStr(rule.get(ValidateMain.REQUEST)));
+    public static boolean isRequest(Map<String, Object> rules){
+        return Boolean.parseBoolean(objToStr(rules.get(ValidateMain.REQUEST)));
     }
 
     //字符串转数字，数字转double
@@ -131,4 +131,5 @@ public class ValidateUtils<T> extends org.springframework.util.StringUtils{
     public static BigDecimal getBigDecimal(Object value){
         return new BigDecimal(getDouble(value));
     }
+
 }

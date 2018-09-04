@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 @Component
 public class ValidateMain {
 
+    //public static final String EXCEPTION_UNMATCH = "校验"
     public static final String REGEX_BEGIN = "REGEX_";
 
     public static final String REQUEST = "request";
@@ -107,82 +108,67 @@ public class ValidateMain {
         return resultValidate;
     }
 
-    //校验请求参数
+    //校验规则key-value 与 请求参数key-value
     private void validateExecute(Map<String, Object> json, Map<String, Object> paramMap){
-        if (json == null || json.size() == 0 || paramMap == null || paramMap.size() == 0)
+        if (json == null || json.size() == 0)
             return ;
 
-        if (ruleKeySet.containsAll(json.keySet())){
-            //paramMap只有一个key-value，json就是校验规则集合
-            for (Object paramVal:paramMap.values()){
-                checkRequest(json, paramVal);
-                break;
-            }
-        }else{
-            //循环校验json
-            for (String key:json.keySet()){
-                Map<String, Object> jsonVal = (Map<String, Object>)json.get(key);
-                Object paramVal = paramMap.get(key);
-                ruleKey = key;
-                Set<String> subKeySet = jsonVal.keySet();
-                if(paramVal == null){
-                    checkChildRequest(jsonVal);
-                }else if(ruleKeySet.containsAll(subKeySet)){  //jsonVal是校验规则Rule
-                    //paramVal就是前台输入值（基本类型、List<基本类型>），jsonVal是校验规则Map(Rule)
-                    checkRequest(jsonVal, paramVal);
-                }else if (paramVal instanceof List){
-                    //paramVal是List<Bean>
-                    for (Object elem: (List)paramVal){
-                        validateExecute(jsonVal, (Map<String, Object>)elem);
+        if (paramMap == null)  //参数为空
+            checkParamValueNull(json);
+
+        //循环校验json
+        for (String key:json.keySet()){
+            Map<String, Object> jsonValue = (Map<String, Object>)json.get(key);
+            Object paramValue = paramMap.get(key);
+
+            if (ruleKeySet.containsAll(jsonValue.keySet())){   //jsonValue为校验规则rules
+                checkRuleValue(jsonValue, paramValue);
+            }else{
+                if (paramValue instanceof Map){  //paramValue是一个key-value
+                    validateExecute(jsonValue, (Map<String, Object>)paramValue);
+                }else if (paramValue instanceof List){  //paramValue是一个List
+                    List paramList = (List)paramValue;
+                    for (Object elem:paramList){
+                        if (elem instanceof Map){
+                            validateExecute(jsonValue, (Map<String, Object>)elem);
+                        }else {
+                            throw new ParamsValidateException(String.format("传参或者校验规则错误，校验规则：%s，请求参数：%s", jsonValue, elem));
+                        }
                     }
-                }else{
-                    //paramVal是对象
-                    validateExecute(jsonVal, (Map<String, Object>)paramVal);
+                }else {
+                    throw new ParamsValidateException(String.format("传参或者校验规则错误，校验规则：%s，请求参数：%s", jsonValue, paramValue));
                 }
             }
         }
-    }
 
-    //请求参数值可能是List<基本类型>
-    private void paramValToElem(Map<String, Object> jsonRule, Object paramVal){
-        if (paramVal instanceof List){   //前台提交值为List
-            for (Object elem:(List)paramVal){
-                checkDetail(jsonRule, elem);
-            }
-        }else{  //前台提交值非数组
-            checkDetail(jsonRule, paramVal);
-        }
     }
 
     //请求参数是空，校验规则rule有request
-    private void checkChildRequest(Object jsonVal){
-        if (jsonVal instanceof Map){
-            Map<String, Object> jsonRule = (Map<String, Object>)jsonVal;
-            Set<String> keySet = jsonRule.keySet();
-            if (ruleKeySet.containsAll(keySet) && ValidateUtils.isRequest(jsonRule)){
-                msgSet.add(messageReturn(jsonRule));
-            }else{
-                for (String key:keySet){
-                    checkChildRequest(jsonRule.get(key));
-                }
+    private void checkParamValueNull(Map<String, Object> json){
+        Set<String> jsonKeySet = json.keySet();
+        if (ruleKeySet.containsAll(jsonKeySet) && ValidateUtils.isRequest(json)){
+            msgSet.add(createFailMsg(json));
+        }else {
+            for (Object elem:jsonKeySet){
+                checkParamValueNull(json);
             }
         }
     }
 
-    //校验是否必填
-    private void checkRequest(Map<String, Object> jsonRule, Object paramVal){
-        if (jsonRule == null)
-            return;
-
-        if (ValidateUtils.isRequest(jsonRule)){
-            if (ValidateUtils.isBlankObj(paramVal)){
-                msgSet.add(messageReturn(jsonRule)); //必填&&无值
+    //rules为校验规则，value为请求值（不包含键）
+    public void checkRuleValue(Map<String, Object> rules, Object value){
+        if (ValidateUtils.isRequest(rules) && ValidateUtils.isBlankObj(value)){
+            //必填&&无值
+            msgSet.add(createFailMsg(rules));
+        }else if (ValidateUtils.isNotBlankObj(value)){
+            //有值，有校验规则
+            if (value instanceof List){  //请求参数：List<基本类型>
+                List list = (List)value;
+                for (Object elem:list){
+                    checkDetail(rules, elem);
+                }
             }else {
-                paramValToElem(jsonRule, paramVal); //必填&&有值
-            }
-        }else{
-            if (ValidateUtils.isNotBlankObj(paramVal)){
-                paramValToElem(jsonRule, paramVal); //非必填&&有值
+                checkDetail(rules, value);  //请求参数：基本类型
             }
         }
     }
@@ -201,7 +187,7 @@ public class ValidateMain {
             ||  ValidateUtils.isNotBlankObj(minLength) && ValidateUtils.objToStr(val).length() < ValidateUtils.getDouble(minLength)
             || ValidateUtils.isNotBlankObj(maxLength) && ValidateUtils.objToStr(val).length() > ValidateUtils.getDouble(maxLength)){
 
-            msgSet.add(messageReturn(jsonRule));
+            msgSet.add(createFailMsg(jsonRule));
             return;
         }
 
@@ -223,13 +209,13 @@ public class ValidateMain {
             }
 
             if (Pattern.matches(regex, ValidateUtils.objToStr(val)) == false){
-                msgSet.add(messageReturn(jsonRule));
+                msgSet.add(createFailMsg(jsonRule));
             }
         }
     }
 
     //处理message为空的情况
-    private String messageReturn(Map<String, Object> jsonRule){
+    private String createFailMsg(Map<String, Object> jsonRule){
         String message = ValidateUtils.objToStr(jsonRule.get(MESSAGE));
         if (ValidateUtils.isBlank(message)){
             String val = "";
