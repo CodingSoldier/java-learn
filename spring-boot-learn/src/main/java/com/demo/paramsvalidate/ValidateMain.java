@@ -120,7 +120,7 @@ public class ValidateMain {
         for (String key:json.keySet()){
             Map<String, Object> jsonValue = (Map<String, Object>)json.get(key);
             Object paramValue = paramMap.get(key);
-
+            ruleKey = key;
             if (ruleKeySet.containsAll(jsonValue.keySet())){   //jsonValue为校验规则rules
                 checkRuleValue(jsonValue, paramValue);
             }else{

@@ -5,10 +5,12 @@ import java.util.List;
 
 public class UserVo extends User {
     private float salaryNum;
-    private Girl girl;
-    private List<Dream> dreamList;
-    private List<String> hobbyList;
     private BigDecimal bigNum;
+    private Girl girl;
+    private Family family;
+    private List<String> hobbyList;
+    private List<Dream> dreamList;
+    private List<BaoBao> baoBaoList;
 
     public float getSalaryNum() {
         return salaryNum;

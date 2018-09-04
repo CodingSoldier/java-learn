@@ -15,7 +15,7 @@
     <script >
         $("#p1").on("click", function(){
             $.ajax({
-                url: "/post/p1/map?s1=12323&i1=11111",
+                url: "/post/p1/map?str1=df121@163.com&int1=11111",
                 type: "post",
                 contentType: "application/json",
                 dataType: "json",
@@ -25,9 +25,17 @@
                     birthday: new Date().getTime(),
                     isSingle: true,
                     salaryNum: 12345678.44,
+                    bigNum: 1234214345235461234.44,
                     girl: {
                         isMarry: false,
                         name: "girlname"
+                    },
+                    family: {
+                        num: 2,
+                        girl: {
+                            isMarry: true,
+                            name: "ggg2222"
+                        }
                     },
                     hobbyList: ["吃","喝","玩","乐"],
                     dreamList:[{
@@ -35,6 +43,33 @@
                         exe: "改变世界",
                         time: new Date().getTime(),
                         money: 12345678901.123456,
+                    },{
+                        txt: "中国梦1",
+                        exe: "改变世界1",
+                        time: new Date().getTime(),
+                        money: 12345678901,
+                    }],
+                    baoBaoList:[{
+                        brand: "lv",
+                        price: 1245653,
+                        innerThing:{
+                            phone: "Iphone",
+                            card: "银行卡"
+                        }
+                    },{
+                        brand: "lv1",
+                        price: 124565113,
+                        innerThing:{
+                            phone: "Ipho11ne",
+                            card: "银行卡1"
+                        }
+                    },{
+                        brand: "lsdv",
+                        price: 1653,
+                        innerThing:{
+                            phone: "dsf",
+                            card: "fsd"
+                        }
                     }]
                 })
             }).done(function(r){
@@ -50,7 +85,7 @@
     <script >
         $("#p2").on("click", function(){
             $.ajax({
-                url: "/post/p2/vo?s1=12323&i1=11111",
+                url: "/post/p1/map?str1=12323&int1=11111",
                 type: "post",
                 contentType: "application/json",
                 dataType: "json",
@@ -60,9 +95,17 @@
                     birthday: new Date().getTime(),
                     isSingle: true,
                     salaryNum: 12345678.44,
+                    bigNum: 1234214345235461234.44,
                     girl: {
                         isMarry: false,
                         name: "girlname"
+                    },
+                    family: {
+                        num: 2,
+                        girl: {
+                            isMarry: true,
+                            name: "ggg2222"
+                        }
                     },
                     hobbyList: ["吃","喝","玩","乐"],
                     dreamList:[{
@@ -70,10 +113,37 @@
                         exe: "改变世界",
                         time: new Date().getTime(),
                         money: 12345678901.123456,
+                    },{
+                        txt: "中国梦1",
+                        exe: "改变世界1",
+                        time: new Date().getTime(),
+                        money: 12345678901,
+                    }],
+                    baoBaoList:[{
+                        brand: "lv",
+                        price: 1245653,
+                        innerThing:{
+                            phone: "Iphone",
+                            card: "银行卡"
+                        }
+                    },{
+                        brand: "lv1",
+                        price: 124565113,
+                        innerThing:{
+                            phone: "Ipho11ne",
+                            card: "银行卡1"
+                        }
+                    },{
+                        brand: "lsdv",
+                        price: 1653,
+                        innerThing:{
+                            phone: "dsf",
+                            card: "fsd"
+                        }
                     }]
                 })
             }).done(function(r){
-                $("#r2").text(r.toString());
+                $("#r1").text(r.toString());
             })
         });
     </script>

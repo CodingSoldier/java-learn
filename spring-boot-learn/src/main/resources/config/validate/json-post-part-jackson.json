@@ -1,4 +1,127 @@
 {
+    "map1": {
+        "str1": {
+            "request": true,
+            "regex": "REGEX_EMAIL",
+            "message": "str1错误提示"
+        },
+        "int1": {
+            "request": true,
+            "regex": "REGEX_NO_NEGATIVE",
+            "message": "int1错误提示"
+        },
+        "id": {
+            "request": true,
+            "minValue": 1,
+            "maxValue": 1000000000,
+            "regex": "REGEX_POSITIVE_NUM",
+            "message": "id:必填，为数字"
+        },
+        "name": {
+            "request": true,
+            "minLength": 1,
+            "maxLength": 20,
+            "regex": "REGEX_CHAR",
+            "message": "name:错误提示"
+        },
+        "birthday": {
+            "request": true,
+            "message": "birthday：必填"
+        },
+        "salaryNum": {
+            "request": "false",
+            "regex": "REGEX_FLOAT_10_2",
+            "message": "薪水填写错误"
+        },
+        "bigNum": {
+            "request": "true",
+            "message": "bigNum错误"
+        },
+        "girl": {
+            "name": {
+                "request": "false",
+                "minLength": 2,
+                "maxLength": 10
+            }
+        },
+        "family": {
+            "num": {
+                "request": "true",
+                "minValue": 2,
+                "maxValue": 3
+            },
+            "girl": {
+                "isMarry": {
+                    "request": "true",
+                    "regex": "true|false"
+                },
+                "name": {
+                    "request": "false",
+                    "minLength": 2,
+                    "maxLength": 10
+                }
+            }
+        },
+        "hobbyList": {
+            "request": true,
+            "minLength": 1,
+            "maxLength": 20,
+            "message": "hobbyList错误提示"
+        },
+        "dreamList": {
+            "txt": {
+                "request": true,
+                "minLength": 1,
+                "maxLength": 20,
+                "message": "txt错误提示"
+            },
+            "exe": {
+                "request": true,
+                "minLength": 1,
+                "maxLength": 20,
+                "message": "exe错误提示"
+            },
+            "time": {
+                "request": true
+            },
+            "money": {
+                "request": true,
+                "minLength": 1,
+                "maxLength": 20,
+                "message": "money错误提示"
+            }
+        },
+        "baoBaoList": {
+            "brand": {
+                "request": true,
+                "minLength": 1,
+                "maxLength": 20,
+                "regex": "REGEX_CHAR",
+                "message": "brand错误提示"
+            },
+            "price": {
+                "request": true,
+                "minLength": 1,
+                "maxLength": 20,
+                "message": "price错误提示"
+            },
+            "innerThing": {
+                "phone": {
+                    "request": true,
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "message": "phone错误提示"
+                },
+                "card": {
+                    "request": true,
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "message": "card错误提示"
+                }
+            }
+        }
+    },
+
     "vo1": {
         "id": {
             "request": true,
@@ -23,43 +146,91 @@
             "regex": "REGEX_FLOAT_10_2",
             "message": "薪水填写错误"
         },
+        "bigNum": {
+            "request": "true",
+            "message": "bigNum错误"
+        },
         "girl": {
             "name": {
                 "request": "false",
                 "minLength": 2,
                 "maxLength": 10
             }
-        }
-    },
-    "vo2": {
-        "id": {
-            "request": true,
-            "minValue": 1,
-            "maxValue": 1000000000,
-            "regex": "REGEX_POSITIVE_NUM",
-            "message": "id:必填，为数字"
         },
-        "name": {
+        "family": {
+            "num": {
+                "request": "true",
+                "minValue": 2,
+                "maxValue": 3
+            },
+            "girl": {
+                "isMarry": {
+                    "request": "true",
+                    "regex": "true|false"
+                },
+                "name": {
+                    "request": "false",
+                    "minLength": 2,
+                    "maxLength": 10
+                }
+            }
+        },
+        "hobbyList": {
             "request": true,
             "minLength": 1,
             "maxLength": 20,
-            "regex": "REGEX_CHAR",
-            "message": "name:错误提示"
+            "message": "hobbyList错误提示"
         },
-        "birthday": {
-            "request": true,
-            "message": "birthday：必填"
+        "dreamList": {
+            "txt": {
+                "request": true,
+                "minLength": 1,
+                "maxLength": 20,
+                "message": "txt错误提示"
+            },
+            "exe": {
+                "request": true,
+                "minLength": 1,
+                "maxLength": 20,
+                "message": "exe错误提示"
+            },
+            "time": {
+                "request": true
+            },
+            "money": {
+                "request": true,
+                "minLength": 1,
+                "maxLength": 20,
+                "message": "money错误提示"
+            }
         },
-        "salaryNum": {
-            "request": "false",
-            "regex": "REGEX_FLOAT_10_2",
-            "message": "薪水填写错误"
-        },
-        "girl": {
-            "name": {
-                "request": "false",
-                "minLength": 2,
-                "maxLength": 10
+        "baoBaoList": {
+            "brand": {
+                "request": true,
+                "minLength": 1,
+                "maxLength": 20,
+                "regex": "REGEX_CHAR",
+                "message": "brand错误提示"
+            },
+            "price": {
+                "request": true,
+                "minLength": 1,
+                "maxLength": 20,
+                "message": "price错误提示"
+            },
+            "innerThing": {
+                "phone": {
+                    "request": true,
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "message": "phone错误提示"
+                },
+                "card": {
+                    "request": true,
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "message": "card错误提示"
+                }
             }
         }
     }
