@@ -5,10 +5,7 @@ import com.demo.config.AppProp;
 import com.demo.paramsvalidate.ParamsValidate;
 import com.demo.testvalidate.bean.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,13 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/post")
-public class PostController {
+@RequestMapping("/validate")
+public class ValidateController {
 
     @Autowired
     AppProp appProp;
 
-    @PostMapping("/p1/map")
+    @PostMapping("/post/map")
     //@ParamsValidate("json-post-one.json")
     @ParamsValidate(value = "json-post-part-jackson.json", keyName = "map1")
     public Object p1(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, Object> map) throws Exception{
@@ -31,11 +28,24 @@ public class PostController {
         return map;
     }
 
-    @PostMapping("/p2/vo")
+    @PostMapping("/post/vo")
     @ParamsValidate(value = "json-post-part-jackson.json", keyName = "vo1")
     public Object p2(HttpServletRequest request, HttpServletResponse response,@RequestBody UserVo userVo) throws Exception{
 
         return userVo;
+    }
+
+    @GetMapping("/get/id")
+    @ParamsValidate(file = "json-get-one.json")
+    public Map<String, Object> g1(String id) throws Exception{
+        return new HashMap<String, Object>(){{put("d",id);}};
+    }
+
+    @RequestMapping("/get/user-vo")
+    @ParamsValidate(file = "json-get-one.json")
+    public Map<String, Object> vo(HttpServletRequest request, UserVo userVo) throws Exception {
+
+        return new HashMap<String, Object>(){{put("r",userVo);}};
     }
 
 }

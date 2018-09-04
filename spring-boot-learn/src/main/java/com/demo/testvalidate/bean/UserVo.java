@@ -51,4 +51,20 @@ public class UserVo extends User {
     public void setHobbyList(List<String> hobbyList) {
         this.hobbyList = hobbyList;
     }
+
+    public Family getFamily() {
+        return family;
+    }
+
+    public void setFamily(Family family) {
+        this.family = family;
+    }
+
+    public List<BaoBao> getBaoBaoList() {
+        return baoBaoList;
+    }
+
+    public void setBaoBaoList(List<BaoBao> baoBaoList) {
+        this.baoBaoList = baoBaoList;
+    }
 }
