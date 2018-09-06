@@ -66,38 +66,18 @@ public class ValidateMain {
         ValidateConfig validateConfig = getConfigs(method);
 
         if (ValidateUtils.isNotBlank(validateConfig.getFile())){  //需要校验
-
+            //参数不符合校验规则提示
+            msgSet = new TreeSet<>();
             //获取请求参数
             Map<String, Object> allParam = requestParam.mergeParams(joinPoint);
-            //try {
-            //    allParam = requestParam.mergeParams(joinPoint);
-            //}catch (IOException e){
-            //    //异常，无法处理请求参数，返回pass false
-            //    resultValidate.setPass(false);
-            //    ValidateUtils.log("@ParamsValidate无法处理请求参数", method, e);
-            //    return resultValidate;
-            //}
-
-            if (allParam != null){
-                Map<String, Object> json = ruleFile.ruleFileJsonToMap(validateConfig);
-                //读取校验规则
-                //Map<String, Object> json = new HashMap<>();
-                //try {
-                //    json = ruleFile.ruleFileJsonToMap(validateConfig);
-                //}catch (Exception e){
-                //    resultValidate.setPass(false);
-                //    ValidateUtils.log("@ParamsValidate读取、解析json文件失败", method, e);
-                //    return resultValidate;
-                //}
-
-                msgSet = new TreeSet<>();
-                //执行校验
-                validateExecute(json, allParam);
-                if (msgSet.size() > 0){
-                    resultValidate.setPass(false);
-                    msgSet.remove("");
-                    resultValidate.setMsgSet(msgSet);
-                }
+            //获取校验规则
+            Map<String, Object> json = ruleFile.ruleFileJsonToMap(validateConfig);
+            //执行校验
+            validateExecute(json, allParam);
+            if (msgSet.size() > 0){
+                resultValidate.setPass(false);
+                msgSet.remove("");
+                resultValidate.setMsgSet(msgSet);
             }
         }
         return resultValidate;
