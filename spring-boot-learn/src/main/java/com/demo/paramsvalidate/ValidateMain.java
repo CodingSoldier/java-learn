@@ -7,7 +7,6 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -180,7 +179,7 @@ public class ValidateMain {
     }
 
     //详细规则校验
-    private void checkRuleValueDetail(Map<String, Object> jsonRule, Object val){
+    private void checkRuleValueDetail(Map<String, Object> jsonRule, Object val) {
         Object minValue = jsonRule.get(MIN_VALUE);
         Object maxValue = jsonRule.get(MAX_VALUE);
         Object minLength = jsonRule.get(MIN_LENGTH);
@@ -200,19 +199,11 @@ public class ValidateMain {
         //正则校验
         if (ValidateUtils.isNotBlank(regex)){
             if ( regex.startsWith(REGEX_BEGIN)){
-                try {
-                    //读取init.json校验规则
-                    Map<String, String> result = ruleFile.getRegexCommon();
-                    if (result != null && result.size() != 0){
-                        regex = result.get(regex);
-                    }else {
-                        ValidateUtils.log(new Exception("校验异常，init.json未配置"+REGEX_BEGIN));
-                        msgSet.add("校验异常");
-                    }
-                }catch (IOException e){
-                    ValidateUtils.log(e);
-                    msgSet.add("初始化init.json失败");
-                }
+                Map<String, String> result = ruleFile.getRegexCommon();  //读取init.json校验规则
+                if (result == null || result.size() == 0)
+                    throw new ParamsValidateException(String.format("校验异常，init.json未配置，无法获取%s", REGEX_BEGIN));
+
+                regex = result.get(regex);
             }
 
             if (Pattern.matches(regex, ValidateUtils.objToStr(val)) == false){
