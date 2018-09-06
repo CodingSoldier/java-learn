@@ -9,13 +9,12 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.Map;
 
 @Component
 public class RuleFile {
 
-    public static volatile Map<String, String> regexCommon;
+    private static volatile Map<String, String> regexCommon;
 
     public static final String REGEX_COMMON_JSON = "init.json";
 
@@ -31,15 +30,16 @@ public class RuleFile {
         Map<String, Object> json = validateInterface.getCache(validateConfig);
         if (json == null || json.size() == 0){
             json = ruleFileRead(filePath);
-            if (json == null)
-                throw new Exception("@ParamsValidate元素value、file错误");
+            if (json == null || json.size() == 0)
+                throw new ParamsValidateException(String.format("读取%s,结果是null、空json", filePath));
 
-            if (ValidateUtils.isNotBlank(validateConfig.getKeyName())){
-                json = (Map<String, Object>)json.get(validateConfig.getKeyName());
+            String key = validateConfig.getKey();
+            if (ValidateUtils.isNotBlank(key)){
+                json = (Map<String, Object>)json.get(key);
                 if (json != null){
                     validateInterface.setCache(validateConfig, json);
                 }else{
-                    throw new Exception("@ParamsValidate元素keyName错误");
+                    throw new ParamsValidateException(String.format("%s文件中无%s", filePath, key));
                 }
             }
         }
@@ -48,7 +48,7 @@ public class RuleFile {
 
     //读取json文件到Map<String, Object>
     private Map<String, Object> ruleFileRead(String filePath) throws Exception{
-        Map<String, Object> json = new HashMap<>();
+        Map<String, Object> json = null;
         Parser parser = validateInterface.getParser();
         try (InputStream is = ValidateUtils.class.getClassLoader().getResourceAsStream(filePath)){
             if (is != null){
@@ -68,15 +68,13 @@ public class RuleFile {
                         Method method = parserClazz.getMethod("parseObject", InputStream.class, Type.class, featureArrClass);
                         json = (Map<String, Object>)method.invoke(null, is, Map.class, null);
                     }else {
-                        throw new Exception("json解析器不符合规范");
+                        throw new ParamsValidateException("json解析器不符合规范，请修改getParser()");
                     }
                 }else{
                     //使用Jackson解析
                     ObjectMapper mapper = new ObjectMapper();
                     json = mapper.readValue(is, Map.class);
                 }
-            }else{
-                throw new IOException("@ParamsValidate读取file失败");
             }
         }
         return json;

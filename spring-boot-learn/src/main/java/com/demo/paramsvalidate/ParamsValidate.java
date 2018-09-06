@@ -16,5 +16,5 @@ import java.lang.annotation.Target;
 public @interface ParamsValidate {
     String value() default "";
     String file() default "";
-    String keyName() default "";
+    String key() default "";
 }

@@ -52,9 +52,9 @@ public class ValidateMain {
         if (method.getAnnotation(ParamsValidate.class) != null){
             String file = method.getAnnotation(ParamsValidate.class).value();
             file = ValidateUtils.isNotBlank(file) ? file : method.getAnnotation(ParamsValidate.class).file();
-            String keyName = method.getAnnotation(ParamsValidate.class).keyName();
+            String key = method.getAnnotation(ParamsValidate.class).key();
             validateConfig.setFile(file);
-            validateConfig.setKeyName(keyName);
+            validateConfig.setKey(key);
         }
         return validateConfig;
     }
@@ -76,10 +76,8 @@ public class ValidateMain {
             }catch (IOException e){
                 //异常，无法处理请求参数，返回pass false
                 resultValidate.setPass(false);
-                resultValidate.setMsgSet(new HashSet<String>(){{
-                    add("@ParamsValidate无法处理请求参数");
-                }});
                 ValidateUtils.log("@ParamsValidate无法处理请求参数", method, e);
+                return resultValidate;
             }
 
             if (allParam != null){
@@ -89,10 +87,8 @@ public class ValidateMain {
                     json = ruleFile.ruleFileJsonToMap(validateConfig);
                 }catch (Exception e){
                     resultValidate.setPass(false);
-                    resultValidate.setMsgSet(new HashSet<String>(){{
-                        add("@ParamsValidate读取、解析json文件失败");
-                    }});
-                    ValidateUtils.log(method, e);
+                    ValidateUtils.log("@ParamsValidate读取、解析json文件失败", method, e);
+                    return resultValidate;
                 }
 
                 msgSet = new TreeSet<>();
@@ -231,8 +227,13 @@ public class ValidateMain {
             for (String key:jsonRule.keySet()){
                 val = ValidateUtils.objToStr(jsonRule.get(key));
                 if (ValidateUtils.isNotBlank(val)){
-                    val = val.startsWith(REGEX_BEGIN) ? ruleFile.getRegexCommon().get(val) : val;
-                    message += key + "：" + val + "; ";
+                    try {
+                        val = val.startsWith(REGEX_BEGIN) ? ruleFile.getRegexCommon().get(val) : val;
+                        message += key + "：" + val + "; ";
+                    }catch (IOException e){
+
+                    }
+
                 }
             }
             message = message.substring(0, message.length()-1);

@@ -26,7 +26,7 @@ public class ValidateInterfaceImpl extends ValidateInterfaceAdapter implements  
     //返回json文件基础路径。init.json文件必须放在此目录下
     @Override
     public String basePath() {
-        return "config/validate/";
+        return "config/validate1/";
     }
 
     //参数校验未通过, 返回自定义数据给客户端的数据
@@ -86,7 +86,7 @@ public class ValidateInterfaceImpl extends ValidateInterfaceAdapter implements  
         String basePath = ValidateUtils.trimBeginEndChar(basePath(), '/') + "/";
         String fileName = validateConfig.getFile().substring(0, validateConfig.getFile().lastIndexOf(".json"));
         fileName = ValidateUtils.trimBeginEndChar(fileName, '/');
-        String jsonKey = validateConfig.getKeyName();
+        String jsonKey = validateConfig.getKey();
         jsonKey = ValidateUtils.isBlank(jsonKey) ? jsonKey : (":"+jsonKey);
         String temp = basePath + fileName + jsonKey;
         return temp.replaceAll("[\\/\\-]",":");
