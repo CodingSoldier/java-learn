@@ -31,7 +31,7 @@ public class RuleFile {
         if (json == null || json.size() == 0){
             json = ruleFileRead(filePath);
             if (json == null || json.size() == 0)
-                throw new ParamsValidateException(String.format("读取%s,结果是null、空json", filePath));
+                throw new ParamsValidateException(String.format("读取%s,结果是null或者空json", filePath));
 
             String key = validateConfig.getKey();
             if (ValidateUtils.isNotBlank(key)){
@@ -39,7 +39,7 @@ public class RuleFile {
                 if (json != null){
                     validateInterface.setCache(validateConfig, json);
                 }else{
-                    throw new ParamsValidateException(String.format("%s文件中无%s", filePath, key));
+                    throw new ParamsValidateException(String.format("%s文件中无key: %s", filePath, key));
                 }
             }
         }

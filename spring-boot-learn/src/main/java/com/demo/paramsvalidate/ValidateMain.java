@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 @Component
 public class ValidateMain {
 
-    //public static final String EXCEPTION_UNMATCH = "校验"
     public static final String REGEX_BEGIN = "REGEX_";
 
     public static final String REQUEST = "request";
@@ -60,7 +59,7 @@ public class ValidateMain {
     }
 
     //校验结果
-    public ResultValidate validateResult(JoinPoint joinPoint){
+    public ResultValidate validateResult(JoinPoint joinPoint) throws Exception{
         ResultValidate resultValidate = new ResultValidate(true);  //默认是校验通过
 
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
@@ -70,26 +69,27 @@ public class ValidateMain {
         if (ValidateUtils.isNotBlank(validateConfig.getFile())){  //需要校验
 
             //获取请求参数
-            Map<String, Object> allParam = null;
-            try {
-                allParam = requestParam.mergeParams(joinPoint);
-            }catch (IOException e){
-                //异常，无法处理请求参数，返回pass false
-                resultValidate.setPass(false);
-                ValidateUtils.log("@ParamsValidate无法处理请求参数", method, e);
-                return resultValidate;
-            }
+            Map<String, Object> allParam = requestParam.mergeParams(joinPoint);
+            //try {
+            //    allParam = requestParam.mergeParams(joinPoint);
+            //}catch (IOException e){
+            //    //异常，无法处理请求参数，返回pass false
+            //    resultValidate.setPass(false);
+            //    ValidateUtils.log("@ParamsValidate无法处理请求参数", method, e);
+            //    return resultValidate;
+            //}
 
             if (allParam != null){
+                Map<String, Object> json = ruleFile.ruleFileJsonToMap(validateConfig);
                 //读取校验规则
-                Map<String, Object> json = new HashMap<>();
-                try {
-                    json = ruleFile.ruleFileJsonToMap(validateConfig);
-                }catch (Exception e){
-                    resultValidate.setPass(false);
-                    ValidateUtils.log("@ParamsValidate读取、解析json文件失败", method, e);
-                    return resultValidate;
-                }
+                //Map<String, Object> json = new HashMap<>();
+                //try {
+                //    json = ruleFile.ruleFileJsonToMap(validateConfig);
+                //}catch (Exception e){
+                //    resultValidate.setPass(false);
+                //    ValidateUtils.log("@ParamsValidate读取、解析json文件失败", method, e);
+                //    return resultValidate;
+                //}
 
                 msgSet = new TreeSet<>();
                 //执行校验
@@ -109,10 +109,10 @@ public class ValidateMain {
         if (json == null || json.size() == 0)
             return ;
 
-        //if (paramMap == null){  //参数为空
-        //    checkParamValueNull(json);
-        //    return;
-        //}
+        if (paramMap == null){  //参数为空
+            checkParamValueNull(json);
+            return;
+        }
 
         //循环校验json
         for (String key:json.keySet()){
@@ -169,16 +169,18 @@ public class ValidateMain {
             if (value instanceof List){  //请求参数：List<基本类型>
                 List list = (List)value;
                 for (Object elem:list){
-                    checkDetail(rules, elem);
+                    if (ValidateUtils.isNotBlankObj(elem)){
+                        checkRuleValueDetail(rules, elem);
+                    }
                 }
             }else {
-                checkDetail(rules, value);  //请求参数：基本类型
+                checkRuleValueDetail(rules, value);  //请求参数：基本类型
             }
         }
     }
 
     //详细规则校验
-    private void checkDetail( Map<String, Object> jsonRule, Object val){
+    private void checkRuleValueDetail(Map<String, Object> jsonRule, Object val){
         Object minValue = jsonRule.get(MIN_VALUE);
         Object maxValue = jsonRule.get(MAX_VALUE);
         Object minLength = jsonRule.get(MIN_LENGTH);
@@ -198,7 +200,8 @@ public class ValidateMain {
         //正则校验
         if (ValidateUtils.isNotBlank(regex)){
             if ( regex.startsWith(REGEX_BEGIN)){
-                try {  //读取init.json校验规则
+                try {
+                    //读取init.json校验规则
                     Map<String, String> result = ruleFile.getRegexCommon();
                     if (result != null && result.size() != 0){
                         regex = result.get(regex);
@@ -227,13 +230,8 @@ public class ValidateMain {
             for (String key:jsonRule.keySet()){
                 val = ValidateUtils.objToStr(jsonRule.get(key));
                 if (ValidateUtils.isNotBlank(val)){
-                    try {
-                        val = val.startsWith(REGEX_BEGIN) ? ruleFile.getRegexCommon().get(val) : val;
-                        message += key + "：" + val + "; ";
-                    }catch (IOException e){
-
-                    }
-
+                    val = val.startsWith(REGEX_BEGIN) ? ruleFile.getRegexCommon().get(val) : val;
+                    message += key + "：" + val + "; ";
                 }
             }
             message = message.substring(0, message.length()-1);
