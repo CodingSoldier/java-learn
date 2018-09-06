@@ -26,7 +26,7 @@ public class ValidateInterfaceImpl extends ValidateInterfaceAdapter implements  
     //返回json文件基础路径。init.json文件必须放在此目录下
     @Override
     public String basePath() {
-        return "config/validate1/";
+        return "config/validate/";
     }
 
     //参数校验未通过, 返回自定义数据给客户端的数据
