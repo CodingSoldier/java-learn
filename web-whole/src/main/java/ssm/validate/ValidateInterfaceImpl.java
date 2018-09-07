@@ -22,7 +22,7 @@ public class ValidateInterfaceImpl extends ValidateInterfaceAdapter{
     public Object validateNotPass(ResultValidate resultValidate) {
         Set<String> msgSet = resultValidate.getMsgSet();
         Map<String, Object> r = new HashMap<>();
-        r.put("success", resultValidate.isPass());
+        r.put("code", resultValidate.isPass() ? 0 : 101);
         r.put("data", msgSet);
         return r;
     }

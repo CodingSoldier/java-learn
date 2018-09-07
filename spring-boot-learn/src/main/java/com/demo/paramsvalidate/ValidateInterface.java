@@ -28,7 +28,8 @@ public interface ValidateInterface {
 
     /**
      * 校验级别
-     * @return PvLevel.STRICT、PvLevel.LOOSE
+     * PvLevel.STRICT  严格模式，发生异常，校验不通过，默认
+     * PvLevel.LOOSE   宽松模式，发生异常，不校验
      */
     String getLevel();
 
