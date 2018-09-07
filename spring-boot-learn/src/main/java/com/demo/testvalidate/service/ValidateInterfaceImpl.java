@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 @Component
 public class ValidateInterfaceImpl extends ValidateInterfaceAdapter implements  InitializingBean {
 
-    //不使用缓存
+    //存
     @Autowired
     RedisTemplate redisTemplate;
 
@@ -33,15 +33,6 @@ public class ValidateInterfaceImpl extends ValidateInterfaceAdapter implements  
     @Override
     public Object validateNotPass(ResultValidate resultValidate) {
         Set<String> msgSet = resultValidate.getMsgSet();
-        //String msg = "";
-        //if (msgSet != null && msgSet.size() == 1 && msgSet.contains(ValidateAspect.VALIDATE_EXCEPTION_MSG)){
-        //    msg = "服务暂不可用";
-        //}else {
-        //    for (String str: msgSet){
-        //        int end = str.indexOf("，校验规则");
-        //        msg += str.substring(0, end == -1 ? str.length() : end)+"，";
-        //    }
-        //}
         Map<String, Object> r = new HashMap<>();
         r.put("success", resultValidate.isPass());
         r.put("data", msgSet);

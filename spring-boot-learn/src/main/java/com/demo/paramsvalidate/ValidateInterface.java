@@ -18,13 +18,6 @@ public interface ValidateInterface {
     String basePath();
 
     /**
-     * 参数校验未通过
-     * @param resultValidate
-     * @return 返回给客户端的数据
-     */
-    Object validateNotPass(ResultValidate resultValidate);
-
-    /**
      * json解析器
      * 1、使用默认解析器jackson，可不覆盖此方法。
      * 2、使用gson，请返回 new Parser(Gson.class)。
@@ -32,6 +25,19 @@ public interface ValidateInterface {
      * 为了支持fastjson，搞得好坑爹。
      */
     Parser getParser();
+
+    /**
+     * 校验级别
+     * @return PvLevel.STRICT、PvLevel.LOOSE
+     */
+    String getLevel();
+
+    /**
+     * 参数校验未通过
+     * @param resultValidate
+     * @return 返回给客户端的数据
+     */
+    Object validateNotPass(ResultValidate resultValidate);
 
     /**
      * 获取缓存中的校验规则

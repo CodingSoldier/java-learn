@@ -17,4 +17,5 @@ public @interface ParamsValidate {
     String value() default "";
     String file() default "";
     String key() default "";
+    String level() default "";
 }

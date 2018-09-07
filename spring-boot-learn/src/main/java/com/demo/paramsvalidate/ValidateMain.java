@@ -3,11 +3,9 @@ package com.demo.paramsvalidate;
 import com.demo.paramsvalidate.bean.ResultValidate;
 import com.demo.paramsvalidate.bean.ValidateConfig;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -44,27 +42,9 @@ public class ValidateMain {
     @Autowired
     private RuleFile ruleFile;
 
-    //获取校验注解@ParamsValidate设置的值
-    private static ValidateConfig getConfigs(Method method){
-        ValidateConfig validateConfig = new ValidateConfig();
-        if (method.getAnnotation(ParamsValidate.class) != null){
-            String file = method.getAnnotation(ParamsValidate.class).value();
-            file = ValidateUtils.isNotBlank(file) ? file : method.getAnnotation(ParamsValidate.class).file();
-            String key = method.getAnnotation(ParamsValidate.class).key();
-            validateConfig.setFile(file);
-            validateConfig.setKey(key);
-        }
-        return validateConfig;
-    }
-
-    //校验结果
-    public ResultValidate validateResult(JoinPoint joinPoint) throws Exception{
+    //校验
+    public ResultValidate validateExecute(JoinPoint joinPoint, ValidateConfig validateConfig) throws Exception{
         ResultValidate resultValidate = new ResultValidate(true);  //默认是校验通过
-
-        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        Method method = methodSignature.getMethod();  //获取当前方法
-        ValidateConfig validateConfig = getConfigs(method);
-
         if (ValidateUtils.isNotBlank(validateConfig.getFile())){  //需要校验
             //参数不符合校验规则提示
             msgSet = new TreeSet<>();
@@ -73,7 +53,7 @@ public class ValidateMain {
             //获取校验规则
             Map<String, Object> json = ruleFile.ruleFileJsonToMap(validateConfig);
             //执行校验
-            validateExecute(json, allParam);
+            validateJsonParam(json, allParam);
             if (msgSet.size() > 0){
                 resultValidate.setPass(false);
                 msgSet.remove("");
@@ -84,7 +64,7 @@ public class ValidateMain {
     }
 
     //校验规则key-value 与 请求参数key-value
-    private void validateExecute(Map<String, Object> json, Map<String, Object> paramMap){
+    private void validateJsonParam(Map<String, Object> json, Map<String, Object> paramMap){
         if (json == null || json.size() == 0)
             return ;
 
@@ -104,12 +84,12 @@ public class ValidateMain {
                 if (paramValue == null){  //参数为空
                     checkParamValueNull(jsonValue);
                 }else if (paramValue instanceof Map){  //paramValue是一个key-value
-                    validateExecute(jsonValue, (Map<String, Object>)paramValue);
+                    validateJsonParam(jsonValue, (Map<String, Object>)paramValue);
                 }else if (paramValue instanceof List){  //paramValue是一个List
                     List paramList = (List)paramValue;
                     for (Object elem:paramList){
                         if (elem instanceof Map){
-                            validateExecute(jsonValue, (Map<String, Object>)elem);
+                            validateJsonParam(jsonValue, (Map<String, Object>)elem);
                         }else {
                             throw new ParamsValidateException(String.format("传参或者校验规则错误，校验规则：%s，请求参数：%s", jsonValue, elem));
                         }

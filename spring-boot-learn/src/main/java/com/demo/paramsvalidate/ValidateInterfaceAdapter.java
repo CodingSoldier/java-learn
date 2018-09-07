@@ -16,13 +16,18 @@ public abstract class ValidateInterfaceAdapter implements ValidateInterface{
         return "validate/";
     }
 
-    //必须覆盖此方法
-    //public Object validateNotPass(ResultValidate resultValidate)
-
     @Override
     public Parser getParser() {
         return null;
     }
+
+    @Override
+    public String getLevel(){
+        return PvLevel.STRICT;
+    }
+
+    //必须覆盖此方法
+    //public Object validateNotPass(ResultValidate resultValidate)
 
     @Override
     public Map<String, Object> getCache(ValidateConfig validateConfig) {

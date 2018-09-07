@@ -14,21 +14,17 @@ public class ValidateUtils<T> extends org.springframework.util.StringUtils{
 
     private static final Logger LOGGER = Logger.getLogger("@ParamsValidate");
 
-    public static void log(String msg, Method method, Throwable e){
+    public static void logWarning(String msg){
+        LOGGER.log(Level.WARNING, msg);
+    }
+
+    public static void logSevere(String msg, Method method, Throwable e){
         if (method != null){
-            msg = String.format("ERROR METHOD: %s.%s  Exception Message: %s",method.getDeclaringClass().getName(),method.getName(),msg);
+            msg = String.format("Error Method: %s.%s  Exception Message: %s",method.getDeclaringClass().getName(),method.getName(),msg);
         }else {
             msg = String.format("Exception Message: %s",msg);
         }
         LOGGER.log(Level.SEVERE, msg, e);
-    }
-
-    public static void log(Method method, Throwable e){
-        log(e.getMessage(), method, e);
-    }
-
-    public static void log(Throwable e){
-        log(null, e);
     }
 
     //空、空格

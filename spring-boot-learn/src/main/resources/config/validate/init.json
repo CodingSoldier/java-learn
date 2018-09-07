@@ -6,7 +6,7 @@
     "REGEX_FLOAT_10_2": "^\\d{1,8}(\\.\\d{1,2})?$",
     "REGEX_ID": "^[a-zA-Z0-9\\-]+$",
     "REGEX_LETTER_NUM": "^[a-zA-Z0-9]+$",
-    "REGEX_NO_NEGATIVE": "^\\d+(\\.\\d+)?$",
+    "REGEX_NO_NEGATIVE": "^\\d+(\\.\\d+)?$",//
     "REGEX_POSITIVE_NUM": "^\\d+$",
     "REGEX_DECIMALS": "(-?\\d*)\\.?\\d+",
     "REGEX_PASSWORD": "^[a-zA-Z0-9_\\`\\=\\;\\,\\~\\!\\@\\#\\$\\%\\^\\*\\-\\+\\}\\{\\:\\?\\(\\)\\.\\/\\[\\]]{6,}$",

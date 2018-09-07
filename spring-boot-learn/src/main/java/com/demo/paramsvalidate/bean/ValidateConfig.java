@@ -7,6 +7,7 @@ public class ValidateConfig {
 
     private String file;
     private String key;
+    private String level;
 
     public ValidateConfig() {
     }
@@ -30,5 +31,13 @@ public class ValidateConfig {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
 }
