@@ -17,14 +17,21 @@ public class ValidateUtils<T> extends org.springframework.util.StringUtils{
     public static void logWarning(String msg){
         LOGGER.log(Level.WARNING, msg);
     }
+    public static void logWarning(String msg, Method method, Throwable e){
+        log(Level.WARNING, msg, method, e);
+    }
 
     public static void logSevere(String msg, Method method, Throwable e){
+        log(Level.SEVERE, msg, method, e);
+    }
+
+    public static void log(Level level, String msg, Method method, Throwable e){
         if (method != null){
             msg = String.format("Error Method: %s.%s  Exception Message: %s",method.getDeclaringClass().getName(),method.getName(),msg);
         }else {
             msg = String.format("Exception Message: %s",msg);
         }
-        LOGGER.log(Level.SEVERE, msg, e);
+        LOGGER.log(level, msg, e);
     }
 
     //空、空格

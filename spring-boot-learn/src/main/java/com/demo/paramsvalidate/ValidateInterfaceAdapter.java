@@ -23,7 +23,7 @@ public abstract class ValidateInterfaceAdapter implements ValidateInterface{
 
     @Override
     public String getLevel(){
-        return PvLevel.STRICT;
+        return PvLevel.LOOSE;
     }
 
     //必须覆盖此方法

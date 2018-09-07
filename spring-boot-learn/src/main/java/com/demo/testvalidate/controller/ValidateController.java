@@ -3,6 +3,7 @@ package com.demo.testvalidate.controller;
 
 import com.demo.config.AppProp;
 import com.demo.paramsvalidate.ParamsValidate;
+import com.demo.paramsvalidate.PvLevel;
 import com.demo.testvalidate.bean.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class ValidateController {
 
     @PostMapping("/post/map")
     //@ParamsValidate("json-post-one.json")
-    @ParamsValidate(value = "json-post-part-jackson.json", key = "map1")
+    @ParamsValidate(value = "json-post-part-jackson.json", key = "map1", level = PvLevel.LOOSE)
     public Object p1(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, Object> map) throws Exception{
         Map<String, Object> map1 = new HashMap<>();
         System.out.println(appProp.getA());

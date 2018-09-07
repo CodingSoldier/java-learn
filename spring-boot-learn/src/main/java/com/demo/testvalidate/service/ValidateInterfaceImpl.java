@@ -40,6 +40,16 @@ public class ValidateInterfaceImpl extends ValidateInterfaceAdapter implements  
     }
 
     /**
+     * 校验级别
+     * PvLevel.STRICT  严格模式，发生异常，校验不通过，默认
+     * PvLevel.LOOSE   宽松模式，发生异常，不校验
+     */
+    //@Override
+    //public String getLevel(){
+    //    return PvLevel.STRICT;
+    //}
+
+    /**
      * json解析器
      * 1、使用默认解析器jackson，可不覆盖此方法
      * 2、使用gson，请返回 new Parser(Gson.class);

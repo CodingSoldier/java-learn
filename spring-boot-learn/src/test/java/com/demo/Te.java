@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class T {
+public class Te {
 
     @Autowired
     AppProp appProp;
