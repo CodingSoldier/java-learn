@@ -1,5 +1,5 @@
 {
-    "map1": {
+    "map": {
         "str1": {
             "request": true,
             "regex": "REGEX_EMAIL",
@@ -38,7 +38,7 @@
             "message": "bigNum错误"
         },
         "girl": {
-            "isMarry":{
+            "marry":{
                 "regex": "false"
             },
             "name": {
@@ -55,7 +55,7 @@
             },
             "girl": {
                 "request": "false",
-                "isMarry": {
+                "marry": {
                     "request": "true",
                     "regex": "true|false"
                 },
@@ -126,7 +126,17 @@
         }
     },
 
-    "vo1": {
+    "vo": {
+        "str1": {
+            "request": true,
+            "regex": "REGEX_EMAIL",
+            "message": "str1错误提示"
+        },
+        "int1": {
+            "request": true,
+            "regex": "REGEX_NO_NEGATIVE",
+            "message": "int1错误提示"
+        },
         "id": {
             "request": true,
             "minValue": 1,
@@ -155,8 +165,11 @@
             "message": "bigNum错误"
         },
         "girl": {
+            "marry":{
+                "regex": "false"
+            },
             "name": {
-                "request": "false",
+                "request": "true",
                 "minLength": 2,
                 "maxLength": 10
             }
@@ -168,7 +181,8 @@
                 "maxValue": 3
             },
             "girl": {
-                "isMarry": {
+                "request": "false",
+                "marry": {
                     "request": "true",
                     "regex": "true|false"
                 },
@@ -182,7 +196,7 @@
         "hobbyList": {
             "request": true,
             "minLength": 1,
-            "maxLength": 20,
+            "maxLength": 1,
             "message": "hobbyList错误提示"
         },
         "dreamList": {
@@ -209,6 +223,7 @@
             }
         },
         "baoBaoList": {
+            "request": false,
             "brand": {
                 "request": true,
                 "minLength": 1,
@@ -230,7 +245,6 @@
                     "message": "phone错误提示"
                 },
                 "card": {
-                    "request": true,
                     "minLength": 1,
                     "maxLength": 20,
                     "message": "card错误提示"

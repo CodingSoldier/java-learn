@@ -1,22 +1,15 @@
 package ssm.validate;
 
-
-import com.github.codingsoldier.paramsvalidate.ValidateInterface;
-import com.github.codingsoldier.paramsvalidate.bean.Parser;
+import com.github.codingsoldier.paramsvalidate.ValidateInterfaceAdapter;
 import com.github.codingsoldier.paramsvalidate.bean.ResultValidate;
-import com.github.codingsoldier.paramsvalidate.bean.ValidateConfig;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
-@Service
-public class ValidateInterfaceImpl implements ValidateInterface, InitializingBean {
-
-    //不使用缓存
-    //@Autowired
-    //RedisTemplate redisTemplate;
+@Component
+public class ValidateInterfaceImpl extends ValidateInterfaceAdapter{
 
     //返回json文件基础路径。init.json文件必须放在此目录下
     @Override
@@ -27,80 +20,11 @@ public class ValidateInterfaceImpl implements ValidateInterface, InitializingBea
     //参数校验未通过, 返回自定义数据给客户端的数据
     @Override
     public Object validateNotPass(ResultValidate resultValidate) {
+        Set<String> msgSet = resultValidate.getMsgSet();
         Map<String, Object> r = new HashMap<>();
         r.put("success", resultValidate.isPass());
-        r.put("msg", resultValidate.getMsgSet());
+        r.put("data", msgSet);
         return r;
     }
-
-    /**
-     * json解析器
-     * 1、使用默认解析器jackson，直接返回null即可
-     * 2、使用gson，请返回 new Parser(Gson.class);
-     * 3、使用fastjson，请返回new Parser(JSON.class, Feature[].class)
-     * 为了支持fastjson，搞得好坑爹
-     */
-    public Parser getParser(){
-        return null;
-        //return new Parser(Gson.class);
-        //return new Parser(JSON.class, Feature[].class);
-    }
-
-    //不使用缓存，返回空map即可
-    @Override
-    public Map<String, Object> getCache(ValidateConfig validateConfig) {
-        return new HashMap<>();
-    }
-
-    //不使用缓存，本方法可不处理
-    @Override
-    public void setCache(ValidateConfig validateConfig, Map<String, Object> json) {
-
-    }
-
-    //不使用缓存，可以不实现InitializingBean，不必实现本方法
-    @Override
-    public void afterPropertiesSet() throws Exception {
-
-    }
-
-
-    ////获取redis缓存中的校验规则
-    //@Override
-    //public Map<String, Object> getCache(ValidateConfig validateConfig) {
-    //    String key = createKey(validateConfig);
-    //    return redisTemplate.opsForHash().entries(key);
-    //}
-    //
-    ////设置redis校验规则到缓存中
-    //@Override
-    //public void setCache(ValidateConfig validateConfig, Map<String, Object> json) {
-    //    String key = createKey(validateConfig);
-    //    redisTemplate.opsForHash().putAll(key, json);
-    //}
-    //
-    ////项目启动时，删除redis缓存校验规则
-    //@Override
-    //public void afterPropertiesSet() throws Exception {
-    //    ExecutorService es = Executors.newFixedThreadPool(1);
-    //    es.submit(new Runnable() {
-    //        @Override
-    //        public void run() {
-    //            Set<String> keys = redisTemplate.keys(basePath().replace("/",":") + "*");
-    //            redisTemplate.delete(keys);
-    //        }
-    //    });
-    //}
-    //
-    ////创建缓存key
-    //private String createKey(ValidateConfig validateConfig){
-    //    String basePath = Utils.trimBeginEndChar(basePath(), '/') + "/";
-    //    String fileName = validateConfig.getFile().substring(0, validateConfig.getFile().lastIndexOf(".json"));
-    //    fileName = Utils.trimBeginEndChar(fileName, '/');
-    //    String jsonKey = validateConfig.getKeyName();
-    //    jsonKey = Utils.isBlank(jsonKey) ? jsonKey : (":"+jsonKey);
-    //    String temp = basePath + fileName + jsonKey;
-    //    return temp.replaceAll("[\\/\\-]",":");
-    //}
 
 }

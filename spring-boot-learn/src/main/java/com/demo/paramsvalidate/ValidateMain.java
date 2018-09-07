@@ -116,6 +116,7 @@ public class ValidateMain {
         }else if (!ValidateUtils.isRequestFalse(json)){
             for (String key:jsonKeySet){
                 if (json.get(key) instanceof Map){
+                    ruleKey = key;
                     checkParamValueNull((Map<String, Object>) json.get(key));
                 }
             }

@@ -7,7 +7,7 @@ public class User {
     private Integer id;
     private String name;
     private Date birthday;
-    private Boolean isSingle;
+    private Boolean single;
 
     public Integer getId() {
         return id;
@@ -34,10 +34,10 @@ public class User {
     }
 
     public Boolean getSingle() {
-        return isSingle;
+        return single;
     }
 
     public void setSingle(Boolean single) {
-        isSingle = single;
+        this.single = single;
     }
 }

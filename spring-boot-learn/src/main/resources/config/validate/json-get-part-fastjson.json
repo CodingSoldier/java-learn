@@ -1,4 +1,5 @@
 {
+    //有注解
     "id": {
         "request": true,
         "minValue": 1,
@@ -21,14 +22,6 @@
         "request": "false",
         "regex": "REGEX_FLOAT_10_2",
         "message": "薪水填写错误"
-    },
-    "girl": {
-        "name": {
-            "request": "false",
-            "minLength": 2,
-            "maxLength": 10,
-//            "message": "2<=长度<=10"
-        }
     }
 }
 

@@ -1,8 +1,11 @@
 package com.demo.testvalidate.service;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.parser.Feature;
 import com.demo.paramsvalidate.ValidateInterfaceAdapter;
 import com.demo.paramsvalidate.ValidateUtils;
+import com.demo.paramsvalidate.bean.Parser;
 import com.demo.paramsvalidate.bean.ResultValidate;
 import com.demo.paramsvalidate.bean.ValidateConfig;
 import org.springframework.beans.factory.InitializingBean;
@@ -34,7 +37,7 @@ public class ValidateInterfaceImpl extends ValidateInterfaceAdapter implements  
     public Object validateNotPass(ResultValidate resultValidate) {
         Set<String> msgSet = resultValidate.getMsgSet();
         Map<String, Object> r = new HashMap<>();
-        r.put("success", resultValidate.isPass());
+        r.put("code", resultValidate.isPass() ? 0 : 101);
         r.put("data", msgSet);
         return r;
     }
@@ -56,10 +59,10 @@ public class ValidateInterfaceImpl extends ValidateInterfaceAdapter implements  
      * 3、使用fastjson，请返回new Parser(JSON.class, Feature[].class)
      * 为了支持fastjson，搞得好坑爹
      */
-    //public Parser getParser(){
-    //    //return new Parser(Gson.class);
-    //    return new Parser(JSON.class, Feature[].class);
-    //}
+    public Parser getParser(){
+        //return new Parser(Gson.class);
+        return new Parser(JSON.class, Feature[].class);
+    }
 
     /**
      * 不使用缓存，可不覆盖此方法
