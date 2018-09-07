@@ -108,9 +108,14 @@ public class ValidateUtils<T> extends org.springframework.util.StringUtils{
         return new BigDecimal(getDouble(value));
     }
 
-    //校验规则，是否必填
-    public static boolean isRequest(Map<String, Object> rules){
+    //校验规则，request是否为true
+    public static boolean isRequestTrue(Map<String, Object> rules){
         return Boolean.parseBoolean(objToStr(rules.get(ValidateMain.REQUEST)));
+    }
+
+    //校验规则，request是否为false
+    public static boolean isRequestFalse(Map<String, Object> rules){
+        return "false".equals(objToStr(rules.get(ValidateMain.REQUEST)).toLowerCase());
     }
 
     //是否为null、""、空集合

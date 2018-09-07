@@ -75,7 +75,11 @@ public class ValidateMain {
 
         //循环校验json
         for (String key:json.keySet()){
-            Map<String, Object> jsonValue = (Map<String, Object>)json.get(key);
+            Object jsonVal = json.get(key);
+            if (!(jsonVal instanceof Map))  //对象有request的情况
+                continue;
+
+            Map<String, Object> jsonValue = (Map<String, Object>)jsonVal;
             Object paramValue = paramMap.get(key);
             ruleKey = key;
             if (ruleKeySet.containsAll(jsonValue.keySet())){   //jsonValue为校验规则rules
@@ -106,10 +110,10 @@ public class ValidateMain {
     private void checkParamValueNull(Map<String, Object> json){
         Set<String> jsonKeySet = json.keySet();
         if (ruleKeySet.containsAll(jsonKeySet)){
-            if (ValidateUtils.isRequest(json)){
+            if (ValidateUtils.isRequestTrue(json)){
                 msgSet.add(createFailMsg(json));
             }
-        }else {
+        }else if (!ValidateUtils.isRequestFalse(json)){
             for (String key:jsonKeySet){
                 if (json.get(key) instanceof Map){
                     checkParamValueNull((Map<String, Object>) json.get(key));
@@ -120,7 +124,7 @@ public class ValidateMain {
 
     //rules为校验规则，value为请求值（不包含键）
     private void checkRuleValue(Map<String, Object> rules, Object value){
-        if (ValidateUtils.isRequest(rules) && ValidateUtils.isBlankObj(value)){
+        if (ValidateUtils.isRequestTrue(rules) && ValidateUtils.isBlankObj(value)){
             //必填&&无值
             msgSet.add(createFailMsg(rules));
         }else if (ValidateUtils.isNotBlankObj(value)){

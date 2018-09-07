@@ -54,6 +54,7 @@
                 "maxValue": 3
             },
             "girl": {
+                "request": "false",
                 "isMarry": {
                     "request": "true",
                     "regex": "true|false"
@@ -95,6 +96,7 @@
             }
         },
         "baoBaoList": {
+            "request": false,
             "brand": {
                 "request": true,
                 "minLength": 1,
@@ -116,7 +118,6 @@
                     "message": "phone错误提示"
                 },
                 "card": {
-                    "request": true,
                     "minLength": 1,
                     "maxLength": 20,
                     "message": "card错误提示"

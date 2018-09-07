@@ -22,7 +22,7 @@ public class ValidateController {
 
     @PostMapping("/post/map")
     //@ParamsValidate("json-post-one.json")
-    @ParamsValidate(value = "json-post-part-jackson.json", key = "map1", level = PvLevel.LOOSE)
+    @ParamsValidate(value = "json-post-part-jackson.json", key = "map1", level = PvLevel.STRICT)
     public Object p1(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, Object> map) throws Exception{
         Map<String, Object> map1 = new HashMap<>();
         System.out.println(appProp.getA());
