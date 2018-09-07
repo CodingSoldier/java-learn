@@ -38,8 +38,11 @@
             "message": "bigNum错误"
         },
         "girl": {
+            "isMarry":{
+                "regex": "false"
+            },
             "name": {
-                "request": "false",
+                "request": "true",
                 "minLength": 2,
                 "maxLength": 10
             }
@@ -65,7 +68,7 @@
         "hobbyList": {
             "request": true,
             "minLength": 1,
-            "maxLength": 20,
+            "maxLength": 1,
             "message": "hobbyList错误提示"
         },
         "dreamList": {

@@ -2,7 +2,7 @@ package com.demo.paramsvalidate;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,21 +54,6 @@ public class ValidateUtils<T> extends org.springframework.util.StringUtils{
         return !isBlankObj(obj);
     }
 
-    //字符相等
-    public static boolean strEquals(String str1, String str2) {
-        return str1 != null && str2 != null && str1.equals(str2);
-    }
-
-    //字符非blank且相等
-    public static boolean strNotBlankEquals(String str1, String str2) {
-        return str1 != null && !"".equals(str1) && str2 != null && !"".equals(str2) && str1.equals(str2);
-    }
-
-    //字符相等忽略大小写
-    public static boolean strEqualsIgnoreCase(String str1, String str2) {
-        return str1 != null && str2 != null && str1.equalsIgnoreCase(str2);
-    }
-
     //对象转字符串
     public static String objToStr(Object object){
         String r = "";
@@ -113,18 +98,6 @@ public class ValidateUtils<T> extends org.springframework.util.StringUtils{
         return trimBeginEndCharBase(args, beTrim, true, false);
     }
 
-    //是否非bean，list，map
-    public static boolean isSingleType (Object obj) {
-        return obj == null || obj instanceof Number
-            || obj instanceof CharSequence || obj instanceof Character
-            || obj instanceof Date;
-    }
-
-    //校验规则，是否必填
-    public static boolean isRequest(Map<String, Object> rules){
-        return Boolean.parseBoolean(objToStr(rules.get(ValidateMain.REQUEST)));
-    }
-
     //字符串转数字，数字转double
     public static double getDouble(Object value){
         return value instanceof String ? Double.parseDouble(objToStr(value)) : ((Number)value).doubleValue();
@@ -133,6 +106,24 @@ public class ValidateUtils<T> extends org.springframework.util.StringUtils{
     //字符串转数字，数字转double
     public static BigDecimal getBigDecimal(Object value){
         return new BigDecimal(getDouble(value));
+    }
+
+    //校验规则，是否必填
+    public static boolean isRequest(Map<String, Object> rules){
+        return Boolean.parseBoolean(objToStr(rules.get(ValidateMain.REQUEST)));
+    }
+
+    //是否为null、""、空集合
+    public static boolean isNullEmptyCollection(Object obj) {
+        boolean r = false;
+        if (isBlankObj(obj)){
+            r = true;
+        }else if (obj instanceof Collection){
+            r = ((Collection)obj).size() == 0;
+        }else if (obj instanceof Map){
+            r = ((Map)obj).size() == 0;
+        }
+        return r;
     }
 
 }

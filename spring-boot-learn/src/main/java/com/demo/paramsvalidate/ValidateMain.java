@@ -68,7 +68,7 @@ public class ValidateMain {
         if (json == null || json.size() == 0)
             return ;
 
-        if (paramMap == null){  //参数为空
+        if (ValidateUtils.isNullEmptyCollection(paramMap)){  //参数为空
             checkParamValueNull(json);
             return;
         }
@@ -81,7 +81,7 @@ public class ValidateMain {
             if (ruleKeySet.containsAll(jsonValue.keySet())){   //jsonValue为校验规则rules
                 checkRuleValue(jsonValue, paramValue);
             }else{
-                if (paramValue == null){  //参数为空
+                if (ValidateUtils.isNullEmptyCollection(paramValue)){  //参数为空
                     checkParamValueNull(jsonValue);
                 }else if (paramValue instanceof Map){  //paramValue是一个key-value
                     validateJsonParam(jsonValue, (Map<String, Object>)paramValue);
@@ -119,7 +119,7 @@ public class ValidateMain {
     }
 
     //rules为校验规则，value为请求值（不包含键）
-    public void checkRuleValue(Map<String, Object> rules, Object value){
+    private void checkRuleValue(Map<String, Object> rules, Object value){
         if (ValidateUtils.isRequest(rules) && ValidateUtils.isBlankObj(value)){
             //必填&&无值
             msgSet.add(createFailMsg(rules));
