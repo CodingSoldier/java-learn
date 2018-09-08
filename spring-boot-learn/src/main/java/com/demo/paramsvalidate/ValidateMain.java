@@ -68,6 +68,19 @@ public class ValidateMain {
         if (json == null || json.size() == 0)
             return ;
 
+        if (ruleKeySet.containsAll(json.keySet())){   //只校验一个参数，并且指定key的情况
+            if (ValidateUtils.isNullEmptyCollection(paramMap)){  //参数为空
+                checkParamValueNull(json);
+                return;
+            }
+
+            for (Object key:paramMap.keySet()){
+                checkRuleValue(json, paramMap.get(key));
+                break;
+            }
+            return;
+        }
+
         if (ValidateUtils.isNullEmptyCollection(paramMap)){  //参数为空
             checkParamValueNull(json);
             return;
@@ -113,7 +126,7 @@ public class ValidateMain {
             if (ValidateUtils.isRequestTrue(json)){
                 msgSet.add(createFailMsg(json));
             }
-        }else if (!ValidateUtils.isRequestFalse(json)){
+        }else if (!ValidateUtils.isRequestFalse(json)){  //对象校验，对象的校验规则未填写request:false，继续校验
             for (String key:jsonKeySet){
                 if (json.get(key) instanceof Map){
                     ruleKey = key;

@@ -49,7 +49,7 @@ public class ValidateInterfaceImpl extends ValidateInterfaceAdapter implements  
      */
     //@Override
     //public String getLevel(){
-    //    return PvLevel.STRICT;
+    //    return PvLevel.LOOSE;
     //}
 
     /**

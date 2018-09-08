@@ -112,7 +112,7 @@
                 },
                 hobbyList: ["吃", "喝", "玩", "乐"],
                 dreamList: [{
-                    txt: "中国梦",
+                    // txt: "中国梦",
                     exe: "改变世界",
                     time: new Date().getTime(),
                     money: 12345678901.123456,
@@ -160,7 +160,7 @@
 <script>
     $("#g1").on("click", function () {
         $.ajax({
-            url: "/validate/get/id?name=name1111",
+            url: "/validate/get/id?name=name1111中文",
             // url: "/validate/get/id",
             type: "get",
             dataType: "json"

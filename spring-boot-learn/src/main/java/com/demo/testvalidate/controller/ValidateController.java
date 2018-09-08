@@ -36,7 +36,8 @@ public class ValidateController {
     }
 
     @GetMapping("/get/id")
-    @ParamsValidate(file = "json-get-one.json")
+    //@ParamsValidate(file = "json-get-one.json")
+    @ParamsValidate(file = "json-get-one.json" , key = "name")
     public Map<String, Object> g1(String name) throws Exception{
         return new HashMap<String, Object>(){{put("name",name);}};
     }
