@@ -71,51 +71,79 @@ public class ValidateMain {
         if (ruleKeySet.containsAll(json.keySet())){   //只校验一个参数，并且指定key的情况
             if (ValidateUtils.isNullEmptyCollection(paramMap)){  //参数为空
                 checkParamValueNull(json);
-                return;
-            }
-
-            for (Object key:paramMap.keySet()){
-                checkRuleValue(json, paramMap.get(key));
-                break;
-            }
-            return;
-        }
-
-        if (ValidateUtils.isNullEmptyCollection(paramMap)){  //参数为空
-            checkParamValueNull(json);
-            return;
-        }
-
-        //循环校验json
-        for (String key:json.keySet()){
-            Object jsonVal = json.get(key);
-            if (!(jsonVal instanceof Map))  //对象有request的情况
-                continue;
-
-            Map<String, Object> jsonValue = (Map<String, Object>)jsonVal;
-            Object paramValue = paramMap.get(key);
-            ruleKey = key;
-            if (ruleKeySet.containsAll(jsonValue.keySet())){   //jsonValue为校验规则rules
-                checkRuleValue(jsonValue, paramValue);
             }else{
-                if (ValidateUtils.isNullEmptyCollection(paramValue)){  //参数为空
-                    checkParamValueNull(jsonValue);
-                }else if (paramValue instanceof Map){  //paramValue是一个key-value
-                    validateJsonParam(jsonValue, (Map<String, Object>)paramValue);
-                }else if (paramValue instanceof List){  //paramValue是一个List
-                    List paramList = (List)paramValue;
-                    for (Object elem:paramList){
-                        if (elem instanceof Map){
-                            validateJsonParam(jsonValue, (Map<String, Object>)elem);
-                        }else {
-                            throw new ParamsValidateException(String.format("传参或者校验规则错误，校验规则：%s，请求参数：%s", jsonValue, elem));
-                        }
+                for (Object key:paramMap.keySet()){
+                    checkRuleValue(json, paramMap.get(key));
+                    break;
+                }
+            }
+        }else{
+            if (ValidateUtils.isNullEmptyCollection(paramMap)){  //参数为空
+                checkParamValueNull(json);
+            }else{
+                for (String key:json.keySet()){
+                    Object jsonVal = json.get(key);
+                    Object paramValue = paramMap.get(key);
+                    if (!(jsonVal instanceof Map))  //对象有request的情况
+                        continue;
+                    if (ruleKeySet.containsAll(json.keySet())){
+                        Map<String, Object> oneParam = new HashMap<>();
+                        map.put(key, paramValue);
+                        validateJsonParam((Map<String, Object>)jsonVal, )
                     }
-                }else {
-                    throw new ParamsValidateException(String.format("传参或者校验规则错误，校验规则：%s，请求参数：%s", jsonValue, paramValue));
+                        if (paramValue instanceof Map){  //paramValue是一个key-value
+                        validateJsonParam((Map<String, Object>)jsonVal, (Map<String, Object>)paramValue);
+                    }else if (paramValue instanceof List){  //paramValue是一个List
+                        List paramList = (List)paramValue;
+                        for (Object elem:paramList){
+                            if (elem instanceof Map){
+                                validateJsonParam((Map<String, Object>)jsonVal, (Map<String, Object>)elem);
+                            }else {
+                                throw new ParamsValidateException(String.format("传参或者校验规则错误，校验规则：%s，请求参数：%s", jsonVal, elem));
+                            }
+                        }
+                    }else {
+                        throw new ParamsValidateException(String.format("传参或者校验规则错误，校验规则：%s，请求参数：%s", jsonVal, paramValue));
+                    }
                 }
             }
         }
+
+        //if (ValidateUtils.isNullEmptyCollection(paramMap)){  //参数为空
+        //    checkParamValueNull(json);
+        //    return;
+        //}
+
+        //循环校验json
+        //for (String key:json.keySet()){
+        //    Object jsonVal = json.get(key);
+        //    if (!(jsonVal instanceof Map))  //对象有request的情况
+        //        continue;
+        //
+        //    Map<String, Object> jsonValue = (Map<String, Object>)jsonVal;
+        //    Object paramValue = paramMap.get(key);
+        //    ruleKey = key;
+        //    if (ruleKeySet.containsAll(jsonValue.keySet())){   //jsonValue为校验规则rules
+        //        checkRuleValue(jsonValue, paramValue);
+        //    }else{
+        //        if (ValidateUtils.isNullEmptyCollection(paramValue)){  //参数为空
+        //            checkParamValueNull(jsonValue);
+        //        }else if (paramValue instanceof Map){  //paramValue是一个key-value
+        //            validateJsonParam(jsonValue, (Map<String, Object>)paramValue);
+        //        }else if (paramValue instanceof List){  //paramValue是一个List
+        //            List paramList = (List)paramValue;
+        //            for (Object elem:paramList){
+        //                if (elem instanceof Map){
+        //                    validateJsonParam(jsonValue, (Map<String, Object>)elem);
+        //                }else {
+        //                    throw new ParamsValidateException(String.format("传参或者校验规则错误，校验规则：%s，请求参数：%s", jsonValue, elem));
+        //                }
+        //            }
+        //        }else {
+        //            throw new ParamsValidateException(String.format("传参或者校验规则错误，校验规则：%s，请求参数：%s", jsonValue, paramValue));
+        //        }
+        //    }
+        //}
 
     }
 
