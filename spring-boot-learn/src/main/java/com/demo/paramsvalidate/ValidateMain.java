@@ -71,12 +71,11 @@ public class ValidateMain {
         if (ruleKeySet.containsAll(json.keySet())){   //只校验一个参数，并且指定key的情况
             if (ValidateUtils.isNullEmptyCollection(paramMap)){  //参数为空
                 checkParamValueNull(json);
-                return;
-            }
-
-            for (Object key:paramMap.keySet()){
-                checkRuleValue(json, paramMap.get(key));
-                break;
+            }else {
+                for (Object key:paramMap.keySet()){
+                    checkRuleValue(json, paramMap.get(key));
+                    break;
+                }
             }
             return;
         }
