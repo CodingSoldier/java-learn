@@ -1,46 +1,36 @@
 package com.demo.paramsvalidate.bean;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * author chenpiqian
  */
 public class ResultValidate {
 
-    private boolean isPass;
+    private boolean pass;
 
-    private Set<String> msgSet;
-
-    private Throwable throwable;
+    private List<String> msgList;
 
     public ResultValidate() {
     }
 
-    public ResultValidate(boolean isPass) {
-        this.isPass = isPass;
+    public ResultValidate(boolean pass) {
+        this.pass = pass;
     }
 
     public boolean isPass() {
-        return isPass;
+        return pass;
     }
 
     public void setPass(boolean pass) {
-        isPass = pass;
+        this.pass = pass;
     }
 
-    public Set<String> getMsgSet() {
-        return msgSet;
+    public List<String> getMsgList() {
+        return msgList;
     }
 
-    public void setMsgSet(Set<String> msgSet) {
-        this.msgSet = msgSet;
-    }
-
-    public Throwable getThrowable() {
-        return throwable;
-    }
-
-    public void setThrowable(Throwable throwable) {
-        this.throwable = throwable;
+    public void setMsgList(List<String> msgList) {
+        this.msgList = msgList;
     }
 }

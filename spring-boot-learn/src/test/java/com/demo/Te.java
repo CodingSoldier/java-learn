@@ -3,14 +3,13 @@ package com.demo;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.Feature;
+import com.demo.config.AppProp;
 import com.demo.old.boy.mapper.BoyExpandMapper;
 import com.demo.old.boy.mapper.BoyMapper;
 import com.demo.old.boy.model.Boy;
 import com.demo.old.boy.model.BoyExample;
-import com.demo.config.AppProp;
 import com.demo.old.girl.mapper.GirlExpandMapper;
 import com.demo.old.girl.mapper.GirlMapper;
-import com.demo.paramsvalidate.ValidateUtils;
 import com.demo.old.sysresource.mapper.SysResourceMapper;
 import com.demo.old.sysresource.model.SysResource;
 import com.demo.old.sysresource.model.SysResourceExample;
@@ -18,13 +17,15 @@ import com.demo.old.sysrole.mapper.SysRoleMapper;
 import com.demo.old.sysuser.mapper.SysUserExpandMapper;
 import com.demo.old.sysuser.mapper.SysUserMapper;
 import com.demo.old.sysuser.model.SysUser;
+import com.demo.paramsvalidate.ValidateUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.*;
 import java.lang.reflect.Method;
@@ -33,8 +34,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes = SpringbootApplication.class)
+
+@TestPropertySource("classpath:application-junit.yml")
 public class Te {
 
     @Autowired

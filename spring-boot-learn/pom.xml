@@ -123,8 +123,8 @@
     </dependencies>
 
     <!--配置环境的profile-->
-    <profiles>
-        <!--dev默认激活，使用idea Spring Boot 配置启动工程，需要dev的配置-->
+    <!--<profiles>
+        &lt;!&ndash;dev默认激活，使用idea Spring Boot 配置启动工程，需要dev的配置&ndash;&gt;
         <profile>
             <id>dev</id>
             <properties>
@@ -146,7 +146,7 @@
                 <environment>prod</environment>
             </properties>
         </profile>
-    </profiles>
+    </profiles>-->
 
     <build>
         <finalName>spring-boot-lean</finalName>
@@ -166,20 +166,20 @@
                     <include>**/*.*</include>
                 </includes>
                 <!--排除资源文件-->
-                <excludes>
+                <!--<excludes>
                     <exclude>application-*.yml</exclude>
                     <exclude>mybatis-generator/</exclude>
                 </excludes>
-                <filtering>false</filtering>
+                <filtering>false</filtering>-->
             </resource>
             <!--打包application-XX.yml，${profile中properties的标签名}-->
-            <resource>
+            <!--<resource>
                 <filtering>true</filtering>
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>application-${environment}.yml</include>
                 </includes>
-            </resource>
+            </resource>-->
 
         </resources>
 
