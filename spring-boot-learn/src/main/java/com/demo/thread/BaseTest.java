@@ -20,6 +20,7 @@ import java.util.HashMap;
 public class BaseTest {
 
     Logger logger = LoggerFactory.getLogger(BaseTest.class);
+
     @Autowired
     OutBean outBean;
 
