@@ -35,7 +35,7 @@ public class ValidateMain {
     }};
 
     private ThreadLocal<List<String>> msgThreadLocal = new ThreadLocal<>();  //错误提示信息
-    private ThreadLocal<String> ruleKeyThreadLoacl = new ThreadLocal<>();  //规则的key
+    private ThreadLocal<String> ruleKeyThreadLocal = new ThreadLocal<>();  //规则的key
 
     @Autowired
     private RequestParam requestParam;
@@ -93,7 +93,7 @@ public class ValidateMain {
 
             Map<String, Object> jsonValue = (Map<String, Object>)jsonVal;
             Object paramValue = paramMap.get(key);
-            ruleKeyThreadLoacl.set(key);
+            ruleKeyThreadLocal.set(key);
             if (ruleKeySet.containsAll(jsonValue.keySet())){   //jsonValue为校验规则rules
                 checkRuleValue(jsonValue, paramValue);
             }else{
@@ -128,7 +128,7 @@ public class ValidateMain {
         }else if (!ValidateUtils.isRequestFalse(json)){  //对象校验，对象的校验规则未填写request:false，继续校验
             for (String key:jsonKeySet){
                 if (json.get(key) instanceof Map){
-                    ruleKeyThreadLoacl.set(key);
+                    ruleKeyThreadLocal.set(key);
                     checkParamValueNull((Map<String, Object>) json.get(key));
                 }
             }
@@ -191,10 +191,10 @@ public class ValidateMain {
 
     //处理message为空的情况
     private String createFailMsg(Map<String, Object> jsonRule){
-        String message = ruleKeyThreadLoacl.get() + ValidateUtils.objToStr(jsonRule.get(MESSAGE));
+        String message = ruleKeyThreadLocal.get() + ValidateUtils.objToStr(jsonRule.get(MESSAGE));
         if (ValidateUtils.isBlank(message)){
             String val = "";
-            message = ruleKeyThreadLoacl.get() + "未通过校验，校验规则：";
+            message = ruleKeyThreadLocal.get() + "未通过校验，校验规则：";
             for (String key:jsonRule.keySet()){
                 val = ValidateUtils.objToStr(jsonRule.get(key));
                 if (ValidateUtils.isNotBlank(val)){

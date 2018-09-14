@@ -47,7 +47,7 @@
             <dependency>
                 <groupId>com.github.codingsoldier</groupId>
                 <artifactId>params-validate</artifactId>
-                <version>1.5-RELEASE</version>
+                <version>1.6-RELEASE</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
