@@ -1,4 +1,4 @@
-package com;
+package com.jvm;
 
 //P187
 public class E_TestClass {

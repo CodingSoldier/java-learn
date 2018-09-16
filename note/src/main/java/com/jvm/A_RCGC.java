@@ -1,4 +1,4 @@
-package com;
+package com.jvm;
 
 
 class A_RCGC{

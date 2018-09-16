@@ -1,4 +1,4 @@
-package com;
+package com.jvm;
 
 public class C_Bar {
     int a = 1;

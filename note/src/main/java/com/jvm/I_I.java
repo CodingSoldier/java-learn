@@ -1,4 +1,4 @@
-package com;
+package com.jvm;
 
 public class I_I {
     static int a;  //成员变量会赋初值

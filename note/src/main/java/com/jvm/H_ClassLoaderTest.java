@@ -1,4 +1,4 @@
-package com;
+package com.jvm;
 
 import java.io.InputStream;
 
@@ -26,7 +26,7 @@ public class H_ClassLoaderTest {
 
         Object obj = myLoader.loadClass("com.H_ClassLoaderTest").newInstance();
         System.out.println(obj.getClass());
-        System.out.println(obj instanceof com.H_ClassLoaderTest);
+        System.out.println(obj instanceof H_ClassLoaderTest );
 
     }
 }

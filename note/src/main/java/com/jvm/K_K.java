@@ -1,4 +1,4 @@
-package com;
+package com.jvm;
 
 import org.junit.Test;
 import org.slf4j.Logger;

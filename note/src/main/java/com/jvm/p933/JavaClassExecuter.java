@@ -1,4 +1,4 @@
-package com.p933;
+package com.jvm.p933;
 
 import java.lang.reflect.Method;
 

@@ -1,4 +1,4 @@
-package com;
+package com.jvm;
 
 // P 211
 public class F_SuperClass {
@@ -29,8 +29,6 @@ class NotInitialzation2{
 }
 
 
-
-
 // P213
 class ConstClass{
     static {
@@ -38,6 +36,7 @@ class ConstClass{
     }
     public static final String HELLOWORLD = "hello world";
 }
+
 class NotInitialzation3{
     public static void main(String[] args){
         //常量会在编译阶段存入调用类的常量池中，本质上没有直接引用到定义常量的类，因此不会触发类的初始化

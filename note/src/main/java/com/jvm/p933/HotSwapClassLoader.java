@@ -1,4 +1,4 @@
-package com.p933;
+package com.jvm.p933;
 
 public class HotSwapClassLoader extends ClassLoader {
 

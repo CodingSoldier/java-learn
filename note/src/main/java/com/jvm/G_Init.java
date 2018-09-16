@@ -1,4 +1,4 @@
-package com;
+package com.jvm;
 
 public class G_Init {
     public static int value = 123;
