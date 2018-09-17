@@ -1,5 +1,63 @@
 package com.jvm;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+/**
+ * P51
+ * VM Args：-Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError
+   1、堆储存快照dump到了java-learn目录，后缀为 .hprof
+   2、使用jvisualvm.exe打开
+   3、B_Allocation_HeapOOM内存溢出.jpg 可以看到com.jvm.HeapOOM.OOMObject这个类的实例太多了
+   4、.hprof可能很大
+ */
+class HeapOOM {
+
+    static class OOMObject {
+    }
+
+    public static void main(String[] args) {
+        List<OOMObject> list = new ArrayList<OOMObject>();
+
+        while (true) {
+            list.add(new OOMObject());
+        }
+    }
+}
+
+
+
+/**
+ * VM Args：-Xss128k
+ * P53
+ */
+class JavaVMStackSOF {
+
+    private int stackLength = 1;
+
+    public void stackLeak() {
+        stackLength++;
+        stackLeak();
+    }
+
+    public static void main(String[] args) throws Throwable {
+        JavaVMStackSOF oom = new JavaVMStackSOF();
+        try {
+            oom.stackLeak();
+        } catch (Throwable e) {
+            System.out.println("stack length:" + oom.stackLength);
+            throw e;
+        }
+    }
+}
+
+
+
+
+
+
 public class B_Allocation {
     private static final int _1MB = 1024 * 1024;
     //P92
