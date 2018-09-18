@@ -45,11 +45,11 @@
         </dependency>
 
         <!-- 热部署 -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
-        </dependency>
+        </dependency>-->
 
         <!--测试-->
         <dependency>
@@ -165,15 +165,22 @@
                 <includes>
                     <include>**/*.*</include>
                 </includes>
-                <!--排除资源文件-->
-                <!--<excludes>
+            </resource>
+
+            <!--<resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+                &lt;!&ndash;排除资源文件&ndash;&gt;
+                <excludes>
                     <exclude>application-*.yml</exclude>
                     <exclude>mybatis-generator/</exclude>
                 </excludes>
-                <filtering>false</filtering>-->
+                <filtering>false</filtering>
             </resource>
-            <!--打包application-XX.yml，${profile中properties的标签名}-->
-            <!--<resource>
+            &lt;!&ndash;打包application-XX.yml，${profile中properties的标签名}&ndash;&gt;
+            <resource>
                 <filtering>true</filtering>
                 <directory>src/main/resources</directory>
                 <includes>
@@ -188,7 +195,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-
                     <!--该配置必须-->
                     <fork>true</fork>
                 </configuration>
