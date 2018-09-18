@@ -12,6 +12,8 @@ import java.util.List;
    2、使用jvisualvm.exe打开
    3、B_Allocation_HeapOOM内存溢出.jpg 可以看到com.jvm.HeapOOM.OOMObject这个类的实例太多了
    4、.hprof可能很大
+
+ java默认最大堆是物理内存的 1/4
  */
 class HeapOOM {
 
