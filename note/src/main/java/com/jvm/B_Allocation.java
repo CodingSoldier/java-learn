@@ -57,9 +57,13 @@ class JavaVMStackSOF {
 }
 
 
+/**
+ linux执行  java -XX:+PrintFlagsFinal -version | grep :
 
+ UseCompressedOops true 启动指针压缩，当服务器内存在4-32G时有效，所以说java服务器内存最好不要大于32G
+ UseParallelGC  true  新生代使用Parallel Scavenge 老年代使用Serial Old（PS MarkSweep）
 
-
+ */
 
 public class B_Allocation {
     private static final int _1MB = 1024 * 1024;

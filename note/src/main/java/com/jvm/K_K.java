@@ -9,9 +9,11 @@ public class K_K {
     static Logger logger = LoggerFactory.getLogger(K_K.class);
     @Test
     public void test01(){
-        System.out.println(Integer.valueOf("154645432") == Integer.valueOf("154645432"));
-        System.out.println(Integer.valueOf("127") == Integer.valueOf("127"));
-        System.out.println(Integer.valueOf("-129") == Integer.valueOf("-129"));
+        Integer min = new Integer(12);
+        Integer big = new Integer(52456);
+        System.out.println(min.equals(12));
+        System.out.println(big.equals(52456));
+
     }
     public static void main(String[] args) {
         String a1 = null;
@@ -32,4 +34,5 @@ public class K_K {
         System.out.println(g == (a + b));  //类型不一样也是自动拆箱，比较数值
         System.out.println(g.equals(a + b)); //封装类.equals()都是封装类比较
     }
+
 }
