@@ -30,10 +30,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SpringbootApplication.class)
 
@@ -80,13 +78,10 @@ public class Te {
     public void changLoyaltyByName(){
 
         Boy boy = new Boy();
-        boy.setLoyalty(11);
-        BoyExample example = new BoyExample();
-        BoyExample.Criteria criteria = example.createCriteria();
-        criteria.andBigNameEqualTo("野猪佩奇");
-        //criteria.andSmallNameEqualTo("佩奇");
+        boy.setId(UUID.randomUUID().toString());
+        boy.setSmallName("中文十个字中文十个字");
 
-        boyMapper.updateByExampleSelective(boy, example);
+        boyMapper.insertSelective(boy);
 
     }
 
