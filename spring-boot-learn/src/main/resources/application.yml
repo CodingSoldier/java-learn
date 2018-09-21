@@ -1,4 +1,7 @@
 #yml代码提示需要添加YAML/Ansible support插件
+server:
+   port: 8080
+
 logging:
   file: log/spring-boot-learn.log
   level:

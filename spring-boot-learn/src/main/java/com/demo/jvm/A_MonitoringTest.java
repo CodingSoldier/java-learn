@@ -13,8 +13,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/jvm")
-public class MonitoringTest {
-    Logger logger = LoggerFactory.getLogger(MonitoringTest.class);
+public class A_MonitoringTest {
+    Logger logger = LoggerFactory.getLogger(A_MonitoringTest.class);
 
     static class OOMObject{
         public byte[] placeholder = new byte[64 * 1024];
