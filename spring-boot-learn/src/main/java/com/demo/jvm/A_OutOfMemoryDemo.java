@@ -23,8 +23,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/jvm")
-public class OutOfMemoryDemo {
-    Logger logger = LoggerFactory.getLogger(OutOfMemoryDemo.class);
+public class A_OutOfMemoryDemo {
+    Logger logger = LoggerFactory.getLogger(A_OutOfMemoryDemo.class);
 
     //内存异常测试
     static class OOMObject2{
