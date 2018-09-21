@@ -17,6 +17,9 @@ public class B_Jstat {
     static List<A_OutOfMemoryDemo.OOMObject2> list = new ArrayList<>();
 
 /*
+https://www.cnblogs.com/duanxz/p/3520829.html
+http://lovestblog.cn/blog/2016/10/29/metaspace/
+
 jstat统计监控，最好打成jar再测试
 1、启动jar包    java -jar -Xms512m -Xmx512m spring-boot-lean.jar
 2、jstat -gc 线程号 10000 200
