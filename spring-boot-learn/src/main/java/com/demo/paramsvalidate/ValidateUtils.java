@@ -27,7 +27,7 @@ public class ValidateUtils<T> extends org.springframework.util.StringUtils{
 
     public static void log(Level level, String msg, Method method, Throwable e){
         if (method != null){
-            msg = String.format("Error Method: %s.%s\nException Message: %s",method.getDeclaringClass().getName(),method.getName(),msg);
+            msg = String.format("Error Method: %s.%s%nException Message: %s",method.getDeclaringClass().getName(),method.getName(),msg);
         }else {
             msg = String.format("Exception Message: %s",msg);
         }
@@ -105,7 +105,7 @@ public class ValidateUtils<T> extends org.springframework.util.StringUtils{
 
     //字符串转数字，数字转double
     public static BigDecimal getBigDecimal(Object value){
-        return new BigDecimal(getDouble(value));
+        return BigDecimal.valueOf(getDouble(value));
     }
 
     //校验规则，request是否为true

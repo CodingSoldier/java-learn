@@ -30,6 +30,11 @@ class TestClass {
 
     private int m;
 
+    public int incOut(){
+        int i = inc();
+        return i;
+    }
+
     public int inc() {
         return m + 1;
     }

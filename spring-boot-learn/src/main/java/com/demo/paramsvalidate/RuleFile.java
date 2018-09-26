@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -35,12 +36,13 @@ public class RuleFile {
 
             String key = validateConfig.getKey();
             if (ValidateUtils.isNotBlank(key)){
-                json = (Map<String, Object>)json.get(key);
-                if (json != null){
-                    validateInterface.setCache(validateConfig, json);
-                }else{
+                Map<String, Object> jsonValue = (Map<String, Object>)json.get(key);
+                if (jsonValue == null)
                     throw new ParamsValidateException(String.format("%s文件中无key: %s", filePath, key));
-                }
+
+                json = new HashMap<>();
+                json.put(key, jsonValue);
+                validateInterface.setCache(validateConfig, json);
             }
         }
         return json;
