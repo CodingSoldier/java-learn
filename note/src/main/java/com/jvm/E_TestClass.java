@@ -1,5 +1,7 @@
 package com.jvm;
 
+import org.apache.commons.lang3.StringUtils;
+
 //P187
 public class E_TestClass {
     private int m;
@@ -21,7 +23,8 @@ public class E_TestClass {
     }
 
     public static void main(String[] args) throws Exception{
-        System.out.println(new E_TestClass().inc2());
+        System.out.println(StringUtils.equals("", null));
+        //System.out.println(new E_TestClass().inc2());
     }
 
 }

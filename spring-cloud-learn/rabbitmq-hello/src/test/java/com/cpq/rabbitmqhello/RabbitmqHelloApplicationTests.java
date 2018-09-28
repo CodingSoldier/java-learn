@@ -8,7 +8,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = RabbitmqHelloApplication.class)
+@SpringApplicationConfiguration(classes = RabbitmqHelloApplication.class)  //@SpringBootTest为最新
 public class RabbitmqHelloApplicationTests {
 
     @Autowired
