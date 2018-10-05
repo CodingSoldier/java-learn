@@ -27,6 +27,8 @@ public class J_DynamicDispatch {
         woman.sayHello();
         man = new Woman();
         man.sayHello();
+
     }
 }
+
 
