@@ -54,7 +54,7 @@ public class ValidateMain {
             //获取请求参数
             Map<String, Object> allParam = requestParam.mergeParams(joinPoint);
             //获取校验规则
-            Map<String, Object> json = ruleFile.ruleFileJsonToMap(validateConfig);
+            Map<String, Object> json = ruleFile.ruleFileJsonToMap(validateConfig, allParam.keySet());
             //执行校验
             validateJsonParam(json, allParam);
             if (msgThreadLocal.get().size() > 0){
@@ -66,22 +66,22 @@ public class ValidateMain {
         return resultValidate;
     }
 
-    //校验规则key-value 与 请求参数key-value
+    //校验规则与请求参数
     private void validateJsonParam(Map<String, Object> json, Map<String, Object> paramMap){
         if (json == null || json.size() == 0)
             return ;
 
-        if (ruleKeySet.containsAll(json.keySet())){   //只校验一个参数，并且指定key的情况
-            if (ValidateUtils.isNullEmptyCollection(paramMap)){  //参数为空
-                checkParamValueNull(json);
-            }else {
-                for (Map.Entry entry:paramMap.entrySet()){
-                    checkRuleValue(json, entry.getValue());
-                    break;
-                }
-            }
-            return;
-        }
+        //if (ruleKeySet.containsAll(json.keySet())){   //只校验一个参数，并且指定key的情况
+        //    if (ValidateUtils.isNullEmptyCollection(paramMap)){  //参数为空
+        //        checkParamValueNull(json);
+        //    }else {
+        //        for (Map.Entry entry:paramMap.entrySet()){
+        //            checkRuleValue(json, entry.getValue());
+        //            break;
+        //        }
+        //    }
+        //    return;
+        //}
 
         if (ValidateUtils.isNullEmptyCollection(paramMap)){  //参数为空
             checkParamValueNull(json);
@@ -91,7 +91,7 @@ public class ValidateMain {
         //循环校验json
         for (Map.Entry<String, Object> entry:json.entrySet()){
             Object jsonVal = entry.getValue();
-            if (!(jsonVal instanceof Map))  //对象有request的情况
+            if (!(jsonVal instanceof Map))  //对象校验有request
                 continue;
 
             Map<String, Object> jsonValue = (Map<String, Object>)jsonVal;
@@ -194,10 +194,10 @@ public class ValidateMain {
 
     //处理message为空的情况
     private String createFailMsg(Map<String, Object> jsonRule){
-        String message = ruleKeyThreadLocal.get() + ValidateUtils.objToStr(jsonRule.get(MESSAGE));
+        String message = ValidateUtils.objToStr(jsonRule.get(MESSAGE));
         if (ValidateUtils.isBlank(message)){
             String val = "";
-            message = ruleKeyThreadLocal.get() + "未通过校验，校验规则：";
+            message = ValidateUtils.objToStr(ruleKeyThreadLocal.get()) + "未通过校验，校验规则：";
             for (Map.Entry<String, Object> entry:jsonRule.entrySet()){
                 val = ValidateUtils.objToStr(entry.getValue());
                 if (ValidateUtils.isNotBlank(val)){

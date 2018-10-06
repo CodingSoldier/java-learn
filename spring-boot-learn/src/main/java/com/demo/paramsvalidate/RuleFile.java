@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Component
 public class RuleFile {
@@ -23,7 +24,7 @@ public class RuleFile {
     private ValidateInterface validateInterface;
 
     //获取需要校验的json
-    public Map<String, Object> ruleFileJsonToMap(ValidateConfig validateConfig) throws Exception{
+    public Map<String, Object> ruleFileJsonToMap(ValidateConfig validateConfig, Set<String> paramKeySet) throws Exception{
         String basePath = validateInterface.basePath();
         String filePath = ValidateUtils.trimBeginEndChar(basePath, '/') + "/"
             + ValidateUtils.trimBeginChar(validateConfig.getFile(), '/');
@@ -40,8 +41,12 @@ public class RuleFile {
                 if (jsonValue == null)
                     throw new ParamsValidateException(String.format("%s文件中无key: %s", filePath, key));
 
-                json = new HashMap<>();
-                json.put(key, jsonValue);
+                if (paramKeySet.contains(key)){
+                    json = new HashMap<>();
+                    json.put(key, jsonValue);
+                }else {
+                    json = jsonValue;
+                }
                 validateInterface.setCache(validateConfig, json);
             }
         }
