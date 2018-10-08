@@ -28,7 +28,9 @@ public class ValidateAspect {
     ValidateInterface validateInterface;
 
     @Pointcut("@annotation(com.demo.paramsvalidate.ParamsValidate)")
-    public void aspect(){}
+    public void aspect(){
+        //切点
+    }
 
     @Around("aspect()")
     public Object around(JoinPoint joinPoint) throws Throwable{
@@ -54,8 +56,7 @@ public class ValidateAspect {
                 //打印告警日志
                 MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
                 Method method = methodSignature.getMethod();
-                String msg = String.format("校验发生异常，校验级别为[PvLevel.LOOSE]，不校验");
-                ValidateUtils.logWarning(msg, method, e);
+                ValidateUtils.logWarning("校验发生异常，校验级别为[PvLevel.LOOSE]，不校验", method, e);
             }
         }
         if (resultValidate.isPass()){  //校验通过

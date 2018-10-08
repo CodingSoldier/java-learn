@@ -71,18 +71,6 @@ public class ValidateMain {
         if (json == null || json.size() == 0)
             return ;
 
-        //if (ruleKeySet.containsAll(json.keySet())){   //只校验一个参数，并且指定key的情况
-        //    if (ValidateUtils.isNullEmptyCollection(paramMap)){  //参数为空
-        //        checkParamValueNull(json);
-        //    }else {
-        //        for (Map.Entry entry:paramMap.entrySet()){
-        //            checkRuleValue(json, entry.getValue());
-        //            break;
-        //        }
-        //    }
-        //    return;
-        //}
-
         if (ValidateUtils.isNullEmptyCollection(paramMap)){  //参数为空
             checkParamValueNull(json);
             return;
@@ -196,16 +184,34 @@ public class ValidateMain {
     private String createFailMsg(Map<String, Object> jsonRule){
         String message = ValidateUtils.objToStr(jsonRule.get(MESSAGE));
         if (ValidateUtils.isBlank(message)){
-            String val = "";
-            message = ValidateUtils.objToStr(ruleKeyThreadLocal.get()) + "未通过校验，校验规则：";
+            message = ValidateUtils.objToStr(ruleKeyThreadLocal.get());
             for (Map.Entry<String, Object> entry:jsonRule.entrySet()){
-                val = ValidateUtils.objToStr(entry.getValue());
-                if (ValidateUtils.isNotBlank(val)){
-                    val = val.startsWith(REGEX_BEGIN) ? ruleFile.getRegexCommon().get(val) : val;
-                    message += entry.getKey() + "：" + val + "; ";
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                switch (key){
+                    case REQUEST:
+                        message = Boolean.TRUE.equals(value) ? (message+"必填，") : message;
+                        break;
+                    case MIN_VALUE:
+                        message = ValidateUtils.isNotBlankObj(value) ? (message+"最小值："+value+"，") : message;
+                        break;
+                    case MAX_VALUE:
+                        message = ValidateUtils.isNotBlankObj(value) ? (message+"最大值："+value+"，") : message;
+                        break;
+                    case MIN_LENGTH:
+                        message = ValidateUtils.isNotBlankObj(value) ? (message+"最小长度："+value+"，") : message;
+                        break;
+                    case MAX_LENGTH:
+                        message = ValidateUtils.isNotBlankObj(value) ? (message+"最大长度："+value+"，") : message;
+                        break;
+                    case REGEX:
+                        message = ValidateUtils.isNotBlankObj(value) ? (message+"正则规则："+value+"，") : message;
+                        break;
+                    default:
+                        break;
                 }
             }
-            message = message.substring(0, message.length()-1);
+            message = message.replaceAll("^[，]+|[，]+$", "");
         }
         return message;
     }

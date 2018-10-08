@@ -20,8 +20,8 @@ public class ValidateController {
     AppProp appProp;
 
     @PostMapping("/post/map")
-    //@ParamsValidate("json-post-one.json")
-    @ParamsValidate(value = "json-post-part-jackson.json", key = "map")
+    @ParamsValidate("json-post-one.json")
+    //@ParamsValidate(value = "json-post-part-jackson.json", key = "map")
     public Object p1(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, Object> map) throws Exception{
         Map<String, Object> map1 = new HashMap<>();
         System.out.println(appProp.getA());
@@ -36,8 +36,8 @@ public class ValidateController {
     }
 
     @GetMapping("/get/id")
-    //@ParamsValidate(file = "json-get-one.json")
-    @ParamsValidate(file = "json-get-one.json" , key = "name")
+    @ParamsValidate(file = "json-get-one.json")
+    //@ParamsValidate(file = "json-get-one.json" , key = "name")
     public Map<String, Object> g1(String name) throws Exception{
         return new HashMap<String, Object>(){{put("name",name);}};
     }

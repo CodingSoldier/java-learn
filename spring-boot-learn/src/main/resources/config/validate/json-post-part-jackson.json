@@ -3,7 +3,7 @@
         "str1": {
             "request": true,
             "regex": "REGEX_EMAIL",
-            "message": "str1错误提示"
+            "message": "邮箱错误提示"
         },
         "int1": {
             "request": true,
@@ -130,7 +130,7 @@
         "str1": {
             "request": true,
             "regex": "REGEX_EMAIL",
-            "message": "str1错误提示"
+            "message": "邮箱错误提示"
         },
         "int1": {
             "request": true,
@@ -223,7 +223,9 @@
             }
         },
         "baoBaoList": {
-            "request": false,
+            //这里加上"request": false的作用是，当前台发送的baoBaoList为空时，可以通过校验。
+            //若取消"request": false，由于baoBaoList的子级元素有"request": true，当前台发送的baoBaoList为空时，则不能通过校验。
+//            "request": false,
             "brand": {
                 "request": true,
                 "minLength": 1,

@@ -89,25 +89,25 @@ public class RuleFile {
 
     //读取init.json文件到regexCommon
     public Map<String, String> getRegexCommon(){
-        if (regexCommon != null)
-            return regexCommon;
+        if (regexCommon == null){
+            synchronized (this){
+                if (regexCommon == null){
+                    ObjectMapper mapper = new ObjectMapper();
+                    String basePath = validateInterface.basePath();
+                    String filePath = ValidateUtils.trimBeginEndChar(basePath, '/') + "/"+ REGEX_COMMON_JSON;
+                    try (InputStream is = this.getClass().getClassLoader().getResourceAsStream(filePath)){
+                        if (is == null)
+                            throw new ParamsValidateException(String.format("读取%s，结果为null", filePath));
 
-        synchronized (this){
-            ObjectMapper mapper = new ObjectMapper();
-            String basePath = validateInterface.basePath();
-            String filePath = ValidateUtils.trimBeginEndChar(basePath, '/') + "/"+ REGEX_COMMON_JSON;
-            try (InputStream is = this.getClass().getClassLoader().getResourceAsStream(filePath)){
-                if (is == null)
-                    throw new ParamsValidateException(String.format("读取%s，结果为null", filePath));
-
-                regexCommon = mapper.readValue(is, Map.class);
-            }catch (IOException ioe){
-                ParamsValidateException pve = new ParamsValidateException(String.format("读取、解析%s异常，%s", filePath, ioe.getMessage()));
-                pve.initCause(ioe);
-                throw pve;
+                        regexCommon = mapper.readValue(is, Map.class);
+                    }catch (IOException ioe){
+                        ParamsValidateException pve = new ParamsValidateException(String.format("读取、解析%s异常，%s", filePath, ioe.getMessage()));
+                        pve.initCause(ioe);
+                        throw pve;
+                    }
+                }
             }
         }
-
         return regexCommon;
     }
 

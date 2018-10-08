@@ -6,6 +6,7 @@ import com.demo.paramsvalidate.bean.ResultValidate;
 import com.demo.paramsvalidate.bean.ValidateConfig;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,8 +29,14 @@ public abstract class ValidateInterfaceAdapter implements ValidateInterface{
         return PvLevel.STRICT;
     }
 
-    //必须覆盖此方法
-    public abstract Object validateNotPass(ResultValidate resultValidate);
+    @Override
+    public Object validateNotPass(ResultValidate resultValidate){
+        List<String> msgList = resultValidate.getMsgList();
+        Map<String, Object> r = new HashMap<>();
+        r.put("code", resultValidate.isPass() ? 0 : 101);
+        r.put("data", msgList);
+        return r;
+    }
 
     @Override
     public Map<String, Object> getCache(ValidateConfig validateConfig) {

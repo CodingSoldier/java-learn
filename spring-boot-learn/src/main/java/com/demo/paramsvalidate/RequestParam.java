@@ -26,8 +26,8 @@ public class RequestParam {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         Map<String, Object> paramMap = getParamFromRequest(request);
 
-        for (String key:bodyMap.keySet()){
-            paramMap.put(key, bodyMap.get(key));
+        for (Map.Entry<String, Object> entry:bodyMap.entrySet()){
+            paramMap.put(entry.getKey(), entry.getValue());
         }
         return paramMap;
     }
@@ -67,16 +67,14 @@ public class RequestParam {
             return new HashMap<>();
 
         Map<String, Object> resultMap = new HashMap<>();
-        String[] value = null;
         Map<String, String[]> paramMap = request.getParameterMap();
         if (paramMap != null){
-            for (String key:paramMap.keySet()){
-                if (ValidateUtils.isNotBlank(key)){
-                    value = paramMap.get(key);
-                    if (value.length == 1){
-                        resultMap.put(key, value[0]);
+            for (Map.Entry<String, String[]> entry:paramMap.entrySet()){
+                if (ValidateUtils.isNotBlank(entry.getKey())){
+                    if (entry.getValue().length == 1){
+                        resultMap.put(entry.getKey(), entry.getValue()[0]);
                     }else{
-                        resultMap.put(key, Arrays.asList(value));
+                        resultMap.put(entry.getKey(), Arrays.asList(entry.getValue()));
                     }
                 }
             }
