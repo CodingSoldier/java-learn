@@ -4,9 +4,9 @@ server:
 
 logging:
   file: log/spring-boot-learn.log
-  level:
-    com:
-      demo: DEBUG
+#  level:
+#    com:
+#      demo: DEBUG
 
 spring:
   application:

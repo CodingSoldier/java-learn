@@ -1,3 +1,4 @@
+/*
 package com.demo.redis;
 
 import com.demo.utils.SpringContextHolder;
@@ -14,11 +15,13 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
+*/
 /**
  * mybatis使用redis作为二级缓存
  * 本项目仅在com/demo/testgenerator/mapper/TestGeneratorMapper.xml中使用了缓存
  * 暂不建议使用
- */
+ *//*
+
 public class MybatisRedisCache implements Cache {
     private static final Logger logger = LoggerFactory.getLogger(MybatisRedisCache.class);
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
@@ -36,12 +39,14 @@ public class MybatisRedisCache implements Cache {
     public String getId() {
         return id;
     }
-    /**
+    */
+/**
      * Put query result to redis
      *
      * @param key
      * @param value
-     */
+     *//*
+
     @Override
     @SuppressWarnings("unchecked")
     public void putObject(Object key, Object value) {
@@ -50,12 +55,14 @@ public class MybatisRedisCache implements Cache {
         opsForValue.set(key.toString(), value, EXPIRE_TIME_IN_MINUTES, TimeUnit.MINUTES);
         logger.debug("Put query result to redis");
     }
-    /**
+    */
+/**
      * Get cached query result from redis
      *
      * @param key
      * @return
-     */
+     *//*
+
     @Override
     public Object getObject(Object key) {
         RedisTemplate redisTemplate = getRedisTemplate();
@@ -63,11 +70,13 @@ public class MybatisRedisCache implements Cache {
         logger.debug("Get cached query result from redis");
         return opsForValue.get(key.toString());
     }
-    /**
+    */
+/**
      * Remove cached query result from redis
      * @param key
      * @return
-     */
+     *//*
+
     @Override
     @SuppressWarnings("unchecked")
     public Object removeObject(Object key) {
@@ -76,9 +85,11 @@ public class MybatisRedisCache implements Cache {
         logger.debug("Remove cached query result from redis");
         return null;
     }
-    /**
+    */
+/**
      * Clears this cache instance
-     */
+     *//*
+
     @Override
     public void clear() {
         RedisTemplate redisTemplate = getRedisTemplate();
@@ -103,3 +114,4 @@ public class MybatisRedisCache implements Cache {
         return redisTemplate;
     }
 }
+*/
