@@ -1,0 +1,9 @@
+一、使用CMS，并打印GC日志
+    java -jar  -verbose:gc -XX:+PrintGCDetails -XX:+UseConcMarkSweepGC spring-boot-lean.jar
+
+二、调优
+    1、echo $JAVA_HOME
+    2、cd $JAVA_HOME/bin
+    3、jps -l    //获取java服务名、pid
+    4、jstat -gc pid 5000 100    //JVM GC、堆使用情况
+    5、jmap -histo:live pid     //类使用内存
