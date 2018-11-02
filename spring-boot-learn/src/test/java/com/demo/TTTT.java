@@ -5,6 +5,9 @@ import org.junit.Test;
 public class TTTT {
     @Test
     public void test1(){
-        System.out.println(String.format("Error Method: %s.%s%nException Message: %s",11,11,333));
+        String name = "法定名称章（钢印）";
+        String nameNew = name.substring(name.length() - 3, name.length()-1);
+        System.out.println(MaterialUtil.getNameGangYin(name));
+        System.out.println(MaterialUtil.getNameGangYin(name));
     }
 }
