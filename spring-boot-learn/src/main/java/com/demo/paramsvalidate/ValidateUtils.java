@@ -1,5 +1,7 @@
 package com.demo.paramsvalidate;
 
+import com.demo.paramsvalidate.bean.PvMsg;
+
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -110,12 +112,12 @@ public class ValidateUtils<T> extends org.springframework.util.StringUtils{
 
     //校验规则，request是否为true
     public static boolean isRequestTrue(Map<String, Object> rules){
-        return Boolean.parseBoolean(objToStr(rules.get(ValidateMain.REQUEST)));
+        return Boolean.parseBoolean(objToStr(rules.get(PvMsg.REQUEST)));
     }
 
     //校验规则，request是否为false
     public static boolean isRequestFalse(Map<String, Object> rules){
-        return "false".equals(objToStr(rules.get(ValidateMain.REQUEST)).toLowerCase());
+        return "false".equals(objToStr(rules.get(PvMsg.REQUEST)).toLowerCase());
     }
 
     //是否为null、""、空集合

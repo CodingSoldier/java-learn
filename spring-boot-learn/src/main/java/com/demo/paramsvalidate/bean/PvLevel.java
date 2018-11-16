@@ -1,4 +1,4 @@
-package com.demo.paramsvalidate;
+package com.demo.paramsvalidate.bean;
 
 public class PvLevel {
 

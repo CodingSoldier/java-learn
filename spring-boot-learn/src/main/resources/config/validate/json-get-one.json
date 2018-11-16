@@ -1,7 +1,8 @@
 {
     "name": {
         "request": true,
-        "regex": "REGEX_CHAR"
+        "regex": "REGEX_CHAR",
+        "message": "只能为数字、字母"
     }
 }
 

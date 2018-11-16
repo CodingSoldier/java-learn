@@ -1,5 +1,6 @@
 package com.demo.paramsvalidate;
 
+import com.demo.paramsvalidate.bean.PvLevel;
 import com.demo.paramsvalidate.bean.ResultValidate;
 import com.demo.paramsvalidate.bean.ValidateConfig;
 import org.aspectj.lang.JoinPoint;
