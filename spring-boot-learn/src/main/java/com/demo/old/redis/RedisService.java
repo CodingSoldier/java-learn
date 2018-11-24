@@ -80,7 +80,6 @@ public class RedisService<T> {
         return val;
     }
 
-
     /*hash*/
     public Boolean hashSetField(String hkey, String field, String value, long expire) throws DataAccessException {
         if (null == value) {
@@ -109,7 +108,7 @@ public class RedisService<T> {
 
 
     /*set*/
-    public void setCollectionSet(String skey, Collection<T> value, Long expire) throws DataAccessException {
+    public void putSet(String skey, Collection<T> value, Long expire) throws DataAccessException {
         if (null == value) {
             return ;
         }
@@ -119,13 +118,13 @@ public class RedisService<T> {
         }
         expire(skey, expire);
     }
-    public void setCollectionSet(String skey, Collection<T> value) throws DataAccessException {
+    public void putSet(String skey, Collection<T> value) throws DataAccessException {
         if (null == value) {
             return ;
         }
-        setCollectionSet(skey, value, redisExpire);
+        putSet(skey, value, redisExpire);
     }
-    public <T> Set<T> setCollectionGet(String lkey) throws DataAccessException {
+    public <T> Set<T> getCollectionSet(String lkey) throws DataAccessException {
         return setOperations.members(lkey);
     }
 

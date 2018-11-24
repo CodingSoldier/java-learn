@@ -23,6 +23,8 @@ import java.util.*;
 @RequestMapping("/oauth2/client")
 public class ClientPattern {
 
+    public static final String OAUTH2_CLIENT_TOKEN = "oauth2:client:token:";
+
     @Autowired
     RedisService redisService;
 
@@ -47,10 +49,24 @@ public class ClientPattern {
         return r;
     }
 
+    //创建token、访问规则
     private String createAccessInfo(String userId, String password) throws Exception{
-        final String accessToken = UUID.randomUUID().toString();
 
-        //用户
+        OauthUser user = getOauthUser(userId, password);
+        List<OauthRole> roleList = getOauthRoleList(user);
+        List<String> urlRegexList = getUrlRegexList(roleList);
+        if (urlRegexList.size() == 0){
+            throw new Exception("账户无url资源权限");
+        }
+
+        String accessToken = UUID.randomUUID().toString();
+        String tokenKey = OAUTH2_CLIENT_TOKEN + accessToken;
+        redisService.putSet(tokenKey, urlRegexList);  //设置token缓存
+        return accessToken;
+    }
+
+    //用户
+    private OauthUser getOauthUser(String userId, String password) throws Exception{
         OauthUserExample userExample = new OauthUserExample();
         OauthUserExample.Criteria userCriteria = userExample.createCriteria();
         userCriteria.andIdEqualTo(userId);
@@ -59,9 +75,12 @@ public class ClientPattern {
         if (userList.size() != 1){
             throw new Exception("账号密码错误");
         }
+        return userList.get(0);
+    }
 
-        //角色
-        String roleStr = userList.get(0).getRoleList();
+    //角色列表
+    private List<OauthRole> getOauthRoleList(OauthUser oauthUser) throws Exception{
+        String roleStr = oauthUser.getRoleList();
         if (StringUtils.isBlank(roleStr)){
             throw new Exception("账户无角色、无资源权限");
         }
@@ -71,8 +90,11 @@ public class ClientPattern {
         OauthRoleExample.Criteria roleCriteria = roleExample.createCriteria();
         roleCriteria.andIdIn(roleIdList);
         List<OauthRole> roleList = oauthRoleMapper.selectByExampleWithBLOBs(roleExample);
+        return roleList;
+    }
 
-        //资源
+    //访问规则列表
+    private List<String> getUrlRegexList(List<OauthRole> roleList) throws Exception{
         List<String> resourceIdList = new ArrayList<>();
         for (OauthRole role:roleList){
             String resourceStr = role.getResourceList();
@@ -96,14 +118,7 @@ public class ClientPattern {
                 urlRegexList.add(urlRegex);
             }
         }
-        if (urlRegexList.size() == 0){
-            throw new Exception("账户无url资源权限");
-        }
-
-        //设置token缓存
-        redisService.setCollectionSet(accessToken, urlRegexList);
-
-        return accessToken;
+        return urlRegexList;
     }
 
 }

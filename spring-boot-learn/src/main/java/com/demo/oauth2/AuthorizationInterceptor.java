@@ -31,11 +31,11 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         if (StringUtils.isBlank(access_token)){
             throw new Exception("access_token为空");
         }
-
         if (!redisService.hasKey(access_token)){
             throw new Exception("token过期");
         }
-        Set<String> accessRegexSet = redisService.setCollectionGet(access_token);
+        String tokenKey = ClientPattern.OAUTH2_CLIENT_TOKEN + access_token;
+        Set<String> accessRegexSet = redisService.getCollectionSet(tokenKey);
         for (String accessRegex:accessRegexSet){
             if (StringUtils.isNotEmpty(accessRegex) && uri.matches(accessRegex)){
                 pass = true;
@@ -43,7 +43,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             }
         }
 
-        //是否允许访问
+        //不允许访问
         if (!pass){
             throw new Exception("无权限访问此资源");
         }
