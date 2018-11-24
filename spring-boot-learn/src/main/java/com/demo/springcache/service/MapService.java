@@ -1,6 +1,6 @@
 package com.demo.springcache.service;
 
-import com.demo.redis.RedisConst;
+import com.demo.old.redis.RedisConst;
 import com.demo.springcache.mapper.SpringCacheMapper;
 import com.demo.springcache.model.SpringCache;
 import org.apache.commons.beanutils.BeanUtils;

@@ -1,6 +1,6 @@
 package com.demo.springcache;
 
-import com.demo.redis.RedisService;
+import com.demo.old.redis.RedisService;
 import com.demo.springcache.model.SpringCache;
 import com.demo.springcache.service.SpringCacheService;
 import org.junit.Test;

@@ -17,9 +17,11 @@ public class AppProp {
     @Value("${spring.datasource.url}")
     private String url;
 
+    @Value("${custom.redis.expire}")
+    private Long redisExpire;
+
     @Value("${variable.a}")
     private String a;
-
 
     @Autowired
     private Environment environment;
@@ -46,6 +48,14 @@ public class AppProp {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Long getRedisExpire() {
+        return redisExpire;
+    }
+
+    public void setRedisExpire(Long redisExpire) {
+        this.redisExpire = redisExpire;
     }
 
     public String getA() {

@@ -25,8 +25,8 @@ spring:
     # redis数据库索引（默认为0）
     database: 0
     # redis服务器地址（默认为localhost）
-    host: 184.170.220.217
-    #host: localhost
+#    host: 184.170.220.217
+    host: localhost
     # redis端口（默认为6379）
     port: 6379
     # redis访问密码（默认为空）
@@ -43,6 +43,11 @@ spring:
       min-idle: 0
       # 从连接池中获取连接最大等待时间（默认为-1，单位为毫秒，负数表示无限）
       max-wait: -1
+
+#指定缓存失效时间30天
+custom:
+  redis:
+    expire: 2592000
 
 #mybatis:
 #  configuration:
