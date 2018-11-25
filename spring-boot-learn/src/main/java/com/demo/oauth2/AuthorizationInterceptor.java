@@ -26,10 +26,11 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     //    if (StringUtils.isBlank(access_token)){
     //        throw new Exception("access_token为空");
     //    }
-    //    if (!redisService.hasKey(access_token)){
+    //
+    //    String tokenKey = OAUTH2_CLIENT_TOKEN + access_token;
+    //    if (!redisService.hasKey(tokenKey)){
     //        throw new Exception("token过期");
     //    }
-    //    String tokenKey = ClientPattern.OAUTH2_CLIENT_TOKEN + access_token;
     //    Set<String> accessRegexSet = redisService.getCollectionSet(tokenKey);
     //    for (String accessRegex:accessRegexSet){
     //        if (StringUtils.isNotEmpty(accessRegex) && uri.matches(accessRegex)){
