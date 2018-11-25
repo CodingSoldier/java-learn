@@ -33,38 +33,24 @@ public abstract class ValidateInterfaceAdapter implements ValidateInterface{
         Map<String, String> data = new HashMap<>();  //错误信息集合
         for (Map<String, String> elemMap:msgList){
             if (elemMap != null){
+                Boolean requestVal = Boolean.parseBoolean(elemMap.get(PvMsg.REQUEST));
+                String minVal = elemMap.get(PvMsg.MIN_VALUE);
+                String maxVal = elemMap.get(PvMsg.MAX_VALUE);
+                String minLen = elemMap.get(PvMsg.MIN_LENGTH);
+                String maxLen = elemMap.get(PvMsg.MAX_LENGTH);
+                String jsonMsg = elemMap.get(PvMsg.MESSAGE);
+
                 String message = "";
-                for (Map.Entry<String, String> entry:elemMap.entrySet()){
-                    String key = entry.getKey();
-                    String value = entry.getValue();
-                    switch (key){
-                        case PvMsg.REQUEST:
-                            message = Boolean.TRUE.equals(Boolean.parseBoolean(value)) ? (message+"必填，") : message;
-                            break;
-                        case PvMsg.MIN_VALUE:
-                            message = ValidateUtils.isNotBlankObj(value) ? (message+"最小值："+value+"，") : message;
-                            break;
-                        case PvMsg.MAX_VALUE:
-                            message = ValidateUtils.isNotBlankObj(value) ? (message+"最大值："+value+"，") : message;
-                            break;
-                        case PvMsg.MIN_LENGTH:
-                            message = ValidateUtils.isNotBlankObj(value) ? (message+"最小长度："+value+"，") : message;
-                            break;
-                        case PvMsg.MAX_LENGTH:
-                            message = ValidateUtils.isNotBlankObj(value) ? (message+"最大长度："+value+"，") : message;
-                            break;
-                        case PvMsg.REGEX:
-                            //不返回正则表达式
-                            break;
-                        case PvMsg.MESSAGE:
-                            message = ValidateUtils.isNotBlankObj(value) ? (message+value+"，") : message;
-                            break;
-                        default:
-                            break;
-                    }
-                }
+                message = Boolean.TRUE.equals(requestVal) ? (message+"必填、") : message;
+                message = ValidateUtils.isNotBlankObj(minVal) ? (message+"最小值"+minVal+"、") : message;
+                message = ValidateUtils.isNotBlankObj(maxVal) ? (message+"最大值"+maxVal+"、") : message;
+                message = ValidateUtils.isNotBlankObj(minLen) ? (message+"最小长度"+minLen+"、") : message;
+                message = ValidateUtils.isNotBlankObj(maxLen) ? (message+"最大长度"+maxLen+"、") : message;
+                message = ValidateUtils.isNotBlankObj(jsonMsg) ? (message+jsonMsg+"、") : message;
                 message = message.substring(0, message.length()-1);
-                data.put(elemMap.get(PvMsg.NAME), message);
+
+                String name = elemMap.get(PvMsg.NAME);
+                data.put(name, message);
             }
         }
         Map<String, Object> r = new HashMap<>();

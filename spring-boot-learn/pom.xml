@@ -122,32 +122,6 @@
         </dependency>
     </dependencies>
 
-    <!--配置环境的profile-->
-    <!--<profiles>
-        &lt;!&ndash;dev默认激活，使用idea Spring Boot 配置启动工程，需要dev的配置&ndash;&gt;
-        <profile>
-            <id>dev</id>
-            <properties>
-                <environment>dev</environment>
-            </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <id>test</id>
-            <properties>
-                <environment>test</environment>
-            </properties>
-        </profile>
-        <profile>
-            <id>prod</id>
-            <properties>
-                <environment>prod</environment>
-            </properties>
-        </profile>
-    </profiles>-->
-
     <build>
         <finalName>spring-boot-lean</finalName>
         <resources>
@@ -166,31 +140,17 @@
                     <include>**/*.*</include>
                 </includes>
             </resource>
-
-            <!--<resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.*</include>
-                </includes>
-                &lt;!&ndash;排除资源文件&ndash;&gt;
-                <excludes>
-                    <exclude>application-*.yml</exclude>
-                    <exclude>mybatis-generator/</exclude>
-                </excludes>
-                <filtering>false</filtering>
-            </resource>
-            &lt;!&ndash;打包application-XX.yml，${profile中properties的标签名}&ndash;&gt;
-            <resource>
-                <filtering>true</filtering>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>application-${environment}.yml</include>
-                </includes>
-            </resource>-->
-
         </resources>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

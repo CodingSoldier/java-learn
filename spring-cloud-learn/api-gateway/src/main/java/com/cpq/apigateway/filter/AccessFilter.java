@@ -1,16 +1,16 @@
-/*
 package com.cpq.apigateway.filter;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
-*/
 /**
  * 是否登录过滤器
- *//*
+ */
+
 @Component
 public class AccessFilter extends ZuulFilter {
 
@@ -42,4 +42,3 @@ public class AccessFilter extends ZuulFilter {
         return null;
     }
 }
-*/
