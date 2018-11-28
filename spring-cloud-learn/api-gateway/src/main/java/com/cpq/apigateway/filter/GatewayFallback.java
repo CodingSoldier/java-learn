@@ -1,8 +1,5 @@
 package com.cpq.apigateway.filter;
 
-// https://www.cnblogs.com/niechen/p/8856551.html  ZuulFallbackProvider
-
-
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +16,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+// https://www.cnblogs.com/niechen/p/8856551.html  ZuulFallbackProvider
+
 //  https://www.cnblogs.com/niechen/p/8856551.html  ZuulFallbackProvider
 
 //   http://itmuch.com/spring-cloud/edgware-new-zuul-fallback/
@@ -26,9 +25,9 @@ import java.util.Map;
 //周立  http://itmuch.com/categories/Spring-Cloud/
 
 @Component
-public class MyFallbackProvider implements FallbackProvider {
+public class GatewayFallback implements FallbackProvider {
 
-    private Logger logger = LoggerFactory.getLogger(MyFallbackProvider.class);
+    private Logger logger = LoggerFactory.getLogger(GatewayFallback.class);
 
     @Override
     public String getRoute() {
