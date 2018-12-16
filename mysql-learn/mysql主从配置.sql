@@ -22,32 +22,14 @@
    service mysqld restart  重启mysql	
 
 6、从数据库
-   6.1 stop slave 关闭从slave 
+   6.1 stop slave; 关闭从slave 
    6.2 change master to master_host='192.168.40.129',master_user='myslave',master_password='mysalave0.',master_log_file='master_log.000001'; 
-   6.3 start slave  开启slave
+   6.3 start slave;  开启slave
    6.4 show slave status \G    \G表示竖直排列
    6.5 从数据库服务器要开放端口给主数据库服务器
    6.6 最好再重启一次从mysql服务
 
 7、主操作建库、建表、插入、更新数据，从自动备份，'myslave'@'192.168.40.120'这账号要有这些权限才行
 
-
-
-
-
-
-
-
-
-
-
-
-vim server.xml
-<user name="root">
-    <property name="password">cpq..123</property>
-    <!-- 与schema.xml中的<schema name="mycat_database"/>相对应 -->
-    <property name="schemas">mycat_database</property>
-    <property name="readOnly">false</property>
-</user>
 
   	
