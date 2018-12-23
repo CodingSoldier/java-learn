@@ -15,8 +15,8 @@ import java.util.Map;
 public class ValidateController {
 
     @PostMapping("/post/map")
-    @ParamsValidate("json-post-one.json")
-    //@ParamsValidate(value = "json-post-part-jackson.json", key = "map")
+    //@ParamsValidate("json-post-one.json")
+    @ParamsValidate(value = "validate-file.json", key = "map")
     public Object p1(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, Object> map) throws Exception{
         Map<String, Object> map1 = new HashMap<>();
         map1.put("code", 0);
@@ -25,7 +25,7 @@ public class ValidateController {
     }
 
     @PostMapping("/post/vo")
-    @ParamsValidate(value = "json-post-part-jackson.json", key = "vo")
+    @ParamsValidate(value = "validate-file.json", key = "vo")
     public Object p2(HttpServletRequest request, HttpServletResponse response,@RequestBody UserVo userVo) throws Exception{
         Map<String, Object> map1 = new HashMap<>();
         map1.put("code", 0);
@@ -34,7 +34,7 @@ public class ValidateController {
     }
 
     @PostMapping("/post/map/part")
-    @ParamsValidate(value = "json-post-part-jackson.json", key = "map")
+    @ParamsValidate(value = "validate-file.json", key = "map")
     public Object p3(HttpServletRequest request, HttpServletResponse response,@RequestBody UserVo userVo) throws Exception{
         Map<String, Object> map1 = new HashMap<>();
         map1.put("code", 0);

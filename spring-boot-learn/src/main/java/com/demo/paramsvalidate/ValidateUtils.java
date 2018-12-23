@@ -5,6 +5,7 @@ import com.demo.paramsvalidate.bean.PvMsg;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -121,7 +122,7 @@ public class ValidateUtils<T> extends org.springframework.util.StringUtils{
     }
 
     //是否为null、""、空集合
-    public static boolean isNullEmptyCollection(Object obj) {
+    public static boolean isEmptySize0(Object obj) {
         boolean r = false;
         if (isBlankObj(obj)){
             r = true;
@@ -131,6 +132,46 @@ public class ValidateUtils<T> extends org.springframework.util.StringUtils{
             r = ((Map)obj).size() == 0;
         }
         return r;
+    }
+
+    //Collection有空元素
+    public static boolean collectionHasEmpty(Collection collection) {
+        return collection.size()==0 || collection.contains("") || collection.contains(null);
+    }
+
+    //删除map中value为空的entry
+    public static void deleteMapEmptyValue(Map<String, Object> map){
+        Iterator<Map.Entry<String, Object>> iterator = map.entrySet().iterator();
+        while (iterator.hasNext()){
+            boolean hasEmpty = false;
+            Map.Entry<String, Object> entry = iterator.next();
+            Object value = entry.getValue();
+            if (isEmptySize0(value)){
+                hasEmpty = true;
+            }else if (value instanceof Map){
+                deleteMapEmptyValue((Map<String, Object>)value);
+            }else if (value instanceof Collection){
+                loopList((Collection)value);
+            }else {
+                hasEmpty = isEmpty(objToStr(value)) ? true : false;
+            }
+            if (hasEmpty) {
+                iterator.remove();
+            }
+        }
+    }
+
+    //Collection循环
+    public static void loopList(Collection collection){
+        Iterator it = collection.iterator();
+        while (it.hasNext()){
+            Object value = it.next();
+            if (value instanceof Map){
+                deleteMapEmptyValue((Map<String, Object>)value);
+            }else if (value instanceof Collection){
+                loopList((Collection)value);
+            }
+        }
     }
 
 }

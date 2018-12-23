@@ -1,6 +1,8 @@
 package com.demo.paramsvalidate;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
@@ -18,18 +20,25 @@ import java.util.Map;
 @Component
 public class RequestParam {
 
-    //合并请求参数
-    public Map<String, Object> mergeParams(JoinPoint joinPoint) throws IOException{
-        Object body = getBodyParam(joinPoint);
-        Map<String, Object> bodyMap = bodyParamToMap(body);
+    //从request中获取请求参数(不包含body)
+    private Map<String, Object> getParamFromRequest(HttpServletRequest request){
+        if (request == null)
+            return new HashMap<>();
 
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        Map<String, Object> paramMap = getParamFromRequest(request);
-
-        for (Map.Entry<String, Object> entry:bodyMap.entrySet()){
-            paramMap.put(entry.getKey(), entry.getValue());
+        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, String[]> paramMap = request.getParameterMap();
+        if (paramMap != null){
+            for (Map.Entry<String, String[]> entry:paramMap.entrySet()){
+                if (ValidateUtils.isNotBlank(entry.getKey())){
+                    if (entry.getValue().length == 1){
+                        resultMap.put(entry.getKey(), entry.getValue()[0]);
+                    }else{
+                        resultMap.put(entry.getKey(), Arrays.asList(entry.getValue()));
+                    }
+                }
+            }
         }
-        return paramMap;
+        return resultMap;
     }
 
     //获取@RequestBody的参数
@@ -56,30 +65,26 @@ public class RequestParam {
     //body中的参数添加到map
     private Map<String, Object> bodyParamToMap(Object obj) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(obj);
-        Map<String, Object> result = mapper.readValue(json, Map.class);
+        mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        Map<String, Object> result = mapper.convertValue(obj, Map.class);
+        //删除空值
+        ValidateUtils.deleteMapEmptyValue(result);
         return result != null ? result : new HashMap<>();
     }
 
-    //从request中获取请求参数(不包含body)
-    private Map<String, Object> getParamFromRequest(HttpServletRequest request){
-        if (request == null)
-            return new HashMap<>();
+    //合并请求参数
+    public Map<String, Object> mergeParams(JoinPoint joinPoint) throws IOException{
+        Object body = getBodyParam(joinPoint);
+        Map<String, Object> bodyMap = bodyParamToMap(body);
 
-        Map<String, Object> resultMap = new HashMap<>();
-        Map<String, String[]> paramMap = request.getParameterMap();
-        if (paramMap != null){
-            for (Map.Entry<String, String[]> entry:paramMap.entrySet()){
-                if (ValidateUtils.isNotBlank(entry.getKey())){
-                    if (entry.getValue().length == 1){
-                        resultMap.put(entry.getKey(), entry.getValue()[0]);
-                    }else{
-                        resultMap.put(entry.getKey(), Arrays.asList(entry.getValue()));
-                    }
-                }
-            }
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        Map<String, Object> paramMap = getParamFromRequest(request);
+
+        for (Map.Entry<String, Object> entry:bodyMap.entrySet()){
+            paramMap.put(entry.getKey(), entry.getValue());
         }
-        return resultMap;
+        return paramMap;
     }
 
 }

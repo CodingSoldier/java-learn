@@ -37,8 +37,6 @@ public class ValidateMain {
     @Autowired
     private RuleFile ruleFile;
 
-
-
     //校验
     public ResultValidate validateExecute(JoinPoint joinPoint, ValidateConfig validateConfig) throws Exception{
         ResultValidate resultValidate = new ResultValidate(true);  //默认是校验通过
@@ -59,12 +57,16 @@ public class ValidateMain {
         return resultValidate;
     }
 
-    //校验规则与请求参数
+    /**
+     * 校验规则与请求参数
+     * @param json
+     * @param paramMap 不可以为null
+     */
     private void validateJsonParam(Map<String, Object> json, Map<String, Object> paramMap){
         if (json == null || json.size() == 0)
             return ;
 
-        if (ValidateUtils.isNullEmptyCollection(paramMap)){  //参数为空
+        if (ValidateUtils.isEmptySize0(paramMap)){  //参数为空
             checkParamValueNull(json);
             return;
         }
@@ -81,7 +83,7 @@ public class ValidateMain {
             if (ruleKeySet.containsAll(jsonValue.keySet())){   //jsonValue为校验规则rules
                 checkRuleValue(jsonValue, paramValue);
             }else{
-                if (ValidateUtils.isNullEmptyCollection(paramValue)){  //参数为空
+                if (ValidateUtils.isEmptySize0(paramValue)){  //参数为空
                     checkParamValueNull(jsonValue);
                 }else if (paramValue instanceof Map){  //paramValue是一个key-value
                     validateJsonParam(jsonValue, (Map<String, Object>)paramValue);
@@ -120,13 +122,15 @@ public class ValidateMain {
 
     //rules为校验规则，value为请求值（不包含键）
     private void checkRuleValue(Map<String, Object> rules, Object value){
-        if (ValidateUtils.isRequestTrue(rules) && ValidateUtils.isBlankObj(value)){
-            //必填&&无值
+        if (ValidateUtils.isRequestTrue(rules)  //必填&&无值
+                && (ValidateUtils.isBlankObj(value) || (value instanceof List && ValidateUtils.collectionHasEmpty((List)value)))){
             msgThreadLocal.get().add(createFailMsg(rules));
-        }else if (ValidateUtils.isNotBlankObj(value)){
-            //非必填，有值，有校验规则
+        }else if (ValidateUtils.isNotBlankObj(value)){  //非必填，有值，有校验规则
             if (value instanceof List){  //请求参数：List<基本类型>
                 List list = (List)value;
+                if (ValidateUtils.collectionHasEmpty(list)){
+                    msgThreadLocal.get().add(createFailMsg(rules));
+                }
                 for (Object elem:list){
                     if (ValidateUtils.isNotBlankObj(elem)){
                         checkRuleValueDetail(rules, elem);
@@ -165,8 +169,8 @@ public class ValidateMain {
 
                 regex = result.get(regex);
             }
-
-            if (!Pattern.matches(regex, ValidateUtils.objToStr(val))){
+            Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+            if (!pattern.matcher(ValidateUtils.objToStr(val)).matches()){
                 msgThreadLocal.get().add(createFailMsg(jsonRule));
             }
         }

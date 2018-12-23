@@ -29,7 +29,7 @@
         },
         "salaryNum": {
             "request": "false",
-            "regex": "REGEX_FLOAT_10_2",
+            "regex": "REGEX_FLOAT_8_2",
             "message": "薪水填写错误"
         },
         "bigNum": {
@@ -37,6 +37,7 @@
             "message": "bigNum错误"
         },
         "girl": {
+//            "request": false,
             "marry":{
                 "regex": "false"
             },
@@ -73,7 +74,7 @@
         },
         "dreamList": {
             "txt": {
-                "request": true,
+                "request": false,
                 "minLength": 1,
                 "maxLength": 20,
                 "message": "txt-txt-txt-错"
@@ -97,7 +98,7 @@
         "baoBaoList": {
 //            这里加上"request": false的作用是，当前台发送的baoBaoList为空时，可以通过校验。
             //若取消"request": false，由于baoBaoList的子级元素有"request": true，当前台发送的baoBaoList为空时，则不能通过校验。
-//            "request": false,
+            "request": false,
             "brand": {
                 "request": true,
                 "minLength": 1,
@@ -112,7 +113,7 @@
                 "message": "price-price-price-错误提示"
             },
             "innerThing": {
-                "request": false,
+//                "request": false,
                 "phone": {
                     "request": true,
                     "minLength": 1,
@@ -158,7 +159,7 @@
         },
         "salaryNum": {
             "request": "false",
-            "regex": "REGEX_FLOAT_10_2",
+            "regex": "REGEX_FLOAT_8_2",
             "message": "薪水填写错误"
         },
         "bigNum": {
@@ -226,7 +227,7 @@
         "baoBaoList": {
             //这里加上"request": false的作用是，当前台发送的baoBaoList为空时，可以通过校验。
             //若取消"request": false，由于baoBaoList的子级元素有"request": true，当前台发送的baoBaoList为空时，则不能通过校验。
-//            "request": false,
+            "request": false,
             "brand": {
                 "request": true,
                 "minLength": 1,

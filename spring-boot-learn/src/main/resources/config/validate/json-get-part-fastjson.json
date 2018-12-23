@@ -19,7 +19,7 @@
     },
     "salaryNum": {
         "request": "false",
-        "regex": "REGEX_FLOAT_10_2",
+        "regex": "REGEX_FLOAT_8_2",
         "message": "薪水填写错误"
     }
 }
