@@ -1,11 +1,10 @@
 package com.cpq.txapp02.sysrole.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cpq.txapp02.sysrole.service.SysRoleService;
+import com.cpq.txapp02.sysrole.service.SysRoleServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,16 +17,16 @@ public class SysRoleController {
     DiscoveryClient discoveryClient;
 
     @Autowired
-    SysRoleService sysRoleService;
+    SysRoleServiceImpl sysRoleService;
 
     @PostMapping("/add")
-    public JSONObject add(HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception{
+    public JSONObject add(HttpServletRequest request) throws Exception{
 
         String services = "txapp02-----Services: " + discoveryClient.getServices();
         System.out.println(request.getServerPort());
         System.out.println(services);
 
-        System.out.println(jsonObject.getString("a1"));
+        //System.out.println(jsonObject.getString("a1"));
 
         sysRoleService.add();
 
