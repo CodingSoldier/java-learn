@@ -50,16 +50,16 @@
         </dependency>
 
         <!-- 重试机制 ，必须配，否则重试不生效 -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.retry</groupId>
             <artifactId>spring-retry</artifactId>
-        </dependency>
+        </dependency>-->
 
         <!--websocket-->
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
-        </dependency>
+        </dependency>-->
 
         <!--json解析-->
         <dependency>

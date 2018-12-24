@@ -9,7 +9,6 @@ import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,14 +43,14 @@ public class AccessFilter extends ZuulFilter {
         HttpServletResponse response = ctx.getResponse();
 
         try {
-            HttpServletRequest request = ctx.getRequest();
-
-            Object accessToken = request.getParameter("token");
-            if ("false".equals(accessToken)){
-                ctx.setSendZuulResponse(false);
-                ctx.setResponseStatusCode(401);
-                return null;
-            }
+            //HttpServletRequest request = ctx.getRequest();
+            //
+            //Object accessToken = request.getParameter("token");
+            //if ("false".equals(accessToken)){
+            //    ctx.setSendZuulResponse(false);
+            //    ctx.setResponseStatusCode(401);
+            //    return null;
+            //}
 
         }catch (Exception e){
             logger.error("网关捕获异常", e);
