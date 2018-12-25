@@ -31,6 +31,8 @@ public class DemoController {
     @RequestMapping("/save")
     @ResponseBody
     public int save(){
-        return demoService.save();
+        int num = demoService.save();
+        System.out.println("************************springcloud-mybatis-demo2/save已经执行************************");
+        return num;
     }
 }

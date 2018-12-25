@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by lorne on 2017/6/27.
  */
-@FeignClient(value = "demo2",fallback = Demo2ClientHystric.class)
+@FeignClient(value = "springcloud-mybatis-demo2",fallback = Demo2ClientHystric.class)
 public interface Demo2Client {
 
 
