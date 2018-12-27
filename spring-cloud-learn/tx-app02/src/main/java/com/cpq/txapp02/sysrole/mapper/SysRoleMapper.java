@@ -2,9 +2,12 @@ package com.cpq.txapp02.sysrole.mapper;
 
 import com.cpq.txapp02.sysrole.model.SysRole;
 import com.cpq.txapp02.sysrole.model.SysRoleExample;
-import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
+@Mapper
 public interface SysRoleMapper {
     long countByExample(SysRoleExample example);
 

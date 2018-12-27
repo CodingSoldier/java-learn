@@ -10,11 +10,11 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-@EnableAutoConfiguration
 @SpringBootApplication
 @EnableEurekaClient
-@EnableFeignClients
+@EnableAutoConfiguration
 @MapperScan("com.cpq.txapp01.*.mapper")
+@EnableFeignClients  //启动feign
 public class Application {
 
     @Bean

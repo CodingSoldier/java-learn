@@ -1,12 +1,14 @@
 package com.cpq.txapp01.sysuser.client;
 
-import com.alibaba.fastjson.JSONObject;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(name = "tx-app02")
-public interface TxApp02Client {
-    @RequestMapping(value = "/sys/role/add",method = RequestMethod.POST)
-    JSONObject add();
+/**
+ * Created by lorne on 2017/6/27.
+ */
+@FeignClient(value = "springcloud-mybatis-demo1")
+public interface Demo1Client {
+    @RequestMapping(value = "/test01/save2",method = RequestMethod.GET)
+    int save();
 }

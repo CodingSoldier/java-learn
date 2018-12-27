@@ -6,4 +6,6 @@ public interface SysUserService{
 
     JSONObject add();
 
+    public JSONObject app01app02demo1demo2();
+
 }
