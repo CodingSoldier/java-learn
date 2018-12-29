@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Created by lorne on 2017/6/26.
@@ -19,7 +20,8 @@ public class DemoServiceImpl implements DemoService {
 
     @Autowired
     private Demo2Client demo2Client;
-
+    @Autowired
+    private RestTemplate restTemplate;
     @Autowired
     private TestMapper testMapper;
 
@@ -41,5 +43,15 @@ public class DemoServiceImpl implements DemoService {
         System.out.println("执行----com.example.demo.test01.service.DemoServiceImpl.save2");
         int rs2 = demo2Client.save();
         return rs1+rs2;
+    }
+
+    @Override
+    @TxTransaction(isStart = true)
+    @Transactional
+    public int restSave() {
+        int rs1 = testMapper.save("rrrrrrrrrrrr");
+        System.out.println("执行----com.example.demo.test01.service.DemoServiceImpl.restSave");
+        restTemplate.getForObject("http://springcloud-mybatis-demo2//test02/save",String.class);
+        return rs1;
     }
 }

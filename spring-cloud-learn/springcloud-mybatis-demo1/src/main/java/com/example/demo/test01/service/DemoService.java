@@ -9,4 +9,6 @@ public interface DemoService  {
 
     int save2();
 
+    int restSave();
+
 }

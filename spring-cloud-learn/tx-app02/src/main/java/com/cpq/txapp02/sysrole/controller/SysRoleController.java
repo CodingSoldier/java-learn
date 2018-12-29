@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/sys/role")
@@ -21,14 +22,10 @@ public class SysRoleController {
 
     @PostMapping("/add")
     public JSONObject add(HttpServletRequest request) throws Exception{
-
         sysRoleService.add();
-
         System.out.println("tx-app02已经执行");
-
         JSONObject json = new JSONObject();
         json.put("code", 0);
-
         return json;
     }
 

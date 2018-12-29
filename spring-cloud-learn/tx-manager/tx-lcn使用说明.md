@@ -19,6 +19,15 @@
          http://localhost:1001/springcloud/mybatis/demo1/test01/save
          post
          {}
+    2.4、若使用RestTemplate，在builder时需要添加拦截器
+        @Autowired
+        private RestTemplateBuilder builder;
+    
+        @Bean
+        public RestTemplate restTemplate() {
+            return builder.interceptors(new TransactionHttpRequestInterceptor()).build();
+        }  
+                       
 3、结果springcloud-mybatis-demo2的save方法确实执行了，但是T_TEST2中未插入数据，分布式事物回滚了。
              
     

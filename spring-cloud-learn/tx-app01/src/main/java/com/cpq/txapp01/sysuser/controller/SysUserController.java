@@ -37,4 +37,13 @@ public class SysUserController {
         return json;
     }
 
+    @PostMapping("/restsave")
+    public JSONObject restsave(HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception{
+        sysUserService.restsave();
+        JSONObject json = new JSONObject();
+        json.put("code", 0);
+
+        return json;
+    }
+
 }

@@ -29,5 +29,11 @@ public class Test01Controller {
         return demoService.save2();
     }
 
+    @RequestMapping("/restSave")
+    @ResponseBody
+    public int restSave(){
+        return demoService.restSave();
+    }
+
 
 }
