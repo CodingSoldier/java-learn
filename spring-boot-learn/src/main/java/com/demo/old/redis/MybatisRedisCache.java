@@ -1,7 +1,7 @@
 /*
 package com.demo.redis;
 
-import com.demo.utils.SpringContextHolder;
+import com.demo.config.SpringContextHolder;
 import org.apache.ibatis.cache.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
