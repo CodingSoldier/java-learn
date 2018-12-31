@@ -10,7 +10,7 @@ import java.util.Map;
 @RequestMapping("/socket")
 public class SocketController {
 
-    // utils.post('/websocket/pushVideoListToWeb',{sdf:1111})
+    // config.post('/websocket/pushVideoListToWeb',{sdf:1111})
     @PostMapping("/pushVideoListToWeb")
     @ResponseBody
     public Map<String,Object> pushVideoListToWeb(@RequestBody Map<String,Object> param) {
