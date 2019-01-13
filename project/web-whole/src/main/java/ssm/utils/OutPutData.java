@@ -3,9 +3,8 @@ package ssm.utils;
 public class OutPutData {
     private Object data;
     private boolean success;
-    //描述请求结果的标示
-    private String type;
     private String message = "";
+    private Throwable throwable;
 
     public OutPutData() {
 
@@ -36,19 +35,19 @@ public class OutPutData {
         this.success = success;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Throwable getThrowable() {
+        return throwable;
+    }
+
+    public void setThrowable(Throwable throwable) {
+        this.throwable = throwable;
     }
 }

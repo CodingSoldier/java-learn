@@ -39,6 +39,7 @@ public class CustomExceptionResolver implements HandlerExceptionResolver {
 		OutPutData outPutData = new OutPutData();
 		outPutData.setMessage(exception.getMessage());
 		outPutData.setSuccess(false);
+		outPutData.setThrowable(ex);
 		response.setContentType("application/text; charset=utf-8");
 		try {
 			PrintWriter out = response.getWriter();
