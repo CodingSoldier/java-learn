@@ -54,4 +54,15 @@ public class Boy implements Serializable {
     public void setSmallName(String smallName) {
         this.smallName = smallName == null ? null : smallName.trim();
     }
+
+    @Override
+    public String toString() {
+        return "Boy{" +
+                "id='" + id + '\'' +
+                ", bigName='" + bigName + '\'' +
+                ", loyalty=" + loyalty +
+                ", yanVal=" + yanVal +
+                ", smallName='" + smallName + '\'' +
+                '}';
+    }
 }
