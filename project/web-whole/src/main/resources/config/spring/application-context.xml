@@ -13,7 +13,7 @@
     http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
   <!--扫描ssm.**包中配置了spring注解的java类，并注册配bean，可通过spring管理-->
-  <context:component-scan base-package="ssm.**, com.github.codingsoldier.paramsvalidate">
+  <context:component-scan base-package="ssm.**">
     <!--不扫描@controller注解的bean-->
     <context:exclude-filter type="annotation"
                             expression="org.springframework.stereotype.Controller"/>

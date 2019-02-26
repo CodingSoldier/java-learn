@@ -37,6 +37,14 @@ change master to master_host='192.168.40.129',master_user='user01',master_passwo
 
 
 
+#主备无法复制
+备  stop slave;
+主  rm -rf mysql-log-bin.*;
+备  rm -rf mysql-relay-bin.* relay-log.info;
+重启主备  systemctl restart mysqld;
+备 stop slave;   reset slave;    start slave;  show slave status \G;
+
+
 # 主库自定义配置
 #不使用密码强度规则
 validate-password=0

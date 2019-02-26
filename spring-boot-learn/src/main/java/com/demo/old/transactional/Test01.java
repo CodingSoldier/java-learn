@@ -21,12 +21,12 @@ public class Test01{
     }
 
     @Test
-    public void update01(){
+    public void update01() throws Exception{
         service.update01();
     }
 
     @Test
-    public void update222(){
+    public void update222() throws Exception{
         service.update222();
     }
 

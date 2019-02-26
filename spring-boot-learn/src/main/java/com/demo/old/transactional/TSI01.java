@@ -25,12 +25,15 @@ public class TSI01 implements TS01 {
     }
 
     @Override
-    //@Transactional
-    public void update01(){
+    @Transactional
+    public void update01() throws Exception{
         SysRole sysRole= new SysRole();
         sysRole.setId("0002");
-        sysRole.setName("vvvvvv111");
+        sysRole.setName("22222222");
         mapper.updateByPrimaryKeySelective(sysRole);
+        if (sysRole != null){
+            throw new RuntimeException("异常");
+        }
         System.out.println("*****************update01");
     }
 

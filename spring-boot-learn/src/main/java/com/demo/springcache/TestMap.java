@@ -36,7 +36,6 @@ public class TestMap {
         springCache.setId(uuid);
         springCache.setName("1111");
         springCache.setNum(new Random().nextInt(100));
-        springCache.setIsTrue(new Random().nextInt(100) % 2 == 0);
         springCache.setDate(new Date());
         redisService.hsetForObject("SPRING:CACHE:"+uuid, springCache, 1);
     }
@@ -54,7 +53,6 @@ public class TestMap {
         springCache.setId(UUID.randomUUID().toString());
         springCache.setName("0000");
         springCache.setNum(new Random().nextInt(100));
-        springCache.setIsTrue(new Random().nextInt(100) % 2 == 0);
         springCache.setDate(new Date());
         mapService.insertSelective(springCache);
     }
@@ -65,7 +63,6 @@ public class TestMap {
         map.put("id", "2626218d-c370-4817-be18-e6c60d096268");
         map.put("name", "nnnnnnnnnnnn111111111");
         map.put("num", new Random().nextInt(100));
-        map.put("isTrue", new Random().nextInt(100) % 2 == 0);
         map.put("date", new Date());
         mapService.updateByPrimaryKey(map);
     }

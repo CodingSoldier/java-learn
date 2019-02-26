@@ -12,7 +12,7 @@ public class SpringCache implements Serializable {
 
     private Date date;
 
-    private Boolean isTrue;
+    private String tc;
 
     private static final long serialVersionUID = 1L;
 
@@ -48,11 +48,11 @@ public class SpringCache implements Serializable {
         this.date = date;
     }
 
-    public Boolean getIsTrue() {
-        return isTrue;
+    public String getTc() {
+        return tc;
     }
 
-    public void setIsTrue(Boolean isTrue) {
-        this.isTrue = isTrue;
+    public void setTc(String tc) {
+        this.tc = tc == null ? null : tc.trim();
     }
 }

@@ -6,7 +6,7 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="num" jdbcType="INTEGER" property="num" />
     <result column="date" jdbcType="TIMESTAMP" property="date" />
-    <result column="is_true" jdbcType="BIT" property="isTrue" />
+    <result column="tc" jdbcType="VARCHAR" property="tc" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -37,37 +37,8 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
   <sql id="Base_Column_List">
-    id, name, num, date, is_true
+    id, name, num, date, tc
   </sql>
   <select id="selectByExample" parameterType="com.demo.springcache.model.SpringCacheExample" resultMap="BaseResultMap">
     select
@@ -101,9 +72,9 @@
   </delete>
   <insert id="insert" parameterType="com.demo.springcache.model.SpringCache">
     insert into spring_cache (id, name, num, 
-      date, is_true)
+      date, tc)
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{num,jdbcType=INTEGER}, 
-      #{date,jdbcType=TIMESTAMP}, #{isTrue,jdbcType=BIT})
+      #{date,jdbcType=TIMESTAMP}, #{tc,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.demo.springcache.model.SpringCache">
     insert into spring_cache
@@ -120,8 +91,8 @@
       <if test="date != null">
         date,
       </if>
-      <if test="isTrue != null">
-        is_true,
+      <if test="tc != null">
+        tc,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -137,8 +108,8 @@
       <if test="date != null">
         #{date,jdbcType=TIMESTAMP},
       </if>
-      <if test="isTrue != null">
-        #{isTrue,jdbcType=BIT},
+      <if test="tc != null">
+        #{tc,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -148,40 +119,6 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
-    update spring_cache
-    <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=VARCHAR},
-      </if>
-      <if test="record.name != null">
-        name = #{record.name,jdbcType=VARCHAR},
-      </if>
-      <if test="record.num != null">
-        num = #{record.num,jdbcType=INTEGER},
-      </if>
-      <if test="record.date != null">
-        date = #{record.date,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.isTrue != null">
-        is_true = #{record.isTrue,jdbcType=BIT},
-      </if>
-    </set>
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map">
-    update spring_cache
-    set id = #{record.id,jdbcType=VARCHAR},
-      name = #{record.name,jdbcType=VARCHAR},
-      num = #{record.num,jdbcType=INTEGER},
-      date = #{record.date,jdbcType=TIMESTAMP},
-      is_true = #{record.isTrue,jdbcType=BIT}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.demo.springcache.model.SpringCache">
     update spring_cache
     <set>
@@ -194,8 +131,8 @@
       <if test="date != null">
         date = #{date,jdbcType=TIMESTAMP},
       </if>
-      <if test="isTrue != null">
-        is_true = #{isTrue,jdbcType=BIT},
+      <if test="tc != null">
+        tc = #{tc,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
@@ -205,7 +142,7 @@
     set name = #{name,jdbcType=VARCHAR},
       num = #{num,jdbcType=INTEGER},
       date = #{date,jdbcType=TIMESTAMP},
-      is_true = #{isTrue,jdbcType=BIT}
+      tc = #{tc,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

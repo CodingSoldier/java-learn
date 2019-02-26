@@ -365,63 +365,73 @@ public class SpringCacheExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsTrueIsNull() {
-            addCriterion("is_true is null");
+        public Criteria andTcIsNull() {
+            addCriterion("tc is null");
             return (Criteria) this;
         }
 
-        public Criteria andIsTrueIsNotNull() {
-            addCriterion("is_true is not null");
+        public Criteria andTcIsNotNull() {
+            addCriterion("tc is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIsTrueEqualTo(Boolean value) {
-            addCriterion("is_true =", value, "isTrue");
+        public Criteria andTcEqualTo(String value) {
+            addCriterion("tc =", value, "tc");
             return (Criteria) this;
         }
 
-        public Criteria andIsTrueNotEqualTo(Boolean value) {
-            addCriterion("is_true <>", value, "isTrue");
+        public Criteria andTcNotEqualTo(String value) {
+            addCriterion("tc <>", value, "tc");
             return (Criteria) this;
         }
 
-        public Criteria andIsTrueGreaterThan(Boolean value) {
-            addCriterion("is_true >", value, "isTrue");
+        public Criteria andTcGreaterThan(String value) {
+            addCriterion("tc >", value, "tc");
             return (Criteria) this;
         }
 
-        public Criteria andIsTrueGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("is_true >=", value, "isTrue");
+        public Criteria andTcGreaterThanOrEqualTo(String value) {
+            addCriterion("tc >=", value, "tc");
             return (Criteria) this;
         }
 
-        public Criteria andIsTrueLessThan(Boolean value) {
-            addCriterion("is_true <", value, "isTrue");
+        public Criteria andTcLessThan(String value) {
+            addCriterion("tc <", value, "tc");
             return (Criteria) this;
         }
 
-        public Criteria andIsTrueLessThanOrEqualTo(Boolean value) {
-            addCriterion("is_true <=", value, "isTrue");
+        public Criteria andTcLessThanOrEqualTo(String value) {
+            addCriterion("tc <=", value, "tc");
             return (Criteria) this;
         }
 
-        public Criteria andIsTrueIn(List<Boolean> values) {
-            addCriterion("is_true in", values, "isTrue");
+        public Criteria andTcLike(String value) {
+            addCriterion("tc like", value, "tc");
             return (Criteria) this;
         }
 
-        public Criteria andIsTrueNotIn(List<Boolean> values) {
-            addCriterion("is_true not in", values, "isTrue");
+        public Criteria andTcNotLike(String value) {
+            addCriterion("tc not like", value, "tc");
             return (Criteria) this;
         }
 
-        public Criteria andIsTrueBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_true between", value1, value2, "isTrue");
+        public Criteria andTcIn(List<String> values) {
+            addCriterion("tc in", values, "tc");
             return (Criteria) this;
         }
 
-        public Criteria andIsTrueNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_true not between", value1, value2, "isTrue");
+        public Criteria andTcNotIn(List<String> values) {
+            addCriterion("tc not in", values, "tc");
+            return (Criteria) this;
+        }
+
+        public Criteria andTcBetween(String value1, String value2) {
+            addCriterion("tc between", value1, value2, "tc");
+            return (Criteria) this;
+        }
+
+        public Criteria andTcNotBetween(String value1, String value2) {
+            addCriterion("tc not between", value1, value2, "tc");
             return (Criteria) this;
         }
     }

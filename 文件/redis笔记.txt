@@ -12,6 +12,24 @@ yum install -y gcc-c++
 9、redis服务关闭 ./bin/redis-cli shutdown。 关闭指定端口 ./bin/redis-cli -p XXXX shutdown
 10、将redis纳入到系统服务列表。vim /etc/init.d/redis  填入下面的信息
 
+
+
+redis.conf配置
+#后台启动
+daemonize yes
+#默认只能本地访问，注释掉配置、修改protected-mode no
+#bind 127.0.0.1
+protected-mode no
+#使用aof持久化策略，只需要把appendonly改成yes即可
+appendonly yes
+appendfilename "appendonly.aof"
+appendfsync everysec
+#设置密码
+requirepass 123456
+
+
+
+
 # chkconfig: 2345 10 90
 # description: Start and Stop redis
 
