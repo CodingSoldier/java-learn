@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cpq</groupId>
-    <artifactId>rabbitmq-api</artifactId>
+    <artifactId>a-rabbitmq-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>rabbitmq-api</name>
+    <name>a-rabbitmq-api</name>
     <description>Demo project for Spring Boot</description>
 
     <parent>
