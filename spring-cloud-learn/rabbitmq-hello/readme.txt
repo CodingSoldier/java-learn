@@ -12,3 +12,10 @@
 
 启动成功后，浏览器中输入http://localhost:15672，可以看到管理界面，
 默认用户密码是：guest/guest
+
+
+
+window版本
+打开  RabbitMQ Command Prompt
+执行  rabbitmq-server.bat
+http://localhost:15672/#/

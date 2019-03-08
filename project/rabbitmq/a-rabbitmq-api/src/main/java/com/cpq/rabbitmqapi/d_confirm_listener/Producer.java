@@ -1,4 +1,4 @@
-package com.cpq.rabbitmqapi.d_confirm;
+package com.cpq.rabbitmqapi.d_confirm_listener;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ConfirmListener;
@@ -24,10 +24,10 @@ public class Producer {
 		channel.confirmSelect();
 		
 		String exchangeName = "test_confirm_exchange";
-		String routingKey = "d_confirm.save";
+		String routingKey = "d_confirm_listener.save";
 		
 		//5 发送一条消息
-		String msg = "Hello RabbitMQ Send d_confirm message!";
+		String msg = "Hello RabbitMQ Send d_confirm_listener message!";
 		channel.basicPublish(exchangeName, routingKey, null, msg.getBytes());
 		
 		//6 添加一个确认监听
@@ -42,10 +42,6 @@ public class Producer {
 				System.err.println("-------ack!-----------");
 			}
 		});
-		
-		
-		
-		
 		
 	}
 }
