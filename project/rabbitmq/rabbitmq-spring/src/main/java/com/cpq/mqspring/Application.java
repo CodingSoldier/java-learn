@@ -1,4 +1,4 @@
-package com.bfxy.spring;
+package com.cpq.mqspring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
