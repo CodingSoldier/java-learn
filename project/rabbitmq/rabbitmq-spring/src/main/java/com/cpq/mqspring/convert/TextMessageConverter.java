@@ -1,4 +1,4 @@
-package com.cpq.mqspring;
+package com.cpq.mqspring.convert;
 
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
