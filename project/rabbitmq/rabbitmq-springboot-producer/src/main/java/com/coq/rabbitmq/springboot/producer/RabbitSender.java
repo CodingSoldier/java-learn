@@ -48,7 +48,7 @@ public class RabbitSender {
 		//id必须是全局唯一
 		CorrelationData correlationData = new CorrelationData("1234567890");
 		//要先在rabbitmq中新建exchange-1，并通过routingKey路由到一个队列
-		rabbitTemplate.convertAndSend("exchange-1", "spring.def", msg, correlationData);
+		rabbitTemplate.convertAndSend("exchange-1", "springboot.def", msg, correlationData);
 	}
 
 }
