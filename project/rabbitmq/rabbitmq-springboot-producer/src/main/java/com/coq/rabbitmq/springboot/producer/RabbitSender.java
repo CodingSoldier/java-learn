@@ -1,5 +1,6 @@
 package com.coq.rabbitmq.springboot.producer;
 
+import com.coq.rabbitmq.springboot.entity.Order;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,18 @@ public class RabbitSender {
 		CorrelationData correlationData = new CorrelationData("1234567890");
 		//要先在rabbitmq中新建exchange-1，并通过routingKey路由到一个队列
 		rabbitTemplate.convertAndSend("exchange-1", "springboot.def", msg, correlationData);
+	}
+
+
+	/**
+	 * 运行ApplicationTests#testSender2()
+	 * rabbitmq-springboot-consumer项目的RabbitReceiver#onOrderMessage()收到消息
+	 */
+	public void sendOrder(Order order) throws Exception{
+		rabbitTemplate.setConfirmCallback(confirmCallback);
+		rabbitTemplate.setReturnCallback(returnCallback);
+		CorrelationData correlationData = new CorrelationData("12566523");
+		rabbitTemplate.convertAndSend("exchange-2", "springboot.123", order, correlationData);
 	}
 
 }

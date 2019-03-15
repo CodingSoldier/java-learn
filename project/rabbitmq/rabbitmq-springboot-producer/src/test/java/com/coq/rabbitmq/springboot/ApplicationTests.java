@@ -37,7 +37,7 @@ public class ApplicationTests {
 	@Test
 	public void testSender2() throws Exception {
 		 Order order = new Order("001", "第一个订单");
-		 //rabbitSender.sendOrder(order);
+		 rabbitSender.sendOrder(order);
 	}
 	
 	

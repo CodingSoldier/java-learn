@@ -1,0 +1,208 @@
+安装
+  下载解压  tar -zvxf elasticsearch-6.6.0.tar.gz
+  #6版本不允许用root权限运行./elasticsearch-6.6.0/bin/elasticsearch
+  adduser esuser
+  passwd cpq..123
+  chown -R esuser elasticsearch-6.6.0   #-R处理指定目录以及其子目录下的所有文件
+  su esuser
+  sh ./elasticsearch-6.6.0/bin/elasticsearch
+
+  #开放端口
+  firewall-cmd --zone=public --add-port=9200/tcp --permanent
+  firewall-cmd --reload
+
+  #开放端口
+  firewall-cmd --zone=public --add-port=80/tcp --permanent
+  firewall-cmd --reload
+
+
+window版本启动  
+	elasticsearch.bat 启动es
+	npm run start  启动head插件
+
+
+#使用head插件
+http://localhost:9100/
+复合查询：
+http://localhost:9200/book/novel/_mappings	
+post请求
+{
+  "novel": {
+    "properties": {
+      "title": {
+        "type": "text"
+      }
+    }
+  }
+}
+提交，就新增了一个文档
+
+一个标准es的api结构：http://ip:port/索引/类型/文档
+#创建索引结构，使用postman
+put请求
+http://localhost:9200/people   //people是索引
+number_of_shards 分片数量
+number_of_replicas 备份数量
+mappings类型映射
+man类型
+properties类型结构
+{
+	"settings":{
+		"number_of_shards":3,
+		"number_of_replicas":1
+	},
+	"mappings":{  
+		"man":{   
+			"properties":{
+				"name":{
+					"type": "text"
+				},
+				"country":{
+					"type": "keyword"
+				},
+				"age":{
+					"type":"integer"
+				},
+				"date":{
+					"type": "date",
+					"format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+				}
+			}
+		}
+	}
+}
+
+
+
+插入文档，put指定文档id
+http://localhost:9200/people/man/1
+put请求
+{
+	"name": "瓦力",
+	"country": "China",
+	"age": 30,
+	"date": "1987-03-07"
+}
+
+
+插入文档，post不指定id，es自动生成id
+http://localhost:9200/people/man
+post请求
+{
+	"name": "瓦力post自动生成id",
+	"country": "China",
+	"age": 34,
+	"date": "1987-04-04"
+}
+
+可在head插件“数据浏览”中查看数据
+
+
+
+修改数据
+http://localhost:9200/people/man/1/_update
+post请求
+{
+	"doc":{
+		"name": "修改名字"
+	}
+}
+
+使用脚本修改数据，使用es内置脚本painless
+http://localhost:9200/people/man/1/_update
+post请求
+{
+	"script":{
+		"lang":"painless",
+		"inline": "ctx._source.age += 10"
+	}
+}
+结果是age加了10
+
+参数外置，使用params
+{
+    "script": {
+        "lang": "painless",
+        "inline": "ctx._source.age += params.age",
+        "params": {
+            "age": 100
+        }
+    }
+}
+
+
+删除文档
+http://localhost:9200/people/man/1
+删除索引
+http://localhost:9200/book
+
+
+
+新增book/novel http://localhost:9200/book
+{
+	"settings":{
+		"number_of_shards":3,
+		"number_of_replicas":1
+	},
+	"mappings":{  
+		"novel":{   
+			"properties":{
+				"word_count":{
+					"type": "integer"
+				},
+				"author":{
+					"type": "keyword"
+				},
+				"title":{
+					"type":"text"
+				},
+				"publish_date":{
+					"type": "date",
+					"format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"					
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
+**************************************************JAVA整合******************************************************************
+1、加入依赖：
+    <dependency>
+        <groupId>org.elasticsearch</groupId>
+        <artifactId>elasticsearch</artifactId>
+        <version>6.6.0</version>
+    </dependency>
+    <dependency>
+        <groupId>org.elasticsearch.client</groupId>
+        <artifactId>transport</artifactId>
+        <version>6.6.0</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+    </dependency>
+
+2、配置config类：
+    @Configuration
+    public class ElasticsearchConfig {
+
+        @Bean
+        public TransportClient client() throws UnknownHostException {
+            //设置端口名字
+            TransportAddress node = new TransportAddress(
+                    InetAddress.getByName("localhost"),
+                    9300
+            );
+            //设置名字
+            Settings settings = Settings.builder().put("cluster.name","my-application").build();
+
+            TransportClient client =  new PreBuiltTransportClient(settings);
+            client.addTransportAddress(node);
+            return client;
+        }
+    }
+
