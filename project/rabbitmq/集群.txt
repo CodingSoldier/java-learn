@@ -1,0 +1,163 @@
+HaProxy配置
+listen rabbitmq_cluster
+bind 0.0.0.0:5672
+mode tcp  #简单的轮询
+balance roundrobin  #主节点
+server bhz76 localhost:5672 check inter 5000 rise 2 fall 2
+server bhz77 localhost:5672 backup check inter 5000 rise 2 fall 2 #备用节点
+
+rabbitmq集群节点配置
+#inter 每隔5秒对mq集群做健康检查，
+2次正确（rise 2）证明服务器可用，
+2次失败（fall 2）证明服务器不可用，并且配置主备机制
+
+
+
+******************搭建集群***********
+vim /etc/hostname  要修改主机名 host129、host120、host119
+129、120、119都安装rabbitmq
+
+1、停止3个节点
+rabbitmq-server stop  或者 rabbitmqctl  stop_app
+
+ps -ef|grep rabbitmq
+ps aux | grep epmd
+ps aux | grep erl
+查看是否还有rabbitmq进程。若有，则kill -9 pid
+
+删除pid文件
+cd /var/lib/rabbitmq/mnesia/
+rm -rf rabbit\@localhost*
+
+2、拷贝主节点  .erlang.cookie到备用节点
+主节点chmod 777 /var/lib/rabbitmq/.erlang.cookie
+scp /var/lib/rabbitmq/.erlang.cookie 192.168.40.120:/var/lib/rabbitmq/
+主节点chmod 400 /var/lib/rabbitmq/.erlang.cookie
+
+3、每个集群节点的hosts文件应包含集群内所有节点的信息以保证互相解析
+每个节点都  vim /etc/hosts
+加入
+192.168.40.129 host129
+192.168.40.120 host120
+192.168.40.119 host119
+
+必须在root@host120、root@host119 下执行
+rabbitmq-server -detached
+rabbitmqctl stop_app
+rabbitmqctl join_cluster rabbit@host129
+rabbitmqctl start_app
+
+删除节点
+rabbitmqctl forget_cluster_node rabbit@bhz24
+
+4、修改集群名称（默认为第一个node名称）
+rabbitmqctl set_cluster_name rabbitmq_cluster1
+
+5、最后在集群的任意一个节点执行命令：查看集群状态
+rabbitmqctl cluster_status
+
+
+6、设置镜像队列策略（在任意一个节点上执行）
+rabbitmqctl set_policy ha-all "^" '{"ha-mode":"all"}'
+将所有队列设置为镜像队列，即队列会被复制到各个节点，各个节点状态一致，RabbitMQ高可用集群就已经搭建好了,我们可以重启服务，查看其队列是否在从节点同步。
+
+
+
+
+*****************************安装haproxy********************
+在其他两台机器上安装haproxy，由于机器不够，所以安装在120、119上
+//下载haproxy
+wget http://www.haproxy.org/download/1.6/src/haproxy-1.6.5.tar.gz
+//解压
+tar -zxvf haproxy-1.6.5.tar.gz -C /usr/local
+//进入目录、进行编译、安装
+cd /usr/local/haproxy-1.6.5
+make TARGET=linux31 PREFIX=/usr/local/haproxy
+make install PREFIX=/usr/local/haproxy
+mkdir /etc/haproxy
+//赋权
+groupadd -r -g 149 haproxy
+useradd -g haproxy -r -s /sbin/nologin -u 149 haproxy
+//创建haproxy配置文件
+touch /etc/haproxy/haproxy.cfg
+
+
+vim /etc/haproxy/haproxy.cfg
+
+#logging options
+global
+	log 127.0.0.1 local0 info
+	maxconn 5120
+	chroot /usr/local/haproxy
+	uid 99
+	gid 99
+	daemon
+	quiet
+	nbproc 20
+	pidfile /var/run/haproxy.pid
+
+defaults
+	log global
+	#使用4层代理模式，”mode http”为7层代理模式
+	mode tcp
+	#if you set mode to tcp,then you nust change tcplog into httplog
+	option tcplog
+	option dontlognull
+	retries 3
+	option redispatch
+	maxconn 2000
+	contimeout 5s
+     ##客户端空闲超时时间为 60秒 则HA 发起重连机制
+     clitimeout 60s
+     ##服务器端链接超时时间为 15秒 则HA 发起重连机制
+     srvtimeout 15s
+#front-end IP for consumers and producters
+
+listen rabbitmq_cluster
+    #由于在rabbitmq也在同一台机器上，所以绑定端口改成5673
+	bind 0.0.0.0:5673
+	#配置TCP模式
+	mode tcp
+	#balance url_param userid
+	#balance url_param session_id check_post 64
+	#balance hdr(User-Agent)
+	#balance hdr(host)
+	#balance hdr(Host) use_domain_only
+	#balance rdp-cookie
+	#balance leastconn
+	#balance source //ip
+	#简单的轮询
+	balance roundrobin
+	#rabbitmq集群节点配置 #inter 每隔五秒对mq集群做健康检查， 2次正确证明服务器可用，2次失败证明服务器不可用，并且配置主备机制
+        server bhz76 192.168.40.129:5672 check inter 5000 rise 2 fall 2
+        server bhz77 192.168.40.120:5672 check inter 5000 rise 2 fall 2
+        server bhz78 192.168.40.119:5672 check inter 5000 rise 2 fall 2
+#配置haproxy web监控，查看统计信息
+listen stats
+	bind 192.168.40.120:8100
+	mode http
+	option httplog
+	stats enable
+	#设置haproxy监控地址为http://localhost:8100/rabbitmq-stats
+	stats uri /rabbitmq-stats
+	stats refresh 5s
+
+
+
+//查看haproxy进程状态
+ps -ef | grep haproxy
+
+
+访问
+http://192.168.40.119:8100/rabbitmq-stats
+http://192.168.40.120:8100/rabbitmq-stats
+
+若访问不了，可
+telnet 192.168.40.119 8100
+telnet 192.168.40.120 8100
+
+
+
+
+
+

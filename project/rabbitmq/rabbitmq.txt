@@ -1,7 +1,8 @@
 ***********安装***********
-yum install 
-build-essential openssl openssl-devel unixODBC unixODBC-devel 
-make gcc gcc-c++ kernel-devel m4 ncurses-devel tk tc xz
+yum install -y build-essential openssl openssl-devel unixODBC unixODBC-devel make gcc gcc-c++ kernel-devel m4 ncurses-devel tk tc xz lsof
+
+vim /etc/hostname  要修改主机名
+重启linux
 
 下载：
 wget www.rabbitmq.com/releases/erlang/erlang-18.3-1.el7.centos.x86_64.rpm
@@ -25,10 +26,11 @@ vim /usr/lib/rabbitmq/lib/rabbitmq_server-3.6.5/ebin/rabbit.app
 例如：loopback_users 中的 <<"guest">>,只保留guest
 {loopback_users, [guest]}
 
-[vim /etc/hostname  要修改主机名]
+
 
 服务启动和停止：
 启动 rabbitmq-server start &
+停止 rabbitmq-server stop   rabbitmqctl  stop_app
 
 查看是否启动成功 lsof -i:端口号，有pid则成功
 lsof -i:5672
@@ -46,9 +48,11 @@ java代码通信端口号5672
 访问前端管控台：http://192.168.40.129:15672/
 账号密码是guest  guest
 若无法登陆，直接   iptables -F
+service iptables save
+service iptables restart
 
 
 
 rabbitmq-server start &
 rabbitmq-plugins enable rabbitmq_management
- iptables -F
+
