@@ -143,7 +143,8 @@ listen stats
 	stats refresh 5s
 
 
-
+启动haproxy
+/usr/local/haproxy/sbin/haproxy -f /etc/haproxy/haproxy.cfg
 //查看haproxy进程状态
 ps -ef | grep haproxy
 
@@ -155,6 +156,176 @@ http://192.168.40.120:8100/rabbitmq-stats
 若访问不了，可
 telnet 192.168.40.119 8100
 telnet 192.168.40.120 8100
+
+
+
+************************KeepAlive*******************************
+//安装所需软件包
+yum install -y openssl openssl-devel
+
+//下载
+wget http://www.keepalived.org/software/keepalived-1.2.18.tar.gz
+
+//解压、编译、安装
+tar -zxvf keepalived-1.2.18.tar.gz -C /usr/local/
+cd ../keepalived-1.2.18/
+./configure --prefix=/usr/local/keepalived
+make && make install
+
+//将keepalived安装成Linux系统服务，因为没有使用keepalived的默认安装路径（默认路径：/usr/local）,安装完成之后，需要做一些修改工作
+//首先创建文件夹，将keepalived配置文件进行复制：
+mkdir /etc/keepalived
+cp /usr/local/keepalived/etc/keepalived/keepalived.conf /etc/keepalived/
+
+//然后复制keepalived脚本文件：
+cp /usr/local/keepalived/etc/rc.d/init.d/keepalived /etc/init.d/
+cp /usr/local/keepalived/etc/sysconfig/keepalived /etc/sysconfig/
+ln -s /usr/local/sbin/keepalived /usr/sbin/
+ln -s /usr/local/keepalived/sbin/keepalived /sbin/
+若提示文件已经存在则删除旧的 rm -f /sbin/keepalived
+
+//可以设置开机启动，到此我们安装完毕!
+chkconfig keepalived on
+
+
+
+修改keepalived.conf配置文件
+vim /etc/keepalived/keepalived.conf
+
+120节点（master）配置：
+! Configuration File for keepalived
+
+global_defs {
+   router_id host120  ##标识节点的字符串，通常为hostname
+
+}
+
+vrrp_script chk_haproxy {
+    script "/etc/keepalived/haproxy_check.sh"  ##执行脚本位置
+    interval 2  ##检测时间间隔
+    weight -20  ##如果条件成立则权重减20
+}
+
+vrrp_instance VI_1 {
+    state MASTER  ## 主节点为MASTER，备份节点为BACKUP
+    interface ens33 ## 绑定虚拟IP的网络接口（网卡），与本机IP地址所在的网络接口相同（我这里是eth0）
+    virtual_router_id 120  ## 虚拟路由ID号（主备节点一定要相同）
+    mcast_src_ip 192.168.40.120 ## 本机ip地址
+    priority 100  ##优先级配置（0-254的值）
+    nopreempt
+    advert_int 1  ## 组播信息发送间隔，俩个节点必须配置一致，默认1s
+authentication {  ## 认证匹配
+        auth_type PASS
+        auth_pass bhz
+    }
+
+    track_script {
+        chk_haproxy
+    }
+
+    virtual_ipaddress {
+        192.168.40.118  ## 虚拟ip，可以指定多个
+    }
+}
+
+
+
+119节点（backup）配置：
+! Configuration File for keepalived
+
+global_defs {
+   router_id host119  ##标识节点的字符串，通常为hostname
+
+}
+
+vrrp_script chk_haproxy {
+    script "/etc/keepalived/haproxy_check.sh"  ##执行脚本位置
+    interval 2  ##检测时间间隔
+    weight -20  ##如果条件成立则权重减20
+}
+
+vrrp_instance VI_1 {
+    state BACKUP  ## 主节点为MASTER，备份节点为BACKUP
+    interface ens33 ## 绑定虚拟IP的网络接口（网卡），与本机IP地址所在的网络接口相同（我这里是eno16777736）
+    virtual_router_id 120  ## 虚拟路由ID号（主备节点一定要相同）
+    mcast_src_ip 192.168.40.119  ## 本机ip地址
+    priority 90  ##优先级配置（0-254的值）
+    nopreempt
+    advert_int 1  ## 组播信息发送间隔，俩个节点必须配置一致，默认1s
+authentication {  ## 认证匹配
+        auth_type PASS
+        auth_pass bhz
+    }
+
+    track_script {
+        chk_haproxy
+    }
+
+    virtual_ipaddress {
+        192.168.40.118  ## 虚拟ip，可以指定多个
+    }
+}
+
+
+
+执行脚本编写,（120、119两个节点文件内容一致即可）
+vim /etc/keepalived/haproxy_check.sh
+
+#!/bin/bash
+COUNT=`ps -C haproxy --no-header |wc -l`
+if [ $COUNT -eq 0 ];then
+    /usr/local/haproxy/sbin/haproxy -f /etc/haproxy/haproxy.cfg
+    sleep 2
+    if [ `ps -C haproxy --no-header |wc -l` -eq 0 ];then
+        killall keepalived
+    fi
+fi
+
+执行脚本赋权
+chmod +x /etc/keepalived/haproxy_check.sh
+
+
+//查看状态 haproxy
+ps -ef | grep haproxy
+
+//启动两台机器的keepalived
+service keepalived start | stop | status | restart
+
+
+
+高可用测试
+vip在120节点上
+120节点宕机测试：停掉120的keepalived服务即可。
+service keepalived stop
+查看119节点状态
+ip a
+我们发现VIP漂移到了119节点上，那么119节点的haproxy可以继续对外提供服务！
+
+
+延迟队列插件
+拷贝rabbitmq_delayed_message_exchange-0.0.1.ez到插件目录/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.5/plugins
+
+rabbitmq-plugins list查看插件是否存在
+
+启动插件
+rabbitmq-plugins enable rabbitmq_delayed_message_exchange
+
+管控台的exchanges
+Add a new exchange
+Type多了一种类型 x-delayed-message
+Arguments  x-delayed-type = topic
+
+发消息时，Header需要设置x-delay，单位是毫秒
+
+
+
+
+
+
+
+
+
+
 
 
 
