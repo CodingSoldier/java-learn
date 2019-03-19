@@ -321,11 +321,22 @@ Arguments  x-delayed-type = topic
 
 
 
+节点同步插件federation
 
+rabbitmq-plugins enable rabbitmq_federation
 
+rabbitmq-plugins enable rabbitmq_federation_management
 
+119控制台Admin
+Add upstream
+Name  federation-upstream001
+URI   amqp://192.168.40.120
 
-
+Add policy
+Policy    federation-policy
+Pattern	  ^federation
+Definition
+federation-upstream-set    all
 
 
 
