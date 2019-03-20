@@ -1,0 +1,107 @@
+安装Oracle VM VirtualBox，改文件存储位置
+安装Vagrant
+window7 需要安装  https://docs.microsoft.com/en-us/powershell/wmf/5.1/install-configure#download-and-install-the-wmf-51-package
+打开virtual box
+新建目录linux/centos7，在此目录下执行  
+vagrant init centos/7    #生成Vagrantfile
+vagrant up     #安装
+vagrant ssh   #进入虚拟机
+
+vagrant destroy删除虚拟机
+
+
+xshell登陆vagrant 虚拟机
+127.0.0.1:2222
+username vagrant
+使用秘钥登陆 E:\linux\centos7\.vagrant\machines\default\virtualbox\private_key
+
+
+
+在centos7上安装docker
+https://docs.docker.com/install/linux/docker-ce/centos/
+1、删除旧版本
+sudo yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-engine
+
+2、
+sudo yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
+
+sudo yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo     
+
+sudo yum install -y docker-ce docker-ce-cli containerd.io   
+
+
+3、启动docker
+sudo systemctl start docker  
+
+4、
+sudo docker version  
+sudo docker run hello-world    
+
+
+
+
+
+Image 镜像
+docker image ls  查看镜像
+
+从registry（https://hub.docker.com）拉取一个Image 
+docker pull ubuntu:14.04
+
+运行hello-world
+docker run hello-world
+
+安装软件
+yum install -y git vim gcc glibc-static telnet bridge-utils net-tools
+
+
+*****************自己写一个基础镜像（base image）***************
+mkdir hello-world
+cd hello-world
+
+vim hello.c 写以下代码
+#include<stdio.h>
+
+int main()
+{
+   printf("hello docker\n");
+}
+
+gcc -static hello.c -o hello  生成hello可执行文件
+
+./hello  执行
+
+
+vim Dockerfile  建立Dockerfile
+
+FROM scratch      # 基础镜像from写scratch
+ADD hello /       # 把hello添加到根目录
+CMD ["/hello"]    # 运行根目录下的hello
+
+创建image，后面的 . 表示在当前目录找Dockerfile
+docker build -t xiaopeng163/hello-world .
+
+
+
+
+
+
+
+
+
+groupadd docker   创建用户组
+gpasswd -a vagrant docker   添加用户vagrant到docker用户组，vagrant就具备了docker用户组的权限
+
+
+
+
