@@ -311,3 +311,41 @@ CMD [ "python", "app.py" ]
 
 -p本地5000端口绑定到容器flash-redis的5000端口，-e指定容器环境变量，app.py中使用了环境变量REDIS_HOST
 docker run -d -p 5000:5000 --link redis --name flash-redis -e REDIS_HOST=redis flash-redis
+
+
+
+
+************************docker数据存储VOLUME************************
+mysql的Dockerfile
+VOLUME /var/lib/mysql 指定数据存储在物理机上位置
+
+运行mysql container，mysql1产生的数据写入到  mysql:/var/lib/mysql指定存储位置，但数据却在/var/lib/docker/volumes/mysql中 
+docker run -d -v mysql:/var/lib/mysql --name mysql1 -e MYSQL_ALLOW_EMPTY_PASSWORD=true mysql:5.7.19
+docker exec -it mysql1 /bin/bash
+
+mysql -u root
+create database test001;
+
+删除mysql1，创建mysql2，使用同样的volume，mysql2中有test001数据库
+
+-v当期目录和容器中的/usr/share/nginx/html目录是同步的
+docker run -d -v $(pwd):/usr/share/nginx/html -p 8080:80 --name web docker-nginx
+
+vim index.html
+curl 127.0.0.1:8080  发现index.html也修改了
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
