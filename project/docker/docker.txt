@@ -29,7 +29,7 @@ sudo yum remove docker \
                   docker-logrotate \
                   docker-engine
 
-2、
+2、设置镜像仓库
 sudo yum install -y yum-utils \
   device-mapper-persistent-data \
   lvm2
@@ -38,6 +38,7 @@ sudo yum-config-manager \
     --add-repo \
     https://download.docker.com/linux/centos/docker-ce.repo     
 
+安装
 sudo yum install -y docker-ce docker-ce-cli containerd.io   
 
 
@@ -49,6 +50,9 @@ sudo docker version
 sudo docker run hello-world    
 
 
+
+查看docker-ce版本
+yum list docker-ce.x86_64  --showduplicates | sort -r
 
 
 
@@ -63,6 +67,10 @@ docker run hello-world
 
 安装软件
 yum install -y git vim gcc glibc-static telnet bridge-utils net-tools
+
+
+groupadd docker   创建用户组
+gpasswd -a vagrant docker   添加用户vagrant到docker用户组，vagrant就具备了docker用户组的权限
 
 
 *****************自己写一个基础镜像（base image）***************
@@ -91,16 +99,168 @@ CMD ["/hello"]    # 运行根目录下的hello
 创建image，后面的 . 表示在当前目录找Dockerfile
 docker build -t xiaopeng163/hello-world .
 
+运行容器
+docker run xiaopeng163/hello-world
+
+
+正在运行的容器
+docker container ls  
+
+docker container ls -a  所有容器
+
+
+交互式运行，会进入到centos这个容器中
+docker run -it centos
+
+exit  退出环境
+
+
+通过CONTAINER ID删除container
+docker container rm 8e84b79e5d4c
+docker rm 8e84b79e5d4c
+
+
+image和container 的关系类似于 类和实例 的关系
+每次 docker run 镜像    这条命令会生成一个新的container，每运行一次就会生成一个container
+
+
+#列出containerId，
+docker container ls -aq  等同于  docker container ls -a | awk {'print$1'}
+
+
+删除所有已经退出的container，status=exited表示已经退出，-q只列出id
+docker rm $(docker container ls -f "status=exited" -q)
+
+
+docker ps -a  容器列表
+
+
+commit一个新的image，旧名字pedantic_khayyam，新名字xiaopeng163/centos-vim
+docker commit pedantic_khayyam xiaopeng163/centos-vim
+
+
+docker image ls       image列表
+docker history 9f38484d220f   image历史
+
+
+#通过Dockerfile构建一个image，用户可以知道这个image有那些修改，比commit的方式要好
+
+mkdir docker-centos-vim
+cd docker-centos-vim/
+vim Dockerfile  写以下配置
+
+FROM centos
+RUN yum install -y vim
+
+docker build -t xiaopeng163/centos-vim .
 
 
 
+https://docs.docker-cn.com/engine/reference/builder/
+Dockerfile配置：
+FROM scratch  #制作base image
+FROM centos   #使用已有的base image，centos
+FROM ubuntu:14.04  #指定版本
+FROM尽量使用官方的image，安全
+
+LABEL maintainer="邮箱"
+LABEL version="1.0"
+LABEL description="描述"
+Metadata不可少
+
+RUN yum update && yum install -y vim\
+	python-dev
+RUN为了美观，复杂的run请用反斜线换行，避免无用分层，合并多行命令为一行
+
+WORKDIR 设定当前目录
+WORKDIR /test  如果没有会自动创建test目录
+WORKDIR demo
+RUN pwd  输出是/test/demo
+用WORKDIR，不要使用RUN cd，尽量使用绝对路径
+
+ADD and COPY
+ADD hello /  添加hello文件到根目录/
+ADD test.tar.gz /  添加到根目录并解压，ADD还有解压的功能
+
+WORKDIR /root
+ADD hello test/  结果是/root/test/hello
+大部分情况下COPY优于ADD
+
+ENV MYSQL_VERSION 5.6  设置常量
+RUN apt-get install -y mysql-server="${MYSQL_VERSION}"
+尽量使用ENV增加维护性
 
 
+RUN    执行命令并创建新的Image Layer
+CMD    设置容器启动后默认执行的命令和参数
+ENTRYYPOINT   设置容器启动时运行的命令
 
 
+Shell格式
+RUN apt-get install -y vim
+CMD echo "hello docker"
+ENTRYPOINT echo "hello docker"
 
-groupadd docker   创建用户组
-gpasswd -a vagrant docker   添加用户vagrant到docker用户组，vagrant就具备了docker用户组的权限
+Exec格式
+RUN ["apt-get", "install", "-y", "vim"]
+CMD ["/bin/echo", "hello docker"]
+
+
+shell方式的Dockerfile
+FROM centos
+ENV NAME docker
+ENTRYPOINT echo "hello $NAME"
+
+excel方式的Dockerfile，-c表示参数，shell语句必须全在一个元素中
+FROM centos
+ENV NAME docker
+ENTRYPOINT ["/bin/bash","-c","echo hello $NAME"]
+
+
+CMD
+容器启动时默认执行的命令
+如果docker run 指定了其他命令，CDM命令被忽略
+如果定义了多个CMD，只有最后一个会执行
+
+ENTRYYPOINT
+容器以应用程序或者服务的形式运行
+不会被忽略，一定会执行
+最佳实践：写一个shell脚本作为entrypoint
+COPY xxx.sh  /user/local/bin
+ENTRYPOINT ["xxx.sh"]
+
+
+docker login  输入账号密码，登陆docker hub
+
+提交一个镜像，:latest是一个标签Tags
+docker push codingsoldier/hello-world:latest
+
+
+docker提供了私有仓库的镜像  https://hub.docker.com/_/registry
+安装私有仓库
+docker run -d -p 5000:5000 --restart always --name registry registry:2
+
+创建属于私有仓库的镜像
+docker build -t 127.0.0.1:5000/hello-world .
+
+提交到使用仓库需要做修改
+vim /etc/docker/daemon.json
+{
+  "insecure-registries":["127.0.0.1:5000"]
+}
+
+vim /lib/systemd/system/docker.service  [Service]中添加 EnvironmentFile=-/etc/docker/daemon.json
+ExecStart=XXXXX
+EnvironmentFile=-/etc/docker/daemon.json
+ExecReload=XXXXXXX
+
+提交到私有镜像
+docker push 127.0.0.1:5000/hello-world
+
+curl http://127.0.0.1:5000/v2/_catalog 即可查看私有仓库的镜像
+
+拉取私有仓库的镜像
+docker pull 127.0.0.1:5000/hello-world
 
 
 
