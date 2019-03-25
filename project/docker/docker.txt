@@ -4,8 +4,10 @@ window7 需要安装  https://docs.microsoft.com/en-us/powershell/wmf/5.1/instal
 打开virtual box
 新建目录linux/centos7，在此目录下执行  
 vagrant init centos/7    #生成Vagrantfile
-vagrant up     #安装
+vagrant up     #启动
 vagrant ssh   #进入虚拟机
+
+vagrant halt  关闭
 
 vagrant destroy删除虚拟机
 
@@ -105,6 +107,87 @@ docker run xiaopeng163/hello-world
 
 正在运行的容器
 docker container ls  
+groupadd docker   创建用户组
+gpasswd -a vagrant docker   添加用户vagrant到docker用户组，vagrant就具备了docker用户组的权限
+
+
+
+yum install -y libaio make cmake gcc-c++ gcc zib zlib-devel open openssl-devel pcre pcre-devel get wget curl net-tools nano vim-enhanced lsof bash-completion zip unzip bzip2
+
+
+写一个pythos image
+mkdir flask-hello-world
+cd flask-hello-world
+vim app.py
+
+from flask import Flask
+app = Flask(__name__)
+@app.route('/')
+def hello():
+    return "hello docker"
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=5000)
+
+
+vim Dockerfile
+
+FROM python:2.7
+LABEL maintainer="Peng Xiao<xiaoquwl@gmail.com>"
+RUN pip install flask
+# COPY可以自动建目录，/app/后面要加/，不然就是建文件
+COPY app.py /app/
+# cd 到/app目录中  
+WORKDIR /app  
+# 开放docker容器中的端口
+EXPOSE 5000
+CMD ["python", "app.py"]
+
+docker build -t codingsoldier/flash-hello-world .
+
+出现错误，可调式 docker run -it step过程临时生成的image /bin/bash
+
+docker run codingsoldier/flash-hello-world
+
+docker run -d codingsoldier/flash-hello-world   后台运行 -d
+
+exec执行命令
+进入docker的bash
+docker exec -it containerId  /bin/bash
+进入python shell
+docker exec -it efe51ae9c3da python
+docker ip 地址
+docker exec -it efe51ae9c3da ip a
+
+停止一个docker 容器
+docker stop containerId
+指定名字启动
+docker run -d --name=flash1 codingsoldier/flash-hello-world
+通过名字停止
+docker stop flash1
+停止后还可以通过名字启动
+docker start flash1
+容器的详细信息
+docker inspect flash1
+docker运行时的日志
+docker logs flash1
+docker命令地址
+https://docs.docker-cn.com/machine/reference/
+
+
+
+
+FROM ubuntu
+RUN apt-get update && apt-get install -y stress
+#通过ENTRYPOINT执行命令
+ENTRYPOINT ["/usr/bin/stress"]
+#用于作为ENTRYPOINT的参数
+CMD []
+
+docker build -t ubuntu-stress .
+docker run  ubuntu-stress 相当于执行 /usr/bin/stress
+docker run  ubuntu-stress --vm 1 --verbose  用CMD接收参数，配合RNTRYPONIT命令执行
+
+
 
 docker container ls -a  所有容器
 
@@ -113,7 +196,6 @@ docker container ls -a  所有容器
 docker run -it centos
 
 exit  退出环境
-
 
 通过CONTAINER ID删除container
 docker container rm 8e84b79e5d4c
@@ -265,3 +347,143 @@ docker pull 127.0.0.1:5000/hello-world
 
 
 
+
+
+***************第四章**********************
+拷贝chapter4的全部代码
+vagrant plugin install vagrant-vbguest  安装共享插件
+vagrant up
+
+
+docker run -d --name=test1 busybox /bin/sh -c "while true; do sleep 3600;done"
+docker exec -it test1 /bin/sh
+
+Linux Network Namespace网络命名空间dome
+ip netns add test1
+ip netns list
+ip netns delete test1
+
+添加两个相通的端口
+ip link add veth-test1 type veth peer name veth-test2
+
+veth-test1设置到test1
+ip link set veth-test1 netns test1
+ip link set veth-test2 netns test2
+
+设置端口ip
+ip netns exec test1 ip addr add 192.168.1.1/24 dev veth-test1
+ip netns exec test2 ip addr add 192.168.1.2/24 dev veth-test2
+
+把启动端口
+ip netns exec test1 ip link set dev veth-test1 up
+ip netns exec test2 ip link set dev veth-test2 up
+
+
+
+容器之间的相互访问是通过docker0这个网络命名空间作为桥连中转
+container1       container2
+172.17.0.3       172.17.0.2
+            链接
+          docker0
+         172.17.0.1
+      链接         链接
+    eth0             eth1
+
+
+创建容器test2的时候，把test2连接到test1
+docker run -d --name test2 --link test1 busybox /bin/sh -c "while true; do sleep 3600; done"    
+docker exec -it test2 /bin/sh
+ping test1   也可以ping通
+
+
+docker network create -d bridge my-bridge
+docker network ls
+
+docker run -d --name test3 --network my-bridge busybox /bin/sh -c "while true; do sleep 3600; done"
+
+链接my-bridge、test2
+docker network connect my-bridge test2
+
+
+docker network ls
+docker network inspect  networkId
+
+test2、test3都链接到了my-bridge，test2、test3可以相互ping通。
+系统默认的bridge（docker0）具备物理主机ping容器的能力，但不具备让container相互ping通的功能
+docker exec -it test3 /bin/sh
+ping test2
+
+
+
+docker run --name web -d nginx  安装nginx服务
+docker inspect bridge
+telnet bridge连接的container
+宿主机器可以访问nginx container
+
+端口映射，把本地的80绑定到容器中的80，外部网络就可以访问nginx就可以给外部访问了
+docker run --name web -d -p 80:80 nginx
+直接在浏览器访问 http://192.168.205.10/
+
+none类型的network，没有ip、mac地址，只能在物理机中docker exec -it test4 /bin/sh访问
+docker run -d --name test4 --network none busybox /bin/sh -c "while true; do sleep 3600; done"
+
+host类型的network，容器test5和物理主机公用network space，端口被公用、会有冲突
+docker run -d --name test5 --network host busybox /bin/sh -c "while true; do sleep 3600; done"
+
+
+
+创建redis  container
+docker run -d --name redis redis
+
+vim app.py
+from flask import Flask
+from redis import Redis
+import os
+import socket
+
+app = Flask(__name__)
+redis = Redis(host=os.environ.get('REDIS_HOST', '127.0.0.1'), port=6379)
+
+
+@app.route('/')
+def hello():
+    redis.incr('hits')
+    return 'Hello Container World! I have been seen %s times and my hostname is %s.\n' % (redis.get('hits'),socket.gethostname())
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
+
+vim Dockerfile
+FROM python:2.7
+LABEL maintaner="Peng Xiao xiaoquwl@gmail.com"
+COPY . /app
+WORKDIR /app
+RUN pip install flask redis
+EXPOSE 5000
+CMD [ "python", "app.py" ]    
+
+-p本地5000端口绑定到容器flash-redis的5000端口，-e指定容器环境变量，app.py中使用了环境变量REDIS_HOST
+docker run -d -p 5000:5000 --link redis --name flash-redis -e REDIS_HOST=redis flash-redis
+
+
+
+
+************************docker数据存储VOLUME************************
+mysql的Dockerfile
+VOLUME /var/lib/mysql 指定数据存储在物理机上位置
+
+运行mysql container，mysql1产生的数据写入到  mysql:/var/lib/mysql指定存储位置，但数据却在/var/lib/docker/volumes/mysql中 
+docker run -d -v mysql:/var/lib/mysql --name mysql1 -e MYSQL_ALLOW_EMPTY_PASSWORD=true mysql:5.7.19
+docker exec -it mysql1 /bin/bash
+
+mysql -u root
+create database test001;
+
+删除mysql1，创建mysql2，使用同样的volume，mysql2中有test001数据库
+
+-v当期目录和容器中的/usr/share/nginx/html目录是同步的
+docker run -d -v $(pwd):/usr/share/nginx/html -p 8080:80 --name web docker-nginx
+
+vim index.html
+curl 127.0.0.1:8080  发现index.html也修改了
