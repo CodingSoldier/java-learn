@@ -487,3 +487,227 @@ docker run -d -v $(pwd):/usr/share/nginx/html -p 8080:80 --name web docker-nginx
 
 vim index.html
 curl 127.0.0.1:8080  发现index.html也修改了
+
+
+
+
+
+****************************compose管理多个容器***************************
+安装mysql、wordpress
+安装mysql，-v参数要注意
+docker run -d -v mysql:/var/lib/mysql --name mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_ALLOW_EMPTY_PASSWORD=false -e MYSQL_DATABASE=wordpress mysql:5.7.19
+安装运行wordpress
+docker run -d --name wordpress -e WORDPRESS_DB_HOST=mysql:3306 -e WORDPRESS_DB_PASSWORD=root --link mysql -p 8080:80 wordpress
+
+日志
+docker logs  --tail=100 container
+
+compose文档
+service 代表一个container
+
+
+
+安装docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+
+
+
+docker-compose.yml
+
+version: '3'
+
+services:
+
+  wordpress:
+    image: wordpress
+    ports:
+      - 8080:80
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_PASSWORD: root
+    networks:
+      - my-bridge
+
+  mysql:
+    image: mysql:5.7.19
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'false'
+      MYSQL_DATABASE: wordpress
+    volumes:
+      - mysql:/var/lib/mysql
+    networks:
+      - my-bridge
+
+volumes:
+  mysql:
+
+networks:
+  my-bridge:
+    driver: bridge
+
+
+
+docker-compose up
+docker-compose -f XXX.yml up
+docker-compose ps
+
+docker-compose stop  停止容器
+docker-compose down  停止并删除容器
+docker-compose start
+docker-compose up -d  后台启动
+docker-compose images
+docker-compose exec mysql bash
+
+
+
+
+
+vim app.py
+vim Dockerfile
+vim docker-compose.yml
+
+version: '3'
+
+services:
+
+  redis:
+    image: redis
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:5000
+    environment:
+      REDIS_HOST: redis
+
+
+docker-compose up -d    通过docker-compose构建、启动容器
+http://192.168.205.10:8080/
+
+
+
+
+于haproxy整合
+vim docker-compose.yml
+
+version: '3'
+services:
+  redis:
+    image: redis
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      REDIS_HOST: redis
+  lb:
+    image: dockercloud/haproxy
+    links:
+      - web
+    ports:
+      - 8080:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock 
+
+web  container起3个服务
+docker-compose up -d --scale web=3
+
+curl 127.0.0.1:8080   负载均衡
+
+
+
+xftp要使用vagrant账号
+docker-compose.yml 构建多个项目
+chapter6 ——> example-voting-app
+
+
+
+
+
+*****************************swarm*************************************
+192.168.205.10上运行
+docker swarm init --advertise-addr=192.168.205.10
+
+Swarm初始化：当前节点（lek64vvcg63lav3uol5s6o0ry）现在是一个manage。
+要将worker添加到此swarm，请在其他机器上（192.168.205.10、11）运行以下命令：
+docker swarm join --token SWMTKN-1-3hobjjmxrwg03di8qpbu76y98ox0w1b0cjw2m35gh4rh6joow2-92wgfo6attn8o535345xc4qj0 192.168.205.10:2377
+
+
+192.168.205.10查看swarm节点
+docker node ls
+
+在swarm模式下，基本上不用docker run，而是用docker service create。service就是一个container
+
+docker service create --name demo busybox sh -c "while true; do sleep 3600; done"
+
+docker service ls  查看service
+
+docker service scale demo=5
+
+docker service ls  查看service
+
+docker service ps demo  查看demo这个service，有5个container分布在3个节点上
+
+可在3节点上执行 docker container ls 查看
+
+
+docker container rm -f containerId  删除节点后，swarm还会重新起一个节点，保证scale依旧是5
+
+docker service rm demo  删除service
+
+
+manage机器上创建一个网络
+docker network create -d overlay demo
+docker network ls
+
+
+新建mysql的service
+docker service create --name mysql \
+--env MYSQL_ROOT_PASSWORD=root --env MYSQL_ALLOW_EMPTY_PASSWORD=false --env MYSQL_DATABASE=wordpress \
+--network demo --mount type=volume,source=mysql-data,destination=/var/lib/mysql mysql:5.7.19
+
+
+docker service ls
+docker service ps mysql
+
+创建wordpress
+docker service create --name wordpress -p 80:80 --env WORDPRESS_DB_PASSWORD=root --env WORDPRESS_DB_HOST=mysql --network demo wordpress
+
+
+wordpress在3个节点上都能访问，并且数据库用的是同一个
+
+
+
+RoutingMesh通信
+Internal 容器和容器之间访问通过overlay网络（就是通过虚拟ip访问）
+
+docker service create --name whoami -p 8000:8000 --network demo -d jwilder/whoami
+
+docker service create --name client -d --network demo busybox sh -c "while true; do sleep 3600; done"
+
+进入client
+docker exec -it 9d683e867211 sh
+ping whoami  能ping通
+
+docker service scale whoami=2  建两个whoami
+ping whoami  ping的ip地址都是同一个，ping的是虚拟ip，不是容器中的真实ip
+
+swarm会给每个服务新建一虚拟ip，一个服务可以有多个task节点，一个虚拟ip关联多个task节点的真实ip
+swarm对外提供虚拟ip，服务之间调用也是用虚拟ip
+
+
+在client容器中访问whoami，轮询两个whoami的task节点
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,10 @@
+http://www.liangxiansen.cn/2017/04/06/consul/#%E4%BD%BF%E7%94%A8consul
+
+在192.168.101.129上启动consul
+
+consul agent -server -bootstrap-expect 3 -data-dir /tmp/consul -node=s1 -bind=192.168.101.129 -ui-dir ./consul_ui/ -rejoin -client 0.0.0.0
+
+默认使用端口8301
+
+在192.168.205.10 上执行
+consul agent -data-dir /tmp/consul -node=c1 -bind=192.168.205.10 -join 192.168.101.129

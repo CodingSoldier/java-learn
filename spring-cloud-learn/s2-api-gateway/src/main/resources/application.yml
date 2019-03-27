@@ -1,0 +1,32 @@
+server:
+  port: 9999
+
+spring:
+  application:
+    name: s2-api-gateway
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        health-check-interval: 60s
+        service-name: ${spring.application.name}
+        instance-id: ${spring.application.name}-${server.port}
+        health-check-url: http://localhost:9999/check
+        enabled: true
+        query-passing: true
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: TO_CONSUL_CLIENT
+          uri: lb://consul-client
+          predicates:
+            - Path=/consulclient/**
+          filters:
+            - StripPrefix=1
+
+management:
+  security:
+    enabled: false
