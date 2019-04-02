@@ -705,9 +705,51 @@ swarm对外提供虚拟ip，服务之间调用也是用虚拟ip
 
 
 
+iptables -nL -t nat
+Chain DOCKER-INGRESS (2 references)
+target     prot opt source               destination         
+DNAT       tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:8000 to:172.18.0.2:8000
+
+
+docker network inspect docker_gwbridge
+ingress-sbox 这个container的网络地址就是172.18.0.2
+
+ls /var/run/docker/netns
+nsenter --net=/var/run/docker/netns/ingress_sbox 
+ip a
+
+
+swarm-worker1
+yum install -y ipvsadm
+ ipvsadm -l
+
+
+
+
+docker stack
+
+docker-compose.yml  使用chapter7
+ docker stack deploy wordpress --compose-file=docker-compose.yml
+
+ docker stack ps wordpress
+docker stack services  wordpress
+
+docker stack rm wordpress
+
+
+chapter7 docker-compose.yml
+docker stack deploy example --compose-file=docker-compose.yml
+docker stack ls
 
 
 
 
 
+DockerSecret存储敏感数据
+mkdir secret-example
+vim password
+admin123
+docker secret create my-pw password 
+docker secret ls
 
+ echo "adminadmin" | docker secret create my-pw2 -
