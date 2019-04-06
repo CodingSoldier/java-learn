@@ -705,6 +705,10 @@ swarm对外提供虚拟ip，服务之间调用也是用虚拟ip
 
 
 
+iptables -nL -t nat
+Chain DOCKER-INGRESS (2 references)
+target     prot opt source               destination         
+DNAT       tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:8000 to:172.18.0.2:8000
 
 
 ################################################
@@ -717,11 +721,19 @@ docker service create --name client --secret my-pw busybox sh -c "while true; do
 docker exec -it 2e72f9b32b2e sh
 cat /run/secrets/my-pw 可以看到传进来的--secret my-pw
 
+docker network inspect docker_gwbridge
+ingress-sbox 这个container的网络地址就是172.18.0.2
+
+
+ls /var/run/docker/netns
+nsenter --net=/var/run/docker/netns/ingress_sbox 
+ip a
 
 从secrets中读取password
 docker service create --name db --secret my-pw -e MYSQL_ROOT_PASSWORD_FILE=/run/secrets/my-pw mysql:5.7.19
 docker exec -it f41b26fc473e sh
 mysql -u root -padmin123
+
 
 docker-compose.yml 使用 --secrets 看chapter7 -> secret-example
 
@@ -742,6 +754,39 @@ docker service update --publish-rm 8080:5000 --publish-add 8088:5000 web
 
 
 
+
+
+docker stack
+
+docker-compose.yml  使用chapter7
+ docker stack deploy wordpress --compose-file=docker-compose.yml
+
+ docker stack ps wordpress
+docker stack services  wordpress
+
+docker stack rm wordpress
+
+
+chapter7 docker-compose.yml
+docker stack deploy example --compose-file=docker-compose.yml
+docker stack ls
+
+
+
+
+
+DockerSecret存储敏感数据
+mkdir secret-example
+vim password
+admin123
+docker secret create my-pw password 
+docker secret ls
+
+ echo "adminadmin" | docker secret create my-pw2 -
+
+ swarm-worker1
+yum install -y ipvsadm
+ ipvsadm -l
 
 
 
@@ -830,4 +875,8 @@ kubectl get pods -o wide
 
  kubectl delete -f .\rc_nginx.yml
  kubectl get pods 
+
+
+
+
 

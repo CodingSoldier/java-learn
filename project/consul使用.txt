@@ -1,10 +1,12 @@
-http://www.liangxiansen.cn/2017/04/06/consul/#%E4%BD%BF%E7%94%A8consul
+docker pull consul:0.8.0  
+docker run -d -e 'CONSUL_LOCAL_CONFIG={"skip_leave_on_interrupt": true}' --name=node1 consul:0.8.0 agent -server -bind=172.17.0.2  -bootstrap-expect=3 -node=node1
 
-在192.168.101.129上启动consul
 
-consul agent -server -bootstrap-expect 3 -data-dir /tmp/consul -node=s1 -bind=192.168.101.129 -ui-dir ./consul_ui/ -rejoin -client 0.0.0.0
+  docker run -d -e 'CONSUL_LOCAL_CONFIG={"skip_leave_on_interrupt": true}' --name=node2 consul agent -server -bind=172.17.0.3  -join=172.17.0.2 -node-id=$(uuidgen | awk '{print tolower($0)}')  -node=node2
 
-默认使用端口8301
+  docker run -d -e 'CONSUL_LOCAL_CONFIG={"skip_leave_on_interrupt": true}' --name=node3 consul agent -server -bind=172.17.0.4  -join=172.17.0.2 -node-id=$(uuidgen | awk '{print tolower($0)}')  -node=node3 -client=172.17.0.4
 
-在192.168.205.10 上执行
-consul agent -data-dir /tmp/consul -node=c1 -bind=192.168.205.10 -join 192.168.101.129
+
+    docker run -d -e 'CONSUL_LOCAL_CONFIG={"leave_on_terminate": true}' --name=node4 consul agent -bind=172.17.0.5 -retry-join=172.17.0.2 -node-id=$(uuidgen | awk '{print tolower($0)}')  -node=node4
+
+
