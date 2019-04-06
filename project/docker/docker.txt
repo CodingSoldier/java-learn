@@ -707,7 +707,127 @@ swarm对外提供虚拟ip，服务之间调用也是用虚拟ip
 
 
 
+################################################
+vim password
+admin123456
+docker secret create my-pw password
+rm -rf password 
+echo "adminadmin" | docker secret create my-pw2 -
+docker service create --name client --secret my-pw busybox sh -c "while true; do sleep 3600; done"
+docker exec -it 2e72f9b32b2e sh
+cat /run/secrets/my-pw 可以看到传进来的--secret my-pw
+
+
+从secrets中读取password
+docker service create --name db --secret my-pw -e MYSQL_ROOT_PASSWORD_FILE=/run/secrets/my-pw mysql:5.7.19
+docker exec -it f41b26fc473e sh
+mysql -u root -padmin123
+
+docker-compose.yml 使用 --secrets 看chapter7 -> secret-example
+
+
+docker service 发版本
+docker service create --name web --publish 8080:5000 --network demo xiaopeng163/python-flask-demo:1.0
+
+docker service scale web=2
+work节点 sh -c "while true; do curl 127.0.0.1:8080&&sleep 1; done"
+
+docker service update --image xiaopeng163/python-flask-demo:2.0 web
+一个一个地更新service节点
+
+docker service update --publish-rm 8080:5000 --publish-add 8088:5000 web
+更新端口
 
 
 
+
+
+
+
+
+
+
+docker cloud
+创建Repositories，Builds选择github的仓库
+
+github创建一个tag，docker cloud构建
+
+
+安装docker ee https://docs.docker.com/install/linux/docker-ee/centos/
+申请一个月试用的url
+export DOCKERURL="https://storebits.docker.com/ee/centos/sub-8849c40a-4a94-4143-ac8f-b62549b140fd"
+
+yum -y install docker-ee-stable-17.06 docker-ee-cli-stable-17.06 containerd.io
+
+mananger节点安装ucp
+https://docs.docker.com/ee/end-to-end-install/
+
+docker container run --rm -it --name ucp \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  docker/ucp:2.2.4 install \
+  --host-address 192.168.205.50 \
+  --interactive
+
+设置用户名和密码 admin adminadmin  
+ucp登陆页面
+https://192.168.205.50/login/
+
+
+enzi --db-addr=192.168.205.50:12383 passwd --interactive
+
+
+work节点安装dtr，dtr管理image
+docker run -it --rm docker/dtr install \
+  --dtr-external-url 192.168.205.60  \
+  --ucp-node docker-ee-worker  \
+  --ucp-username admin  \
+  --ucp-url https://192.168.205.50 \
+  --ucp-insecure-tls
+
+
+
+
+******************************K8s*************************************
+minikube  https://github.com/kubernetes/minikube/releases
+
+1、新建C:\mysoftware\kubernetes目录，放入minikube.exe、kubectl.exe
+2、配置环境变量
+3、 minikube start  若出错重装，需需要先执行 minikube delete
+4、kubectl config view
+
+
+使用chapter9代码
+kubectl create -f .\pod_nginx.yml
+kubectl get pods
+kubectl get pods -o wide
+minikube ssh  进入到虚拟机中
+docker exec -it 680c066d6c67 sh
+也可以  kubectl exec -it nginx sh
+kubectl describe pods nginx  找到ip
+minikube ssh
+curl http://172.17.0.3
+ kubectl port-forward nginx 8080:80
+ http://localhost:8080/
+
+
+重启后需要， minikube start
+ kubectl delete -f .\chapter9\labs\pod-basic\pod_nginx.yml
+ kubectl get pods
+ kubectl create -f .\rc_nginx.yml
+  kubectl get rc
+kubectl get pods  
+kubectl delete pods nginx-bsvvp
+kubectl get pods
+会重启一个pods，维持3个正在运行
+
+设置有两个nginx的pod在运行
+kubectl scale rc nginx --replicas=2
+kubectl get pods
+kubectl get rc
+
+网络问题
+kubectl get pods -o wide
+
+ kubectl delete -f .\rc_nginx.yml
+ kubectl get pods 
 
