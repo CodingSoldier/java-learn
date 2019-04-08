@@ -17,7 +17,7 @@ import java.util.List;
  * @Date: 2019-04-01
  */
 @Configuration
-public class Configurer extends WebMvcConfigurationSupport {
+public class MyWebMvcConfiguration extends WebMvcConfigurationSupport {
 
     //定义时间格式转换器
     @Bean

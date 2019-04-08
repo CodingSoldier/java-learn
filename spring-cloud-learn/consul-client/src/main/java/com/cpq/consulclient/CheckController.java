@@ -1,6 +1,8 @@
 package com.cpq.consulclient;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -11,10 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CheckController {
 
+    @PostMapping("/p1")
+    public String check(@RequestBody Log log){
+        System.out.println(log.toString());
+        return "ok1";
+    }
+
     @GetMapping("check")
     public String check(){
         System.out.println("**************ok1111");
-
         return "ok1";
     }
 

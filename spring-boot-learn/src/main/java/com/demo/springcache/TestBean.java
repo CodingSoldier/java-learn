@@ -70,4 +70,21 @@ public class TestBean {
         springCacheService.deleteAllEntries();
     }
 
+    @Test
+    public void add1(){
+        SpringCache springCache = new SpringCache();
+        springCache.setId("2626218d-c370-4817-be18-e6c60d096268");
+        springCache.setName("nnnnnnnnnnnn111111111");
+        springCache.setNum(new Random().nextInt(100));
+        springCache.setDate(new Date());
+        redisService.valueSetObject("key1", springCache);
+    }
+
+    @Test
+    public void get1(){
+        SpringCache springCache = (SpringCache)redisService.valueGetObject("key1", SpringCache.class);
+        System.out.println(springCache.getName());
+        System.out.println(springCache.getId());
+    }
+
 }

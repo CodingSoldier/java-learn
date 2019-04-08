@@ -5,10 +5,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class DcController {
@@ -30,6 +33,24 @@ public class DcController {
         String services = "Services: " + discoveryClient.getServices();
         //System.out.println(services);
         return services;
+    }
+
+    @GetMapping("/map")
+    public Map map(HttpServletRequest request) throws Exception{
+
+        Map map = new HashMap();
+        map.put("status", 0);
+        map.put("data", 1234546);
+        return map;
+    }
+
+    @PostMapping("/post/map")
+    public Map pmap(@RequestBody Map<String, String> param) throws Exception{
+
+        Map map = new HashMap();
+        map.put("status", 100);
+        map.put("data", "data");
+        return map;
     }
 
     @GetMapping("/dc2")

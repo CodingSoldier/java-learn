@@ -9,6 +9,7 @@ import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +41,9 @@ public class AccessFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
+        HttpServletRequest request = ctx.getRequest();
         HttpServletResponse response = ctx.getResponse();
+        ctx.addZuulRequestHeader("LOG_ID", "xxx");
 
         try {
             //HttpServletRequest request = ctx.getRequest();
