@@ -2,7 +2,6 @@ package com.thinkinginjava.m_collection_map;
 
 import java.util.*;
 
-import static org.eclipse.osgi.internal.debug.Debug.print;
 
 public class M_Collection_map {
 }
@@ -45,7 +44,7 @@ class ArrayMapTest{
         try {
             map.put("key3", "value3"); // 添加的键值对超过map的存储容量
         } catch(RuntimeException e) {
-            print("Too many objects!\n");
+            System.out.println("Too many objects!\n");
         }
         System.out.println(map.get("key1"));
     }

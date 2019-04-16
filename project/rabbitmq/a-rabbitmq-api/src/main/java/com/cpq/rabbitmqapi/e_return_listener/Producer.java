@@ -51,10 +51,6 @@ public class Producer {
 				System.err.println("body: " + new String(body));
 			}
 		});
-		
-		
 
-
-		
 	}
 }
