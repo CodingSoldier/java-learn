@@ -1,0 +1,17 @@
+######################安装ubuntu-16.04.6-server-amd64.iso##############
+必须装英文版
+https://blog.csdn.net/ai2000ai/article/details/81167288
+
+允许root登陆
+https://jingyan.baidu.com/article/066074d615b8f4c3c31cb067.html
+
+#设置xshell使用root登陆
+设置(不是全局设置)——网络——端口转发
+127.0.0.1:9091 转到 Ubuntu主机ip:端口
+
+
+
+
+
+
+

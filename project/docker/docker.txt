@@ -761,7 +761,7 @@ docker stack
 docker-compose.yml  使用chapter7
  docker stack deploy wordpress --compose-file=docker-compose.yml
 
- docker stack ps wordpress
+docker stack ps wordpress
 docker stack services  wordpress
 
 docker stack rm wordpress
@@ -856,10 +856,10 @@ curl http://172.17.0.3
 
 
 重启后需要， minikube start
- kubectl delete -f .\chapter9\labs\pod-basic\pod_nginx.yml
- kubectl get pods
- kubectl create -f .\rc_nginx.yml
-  kubectl get rc
+kubectl delete -f .\chapter9\labs\pod-basic\pod_nginx.yml
+kubectl get pods
+kubectl create -f .\rc_nginx.yml
+kubectl get rc
 kubectl get pods  
 kubectl delete pods nginx-bsvvp
 kubectl get pods
@@ -876,7 +876,8 @@ kubectl get pods -o wide
  kubectl delete -f .\rc_nginx.yml
  kubectl get pods 
 
-
+创建deployments
+ kubectl create -f .\deployment_nginx.yml
 
 
 
