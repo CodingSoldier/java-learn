@@ -10,8 +10,7 @@ public class Consumer {
 
 	
 	public static void main(String[] args) throws Exception {
-		
-		
+
 		ConnectionFactory connectionFactory = new ConnectionFactory();
 		connectionFactory.setHost("localhost");
 		connectionFactory.setPort(5672);
@@ -38,9 +37,6 @@ public class Consumer {
 			String msg = new String(delivery.getBody());
 			System.err.println("消费者: " + msg);
 		}
-		
-		
-		
 		
 		
 	}

@@ -3,7 +3,6 @@ package com.thinkinginjava;
 import java.util.*;
 
 import static java.util.Collections.binarySearch;
-import static org.eclipse.osgi.internal.debug.Debug.print;
 
 
 public class M_Collection {
@@ -242,18 +241,18 @@ class Countries {
         return new ArrayList<String>(select(size).keySet());
     }
     public static void main(String[] args) {
-        print(capitals(10));
-        print(names(10));
-        print(new HashMap<String,String>(capitals(3)));
-        print(new LinkedHashMap<String,String>(capitals(3)));
-        print(new TreeMap<String,String>(capitals(3)));
-        print(new Hashtable<String,String>(capitals(3)));
-        print(new HashSet<String>(names(6)));
-        print(new LinkedHashSet<String>(names(6)));
-        print(new TreeSet<String>(names(6)));
-        print(new ArrayList<String>(names(6)));
-        print(new LinkedList<String>(names(6)));
-        print(capitals().get("BRAZIL"));
+        System.out.println(capitals(10));
+        System.out.println(names(10));
+        System.out.println(new HashMap<String,String>(capitals(3)));
+        System.out.println(new LinkedHashMap<String,String>(capitals(3)));
+        System.out.println(new TreeMap<String,String>(capitals(3)));
+        System.out.println(new Hashtable<String,String>(capitals(3)));
+        System.out.println(new HashSet<String>(names(6)));
+        System.out.println(new LinkedHashSet<String>(names(6)));
+        System.out.println(new TreeSet<String>(names(6)));
+        System.out.println(new ArrayList<String>(names(6)));
+        System.out.println(new LinkedList<String>(names(6)));
+        System.out.println(capitals().get("BRAZIL"));
     }
 }
 
@@ -343,45 +342,45 @@ class SList<T> {
 class E08_SList {
     public static void main(String[] args) {
 // First, show some use cases for SListIterator
-        print("Demonstrating SListIterator...");
+        System.out.println("Demonstrating SListIterator...");
         SList<String> sl = new SList<String>();
-        print(sl);
+        System.out.println(sl);
         SListIterator<String> slit = sl.iterator();
         slit.add("One");
         slit.add("Two");
         slit.add("Three");
-        print(slit.hasNext());
-        print(sl);
+        System.out.println(slit.hasNext());
+        System.out.println(sl);
         slit = sl.iterator();
         slit.add("Four");
         for(; slit.hasNext();)
-            print(slit.next());
-        print(sl);
+            System.out.println(slit.next());
+        System.out.println(sl);
         slit = sl.iterator();
-        print(slit.next());
+        System.out.println(slit.next());
         slit.remove();
-        print(slit.next());
-        print(sl);
+        System.out.println(slit.next());
+        System.out.println(sl);
 // Now, show the same use cases for ListIterator, too
-        print("\nDemonstrating ListIterator...");
+        System.out.println("\nDemonstrating ListIterator...");
         List<String> l = new ArrayList<String>();
-        print(l);
+        System.out.println(l);
         ListIterator<String> lit = l.listIterator();
         lit.add("One");
         lit.add("Two");
         lit.add("Three");
-        print(lit.hasNext());
-        print(l);
+        System.out.println(lit.hasNext());
+        System.out.println(l);
         lit = l.listIterator();
         lit.add("Four");
         for(; lit.hasNext();)
-            print(lit.next());
-        print(l);
+            System.out.println(lit.next());
+        System.out.println(l);
         lit = l.listIterator();
-        print(lit.next());
+        System.out.println(lit.next());
         lit.remove();
-        print(lit.next());
-        print(l);
+        System.out.println(lit.next());
+        System.out.println(l);
     }
 }
 
@@ -535,37 +534,37 @@ class E10_CustomSortedSet {
         Collections.addAll(sortedSet,
                 "one two three four five six seven eight"
                         .split(" "));
-        print(sortedSet);
+        System.out.println(sortedSet);
         String low = sortedSet.first();
         String high = sortedSet.last();
-        print(low);
-        print(high);
+        System.out.println(low);
+        System.out.println(high);
         Iterator<String> it = sortedSet.iterator();
         for(int i = 0; i <= 6; i++) {
             if(i == 3) low = it.next();
             if(i == 6) high = it.next();
         }
-        print(low);
-        print(high);
-        print(sortedSet.subSet(low, high));
-        print(sortedSet.headSet(high));
-        print(sortedSet.tailSet(low));
-        print(sortedSet.contains("three"));
-        print(sortedSet.contains("eleven"));
-        print(sortedSet.addAll(Arrays.asList(
+        System.out.println(low);
+        System.out.println(high);
+        System.out.println(sortedSet.subSet(low, high));
+        System.out.println(sortedSet.headSet(high));
+        System.out.println(sortedSet.tailSet(low));
+        System.out.println(sortedSet.contains("three"));
+        System.out.println(sortedSet.contains("eleven"));
+        System.out.println(sortedSet.addAll(Arrays.asList(
                 "three", "eleven")));
-        print(sortedSet);
-        print(sortedSet.retainAll(Arrays.asList(
+        System.out.println(sortedSet);
+        System.out.println(sortedSet.retainAll(Arrays.asList(
                 "three", "eleven")));
-        print(sortedSet);
+        System.out.println(sortedSet);
 // Demonstrate data integrity
         try {
             sortedSet.addAll(Arrays.asList("zero", null));
         } catch(NullPointerException e) {
-            System.out.println("Null elements not supported!");
+            System.out.print("Null elements not supported!");
         }
 // The set will not contain "zero"!
-        print(sortedSet);
+        System.out.println(sortedSet);
     }
 }
 
@@ -674,9 +673,9 @@ class SimpleHashMap<K, V> extends AbstractMap<K,V>{
          SimpleHashMap<String,String> m =
                  new SimpleHashMap<String,String>();
          m.putAll(Countries.capitals(25));
-         System.out.println(m);
-         System.out.println(m.get("ERITREA"));
-         System.out.println(m.entrySet());
+         System.out.print(m);
+         System.out.print(m.get("ERITREA"));
+         System.out.print(m.entrySet());
      }
 }
 

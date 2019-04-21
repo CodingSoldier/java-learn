@@ -1,8 +1,6 @@
 package com.thinkinginjava;
 
 import com.alibaba.fastjson.JSON;
-import typeinfo.pets.Mouse;
-import typeinfo.pets.Pet;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -31,8 +29,8 @@ class Holder3<T>{
 }
 class E01_PetsHolder {
     public static void main(String[] args) {
-        Holder3<Pet> h3 = new Holder3<Pet>(new Mouse("Mickey"));
-        System.out.println(h3.get());
+        //Holder3<Pet> h3 = new Holder3<Pet>(new Mouse("Mickey"));
+        //System.out.println(h3.get());
     }
 }
 
