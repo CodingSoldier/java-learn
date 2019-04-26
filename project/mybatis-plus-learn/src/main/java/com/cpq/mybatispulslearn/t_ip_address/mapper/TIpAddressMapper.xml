@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cpq.mybatispulslearn.t_ip_address.mapper.TIpAddressMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cpq.mybatispulslearn.t_ip_address.entity.TIpAddress">
+        <result column="ip_start" property="ipStart" />
+        <result column="ip_end" property="ipEnd" />
+        <result column="ip10d_start" property="ip10dStart" />
+        <result column="ip10d_end" property="ip10dEnd" />
+        <result column="address" property="address" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ip_start, ip_end, ip10d_start, ip10d_end, address
+    </sql>
+
+</mapper>

@@ -30,7 +30,7 @@
       <version>2.9.0</version>
     </dependency>
 
-    <!--rabbitmq-->
+    <!--commonproducer-->
     <dependency>
       <groupId>com.rabbitmq</groupId>
       <artifactId>amqp-client</artifactId>

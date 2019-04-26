@@ -135,7 +135,7 @@ public class E_Test {
     //使用到了ImageMessageConverter、MessageDelegate#consumeMessage(File file)
     @Test
     public void testImg() throws Exception {
-        byte[] body = Files.readAllBytes(Paths.get("e:/rabbitmq-from-file", "picture.png"));
+        byte[] body = Files.readAllBytes(Paths.get("e:/commonproducer-from-file", "picture.png"));
         MessageProperties messageProperties = new MessageProperties();
         messageProperties.setContentType("image/png");
         messageProperties.getHeaders().put("extName", "png");
@@ -146,7 +146,7 @@ public class E_Test {
     //使用了PDFMessageConverter、MessageDelegate#consumeMessage(File file)
     @Test
     public void tesPDF() throws Exception {
-        byte[] body = Files.readAllBytes(Paths.get("e:/rabbitmq-from-file", "mysql.pdf"));
+        byte[] body = Files.readAllBytes(Paths.get("e:/commonproducer-from-file", "mysql.pdf"));
         MessageProperties messageProperties = new MessageProperties();
         messageProperties.setContentType("application/pdf");
         Message message = new Message(body, messageProperties);

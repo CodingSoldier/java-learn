@@ -27,7 +27,7 @@ public class ImageMessageConverter implements MessageConverter {
 		
 		byte[] body = message.getBody();
 		String fileName = UUID.randomUUID().toString();
-		String path = "e:/rabbitmq-to-file/" + fileName + "." + extName;
+		String path = "e:/commonproducer-to-file/" + fileName + "." + extName;
 		File f = new File(path);
 		try {
 			Files.copy(new ByteArrayInputStream(body), f.toPath());

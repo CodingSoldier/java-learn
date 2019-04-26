@@ -1,15 +1,10 @@
 package com.coq.rabbitmq.springboot.producer;
 
-import com.coq.rabbitmq.springboot.entity.Order;
+import com.example.rabbitmqbean.MyOrder;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 @Component
 public class RabbitSender {
@@ -21,9 +16,9 @@ public class RabbitSender {
 	final RabbitTemplate.ConfirmCallback confirmCallback= new RabbitTemplate.ConfirmCallback(){
 		@Override
 		public void confirm(CorrelationData correlationData, boolean ack, String cause){
-			System.out.println("confirm");
-			System.out.println("correlationData  "+correlationData);
-			System.out.println("ack " +ack);
+			System.out.println("ConfirmCallback##correlationData  "+correlationData.toString());
+			System.out.println("ConfirmCallback##ack " +ack);
+			System.out.println("ConfirmCallback##cause " +cause);
 			if (!ack){
 				System.out.println("1、没找到交换机。2、有交换机但是交换机没有routingKey。异常处理");
 			}
@@ -39,29 +34,40 @@ public class RabbitSender {
 					+ routingKey + ", replyCode: " + replyCode + ", replyText: " + replyText);
 		}
 	};
-
-	//运行testSender1()测试
-	public void send(Object message, Map<String, Object> properties) throws Exception{
-		MessageHeaders mhs = new MessageHeaders(properties);
-		Message msg = MessageBuilder.createMessage(message,mhs);
-		rabbitTemplate.setConfirmCallback(confirmCallback);
-		rabbitTemplate.setReturnCallback(returnCallback);
-		//id必须是全局唯一
-		CorrelationData correlationData = new CorrelationData("1234567890");
-		//要先在rabbitmq中新建exchange-1，并通过routingKey路由到一个队列
-		rabbitTemplate.convertAndSend("exchange-1", "springboot.def", msg, correlationData);
-	}
+    //
+	////运行testSender1()测试
+	//public void send(Object message, Map<String, Object> properties) throws Exception{
+	//	MessageHeaders mhs = new MessageHeaders(properties);
+	//	Message msg = MessageBuilder.createMessage(message,mhs);
+	//	rabbitTemplate.setConfirmCallback(confirmCallback);
+	//	rabbitTemplate.setReturnCallback(returnCallback);
+	//	//id必须是全局唯一
+	//	CorrelationData correlationData = new CorrelationData(Math.random()*100000D+"");
+	//	//要先在rabbitmq中新建exchange-1，并通过routingKey路由到一个队列
+	//	rabbitTemplate.convertAndSend("exchange-1", "springboot.def", msg, correlationData);
+	//}
 
 
 	/**
 	 * 运行ApplicationTests#testSender2()
-	 * rabbitmq-springboot-consumer项目的RabbitReceiver#onOrderMessage()收到消息
+	 * commonproducer-springboot-consumer项目的RabbitReceiver#onOrderMessage()收到消息
 	 */
-	public void sendOrder(Order order) throws Exception{
+	public void sendOrder(MyOrder order) throws Exception{
 		rabbitTemplate.setConfirmCallback(confirmCallback);
 		rabbitTemplate.setReturnCallback(returnCallback);
-		CorrelationData correlationData = new CorrelationData("12566523");
-		rabbitTemplate.convertAndSend("exchange-2", "springboot.123", order, correlationData);
+		String num = ((int)Math.ceil(Math.random()*100000))+"";
+		CorrelationData correlationData = new CorrelationData(num);
+        System.out.println("correlationData   "+num);
+		rabbitTemplate.convertAndSend("test-exchange-2", "test-exchange-2.abc", order, correlationData);
+	}
+
+	public void sendDead(MyOrder order) throws Exception{
+		rabbitTemplate.setConfirmCallback(confirmCallback);
+		rabbitTemplate.setReturnCallback(returnCallback);
+		String num = ((int)Math.ceil(Math.random()*100000))+"";
+		CorrelationData correlationData = new CorrelationData(num);
+        System.out.println("correlationData   "+num);
+		rabbitTemplate.convertAndSend("direct-dead-exchange", "direct-dead", order, correlationData);
 	}
 
 }
