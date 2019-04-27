@@ -1,0 +1,18 @@
+{
+    "CN": "$HOSTNAME",
+    "hosts": [
+        "$HOSTNAME",
+        "PRIVATE_IP"
+    ],
+    "key": {
+        "algo": "ecdsa",
+        "size": 256
+    },
+    "names": [
+        {
+            "C": "US",
+            "ST": "CA",
+            "L": "San Francisco"
+        }
+    ]
+}

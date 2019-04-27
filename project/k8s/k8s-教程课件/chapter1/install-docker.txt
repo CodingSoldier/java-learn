@@ -1,0 +1,23 @@
+在ubuntu 16.04上安装docker 17.03.2 ce版本的步骤(以在root用户下为例)：
+
+# apt-get update
+# apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+
+# curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+# add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+# apt-get update
+
+# apt-get install docker-ce=17.03.2~ce-0~ubuntu-xenial
+
+查看安装结果：
+# docker version
+# systemctl status docker
+# docker run hello-world
+
+
+
+
+
+
+
+

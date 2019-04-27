@@ -1,0 +1,13 @@
+
+安装weave cni插件：
+
+方法1:
+ # kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+
+方法2: （应对weave pod启动时出现：Network 10.32.0.0/12 overlaps with existing route xx.xx.xx.xx/16 on host 错误信息)
+
+ # curl -L "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')" > weave.yaml
+
+ vi weave.yaml
+	修改：IPALLOC_RANGE
+ # kubectl apply -f weave.yaml

@@ -1,0 +1,28 @@
+istio安装相关命令：
+
+# wget -c https://github.com/istio/istio/releases/download/1.0.2/istio-1.0.2-linux.tar.gz
+# kubectl apply -f istio-1.0.2/install/kubernetes/helm/istio/templates/crds.yaml
+
+# docker pull anjia0532/istio-release.proxy_init:1.0.2
+# docker pull anjia0532/istio-release.proxyv2:1.0.2
+# docker pull anjia0532/istio-release.galley:1.0.2
+# docker pull anjia0532/istio-release.grafana:1.0.2
+# docker pull anjia0532/istio-release.mixer:1.0.2
+# docker pull anjia0532/istio-release.pilot:1.0.2
+# docker pull anjia0532/istio-release.citadel:1.0.2
+# docker pull anjia0532/istio-release.servicegraph:1.0.2
+# docker pull anjia0532/istio-release.sidecar_injector:1.0.2
+
+# docker tag anjia0532/istio-release.proxy_init:1.0.2 gcr.io/istio-release/proxy_init:1.0.2
+# docker tag anjia0532/istio-release.proxyv2:1.0.2 gcr.io/istio-release/proxyv2:1.0.2
+# docker tag anjia0532/istio-release.galley:1.0.2 gcr.io/istio-release/galley:1.0.2
+# docker tag anjia0532/istio-release.grafana:1.0.2 gcr.io/istio-release/grafana:1.0.2
+# docker tag anjia0532/istio-release.mixer:1.0.2 gcr.io/istio-release/mixer:1.0.2
+# docker tag anjia0532/istio-release.pilot:1.0.2 gcr.io/istio-release/pilot:1.0.2
+# docker tag anjia0532/istio-release.citadel:1.0.2 gcr.io/istio-release/citadel:1.0.2
+# docker tag anjia0532/istio-release.servicegraph:1.0.2 gcr.io/istio-release/servicegraph:1.0.2
+# docker tag anjia0532/istio-release.sidecar_injector:1.0.2 gcr.io/istio-release/sidecar_injector:1.0.2
+
+# kubectl apply -f install/kubernetes/istio-demo.yaml
+
+

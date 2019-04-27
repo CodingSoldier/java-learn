@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: foo-namespace-limit-range
+spec:
+  limits:
+  - default:
+      cpu: 1
+      memory: 200Mi
+    defaultRequest:
+      cpu: 0.2
+      memory: 100Mi
+    max:
+      cpu: 2
+      memory: 2Gi
+    min:
+      cpu: 0.1
+      memory: 50Mi
+    type: Container
+  - max:
+      cpu: 4
+      memory: 3Gi
+    min:
+      cpu: 0.1
+      memory: 60Mi
+    type: Pod

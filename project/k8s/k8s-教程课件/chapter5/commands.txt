@@ -1,0 +1,44 @@
+本章涉及到的命令不完全列表：
+
+kubectl describe node/xxx
+kubectl get node/xxx -o yaml
+
+kubectl drain node/xxx
+kubectl delete nodes/xxx
+
+kubectl cordon node/xxx
+kubectl uncordon node/xxx
+
+kubectl get nodes --show-labels
+kubect get pods  --show-labels
+kubectl get services  --show-labels
+
+kubectl label pod PODNAME key1=value1
+kubectl label pod PODNAME key1-
+kubectl label pod PODNAME key1=value2 --overwrite
+
+kubectl create namespace foo
+kubectl delete namespace foo
+
+kubectl config get-contexts
+kubectl config use-context foo-ctx
+
+
+kubectl create -f xxxx.yaml
+kubectl delete pods/xxx
+kubectl delete -f xxx.yaml
+kubectl get pods
+kubectl get pod/xxxx
+kubectl get pod/xxxx  -o wide
+kubectl edit pod/xxxx
+kubectl describe pods/xxxx
+kubectl apply -f xxx.yaml
+
+kubectl delete service/xxx
+kubectl get service/xx
+kubectl describe service/xxx
+kubectl edit service/xx
+
+
+kubectl get events
+

@@ -1,0 +1,30 @@
+安装heapster的步骤：
+
+1. 下载镜像
+
+# docker pull anjia0532/heapster-grafana-amd64:v4.4.3
+# docker pull anjia0532/heapster-amd64:v1.5.3
+# docker pull anjia0532/heapster-influxdb-amd64:v1.3.3
+# docker tag anjia0532/heapster-grafana-amd64:v4.4.3 k8s.gcr.io/heapster-grafana-amd64:v4.4.3
+# docker tag anjia0532/heapster-amd64:v1.5.3 k8s.gcr.io/heapster-amd64:v1.5.3
+# docker tag anjia0532/heapster-influxdb-amd64:v1.3.3 k8s.gcr.io/heapster-influxdb-amd64:v1.3.3
+
+2. 下载heapster源码包
+
+# wget -c https://github.com/kubernetes/heapster/archive/master.zip
+# unzip master.zip
+
+3. 安装heapster
+
+# cd heapster-master/deploy/kube-config
+# kubectl create -f influxdb
+# kubectl create -f rbac/heapster-rbac.yaml
+
+4. 验证安装结果
+
+# kubectl top pods
+
+
+
+
+

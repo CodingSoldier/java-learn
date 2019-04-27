@@ -4,14 +4,115 @@ https://blog.csdn.net/ai2000ai/article/details/81167288
 
 允许root登陆
 https://jingyan.baidu.com/article/066074d615b8f4c3c31cb067.html
+root cpq..123
 
 #设置xshell使用root登陆
 设置(不是全局设置)——网络——端口转发
 127.0.0.1:9091 转到 Ubuntu主机ip:端口
 
+###################翻墙，虚拟机走物理机代理#######################
+vim /etc/profile
+export http_proxy=http://192.168.1.104:1080   #192.168.1.104:1080是走物理机的代理
+export https_proxy=http://192.168.1.104:1080
+source /etc/profile 
+curl www.google.com
+
+##################################安装docker###################################
+#更新包索引
+apt-get update
+
+# 添加Docker的官方GPG密钥
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
+# 设定稳定存储库
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+vi /etc/apt/sources.list
+/docker  查看是否已经添加docker官方源
+
+apt-get update
+
+# 查看可安装的docker版本
+apt-cache madison docker-ce
+# 安装docker17.03.2
+apt-get install docker-ce=17.03.2~ce-0~ubuntu-xenial
+# 查看版本
+docker version
+# 查看docker服务运行状态
+systemctl status docker
+
+docker run hello-world
+
+
+###############################设置kubernetes仓库源###################################
+安装kubeadm、kubelet、kubectl
+# 添加kubernetes公钥文件，没成功
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+# 手动下载apt-key.gpg
+https://packages.cloud.google.com/apt/doc/apt-key.gpg 
+# 拷贝到服务器然后安装
+apt-key add apt-key.gpg
+
+#将k8s官方源列表加入到本地源列表
+vi /etc/apt/sources.list.d/kubernetes.list
+deb http://apt.kubernetes.io/ kubernetes-xenial main
+#更新本地包缓存
+apt-get update
+
+apt-get install -y kubelet kubeadm kubectl
+
+kubeadm version
+
+kubectl version
+
+systemctl status kubelet
+#还不是运行状态
 
 
 
+
+####################复制出两个虚拟机#############################
+关闭虚拟机后，选择复制
+改名为 k8s-1、k8s-2、k8s-3
+MAC地址设定：为所有网卡重新生成MAC地址
+点击复制
+
+修改虚拟机newwork，端口转发 k8s-1为9091、k8s-2为9092、k8s-3为9093
+
+
+
+#########################安装kubernetes############################
+从k8s的mirror镜像库下载k8s master组件和node组件镜像步骤:
+
+1. master节点，要一个的下载
+
+docker pull anjia0532/kube-apiserver-amd64:v1.10.2
+docker pull anjia0532/kube-controller-manager-amd64:v1.10.2
+docker pull anjia0532/kube-scheduler-amd64:v1.10.2
+docker pull anjia0532/kube-proxy-amd64:v1.10.2
+docker pull anjia0532/etcd-amd64:3.1.12
+docker pull anjia0532/pause-amd64:3.1
+docker pull anjia0532/k8s-dns-sidecar-amd64:1.14.8
+docker pull anjia0532/k8s-dns-kube-dns-amd64:1.14.8
+docker pull anjia0532/k8s-dns-dnsmasq-nanny-amd64:1.14.8
+
+docker tag anjia0532/kube-apiserver-amd64:v1.10.2 k8s.gcr.io/kube-apiserver-amd64:v1.10.2
+docker tag anjia0532/kube-scheduler-amd64:v1.10.2 k8s.gcr.io/kube-scheduler-amd64:v1.10.2
+docker tag anjia0532/kube-controller-manager-amd64:v1.10.2 k8s.gcr.io/kube-controller-manager-amd64:v1.10.2
+docker tag anjia0532/kube-proxy-amd64:v1.10.2 k8s.gcr.io/kube-proxy-amd64:v1.10.2
+docker tag anjia0532/etcd-amd64:3.1.12 k8s.gcr.io/etcd-amd64:3.1.12
+docker tag anjia0532/pause-amd64:3.1 k8s.gcr.io/pause-amd64:3.1
+docker tag anjia0532/k8s-dns-sidecar-amd64:1.14.8 k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.8
+docker tag anjia0532/k8s-dns-kube-dns-amd64:1.14.8 k8s.gcr.io/k8s-dns-kube-dns-amd64:1.14.8
+docker tag anjia0532/k8s-dns-dnsmasq-nanny-amd64:1.14.8 k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.8
+
+2. worker节点
+
+docker pull anjia0532/pause-amd64:3.1
+docker pull anjia0532/kube-proxy-amd64:v1.10.2
+
+docker tag anjia0532/pause-amd64:3.1 k8s.gcr.io/pause-amd64:3.1
+docker tag anjia0532/kube-proxy-amd64:v1.10.2 k8s.gcr.io/kube-proxy-amd64:v1.10.2
 
 
 

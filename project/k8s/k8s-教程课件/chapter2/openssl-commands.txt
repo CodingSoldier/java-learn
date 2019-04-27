@@ -1,0 +1,12 @@
+本章有关的openssl操作的命令行：
+
+
+在/etc/kubernetes/pki下面：
+
+# openssl x509 -in ca.crt -noout -text
+# openssl x509 -in apiserver.crt -noout -text
+# openssl x509 -in apiserver-kubelet-client.crt -noout -text
+# openssl verify -CAfile ca.crt apiserver-etcd-client.crt
+
+# openssl x509 -in /etc/kubernetes/pki/ca.crt -noout -pubkey | openssl rsa -pubin -outform DER 2>/dev/null | sha256sum | cut -d' ' -f1
+

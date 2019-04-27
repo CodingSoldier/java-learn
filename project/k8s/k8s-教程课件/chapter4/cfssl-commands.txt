@@ -1,0 +1,9 @@
+本章涉及到的cfssl命令：
+
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=server config.json | cfssljson -bare server
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=peer config.json | cfssljson -bare peer
+
+cfssl gencert -ca=ca.crt -ca-key=ca.key -config=ca-config.json -profile=client client.json | cfssljson -bare client
+
+
+

@@ -1,0 +1,24 @@
+安装es logging设施时使用的命令：
+
+1. 安装es
+
+# docker pull docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+# mkdir -p ~/.data/es_data
+# chmod g+rwx ~/.data/es_data
+# chgrp 1000 ~/.data/es_data
+# chown 1000 -R ~/.data/es_data
+# docker run -d --restart=unless-stopped -p 9200:9200 -p 9300:9300 -v /root/.data/es_data:/usr/share/elasticsearch/data --ulimit nofile=65536:65536 -e "bootstrap.memory_lock=true" --ulimit memlock=-1:-1 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+# curl http://127.0.0.1:9200/_cat/health
+
+2. 安装fluentd
+
+# wget -c https://raw.githubusercontent.com/fluent/fluentd-kubernetes-daemonset/master/fluentd-daemonset-elasticsearch-rbac.yaml
+# kubectl apply -f fluentd-daemonset-elasticsearch-rbac.yaml
+
+3. 安装kibana
+
+# wget -c https://raw.githubusercontent.com/kubernetes/kubernetes/master/cluster/addons/fluentd-elasticsearch/kibana-deployment.yaml
+# wget -c https://raw.githubusercontent.com/kubernetes/kubernetes/master/cluster/addons/fluentd-elasticsearch/kibana-service.yaml
+
+# kubectl apply -f kibana-service.yaml
+# kubectl apply -f kibana-deployment.yaml

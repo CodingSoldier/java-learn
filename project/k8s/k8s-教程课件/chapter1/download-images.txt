@@ -1,0 +1,32 @@
+
+从k8s的mirror镜像库下载k8s master组件和node组件镜像步骤:
+
+1. master节点
+
+docker pull anjia0532/kube-apiserver-amd64:v1.10.2
+docker pull anjia0532/kube-controller-manager-amd64:v1.10.2
+docker pull anjia0532/kube-scheduler-amd64:v1.10.2
+docker pull anjia0532/kube-proxy-amd64:v1.10.2
+docker pull anjia0532/etcd-amd64:3.1.12
+docker pull anjia0532/pause-amd64:3.1
+docker pull anjia0532/k8s-dns-sidecar-amd64:1.14.8
+docker pull anjia0532/k8s-dns-kube-dns-amd64:1.14.8
+docker pull anjia0532/k8s-dns-dnsmasq-nanny-amd64:1.14.8
+
+docker tag anjia0532/kube-apiserver-amd64:v1.10.2 k8s.gcr.io/kube-apiserver-amd64:v1.10.2
+docker tag anjia0532/kube-scheduler-amd64:v1.10.2 k8s.gcr.io/kube-scheduler-amd64:v1.10.2
+docker tag anjia0532/kube-controller-manager-amd64:v1.10.2 k8s.gcr.io/kube-controller-manager-amd64:v1.10.2
+docker tag anjia0532/kube-proxy-amd64:v1.10.2 k8s.gcr.io/kube-proxy-amd64:v1.10.2
+docker tag anjia0532/etcd-amd64:3.1.12 k8s.gcr.io/etcd-amd64:3.1.12
+docker tag anjia0532/pause-amd64:3.1 k8s.gcr.io/pause-amd64:3.1
+docker tag anjia0532/k8s-dns-sidecar-amd64:1.14.8 k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.8
+docker tag anjia0532/k8s-dns-kube-dns-amd64:1.14.8 k8s.gcr.io/k8s-dns-kube-dns-amd64:1.14.8
+docker tag anjia0532/k8s-dns-dnsmasq-nanny-amd64:1.14.8 k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.8
+
+2. worker节点
+
+docker pull anjia0532/pause-amd64:3.1
+docker pull anjia0532/kube-proxy-amd64:v1.10.2
+
+docker tag anjia0532/pause-amd64:3.1 k8s.gcr.io/pause-amd64:3.1
+docker tag anjia0532/kube-proxy-amd64:v1.10.2 k8s.gcr.io/kube-proxy-amd64:v1.10.2

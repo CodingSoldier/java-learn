@@ -1,0 +1,16 @@
+安装dashboard的步骤：
+
+1. 下载dashboard镜像
+
+# docker pull anjia0532/kubernetes-dashboard-amd64:v1.8.3
+# docker tag  anjia0532/kubernetes-dashboard-amd64:v1.8.3 k8s.gcr.io/kubernetes-dashboard-amd64:v1.8.3
+
+2. 安装dashboard
+
+# kubectl apply -f  kubernetes-dashboard.yaml
+
+
+
+
+
+

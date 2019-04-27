@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: httpbackend
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - app-gateway
+  http:
+    - route:
+      - destination:
+          host: httpbackend
+          subset: v1
+        weight: 0
+      - destination:
+          host: httpbackend
+          subset: v2
+        weight: 100

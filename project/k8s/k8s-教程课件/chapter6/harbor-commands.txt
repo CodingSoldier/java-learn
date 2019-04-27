@@ -1,0 +1,27 @@
+搭建harbor时使用的命令集合：
+
+1. minio启动命令
+
+# MINIO_ACCESS_KEY=minio MINIO_SECRET_KEY=minio123 nohup minio server http://172.16.66.101/root/.data/minio http://172.16.66.102/root/.data/minio http://172.16.66.103/root/.data/minio http://172.16.66.104/root/.data/minio > minio.log & 2>&1
+
+
+2. 在MySQL中创建harbor用户
+
+> use mysql;
+> create user  harbor identified  by 'harbor123';
+> show grants for harbor;
+> create database registry;
+> grant all on registry.* to 'harbor' identified by 'harbor123';
+
+3. 安装docker-compose
+
+# curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+# chmod +x /usr/local/bin/docker-compose
+# docker-compose version
+
+4. 下载harbor离线安装包
+
+# wget -c https://storage.googleapis.com/harbor-releases/harbor-offline-installer-v1.5.3.tgz
+# tar zxvf harbor-offline-installer-v1.5.3.tgz
+
+
