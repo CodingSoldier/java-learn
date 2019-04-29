@@ -1,0 +1,153 @@
+#########################VirtualBox########################
+
+yum -y install lshw pciutils gdisk system-storage-manager bash-completion zip unzip bzip2 tree tmpwatch pinfo man-pages nano vim-enhanced tmux screen net-tools psmisclsof sysstat yum-plugin-security yum-utils createrepo get wget curl eliks lynx lftp mailx mutt reync libaio make cmake gcc-c++ gcc zib zlib-devel open openssl-devel pcre pcre-devel lsof  telnet-server.x86_64 telnet.x86_64
+全局设定 ——> 网络 ——> 添加NAT，支持DHCP
+单个虚拟机设置 ——> 网络 ——> 
+网卡1，选择网络地址转换NAT、拒绝、接入网线
+网卡2，桥接、拒绝、接入网线
+
+vim /etc/sysconfig/network-scripts/ifcfg-enp0s8
+
+NM_CONTROLLED=yes
+BOOTPROTO=none
+ONBOOT=yes
+IPADDR=192.168.4.24XX
+NETMASK=255.255.255.0
+DEVICE=enp0s8
+NAME=enp0s8
+PEERDNS=no
+
+
+source /etc/profile
+service network restart
+
+#网卡1选择NAT是为了走物理机代理
+#网卡1选择桥接是为了虚拟机之间通信
+
+
+
+#########################安装########################
+sudo yum remove docker \
+                  docker-common \
+                  docker-selinux \
+                  docker-engine
+
+yum install -y yum-utils device-mapper-persistent-data lvm2
+
+yum-config-manager \
+     --add-repo \
+     https://download.docker.com/linux/centos/docker-ce.repo
+
+
+yum makecache fast
+
+# 查看版本
+yum list docker-ce.x86_64  --showduplicates | sort -r
+
+#安装指定版本
+yum install -y docker-ce-18.06.2.ce-3.el7
+
+systemctl start docker
+
+docker run hello-world
+
+docker --version  查看版本
+
+#将 Docker 配置为在启动时启动
+systemctl enable docker
+
+#添加用户组
+groupadd docker
+adduser dockeruser
+passwd dockeruser 
+usermod -aG docker dockeruser
+
+使用阿里申请的加速器获取docker镜像
+vim  /etc/docker/daemon.json
+systemctl daemon-reload
+systemctl restart docker
+
+centos设置代理
+shadowsocks 允许局域网连接
+
+vim /etc/profile
+
+！！！物理机上有多个节点时，必须注释掉代理
+http_proxy=http://192.168.4.62:1080/
+https_proxy=http://192.168.4.62:1080/
+export http_proxy
+export https_proxy
+
+source /etc/profile
+
+！！！建议下载完后马上注释掉此配置
+
+
+
+
+
+
+
+
+
+
+#########################容器########################
+
+https://docs.docker-cn.com/get-started/part2/#apppy
+# 将官方 Python 运行时用作父镜像
+FROM python:2.7-slim
+
+# 将docker容器的工作目录设置为 /app
+WORKDIR /app
+
+# 将当前目录内容复制到位于 /app 中的容器中
+# 由于docker容器的目录已经在/app中，所有这句命令也可以改成ADD . ./  将物理机当前目录的所有文件拷贝到docker容器的当前目录
+ADD . /app
+
+# 安装 requirements.txt 中指定的任何所需软件包
+RUN pip install -r requirements.txt
+
+# 使端口 80 可供此容器外的环境使用
+EXPOSE 80
+
+# 定义环境变量
+ENV NAME World
+
+# 在容器启动时运行 app.py
+CMD ["python", "app.py"]
+
+
+
+
+
+#########################服务#######################
+https://docs.docker-cn.com/get-started/part3/#%E6%82%A8%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA-docker-composeyml-%E6%96%87%E4%BB%B6
+
+vim docker-compose.yml
+
+version: "3"
+services:
+  web:
+    image: codingsoldier/friendlyname:v1.0
+    deploy:
+      replicas: 5
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 50M
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "4000:80"
+    networks:
+      - webnet
+networks:
+  webnet:
+
+
+
+docker swarm join --token SWMTKN-1-2ggqxmr15sp1ll3ebufss2713brdycfrhdf6qwidriekmxu4km-7s9opqrfvwqnaanb4vg94ojus 10.0.2.15:2377
+
+
+
+

@@ -1,5 +1,6 @@
 package com.coq.rabbitmq.sb.conusmer;
 
+import com.coq.rabbitmq.sb.Const;
 import com.example.rabbitmqbean.MyOrder;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.rabbit.annotation.*;
@@ -48,11 +49,11 @@ public class RabbitReceiver {
      */
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = "${spring.rabbitmq.listener.order.queue.name}",
-                    durable = "${spring.rabbitmq.listener.order.queue.durable}"
-/*                    arguments = {
+                    durable = "${spring.rabbitmq.listener.order.queue.durable}",
+                    arguments = {
                             @Argument(name = "x-dead-letter-exchange", value = "${custom.rabbit.exchange.direct.dead.exchange}"),
                             @Argument(name = "x-dead-letter-routing-key", value = "${custom.rabbit.routingkey.direct.dead}")
-                    }*/),
+                    }),
 
             exchange = @Exchange(value = "${spring.rabbitmq.listener.order.exchange.name}",
                     durable = "${spring.rabbitmq.listener.order.exchange.durable}",
@@ -94,12 +95,12 @@ public class RabbitReceiver {
      * 死信队列消费者，由于消息体内容千变万化，不能使用@Payload Object接受，@Payload只接受javabean
      */
     @RabbitListener(bindings = @QueueBinding(
-            value = @Queue(value = "${custom.rabbit.queue.direct.dead.queue}",
+            value = @Queue(value = Const.DIRECT_DEAD_QUEUE,
                     durable = "${custom.rabbit.durable.true}"),
 
             exchange = @Exchange(value = "${custom.rabbit.exchange.direct.dead.exchange}",
                     durable = "${custom.rabbit.durable.true}",
-                    type = "${custom.rabbit.type.direct}",
+                    type = Const.DIRECT,
                     ignoreDeclarationExceptions = "${custom.rabbit.ignoredeclarationexceptions.true}"),
 
             key = "${custom.rabbit.routingkey.direct.dead}"

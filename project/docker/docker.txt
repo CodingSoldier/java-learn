@@ -136,7 +136,7 @@ LABEL maintainer="Peng Xiao<xiaoquwl@gmail.com>"
 RUN pip install flask
 # COPY可以自动建目录，/app/后面要加/，不然就是建文件
 COPY app.py /app/
-# cd 到/app目录中  
+# 在docker容器中cd到/app目录中，对物理机当前目录不起作用，物理机还是在当前目录  
 WORKDIR /app  
 # 开放docker容器中的端口
 EXPOSE 5000

@@ -2,13 +2,16 @@ package com.demo;
 
 import org.junit.Test;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TTTT {
     @Test
     public void test1(){
-        Object a = null;
-        System.out.println((Map)a);
+        List<String> list = new ArrayList<>();
+        list.add("sdfsf");
+        list.add("afdf12");
+        System.out.println(list.toString());
 
     }
 }

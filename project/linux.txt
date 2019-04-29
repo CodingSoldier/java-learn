@@ -1,0 +1,98 @@
+﻿yum -y install lshw pciutils gdisk system-storage-manager bash-completion zip unzip bzip2 tree tmpwatch pinfo man-pages nano vim-enhanced tmux screen net-tools psmisclsof sysstat yum-plugin-security yum-utils createrepo get wget curl eliks lynx lftp mailx mutt reync libaio make cmake gcc-c++ gcc zib zlib-devel open openssl-devel pcre pcre-devel lsof  
+
+
+###############################################linux网络#######################################################
+
+ipconfig         查看ip，负责公网
+ipconfig /all      查看MAC地址，计算机网卡的硬件地址，负责局域网
+netstat –an       查看本机启动端口
+
+修改网卡信息
+vim /etc/sysconfig/network-scripts/ifcfg-ens33
+
+网卡信息
+DEVICE=ens33                    网卡设备名
+BOOTPROTO=none                是否自动获取IP（none不指定、static静态ip、dhcp通过dhcp服务器分配）            
+HWADDR=00:XX:XX:XX:XX:XX        MAC地址
+NM__CONTROLLED=yes            是否可以有Network Manager图形管理器工具托管
+ONBOOT=yes                     是否随网络服务启动，ens33生效
+TYPE=Ethernet                    以太网类型
+UUID=“XXXX”                     唯一识别码
+IPADDR=192.168.0.222             IP地址
+NETMASK=255.255.255.0           子网掩码
+GATEWAY=192.268.0.0             网关
+DNS1=202.106.0.20                DNS
+IPV6INIT=no                      ipv6
+USERCTL=no                      不允许非root用户控制此网卡
+
+修改主机信息  vim /etc/sysconfig/network
+NETWORKING=yes                 是否利用网络
+HOSTNAME=localhost.localdomain    主机名
+修改主机配置需要重启服务器才生效，所以配好后要临时修改
+hostname localhost.localdomain  这样临时修改，永久修改都生效了
+hostname 查询主机名
+主机名对linux来说不重要
+
+修改DNS
+vim /etc/resolv.conf
+search localdomain com      默认域名，即是说ping baidu 会自动帮我们加上一级域名baidu.localdomain、baidu.com
+nameserver 192.168.101.2    DNS
+
+
+虚拟机网络配置：
+桥接，使用物理机的物理网卡和物理机通信，也可以和同一网段内的其他物理机通信
+NAT使用虚拟网卡VMnet8和物理主机通信，不能和同一网段内的其他物理机通信
+Host-only 使用虚拟网卡VMnet1，不能连接公网，只能和物理主机通信
+
+虚拟机复制、配置网卡:
+	1、使用桥接模式
+修改虚拟机，编辑—虚拟网络编辑器，桥接模式默认是自动桥接，需要修改，指定桥接到哪个网卡
+Vim /etc/sysconfig/network-scripts/ifcfg-ens33
+
+BOOTPROTO="static"
+IPADDR=192.168.4.240
+NETMASK=255.255.255.0
+GATEWAY=192.168.4.1 
+DNS1=192.168.1.20
+DNS2=192.168.1.19
+DNS3=114.114.114.114
+
+# IPADDR要和物理机在同一个网段，GATEWAY使用物理机的，DNS也是用物理机的
+
+service network restart  重启网络服务
+
+2、使用nat模式
+BOOTPROTO="static"
+IPADDR=192.168.101.100    #必须在虚拟机NAT的网段下
+NETMASK=255.255.255.0
+GATEWAY=192.168.4.1      #使用虚拟机NAT的网关
+DNS1=114.114.114.114     #使用此DNS服务器
+
+#复制，
+修改UUID
+删除MAC地址行
+重启linux服务器
+
+
+Ifdown lo 禁用lo网卡
+Ifup lo启动lo网卡
+
+Ctrl + ] 退出telnet
+
+
+######################################################################################################
+
+
+
+需求：查看进程中 和 vim相关的进程，并保留头部文字，以便确认哪个进程号是pid，哪个是ppid
+命令：ps -ef|head -n 1;ps -ef|grep -i vim
+
+VMware配置固定ip为192.168.40.129
+编辑 ——> 虚拟网路编辑器 ——> 点击更改设置 ——> 点击NAT模式 ——> DHCP设置 
+——> 起始IP地址 192.168.40.129 结束IP地址 192.168.40.130
+http://blog.csdn.net/ekey_code/article/details/73824214
+
+进入paste 模式
+:set paste
+清空文件
+:dG
