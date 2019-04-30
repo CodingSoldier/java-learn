@@ -18,11 +18,15 @@ NAME=enp0s8
 PEERDNS=no
 
 
-source /etc/profile
 service network restart
 
 #网卡1选择NAT是为了走物理机代理
 #网卡1选择桥接是为了虚拟机之间通信
+
+
+systemctl stop firewalld
+systemctl disable firewalld
+
 
 
 
@@ -117,7 +121,24 @@ ENV NAME World
 CMD ["python", "app.py"]
 
 
+当执行docker build XXX . 命令时，最后的点.会将构建上下文设置为当前目录
+ADD .  XX
+ADD /  XX
+ADD ./ XX
+这3个命令的效果是一样的，都表示把宿主机当前目录的文件添加到容器中的XX目录
 
+WORKDIR /app
+用于指定容器中的目录上下文
+假设/app中有hello文件，执行 WORKDIR /app 命令后
+RUN cat /app/hello
+RUN cat ./hello
+RUN cat hello
+这3条命令的结果是一样的
+
+
+
+了解构建上下文
+https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
 
 
 #########################服务#######################
@@ -146,7 +167,16 @@ networks:
 
 
 
-docker swarm join --token SWMTKN-1-2ggqxmr15sp1ll3ebufss2713brdycfrhdf6qwidriekmxu4km-7s9opqrfvwqnaanb4vg94ojus 10.0.2.15:2377
+
+
+
+
+############################swarm#######################################
+要有两张网卡，一张走代理，一张内部调用
+docker swarm init --advertise-addr=192.168.4.242
+docker swarm join --token SWMTKN-1-5glp8n80pz39ex0v4a5or822pq9ihkdrozzt5m9x39gk2eo7hi-5fd7im1glrgjyujejt2m32axy 192.168.4.242:2377
+
+
 
 
 

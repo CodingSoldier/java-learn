@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cpq.mybatispulslearn.t_ip_address.mapper.TIpAddressMapper">
+<mapper namespace="com.cpq.mybatispulslearn.ipaddress.mapper.IpAddressMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.cpq.mybatispulslearn.t_ip_address.entity.TIpAddress">
+    <resultMap id="BaseResultMap" type="com.cpq.mybatispulslearn.ipaddress.entity.IpAddress">
         <result column="ip_start" property="ipStart" />
         <result column="ip_end" property="ipEnd" />
         <result column="ip10d_start" property="ip10dStart" />

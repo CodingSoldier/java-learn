@@ -1,4 +1,4 @@
-package com.demo.old.redis;
+package com.cpq.mybatispulslearn;
 
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -35,6 +35,7 @@ public class RedisConfig extends CachingConfigurerSupport {
             return sb.toString().replaceAll("\\.", ":");
         };
     }
+
 
     @Bean
     public RedisTemplate redisTemplate(RedisConnectionFactory factory) {

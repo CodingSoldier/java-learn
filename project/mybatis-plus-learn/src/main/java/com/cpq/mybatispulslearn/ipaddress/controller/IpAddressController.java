@@ -1,20 +1,19 @@
-package com.cpq.mybatispulslearn.t_ip_address.controller;
+package com.cpq.mybatispulslearn.ipaddress.controller;
 
 
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- *  前端控制器
+ * ip网段对应地址 前端控制器
  * </p>
  *
- * @author cpq
+ * @author chenpiqian
  * @since 2019-04-24
  */
 @RestController
-@RequestMapping("/t_ip_address/tIpAddress")
-public class TIpAddressController {
+@RequestMapping("/ipaddress/ipAddress")
+public class IpAddressController {
 
 }
