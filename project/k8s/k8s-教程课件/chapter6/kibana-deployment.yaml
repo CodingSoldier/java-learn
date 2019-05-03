@@ -30,9 +30,7 @@ spec:
             cpu: 100m
         env:
           - name: ELASTICSEARCH_URL
-            value: http://172.16.66.102:9200
-          - name: SERVER_BASEPATH
-            value: /api/v1/namespaces/kube-system/services/kibana-logging/proxy
+            value: http://10.0.2.6:9200
         ports:
         - containerPort: 5601
           name: ui
