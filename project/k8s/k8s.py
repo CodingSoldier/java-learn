@@ -182,6 +182,12 @@ docker tag mirrorgooglecontainers/kube-proxy-amd64:v1.14.1 k8s.gcr.io/kube-proxy
 kubeadm join 10.0.2.15:6443 --token trhv5v.yckqzyzqyawj1svz \
     --discovery-token-ca-cert-hash sha256:137962665379e831d10b002f5f1df3c7f14838a8a72b6483553d9dce8003ae0e 
 
+# 可能会报iptable问题，从节点
+vim /etc/sysctl.conf
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+sysctl -p
+
 kubectl get nodes
 
 # 重新加入节点，从节点执行
