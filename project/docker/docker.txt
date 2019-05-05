@@ -149,6 +149,8 @@ docker build -t codingsoldier/flash-hello-world .
 docker run codingsoldier/flash-hello-world
 
 docker run -d codingsoldier/flash-hello-world   后台运行 -d
+# -v /etc/localtime:/etc/localtime:ro 表示使用容器使用服务器时间
+docker run -v /etc/localtime:/etc/localtime:ro -d codingsoldier/flash-hello-world  
 
 exec执行命令
 进入docker的bash
