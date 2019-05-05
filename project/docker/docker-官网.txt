@@ -31,34 +31,58 @@ systemctl disable firewalld
 
 
 #########################安装########################
-sudo yum remove docker \
+卸载旧docker
+yum remove docker \
+                  docker-client \
+                  docker-client-latest \
                   docker-common \
-                  docker-selinux \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
                   docker-engine
 
-yum install -y yum-utils device-mapper-persistent-data lvm2
+安装yum-utils等软件
+yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
 
+设置存储仓库
 yum-config-manager \
-     --add-repo \
-     https://download.docker.com/linux/centos/docker-ce.repo
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
 
-
-yum makecache fast
 
 # 查看版本
-yum list docker-ce.x86_64  --showduplicates | sort -r
+yum list docker-ce --showduplicates | sort -r
 
 #安装指定版本
-yum install -y docker-ce-18.06.2.ce-3.el7
+yum install -y docker-ce-18.06.2.ce-3.el7 docker-ce-cli-18.06.2.ce-3.el7 containerd.io
 
 systemctl start docker
-
-docker run hello-world
+#将 Docker 配置为在启动时启动
+systemctl enable docker
 
 docker --version  查看版本
 
-#将 Docker 配置为在启动时启动
-systemctl enable docker
+docker run hello-world
+
+使用阿里申请的加速器获取docker镜像
+
+https://account.aliyun.com/register/register.htm
+
+https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
+
+vim /etc/docker/daemon.json
+
+{
+  "registry-mirrors": ["https://ojmdil2j.mirror.aliyuncs.com"]
+}
+
+systemctl daemon-reload
+systemctl restart docker
+
+docker info
+
 
 #添加用户组
 groupadd docker
@@ -66,10 +90,8 @@ adduser dockeruser
 passwd dockeruser 
 usermod -aG docker dockeruser
 
-使用阿里申请的加速器获取docker镜像
-vim  /etc/docker/daemon.json
-systemctl daemon-reload
-systemctl restart docker
+
+
 
 centos设置代理
 shadowsocks 允许局域网连接
