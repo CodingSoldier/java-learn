@@ -47,6 +47,20 @@ kubectl rollout undo deployment nginx-deployment
 kubectl get deployment -o wide
 
 
+kubectl create -f deployment_nginx.yml 
+# 暴露端口
+kubectl expose deployment nginx-deployment --type=NodePort
+
+kubectl get svc
+
+kubectl delete -f deployment_nginx.yml 
+
+kubectl create -f pod_busybox.yml 
+kubectl create -f pod_nginx.yml 
+kubectl get pods -o wide
+# 在busybox中可以ping通 pod_nginx
+kubectl exec -it busybox-pod sh
+# 在master、node节点上也可ping通pod_nginx、pod_busybox
 
 
 
