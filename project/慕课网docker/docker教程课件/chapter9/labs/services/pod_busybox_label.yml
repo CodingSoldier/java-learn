@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-pod-label
+  labels:
+    app: busybox
+spec:
+  nodeSelector:
+    hardware: good
+  containers:
+  - name: busybox-container-label
+    image: busybox
+    command:
+      - sleep
+      - "360000"

@@ -1,0 +1,886 @@
+安装Oracle VM VirtualBox，改文件存储位置
+安装Vagrant
+window7 需要安装  https://docs.microsoft.com/en-us/powershell/wmf/5.1/install-configure#download-and-install-the-wmf-51-package
+打开virtual box
+新建目录linux/centos7，在此目录下执行  
+vagrant init centos/7    #生成Vagrantfile
+vagrant up     #启动
+vagrant ssh   #进入虚拟机
+
+vagrant halt  关闭
+
+vagrant destroy删除虚拟机
+
+
+xshell登陆vagrant 虚拟机
+127.0.0.1:2222
+username vagrant
+使用秘钥登陆 E:\linux\centos7\.vagrant\machines\default\virtualbox\private_key
+
+
+
+在centos7上安装docker
+https://docs.docker.com/install/linux/docker-ce/centos/
+1、删除旧版本
+sudo yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-engine
+
+2、设置镜像仓库
+sudo yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
+
+sudo yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo     
+
+安装
+sudo yum install -y docker-ce docker-ce-cli containerd.io   
+
+
+3、启动docker
+sudo systemctl start docker  
+
+4、
+sudo docker version  
+sudo docker run hello-world    
+
+
+
+查看docker-ce版本
+yum list docker-ce.x86_64  --showduplicates | sort -r
+
+
+
+Image 镜像
+docker image ls  查看镜像
+
+从registry（https://hub.docker.com）拉取一个Image 
+docker pull ubuntu:14.04
+
+运行hello-world
+docker run hello-world
+
+安装软件
+yum install -y git vim gcc glibc-static telnet bridge-utils net-tools
+
+
+groupadd docker   创建用户组
+gpasswd -a vagrant docker   添加用户vagrant到docker用户组，vagrant就具备了docker用户组的权限
+
+
+*****************自己写一个基础镜像（base image）***************
+mkdir hello-world
+cd hello-world
+
+vim hello.c 写以下代码
+#include<stdio.h>
+
+int main()
+{
+   printf("hello docker\n");
+}
+
+gcc -static hello.c -o hello  生成hello可执行文件
+
+./hello  执行
+
+
+vim Dockerfile  建立Dockerfile
+
+FROM scratch      # 基础镜像from写scratch
+ADD hello /       # 把hello添加到根目录
+CMD ["/hello"]    # 运行根目录下的hello
+
+创建image，后面的 . 表示在当前目录找Dockerfile
+docker build -t xiaopeng163/hello-world .
+
+运行容器
+docker run xiaopeng163/hello-world
+
+
+正在运行的容器
+docker container ls  
+groupadd docker   创建用户组
+gpasswd -a vagrant docker   添加用户vagrant到docker用户组，vagrant就具备了docker用户组的权限
+
+
+
+yum install -y libaio make cmake gcc-c++ gcc zib zlib-devel open openssl-devel pcre pcre-devel get wget curl net-tools nano vim-enhanced lsof bash-completion zip unzip bzip2
+
+
+写一个pythos image
+mkdir flask-hello-world
+cd flask-hello-world
+vim app.py
+
+from flask import Flask
+app = Flask(__name__)
+@app.route('/')
+def hello():
+    return "hello docker"
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=5000)
+
+
+vim Dockerfile
+
+FROM python:2.7
+LABEL maintainer="Peng Xiao<xiaoquwl@gmail.com>"
+RUN pip install flask
+# COPY可以自动建目录，
+COPY app.py /app/
+# 在docker容器中cd到/app中，如果docker容器中没有app目录，则会在容器中创建/app目录
+对物理机当前目录不起作用，物理机还是在当前目录  
+WORKDIR /app  
+# 开放docker容器中的端口
+EXPOSE 5000
+CMD ["python", "app.py"]
+
+docker build -t codingsoldier/flash-hello-world .
+
+出现错误，可调式 docker run -it step过程临时生成的image /bin/bash
+
+docker run codingsoldier/flash-hello-world
+
+docker run -d codingsoldier/flash-hello-world   后台运行 -d
+# -v /etc/localtime:/etc/localtime:ro 表示使用容器使用服务器时间
+docker run -v /etc/localtime:/etc/localtime:ro -d codingsoldier/flash-hello-world  
+
+exec执行命令
+进入docker的bash
+docker exec -it containerId  /bin/bash
+进入python shell
+docker exec -it efe51ae9c3da python
+docker ip 地址
+docker exec -it efe51ae9c3da ip a
+
+停止一个docker 容器
+docker stop containerId
+指定名字启动
+docker run -d --name=flash1 codingsoldier/flash-hello-world
+通过名字停止
+docker stop flash1
+停止后还可以通过名字启动
+docker start flash1
+容器的详细信息
+docker inspect flash1
+docker运行时的日志
+docker logs flash1
+docker命令地址
+https://docs.docker-cn.com/machine/reference/
+
+
+
+
+FROM ubuntu
+RUN apt-get update && apt-get install -y stress
+#通过ENTRYPOINT执行命令
+ENTRYPOINT ["/usr/bin/stress"]
+#用于作为ENTRYPOINT的参数
+CMD []
+
+docker build -t ubuntu-stress .
+docker run  ubuntu-stress 相当于执行 /usr/bin/stress
+docker run  ubuntu-stress --vm 1 --verbose  用CMD接收参数，配合RNTRYPONIT命令执行
+
+
+
+docker container ls -a  所有容器
+
+
+交互式运行，会进入到centos这个容器中
+docker run -it centos
+
+exit  退出环境
+
+通过CONTAINER ID删除container
+docker container rm 8e84b79e5d4c
+docker rm 8e84b79e5d4c
+
+
+image和container 的关系类似于 类和实例 的关系
+每次 docker run 镜像    这条命令会生成一个新的container，每运行一次就会生成一个container
+
+
+#列出containerId，
+docker container ls -aq  等同于  docker container ls -a | awk {'print$1'}
+
+
+删除所有已经退出的container，status=exited表示已经退出，-q只列出id
+docker rm $(docker container ls -f "status=exited" -q)
+
+
+docker ps -a  容器列表
+
+
+commit一个新的image，旧名字pedantic_khayyam，新名字xiaopeng163/centos-vim
+docker commit pedantic_khayyam xiaopeng163/centos-vim
+
+
+docker image ls       image列表
+docker history 9f38484d220f   image历史
+
+
+#通过Dockerfile构建一个image，用户可以知道这个image有那些修改，比commit的方式要好
+
+mkdir docker-centos-vim
+cd docker-centos-vim/
+vim Dockerfile  写以下配置
+
+FROM centos
+RUN yum install -y vim
+
+docker build -t xiaopeng163/centos-vim .
+
+
+
+https://docs.docker-cn.com/engine/reference/builder/
+Dockerfile配置：
+FROM scratch  #制作base image
+FROM centos   #使用已有的base image，centos
+FROM ubuntu:14.04  #指定版本
+FROM尽量使用官方的image，安全
+
+LABEL maintainer="邮箱"
+LABEL version="1.0"
+LABEL description="描述"
+Metadata不可少
+
+RUN yum update && yum install -y vim\
+	python-dev
+RUN为了美观，复杂的run请用反斜线换行，避免无用分层，合并多行命令为一行
+
+WORKDIR 设定当前目录
+WORKDIR /test  如果没有会自动创建test目录
+WORKDIR demo
+RUN pwd  输出是/test/demo
+用WORKDIR，不要使用RUN cd，尽量使用绝对路径
+
+ADD and COPY
+ADD hello /  添加hello文件到根目录/
+ADD test.tar.gz /  添加到根目录并解压，ADD还有解压的功能
+
+WORKDIR /root
+ADD hello test/  结果是/root/test/hello
+大部分情况下COPY优于ADD
+
+ENV MYSQL_VERSION 5.6  设置常量
+RUN apt-get install -y mysql-server="${MYSQL_VERSION}"
+尽量使用ENV增加维护性
+
+
+RUN    执行命令并创建新的Image Layer
+CMD    设置容器启动后默认执行的命令和参数
+ENTRYYPOINT   设置容器启动时运行的命令
+
+
+Shell格式
+RUN apt-get install -y vim
+CMD echo "hello docker"
+ENTRYPOINT echo "hello docker"
+
+Exec格式
+RUN ["apt-get", "install", "-y", "vim"]
+CMD ["/bin/echo", "hello docker"]
+
+
+shell方式的Dockerfile
+FROM centos
+ENV NAME docker
+ENTRYPOINT echo "hello $NAME"
+
+excel方式的Dockerfile，-c表示参数，shell语句必须全在一个元素中
+FROM centos
+ENV NAME docker
+ENTRYPOINT ["/bin/bash","-c","echo hello $NAME"]
+
+
+CMD
+容器启动时默认执行的命令
+如果docker run 指定了其他命令，CDM命令被忽略
+如果定义了多个CMD，只有最后一个会执行
+
+ENTRYYPOINT
+容器以应用程序或者服务的形式运行
+不会被忽略，一定会执行
+最佳实践：写一个shell脚本作为entrypoint
+COPY xxx.sh  /user/local/bin
+ENTRYPOINT ["xxx.sh"]
+
+
+docker login  输入账号密码，登陆docker hub
+
+提交一个镜像，:latest是一个标签Tags
+docker push codingsoldier/hello-world:latest
+
+
+docker提供了私有仓库的镜像  https://hub.docker.com/_/registry
+安装私有仓库
+docker run -d -p 5000:5000 --restart always --name registry registry:2
+
+创建属于私有仓库的镜像
+docker build -t 127.0.0.1:5000/hello-world .
+
+提交到使用仓库需要做修改
+vim /etc/docker/daemon.json
+{
+  "insecure-registries":["127.0.0.1:5000"]
+}
+
+vim /lib/systemd/system/docker.service  [Service]中添加 EnvironmentFile=-/etc/docker/daemon.json
+ExecStart=XXXXX
+EnvironmentFile=-/etc/docker/daemon.json
+ExecReload=XXXXXXX
+
+提交到私有镜像
+docker push 127.0.0.1:5000/hello-world
+
+curl http://127.0.0.1:5000/v2/_catalog 即可查看私有仓库的镜像
+
+拉取私有仓库的镜像
+docker pull 127.0.0.1:5000/hello-world
+
+
+
+
+
+
+***************第四章**********************
+拷贝chapter4的全部代码
+vagrant plugin install vagrant-vbguest  安装共享插件
+vagrant up
+
+
+docker run -d --name=test1 busybox /bin/sh -c "while true; do sleep 3600;done"
+docker exec -it test1 /bin/sh
+
+Linux Network Namespace网络命名空间dome
+ip netns add test1
+ip netns list
+ip netns delete test1
+
+添加两个相通的端口
+ip link add veth-test1 type veth peer name veth-test2
+
+veth-test1设置到test1
+ip link set veth-test1 netns test1
+ip link set veth-test2 netns test2
+
+设置端口ip
+ip netns exec test1 ip addr add 192.168.1.1/24 dev veth-test1
+ip netns exec test2 ip addr add 192.168.1.2/24 dev veth-test2
+
+把启动端口
+ip netns exec test1 ip link set dev veth-test1 up
+ip netns exec test2 ip link set dev veth-test2 up
+
+
+
+容器之间的相互访问是通过docker0这个网络命名空间作为桥连中转
+container1       container2
+172.17.0.3       172.17.0.2
+            链接
+          docker0
+         172.17.0.1
+      链接         链接
+    eth0             eth1
+
+
+创建容器test2的时候，把test2连接到test1
+docker run -d --name test2 --link test1 busybox /bin/sh -c "while true; do sleep 3600; done"    
+docker exec -it test2 /bin/sh
+ping test1   也可以ping通
+
+
+docker network create -d bridge my-bridge
+docker network ls
+
+docker run -d --name test3 --network my-bridge busybox /bin/sh -c "while true; do sleep 3600; done"
+
+链接my-bridge、test2
+docker network connect my-bridge test2
+
+
+docker network ls
+docker network inspect  networkId
+
+test2、test3都链接到了my-bridge，test2、test3可以相互ping通。
+系统默认的bridge（docker0）具备物理主机ping容器的能力，但不具备让container相互ping通的功能
+docker exec -it test3 /bin/sh
+ping test2
+
+
+
+docker run --name web -d nginx  安装nginx服务
+docker inspect bridge
+telnet bridge连接的container
+宿主机器可以访问nginx container
+
+端口映射，把本地的80绑定到容器中的80，外部网络就可以访问nginx就可以给外部访问了
+docker run --name web -d -p 80:80 nginx
+直接在浏览器访问 http://192.168.205.10/
+
+none类型的network，没有ip、mac地址，只能在物理机中docker exec -it test4 /bin/sh访问
+docker run -d --name test4 --network none busybox /bin/sh -c "while true; do sleep 3600; done"
+
+host类型的network，容器test5和物理主机公用network space，端口被公用、会有冲突
+docker run -d --name test5 --network host busybox /bin/sh -c "while true; do sleep 3600; done"
+
+
+
+创建redis  container
+docker run -d --name redis redis
+
+vim app.py
+from flask import Flask
+from redis import Redis
+import os
+import socket
+
+app = Flask(__name__)
+redis = Redis(host=os.environ.get('REDIS_HOST', '127.0.0.1'), port=6379)
+
+
+@app.route('/')
+def hello():
+    redis.incr('hits')
+    return 'Hello Container World! I have been seen %s times and my hostname is %s.\n' % (redis.get('hits'),socket.gethostname())
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
+
+vim Dockerfile
+FROM python:2.7
+LABEL maintaner="Peng Xiao xiaoquwl@gmail.com"
+COPY . /app
+WORKDIR /app
+RUN pip install flask redis
+EXPOSE 5000
+CMD [ "python", "app.py" ]    
+
+-p本地5000端口绑定到容器flash-redis的5000端口，-e指定容器环境变量，app.py中使用了环境变量REDIS_HOST
+docker run -d -p 5000:5000 --link redis --name flash-redis -e REDIS_HOST=redis flash-redis
+
+
+
+
+************************docker数据存储VOLUME************************
+mysql的Dockerfile
+VOLUME /var/lib/mysql 指定数据存储在物理机上位置
+
+运行mysql container，mysql1产生的数据写入到  mysql:/var/lib/mysql指定存储位置，但数据却在/var/lib/docker/volumes/mysql中 
+docker run -d -v mysql:/var/lib/mysql --name mysql1 -e MYSQL_ALLOW_EMPTY_PASSWORD=true mysql:5.7.19
+docker exec -it mysql1 /bin/bash
+
+mysql -u root
+create database test001;
+
+删除mysql1，创建mysql2，使用同样的volume，mysql2中有test001数据库
+
+-v当期目录和容器中的/usr/share/nginx/html目录是同步的
+docker run -d -v $(pwd):/usr/share/nginx/html -p 8080:80 --name web docker-nginx
+
+vim index.html
+curl 127.0.0.1:8080  发现index.html也修改了
+
+
+
+
+
+****************************compose管理多个容器***************************
+安装mysql、wordpress
+安装mysql，-v参数要注意
+docker run -d -v mysql:/var/lib/mysql --name mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_ALLOW_EMPTY_PASSWORD=false -e MYSQL_DATABASE=wordpress mysql:5.7.19
+安装运行wordpress
+docker run -d --name wordpress -e WORDPRESS_DB_HOST=mysql:3306 -e WORDPRESS_DB_PASSWORD=root --link mysql -p 8080:80 wordpress
+
+日志
+docker logs  --tail=100 container
+
+compose文档
+service 代表一个container
+
+
+
+安装docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+
+
+
+docker-compose.yml
+
+version: '3'
+
+services:
+
+  wordpress:
+    image: wordpress
+    ports:
+      - 8080:80
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_PASSWORD: root
+    networks:
+      - my-bridge
+
+  mysql:
+    image: mysql:5.7.19
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'false'
+      MYSQL_DATABASE: wordpress
+    volumes:
+      - mysql:/var/lib/mysql
+    networks:
+      - my-bridge
+
+volumes:
+  mysql:
+
+networks:
+  my-bridge:
+    driver: bridge
+
+
+
+docker-compose up
+docker-compose -f XXX.yml up
+docker-compose ps
+
+docker-compose stop  停止容器
+docker-compose down  停止并删除容器
+docker-compose start
+docker-compose up -d  后台启动
+docker-compose images
+docker-compose exec mysql bash
+
+
+
+
+
+vim app.py
+vim Dockerfile
+vim docker-compose.yml
+
+version: '3'
+
+services:
+
+  redis:
+    image: redis
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:5000
+    environment:
+      REDIS_HOST: redis
+
+
+docker-compose up -d    通过docker-compose构建、启动容器
+http://192.168.205.10:8080/
+
+
+
+
+于haproxy整合
+vim docker-compose.yml
+
+version: '3'
+services:
+  redis:
+    image: redis
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      REDIS_HOST: redis
+  lb:
+    image: dockercloud/haproxy
+    links:
+      - web
+    ports:
+      - 8080:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock 
+
+web  container起3个服务
+docker-compose up -d --scale web=3
+
+curl 127.0.0.1:8080   负载均衡
+
+
+
+xftp要使用vagrant账号
+docker-compose.yml 构建多个项目
+chapter6 ——> example-voting-app
+
+
+
+
+
+*****************************swarm*************************************
+192.168.205.10上运行
+docker swarm init --advertise-addr=192.168.205.10
+
+Swarm初始化：当前节点（lek64vvcg63lav3uol5s6o0ry）现在是一个manage。
+要将worker添加到此swarm，请在其他机器上（192.168.205.10、11）运行以下命令：
+docker swarm join --token SWMTKN-1-3hobjjmxrwg03di8qpbu76y98ox0w1b0cjw2m35gh4rh6joow2-92wgfo6attn8o535345xc4qj0 192.168.205.10:2377
+
+
+192.168.205.10查看swarm节点
+docker node ls
+
+在swarm模式下，基本上不用docker run，而是用docker service create。service就是一个container
+
+docker service create --name demo busybox sh -c "while true; do sleep 3600; done"
+
+docker service ls  查看service
+
+docker service scale demo=5
+
+docker service ls  查看service
+
+docker service ps demo  查看demo这个service，有5个container分布在3个节点上
+
+可在3节点上执行 docker container ls 查看
+
+
+docker container rm -f containerId  删除节点后，swarm还会重新起一个节点，保证scale依旧是5
+
+docker service rm demo  删除service
+
+
+manage机器上创建一个网络
+docker network create -d overlay demo
+docker network ls
+
+
+新建mysql的service
+docker service create --name mysql \
+--env MYSQL_ROOT_PASSWORD=root --env MYSQL_ALLOW_EMPTY_PASSWORD=false --env MYSQL_DATABASE=wordpress \
+--network demo --mount type=volume,source=mysql-data,destination=/var/lib/mysql mysql:5.7.19
+
+
+docker service ls
+docker service ps mysql
+
+创建wordpress
+docker service create --name wordpress -p 80:80 --env WORDPRESS_DB_PASSWORD=root --env WORDPRESS_DB_HOST=mysql --network demo wordpress
+
+
+wordpress在3个节点上都能访问，并且数据库用的是同一个
+
+
+
+RoutingMesh通信
+Internal 容器和容器之间访问通过overlay网络（就是通过虚拟ip访问）
+
+docker service create --name whoami -p 8000:8000 --network demo -d jwilder/whoami
+
+docker service create --name client -d --network demo busybox sh -c "while true; do sleep 3600; done"
+
+进入client
+docker exec -it 9d683e867211 sh
+ping whoami  能ping通
+
+docker service scale whoami=2  建两个whoami
+ping whoami  ping的ip地址都是同一个，ping的是虚拟ip，不是容器中的真实ip
+
+swarm会给每个服务新建一虚拟ip，一个服务可以有多个task节点，一个虚拟ip关联多个task节点的真实ip
+swarm对外提供虚拟ip，服务之间调用也是用虚拟ip
+
+
+在client容器中访问whoami，轮询两个whoami的task节点
+
+
+
+iptables -nL -t nat
+Chain DOCKER-INGRESS (2 references)
+target     prot opt source               destination         
+DNAT       tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:8000 to:172.18.0.2:8000
+
+
+################################################
+vim password
+admin123456
+docker secret create my-pw password
+rm -rf password 
+echo "adminadmin" | docker secret create my-pw2 -
+docker service create --name client --secret my-pw busybox sh -c "while true; do sleep 3600; done"
+docker exec -it 2e72f9b32b2e sh
+cat /run/secrets/my-pw 可以看到传进来的--secret my-pw
+
+docker network inspect docker_gwbridge
+ingress-sbox 这个container的网络地址就是172.18.0.2
+
+
+ls /var/run/docker/netns
+nsenter --net=/var/run/docker/netns/ingress_sbox 
+ip a
+
+从secrets中读取password
+docker service create --name db --secret my-pw -e MYSQL_ROOT_PASSWORD_FILE=/run/secrets/my-pw mysql:5.7.19
+docker exec -it f41b26fc473e sh
+mysql -u root -padmin123
+
+
+docker-compose.yml 使用 --secrets 看chapter7 -> secret-example
+
+
+docker service 发版本
+docker service create --name web --publish 8080:5000 --network demo xiaopeng163/python-flask-demo:1.0
+
+docker service scale web=2
+work节点 sh -c "while true; do curl 127.0.0.1:8080&&sleep 1; done"
+
+docker service update --image xiaopeng163/python-flask-demo:2.0 web
+一个一个地更新service节点
+
+docker service update --publish-rm 8080:5000 --publish-add 8088:5000 web
+更新端口
+
+
+
+
+
+
+
+docker stack
+
+docker-compose.yml  使用chapter7
+ docker stack deploy wordpress --compose-file=docker-compose.yml
+
+docker stack ps wordpress
+docker stack services  wordpress
+
+docker stack rm wordpress
+
+
+chapter7 docker-compose.yml
+docker stack deploy example --compose-file=docker-compose.yml
+docker stack ls
+
+
+
+
+
+DockerSecret存储敏感数据
+mkdir secret-example
+vim password
+admin123
+docker secret create my-pw password 
+docker secret ls
+
+ echo "adminadmin" | docker secret create my-pw2 -
+
+ swarm-worker1
+yum install -y ipvsadm
+ ipvsadm -l
+
+
+
+
+
+docker cloud
+创建Repositories，Builds选择github的仓库
+
+github创建一个tag，docker cloud构建
+
+
+安装docker ee https://docs.docker.com/install/linux/docker-ee/centos/
+申请一个月试用的url
+export DOCKERURL="https://storebits.docker.com/ee/centos/sub-8849c40a-4a94-4143-ac8f-b62549b140fd"
+
+yum -y install docker-ee-stable-17.06 docker-ee-cli-stable-17.06 containerd.io
+
+mananger节点安装ucp
+https://docs.docker.com/ee/end-to-end-install/
+
+docker container run --rm -it --name ucp \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  docker/ucp:2.2.4 install \
+  --host-address 192.168.205.50 \
+  --interactive
+
+设置用户名和密码 admin adminadmin  
+ucp登陆页面
+https://192.168.205.50/login/
+
+
+enzi --db-addr=192.168.205.50:12383 passwd --interactive
+
+
+work节点安装dtr，dtr管理image
+docker run -it --rm docker/dtr install \
+  --dtr-external-url 192.168.205.60  \
+  --ucp-node docker-ee-worker  \
+  --ucp-username admin  \
+  --ucp-url https://192.168.205.50 \
+  --ucp-insecure-tls
+
+
+
+
+******************************K8s*************************************
+minikube  https://github.com/kubernetes/minikube/releases
+
+1、新建C:\mysoftware\kubernetes目录，放入minikube.exe、kubectl.exe
+2、配置环境变量
+3、 minikube start  若出错重装，需需要先执行 minikube delete
+4、kubectl config view
+
+
+使用chapter9代码
+kubectl create -f .\pod_nginx.yml
+kubectl get pods
+kubectl get pods -o wide
+minikube ssh  进入到虚拟机中
+docker exec -it 680c066d6c67 sh
+也可以  kubectl exec -it nginx sh
+kubectl describe pods nginx  找到ip
+minikube ssh
+curl http://172.17.0.3
+ kubectl port-forward nginx 8080:80
+ http://localhost:8080/
+
+
+重启后需要， minikube start
+kubectl delete -f .\chapter9\labs\pod-basic\pod_nginx.yml
+kubectl get pods
+kubectl create -f .\rc_nginx.yml
+kubectl get rc
+kubectl get pods  
+kubectl delete pods nginx-bsvvp
+kubectl get pods
+会重启一个pods，维持3个正在运行
+
+设置有两个nginx的pod在运行
+kubectl scale rc nginx --replicas=2
+kubectl get pods
+kubectl get rc
+
+网络问题
+kubectl get pods -o wide
+
+ kubectl delete -f .\rc_nginx.yml
+ kubectl get pods 
+
+创建deployments
+ kubectl create -f .\deployment_nginx.yml
+
+
+
