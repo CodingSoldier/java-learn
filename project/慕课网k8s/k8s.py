@@ -54,6 +54,7 @@ vim /etc/docker/daemon.json
 
 systemctl daemon-reload
 systemctl restart docker
+systemctl start docker
 
 docker run hello-world
 
