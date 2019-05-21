@@ -1,0 +1,112 @@
+定义volume
+# vim pod-vol-demo.yaml 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-demo
+  namespace: default
+  labels:
+    app: myapp
+    tier: frontend
+spec:
+  containers:
+  - name: myapp
+    image: ikubernetes/myapp:v1
+    ports:
+    - name: http
+      containerPort: 80
+    #使用名称为html的volumes
+    volumeMounts:
+    - name: html
+      mountPath: /data/web/html/
+  - name: busybox
+    image: busybox:latest
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+    - name: html
+      mountPath: /data/
+    command:
+    - "/bin/sh"
+    - "-c"
+    - "sleep 7200"
+  # 定义一个volume，名称必填
+  volumes:
+  - name: html
+    emptyDir: {}
+
+
+kubectl apply -f pod-vol-demo.yaml 
+
+kubectl get pod
+
+
+
+kubectl exec -it pod-demo -c busybox -- /bin/sh
+
+在/data 下生成 index.html
+echo $(data) >> /data/index.html
+
+myapp与busybox共用一个volume，busybox映射到容器内的/data下，myapp映射到容器内的/data/web/html下
+kubectl exec -it pod-demo -c myapp -- /bin/sh
+
+cat /data/web/html/index.html   busybox中生成的index.html已经在myapp中了
+
+
+kubectl delete -f pod-vol-demo.yaml
+
+
+
+
+vim pod-vol-demo.yaml 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-demo
+  namespace: default
+  labels:
+    app: myapp
+    tier: frontend
+spec:
+  containers:
+  - name: myapp
+    image: ikubernetes/myapp:v1
+    imagePullPolicy: IfNotPresent
+    ports:
+    - name: http
+      containerPort: 80
+    volumeMounts:
+    - name: html
+      mountPath: /usr/share/nginx/html/
+  - name: busybox
+    image: busybox:latest
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+    - name: html
+      mountPath: /data/
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo $(date) >> /data/index.html; sleep 2; done"]
+  volumes:
+  - name: html
+    emptyDir: {}
+
+
+shell脚本一定要写成  while true; do echo $(date) >> /data/index.html; sleep 2; done
+
+kubectl apply -f pod-vol-demo.yaml 
+
+kubectl get pod -o wide
+curl 10.244.2.27
+得到一大堆日期数据
+
+
+
+
+
+
+
+
+
+
+
