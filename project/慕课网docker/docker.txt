@@ -358,8 +358,8 @@ vagrant plugin install vagrant-vbguest  安装共享插件
 vagrant up
 
 
-docker run -d --name=test1 busybox /bin/sh -c "while true; do sleep 3600;done"
-docker exec -it test1 /bin/sh
+docker run -d --name=busybox busybox /bin/sh -c "while true; do sleep 3600;done"
+docker exec -it busybox /bin/sh
 
 Linux Network Namespace网络命名空间dome
 ip netns add test1
