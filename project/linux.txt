@@ -1,6 +1,4 @@
-﻿yum -y install lshw pciutils gdisk system-storage-manager bash-completion zip unzip bzip2 tree tmpwatch pinfo man-pages nano vim-enhanced tmux screen net-tools psmisclsof sysstat yum-plugin-security yum-utils createrepo get wget curl eliks lynx lftp mailx mutt reync libaio make cmake gcc-c++ gcc zib zlib-devel open openssl-devel pcre pcre-devel lsof  
-
-
+﻿yum -y install lrzsz gcc gcc-c++ pcre pcre-devel zlib zlib-devel ruby wget bash-completion zlib.i686 libstdc++.i686 lsof unzip zip finger bind-utils  readline-devel autoconf  man-pages nano vim-enhanced net-tools get curl lftp make
 ###############################################linux网络#######################################################
 
 ipconfig         查看ip，负责公网
