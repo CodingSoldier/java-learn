@@ -15,6 +15,23 @@
   firewall-cmd --zone=public --add-port=80/tcp --permanent
   firewall-cmd --reload
 
+window版本安装head：
+head插件不能放在plugin目录
+npm install -g grunt-cli
+grunt -version
+修改head/Gruntfile.js
+options: {
+    port: 9100,
+    hostname: '*',
+    base: '.',
+    keepalive: true
+}
+npm install
+grunt server
+
+修改elasticsearch的config/elasticsearch.yml
+http.cors.enabled: true
+http.cors.allow-origin: "*"
 
 window版本启动  
 	elasticsearch.bat 启动es
