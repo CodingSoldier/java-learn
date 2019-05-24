@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+  namespace: default
+spec:
+  selector:
+    app: myapp
+    release: canary
+  clusterIP: 10.99.99.99
+  type: NodePort
+  ports:
+  # service端口，给外部使用
+  - port: 80
+    # pod的端口
+    targetPort: 80
+    #节点端口，不指定则动态分配。手动指定，在节点中，此端口不能被占用
+    nodePort: 30080
+  

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-svc
+  namespace: default
+spec:
+  selector:
+    app: myapp
+    release: canary
+  #无头service，请求不经过service，而是直接访问pod，所以也就不需要写clusterIP
+  clusterIP: None
+  ports:
+  - port: 80
+    targetPort: 80
+  

@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-cm-2
+  namespace: default
+  labels:
+    app: myapp
+    tier: frontend
+spec:
+  containers:
+  - name: myapp
+    image: ikubernetes/myapp:v1
+    ports:
+    - name: http
+      containerPort: 80
+    volumeMounts:
+    - name: nginxconf
+      mountPath: /etc/nginx/config.d/
+      readOnly: true
+  volumes:
+  - name: nginxconf
+    configMap:
+      name: nginx-config
