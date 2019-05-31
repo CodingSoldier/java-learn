@@ -121,8 +121,18 @@ http://localhost:9200/people/man/1/_update
 post请求
 {
 	"doc":{
-		"name": "修改名字"
-	}
+    "id": "df29f18ae0844ac68c4005d3ca28a737",
+    "account": "温龙英－专员1",
+    "loginTime": 1558921381137,
+    "ip": "string",
+    "address": "",
+    "kernel": "string",
+    "loginResult": true,
+    "loginStatus": 0,
+    "tenantCode": "BLWY",
+    "type": 1,
+    "tenantName": "深圳保利物业管理集团有限公司"
+}
 }
 
 使用脚本修改数据，使用es内置脚本painless

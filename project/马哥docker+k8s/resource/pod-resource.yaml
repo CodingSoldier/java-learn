@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-resource
+  labels:
+    app: myapp
+    tier: frontend
+spec:
+  containers:
+  - name: myapp
+    image: ikubernetes/stress-ng
+    command: ["/usr/bin/stress-ng", "-m 1", "-c 1", "--metrics-brief"]
+    resources:
+      # 指定最低资源需求，1个cpu分成1000m，128Mi即128M
+      requests:
+        cpu: "200m"
+        memory: "128Mi"
+      # 资源限制,cpu:1表示最多使用1整个cpu
+      limits:
+        cpu: "1"
+        memory: "256Mi"
