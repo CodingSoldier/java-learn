@@ -1,0 +1,3 @@
+pod、rs、deployment、service
+pod svc 网络
+存活探针、服务就绪探针

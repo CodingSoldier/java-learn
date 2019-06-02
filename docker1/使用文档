@@ -1,0 +1,16 @@
+
+docker build -t codingsoldier/docker1 .
+
+docker rm -f $(docker container ps -aq)
+
+
+docker run --name=docker1 -e JAVA_OPS='-Xmx256m -Xms256m -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails' codingsoldier/docker1 
+
+
+docker ps
+
+
+docker exec -it docker1 /bin/sh
+
+
+jstat -gc 1 5000 100
