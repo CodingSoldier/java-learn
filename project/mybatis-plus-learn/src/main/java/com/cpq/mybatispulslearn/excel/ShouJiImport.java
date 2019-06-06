@@ -1,8 +1,7 @@
 package com.cpq.mybatispulslearn.excel;
 
+import org.apache.commons.collections4.list.TreeList;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
@@ -27,91 +26,114 @@ public class ShouJiImport {
 
     public static void main(String args[]) throws Exception {
 
-        //收集数据
-        ArrayList<String> shoujiFileList = getDirFileList("E:\\excel_shouji");
-        for (String filePath : shoujiFileList) {
-            sjExcelData(filePath);
-        }
-        System.out.println("******************收集数据********************");
-        for (Map.Entry<String, List<ExcelData>> entry: shouJiMap.entrySet()){
-            System.out.println("\n");
-            System.out.println("所属项目："+entry.getKey());
-            System.out.println("个人客户[客户姓名][所属项目]都不为空 + 企业客户[企业名称][所属项目]都不为空  的数量"+entry.getValue().size());
-            //printWanZhengLu(entry.getValue());
-
-            //if ("无".equals(entry.getKey())){
-            //    System.out.println("无无"+entry.getValue());
-            //}
-            //if ("所属项目".equals(entry.getKey())){
-            //    System.out.println("所属项目"+entry.getValue());
-            //}
-            //if ("开发商".equals(entry.getKey())){
-            //    System.out.println("开发商"+entry.getValue());
-            //}
-            //if ("多种经营".equals(entry.getKey())){
-            //    System.out.println("多种经营"+entry.getValue());
-            //}
-            //if ("其他".equals(entry.getKey())){
-            //    System.out.println("其他"+entry.getValue());
-            //}
-            //if ("2栋".equals(entry.getKey())){
-            //    System.out.println("2栋"+entry.getValue());
-            //}
-            //if ("4栋".equals(entry.getKey())){
-            //    System.out.println("4栋"+entry.getValue());
-            //}
-        }
+        ////收集数据
+        //ArrayList<String> shoujiFileList = getDirFileList("E:\\excel_shouji");
+        //for (String filePath : shoujiFileList) {
+        //    sjExcelData(filePath);
+        //}
+        //System.out.println("******************收集数据********************");
+        //for (Map.Entry<String, List<ExcelData>> entry: shouJiMap.entrySet()){
+        //    System.out.println("\n");
+        //    System.out.println("所属项目："+entry.getKey());
+        //    System.out.println("个人客户[客户姓名][所属项目]都不为空 + 企业客户[企业名称][所属项目]都不为空  的数量"+entry.getValue().size());
+        //}
 
 
 
         //在库数据
-        ArrayList<String> zaikuFileList = getDirFileList("E:\\收费系统客户信息_2019.4.24");
+        TreeList<String> zaikuFileList = getDirFileList("E:\\收费系统客户信息_2019.4.24");
         for (String filePath : zaikuFileList) {
             zkExcelData(filePath);
         }
-        System.out.println("\n\n******************在库数据********************");
-        for (Map.Entry<String, List<ExcelData>> entry: zaiKuJiMap.entrySet()){
-            System.out.println("\n");
-            System.out.println("所属项目："+entry.getKey());
-            System.out.println("个人客户[客户姓名][所属项目]都不为空 + 企业客户[企业名称][所属项目]都不为空  的数量"+entry.getValue().size());
-            //printWanZhengLu(entry.getValue());
+        //System.out.println("\n\n******************在库数据********************");
+        //for (Map.Entry<String, List<ExcelData>> entry: zaiKuJiMap.entrySet()){
+        //    System.out.println("\n");
+        //    System.out.println("所属项目："+entry.getKey());
+        //    System.out.println("个人客户[客户姓名][所属项目]都不为空 + 企业客户[企业名称][所属项目]都不为空  的数量"+entry.getValue().size());
+        //    //printWanZhengLu(entry.getValue());
+        //}
+
+
+    }
+
+    public static void zkExcelData(String filePath) throws Exception {
+        System.out.println("\n");
+        System.out.println(filePath);
+        int count = 0;
+        int num = 0;
+
+        Workbook wookbook = WorkbookFactory.create(new FileInputStream(filePath));
+
+        Sheet geRenSheet = wookbook.getSheet("个人客户");
+        Sheet qiYeSheet = wookbook.getSheet("企业客户");
+
+        // 个人客户
+        if (geRenSheet != null){
+            //获取到Excel文件中的所有行数
+            int rows = geRenSheet.getPhysicalNumberOfRows();
+            count = count + rows-1;
+            for (int i = 1; i < rows; i++) {
+                // 读取左上端单元格
+                Row row = geRenSheet.getRow(i);
+                if (row != null) {
+                    if ("客户姓名".equals(getCellValue(row.getCell(1)))) {
+                        continue;
+                    }
+
+                    //姓名
+                    Cell nameCell = row.getCell(1);
+                    String  name = getCellValue(nameCell);
+                    //证件号码
+                    Cell idCardCell = row.getCell(2);
+                    String idCard = getCellValue(idCardCell);
+                    //手机号码
+                    Cell phoneCell = row.getCell(3);
+                    String phone = getCellValue(phoneCell);
+                    //身份证地址
+                    Cell idCardAddressCell = row.getCell(4);
+                    String idCardAddress = getCellValue(idCardAddressCell);
+
+                    ////所属项目
+                    //Cell xiangMuCell = row.getCell(5);
+                    //String xiangMu = getCellValue(xiangMuCell);
+
+                    if (StringUtils.isNotBlank(phone) && (StringUtils.isNotBlank(idCard) || StringUtils.isNotBlank(idCardAddress)) ){
+                        num++;
+                    }
+                }
+            }
         }
 
+        //企业客户
+        if (qiYeSheet != null){
+            int rowsQiYe = qiYeSheet.getPhysicalNumberOfRows();
+            count = count + rowsQiYe-1;
+            for (int i = 1; i < rowsQiYe; i++) {
+                Row row = qiYeSheet.getRow(i);
+                if (row != null){
+                    //企业名称
+                    Cell nameCell = row.getCell(1);
+                    String name = getCellValue(nameCell);
 
+                    Cell yignyeCell = row.getCell(2);
+                    String yignye  = getCellValue(yignyeCell);
 
-        //列宽、列标题
-        LinkedList<OutputExcelProperties.ColTitle> titleStyle = new LinkedList(){{
-            add(new OutputExcelProperties.ColTitle("序号", 20*256, true));
-            add(new OutputExcelProperties.ColTitle("公安机关名称"));
-            add(new OutputExcelProperties.ColTitle("制作单位"));
-            add(new OutputExcelProperties.ColTitle("从业人员", 20*256));
-            add(new OutputExcelProperties.ColTitle("从业人员证件号"));
-            add(new OutputExcelProperties.ColTitle("填报人",20*256));
-            add(new OutputExcelProperties.ColTitle("填报日期"));
-            add(new OutputExcelProperties.ColTitle("接警日期"));
-            add(new OutputExcelProperties.ColTitle("可疑情况类型"));
-            add(new OutputExcelProperties.ColTitle("疑点详情描述", 50*512));
-        }};
+                    Cell dianhuaCell = row.getCell(4);
+                    String dianhau = getCellValue(dianhuaCell);
 
-        //excel属性对象
-        OutputExcelProperties ep = new OutputExcelProperties("可疑情况", "制作单位案发信息", "可疑情况",titleStyle);
-
-        HSSFWorkbook wb = OutPutExcelUtil.createExcel(ep, dataList, (HSSFRow row, Integer orderNum, Map<String, String> map) -> {
-
-            //回调中将数据添加到excel单元格中
-            Integer cellIndex = 0;
-            if (orderNum != null){
-                OutPutExcelUtil.createCell(row, cellIndex++, orderNum);  //序号
+                    if (StringUtils.isNotBlank(yignye) && StringUtils.isNotBlank(dianhau)){
+                        num++;
+                    }
+                }
             }
-            OutPutExcelUtil.createCell(row, cellIndex++, map.get("approveName"));
-            OutPutExcelUtil.createCell(row, cellIndex++, map.get("shopName"));
-            OutPutExcelUtil.createCell(row, cellIndex++, map.get("employeeName"));
-            OutPutExcelUtil.createCell(row, cellIndex++, map.get("employeeId"));
-            OutPutExcelUtil.createCell(row, cellIndex++, map.get("addUserName"));
-
-        });
-        wb.write(new File("E:\\数据.xlsx"));
+        }
+        System.out.println("总数 "+count);
+        System.out.println("有效 "+num);
     }
+
+
+
+
 
     public static void sjExcelData(String filePath) throws Exception {
         //数据
@@ -266,106 +288,17 @@ public class ShouJiImport {
         }
     }
 
-    public static void zkExcelData(String filePath) throws Exception {
 
-        Workbook wookbook = WorkbookFactory.create(new FileInputStream(filePath));
 
-        Sheet geRenSheet = wookbook.getSheet("个人客户");
-        Sheet qiYeSheet = wookbook.getSheet("企业客户");
-
-        if (wookbook.getNumberOfSheets() != 1 && (geRenSheet == null || qiYeSheet == null)){
-            System.out.println("不规范表格："+filePath);
-        }
-
-        // 个人客户
-        if (geRenSheet != null){
-            //获取到Excel文件中的所有行数
-            int rows = geRenSheet.getPhysicalNumberOfRows();
-            for (int i = 1; i < rows; i++) {
-                // 读取左上端单元格
-                Row row = geRenSheet.getRow(i);
-                if (row != null) {
-                    if ("客户姓名".equals(getCellValue(row.getCell(1)))) {
-                        continue;
-                    }
-
-                    //姓名
-                    Cell nameCell = row.getCell(1);
-                    String  name = getCellValue(nameCell);
-                    //证件号码
-                    Cell idCardCell = row.getCell(2);
-                    String idCard = getCellValue(idCardCell);
-                    //手机号码
-                    Cell phoneCell = row.getCell(3);
-                    String phone = getCellValue(phoneCell);
-                    //身份证地址
-                    Cell idCardAddressCell = row.getCell(4);
-                    String idCardAddress = getCellValue(idCardAddressCell);
-                    //所属项目
-                    Cell xiangMuCell = row.getCell(5);
-                    String xiangMu = getCellValue(xiangMuCell);
-
-                    if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(xiangMu)) {
-                        ExcelData excelData = new ExcelData();
-                        excelData.setName(name);
-                        excelData.setIdCard(idCard);
-                        excelData.setPhone(phone);
-                        excelData.setIdCardAddress(idCardAddress);
-                        excelData.setXiangMu(xiangMu);
-                        excelData.setType("个人");
-                        excelData.setFilePath(filePath);
-                        if (zaiKuJiMap.get(xiangMu) != null){
-                            zaiKuJiMap.get(xiangMu).add(excelData);
-                        }else {
-                            ArrayList<ExcelData> excelDataArrayList = new ArrayList<>();
-                            excelDataArrayList.add(excelData);
-                            zaiKuJiMap.put(xiangMu, excelDataArrayList);
-                        }
-                    }
-                }
-            }
-        }
-
-        //企业客户
-        if (qiYeSheet != null){
-            int rowsQiYe = qiYeSheet.getPhysicalNumberOfRows();
-            for (int i = 1; i < rowsQiYe; i++) {
-                Row row = qiYeSheet.getRow(i);
-                if (row != null){
-                    //企业名称
-                    Cell nameCell = row.getCell(1);
-                    String name = getCellValue(nameCell);
-                    //所属项目
-                    Cell xiangMuCell = row.getCell(6);
-                    String xiangMu = getCellValue(xiangMuCell);
-
-                    if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(xiangMu)){
-                        ExcelData excelData = new ExcelData();
-                        excelData.setName(name);
-                        excelData.setXiangMu(xiangMu);
-                        excelData.setType("企业");
-                        excelData.setFilePath(filePath);
-                        if (zaiKuJiMap.get(xiangMu) != null){
-                            zaiKuJiMap.get(xiangMu).add(excelData);
-                        }else {
-                            ArrayList<ExcelData> excelDataArrayList = new ArrayList<>();
-                            excelDataArrayList.add(excelData);
-                            zaiKuJiMap.put(xiangMu, excelDataArrayList);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public static ArrayList<String> getDirFileList(String dir) {
-        ArrayList<String> pathList = new ArrayList<>();
+    public static TreeList<String> getDirFileList(String dir) {
+        TreeList<String> pathList = new TreeList<>();
         File fileDir = new File(dir);
         File[] fileList = fileDir.listFiles();
         for (File file : fileList) {
             String filePath = file.getAbsolutePath();
             pathList.add(filePath);
         }
+        pathList.sort((o1, o2)->(o1.compareTo(o2)));
         return pathList;
     }
 
