@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.cpq</groupId>
-    <artifactId>docker1</artifactId>
+    <artifactId>app01</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>docker1</name>
+    <name>app01</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -26,7 +26,7 @@
     </dependencies>
 
     <build>
-        <finalName>docker1</finalName>
+        <finalName>app01</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
