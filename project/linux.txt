@@ -1,4 +1,19 @@
-﻿yum -y install lrzsz gcc gcc-c++ pcre pcre-devel zlib zlib-devel ruby wget bash-completion zlib.i686 libstdc++.i686 lsof unzip zip finger bind-utils  readline-devel autoconf  man-pages nano vim-enhanced net-tools get curl lftp make
+﻿##########################ssh################################
+本地使用xshell
+新建连接——>用户秘钥——>生成——>输入密钥名称——>密码为空——下一步，保存为文件，保存公钥
+
+服务器生成秘钥对
+cd .ssh
+一路回车
+ssh-keygen -t rsa
+vi authorized_keys
+输入xshell生成的公钥
+
+xshell使用公钥连接即可
+
+##########################ssh################################
+
+yum -y install lrzsz gcc gcc-c++ pcre pcre-devel zlib zlib-devel ruby wget bash-completion zlib.i686 libstdc++.i686 lsof unzip zip finger bind-utils  readline-devel autoconf  man-pages nano vim-enhanced net-tools get curl lftp make
 ###############################################linux网络#######################################################
 
 ipconfig         查看ip，负责公网
