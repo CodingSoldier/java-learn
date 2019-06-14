@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-eureka-server
+spec:
+# 注册中心只能部署一个pod
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eureka-server
+  template:
+    metadata:
+      labels:
+        app: eureka-server
+    spec:
+      containers:
+      - name: eureka-server
+#       为了演示方便，不出错，每次构建都拉镜像
+        imagePullPolicy: Always
+        image: codingsoldier/eureka-server:latest
+        ports:
+        - name: http
+          containerPort: 10001
+---
+apiVersion: v1
+kind: Service
+metadata:
+# service的名字非常重要，必须跟application.properties的eureka.client.serviceUrl.defaultZone=http://server-eureka-server:10001/eureka/ 中的域名相同
+  name: server-eureka-server
+spec:
+  selector:
+    app: eureka-server
+# 使用NodePort类型的Service，绑定service的10001端口到宿主机，以便在物理机浏览器上看注册中心的信息
+  type: NodePort
+  ports:
+  - name: http
+    port: 10001
+    targetPort: 10001
+#   暴露端口取值范围是30000-32767
+    nodePort: 30001

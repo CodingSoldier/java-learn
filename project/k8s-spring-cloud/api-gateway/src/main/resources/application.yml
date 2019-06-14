@@ -1,0 +1,33 @@
+server:
+  port: 10005
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: TO_APP01
+          uri: lb://app01
+          predicates:
+            - Path=/app01/**
+          filters:
+            - StripPrefix=1
+        - id: TO_APP02
+          uri: lb://app02
+          predicates:
+            - Path=/app02/**
+          filters:
+            - StripPrefix=1
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      instance-id: ${spring.application.name}:${server.port}
+      defaultZone: http://server-eureka-server:10001/eureka/

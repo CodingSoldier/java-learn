@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-api-gateway
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+      - name: api-gateway
+        imagePullPolicy: Always
+        image: codingsoldier/api-gateway:latest
+        ports:
+        - name: http
+          containerPort: 10005
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-api-gateway
+spec:
+  selector:
+    app: api-gateway
+# 使用NodePort类型的Service，绑定service的10005端口到宿主机，以便在物理机上调用
+  type: NodePort
+  ports:
+  - name: http
+    port: 10005
+    targetPort: 10005
+#   暴露端口取值范围是30000-32767
+    nodePort: 30005

@@ -94,39 +94,39 @@ Ctrl + ] 退出telnet
 
 
 ######################################################################################################
-
 源码包安装nginx
+
+tar -zxvf xxxx
+cd ngXXX
+
+./configure --prefix=/usr/local/nginx
+## 安装到/usr/local/nginx的nginx目录下
+make
+make install
+
+# nginx命令
 /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
 /usr/local/nginx/sbin/nginx                      # 启动
 /usr/local/nginx/sbin/nginx -s reload            # 重新载入配置文件
-/usr/local/nginx/sbin/nginx -s reopen            # 重启 Nginx
 /usr/local/nginx/sbin/nginx -s stop              # 停止 Nginx
 
 自启动脚本的方式似乎无效了，需要些unit文件的方式
-cd /usr/lib/systemd/system/
-vim nginx.service
+vim /usr/lib/systemd/system/nginx.service
 
-[Unit] 
-Description=nginx - high performance web server 
-After=network.target remote-fs.target nss-lookup.target
-
+[Unit]
+Description=nginx 
+After=network.target 
+ 
 [Service] 
 Type=forking 
-PIDFile=/var/run/nginx.pid 
-ExecStartPre=/usr/local/nginx/sbin/nginx -t -c /usr/local/nginx/conf/nginx.conf 
-ExecStart=/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf 
-ExecReload=/usr/local/nginx/sbin/nginx -s reload 
-ExecStop=/usr/local/nginx/sbin/nginx -s stop 
-ExecQuit=/usr/local/nginx/sbin/nginx -s quit 
-PrivateTmp=true
-
+ExecStart=/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
+ExecReload=/usr/local/nginx/sbin/nginx -s reload
+ExecStop=/usr/local/nginx/sbin/nginx -s stop
+PrivateTmp=true 
+ 
 [Install] 
 WantedBy=multi-user.target
 
-
-
-保存，重新加载 systemd
-systemctl daemon-reload
 
 设置nginx服务开机自启动
 systemctl enable nginx
@@ -147,3 +147,13 @@ http://blog.csdn.net/ekey_code/article/details/73824214
 :set paste
 清空文件
 :dG
+
+
+
+
+
+
+
+
+
+
