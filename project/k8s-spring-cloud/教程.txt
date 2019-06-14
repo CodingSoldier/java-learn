@@ -21,6 +21,8 @@ docker container rm -f eureka-server
 # 推送镜像
 docker push codingsoldier/eureka-server:latest
 
+# 新建k8s-eureka-server.yaml
+
 
 
 
