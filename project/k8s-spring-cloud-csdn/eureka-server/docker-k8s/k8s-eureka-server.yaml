@@ -15,9 +15,8 @@ spec:
     spec:
       containers:
       - name: eureka-server
-#       为了演示方便，不出错，每次构建都拉镜像
-        imagePullPolicy: Always
         image: codingsoldier/eureka-server:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - name: http
           containerPort: 10001

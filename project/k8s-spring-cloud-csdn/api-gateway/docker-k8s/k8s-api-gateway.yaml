@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: api-gateway
-        imagePullPolicy: Always
         image: codingsoldier/api-gateway:latest
+        imagePullPolicy: IfNotPresent        
         ports:
         - name: http
           containerPort: 10005
