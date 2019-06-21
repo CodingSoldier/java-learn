@@ -1,0 +1,30 @@
+
+执行命令查看已经安装的java程序:
+rpm –qa | grep java
+
+卸载OPENJDK
+rpm -e --nodeps java-1.6.0-openjdk-1.6.0.0-1.66.1.13.0.el6.i686
+rpm -e --nodeps java-1.7.0-openjdk-1.7.0.45-2.4.3.3.el6.i686
+
+创建JDK的安装路径：
+在/usr/local/  创建文件夹java目录
+mkdir -p /usr/local/java
+
+上传安装文件到linux
+
+解压tar.gz，解压后就是安装完了，配置好环境变量就能用:
+tar -zxvf jdk-7u71-linux-i586.tar.gz -C /usr/local/java
+
+配置环境变量：
+vim /etc/profile
+添加：
+#set java environment
+export JAVA_HOME=/usr/local/java/jdk1.8.0_171
+export JRE_HOME=${JAVA_HOME}/jre
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+export  PATH=${JAVA_HOME}/bin:$PATH
+
+重新加载配置文件：【否则环境变量不会重新执行】
+source /etc/profile
+
+
