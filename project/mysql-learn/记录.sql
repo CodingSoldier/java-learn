@@ -104,21 +104,104 @@ mysqlslap --password=密码 --concurrency=1,50,100 --iterations=3 --number-int-c
 
 基准测试sysbench
 curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.rpm.sh | sudo bash
-sudo yum -y install sysbench
+yum -y install sysbench
 
 
 
 
+cd /tmp
+sysbench --test=fileio --file-total-size=1G prepare
+
+sysbench --test=fileio --num-threads=8 --file-total-size=1G --file-test-mode=rndrw --report-interval=1 run
+
+cd /usr/share/sysbench/tests/include/oltp_legacy/
+sysbench --test=./oltp.lua --mysql-table-engine=innodb --oltp-table-size=10000 --mysql-db=imooc --mysql-user=root --mysql-password=cpq..123 --oltp-tables-count=10 --mysql-socket=/var/lib/mysql/mysql.sock prepare
+
+sysbench --test=./oltp.lua --mysql-table-engine=innodb --oltp-table-size=10000 --mysql-db=imooc --mysql-user=root --mysql-password=cpq..123 --oltp-tables-count=10 --mysql-socket=/var/lib/mysql/mysql.sock run
 
 
+整数类型
+tinynit      1字节      -128~127                    0~255
+smallint     2字节      -32768~32767                0~65535
+mediumint    3字节      -8388608~8388607            0~16777215
+int          4字节      -2147483648~2147483647      0~4294967295
+bigint       8字节
+
+实数类型
+float     4字节   非精确类型
+double    8字节   非精确类型
+decimal   每4个字节存9个数字，小数点占一个字节     是
+非精确类型 说明：
+比方说两个double数据使用sum()函数求和，-101.1 + 80.5 得到的结果可能是 -20.599999999999994，这种情况在代码中也存在。
+
+varchar(长度)、char(长度) 中的长度是以字符为单位的，而不是以字节为单位
+char类型：字符串末尾空格会被删除，最大宽度255
+char类型更新比varchar快，因为char定长，更新不会导致叶分裂，varchar更新后长度增加，可能导致叶分裂
+
+datatime类型默认 YYYY-MM-DD HH:MM:SS，占8字节
+timestamp时间戳，以YYYY-MM-DD HH:MM:SS显示，占4字节，实际上int类型，时间范围是1970-01-01~2038-01-19，在不同时区下，时间值不同
+
+date类型，存年月日，储存生日，3字节
+time类型，存时间部分
 
 
+二进制日志格式
+SHOW VARIABLES LIKE '%binlog_format%'
+
+改成段模式
+SET GLOBAL binlog_format='statement'
 
 
+开启bin_log
+vim /etc/my.cnf
+加入配置
+# server_id一定要有，不然重启会报错
+server_id=100  
+log_bin=master_log	
+
+service mysqld restart 
+
+#查看binlog，看到SQL语句
+mysqlbinlog master_log.000001
+
+#新建binlog文件
+flush logs;
 
 
+改回默认段的模式
+SET GLOBAL binlog_format='row'
+避免了主从复制不一致的问题，记录的是每一行的数据修改，而不是记录SQL语句
+
+#加入 -vv 才能看懂增删改查，但也不是展示完整的SQL语句，而是一般SQL、一半数据
+mysqlbinlog -vv  master_log.000003
+
+改成
+SET GLOBAL binlog_row_image="minimal";  或者noblob可以减少二进制文件的大小，只记录更新的行
 
 
+混合日志格式binlog_format，能用SQL语句记录的就用SQL，不能用SQL的，比如uuid()，就用row格式
+
+
+建议使用mixed或者row格式
+当使用row格式时，建议设置binlog_row_image=minimal
+
+
+从服务器查看线程
+SHOW PROCESSLIST;
+
+
+使用多线程复制
+stop slave;
+set global slave_parallel_type='logical_clock';
+set global slave_parallel_workers=4;
+start slave;
+
+
+SHOW PROCESSLIST;
+
+SHOW VARIABLES LIKE '%slave_parallel_type%';
+
+SHOW VARIABLES LIKE '%slave_parallel_workers%';
 
 
 

@@ -7,20 +7,18 @@ yum repolist enabled | grep mysql.*
 
 yum install -y mysql-server
 
-systemctl start  mysql
-systemctl status mysql
+systemctl start  mysqld
+systemctl status mysqld
 
 修改密码
 grep "password" /var/log/mysqld.log
 mysql -uroot -p
 改变validate_password_policy策略为0，仅校验密码长度，最小长度为8位
 set global validate_password_policy=0;
-ALTER USER 'root'@'localhost' IDENTIFIED BY '密码'
+ALTER USER 'root'@'localhost' IDENTIFIED BY '密码';
 
 设置用户 root 可以在任意 IP 下被访问：
 grant all privileges on *.* to root@"%" identified by "密码";
-设置用户 root 可以在本地被访问：
-grant all privileges on *.* to root@"localhost" identified by "密码";
 
 刷新权限使之生效：
 flush privileges;
@@ -69,8 +67,6 @@ mysql> show variables like '%character%';
 mysql> use mysql;
 mysql> update user set password=password("new_password") where user="root"; 
 mysql> flush privileges;
-
-
 
 
 

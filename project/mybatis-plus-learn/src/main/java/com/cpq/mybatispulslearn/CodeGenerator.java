@@ -16,8 +16,8 @@ public class CodeGenerator {
 
 
 
-    static final String TABLE_NAME = "t_ip_address";
-    static final String MODULE_NAME = "t_ip_address";
+    static final String TABLE_NAME = "t3";
+    static final String MODULE_NAME = "t3";
     static final String AUTHOR = "cpq";
 
     //修改TABLE_NAME、MODULE_NAME、AUTHOR后运行main方法
@@ -28,7 +28,7 @@ public class CodeGenerator {
 
         // 全局配置
         GlobalConfig globalConfig = new GlobalConfig();
-        String projectPath = System.getProperty("user.dir") + "/java-learn/project/mybatis-plus-learn"; //项目目录
+        String projectPath = System.getProperty("user.dir") + "/project/mybatis-plus-learn"; //项目目录
         globalConfig.setOutputDir(projectPath + "/src/main/java");
         globalConfig.setOpen(false);  //生成后打开文件目录
         globalConfig.setFileOverride(true);  //覆盖文件
@@ -44,7 +44,7 @@ public class CodeGenerator {
         dsc.setUrl("jdbc:mysql://localhost:3306/cpq?useUnicode=true&useSSL=false&characterEncoding=utf8");
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("poly2017");
+        dsc.setPassword("cpq..123");
         autoGenerator.setDataSource(dsc);
 
         // 包配置

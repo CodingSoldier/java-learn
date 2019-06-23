@@ -1,35 +1,226 @@
-1、VMware 安装两台虚拟机，解决ip冲突问题
-	1.1、https://blog.csdn.net/lmmzsn/article/details/78921247
-	1.2、https://blog.csdn.net/qq_22815337/article/details/79750689
+###################基于日志点的复制###################################
 
-2、主数据库vim /etc/my.cnf
-	#主数据库server-id要比从数据库id小
-	server_id=100
+vim /etc/my.cnf
+#禁用validate-password功能，通过mysql 语句修改validate-password只在当前环境变量下有效，重启mysql后无效
+validate-password=0
 
-	#主库开启日志功能，日志文件默认在/var/lib/mysql目录下
-	log_bin=master_log	
-
-   从数据库vim /etc/my.cnf
-	#从数据库
-	server_id=101
-
-3、service mysqld restart  重启mysql
-
-4、主添加用户给从使用
-	grant all privileges on *.* to 'myslave'@'192.168.40.120' identified by 'mysalave0.' with grant option;
-
-5、主或者从 vim /var/lib/mysql/auto.cnf  修改service-uuid（主从不相同即可）
-   service mysqld restart  重启mysql	
-
-6、从数据库
-   6.1 stop slave; 关闭从slave 
-   6.2 change master to master_host='192.168.40.129',master_user='myslave',master_password='mysalave0.',master_log_file='master_log.000001'; 
-   6.3 start slave;  开启slave
-   6.4 show slave status \G    \G表示竖直排列
-   6.5 从数据库服务器要开放端口给主数据库服务器
-   6.6 最好再重启一次从mysql服务
-
-7、主操作建库、建表、插入、更新数据，从自动备份，'myslave'@'192.168.40.120'这账号要有这些权限才行
+# 二进制日志
+server_id=1
+log_bin=master_log
+max_binlog_size=1000M
+binlog_format=row
+expire_logs_days=7
+sync_binlog=1
 
 
-  	
+#主创建复制账号
+create user repl@'192.168.1.%' identified by '123456';
+GRANT REPLICATION SLAVE ON *.* TO repl@'192.168.1.%' IDENTIFIED BY '123456';
+
+
+备份主库的test01数据库，导出来的all.sql似乎不太好用，还有changelog的信息
+还不如通过navicat同步数据
+mysqldump --single-transaction --master-data --triggers --routines -uroot -pcpq..123 --databases test01 >> all.sql;
+
+删除binlog
+rm -rf master_log.*
+
+
+
+
+备库修改
+#之前做过备库，需要停止备库
+stop slave
+#需要重置备库
+reset slave
+#删除主备旧的log_bin文件
+
+改uuid
+vim /etc/sysconfig/network-scripts/ifcfg-enp0s3
+vim /var/lib/mysql/auto.cnf
+
+
+vim /etc/my.cnf
+#password功能，通过mysql 语句修改validate-password只在当前环境变量下有效，重启mysql后无效
+validate-password=0
+server_id=2
+log_bin=/var/lib/mysql/master_log
+max_binlog_size=1000M
+binlog_format=row
+expire_logs_days=7
+sync_binlog=1
+
+relay_log=/var/lib/mysql/mysql_relay_log
+log_slave_updates=on
+read_only=on
+
+
+
+# 导入sql
+# mysql -uroot -p密码 < all.sql
+
+
+
+#重启数据库
+service mysqld restart
+
+#设置备库
+# master_log_file='mysql-log-bin.000001', \
+# master_log_pos=0;
+# 这两个参数通过mysqldump导出的SQL中有
+-- CHANGE MASTER TO MASTER_LOG_FILE='master_log.000003', MASTER_LOG_POS=154;
+
+change master to master_host='192.168.1.196', \
+	master_user='repl', \
+	master_password='123456', \
+	master_log_file='master_log.000005', \
+	master_log_pos=154;
+
+show slave status \G;
+
+start slave; 
+
+
+从节点查看线程
+SHOW PROCESSLIST
+
+
+
+
+
+
+
+
+stop slave;   
+reset slave;
+start slave; 
+show slave status \G; 
+
+
+删除log
+rm -rf master_log.* mysql-log-bin.*
+
+# 主库自定义配置
+#不使用密码强度规则
+validate-password=0
+# 主库开启日志功能、设置server_id
+log_bin=/var/lib/mysql/mysql-log-bin
+server_id=10
+#日志同步到磁盘
+sync_binlog=1
+#一个日志最大容量
+max_binlog_size = 500M
+#日志过期时间
+expire_logs_days = 9
+
+
+
+#备库自定义配置
+#不使用密码强度规则
+validate-password=0
+#从数据库
+log_bin=/var/lib/mysql/mysql-log-bin
+server_id=2
+relay_log=/var/lib/mysql/mysql-relay-bin
+#备库从主库获取数据后更新自己的数据，这些数据/操作默认不会写入binlog，为了能让此备库在以后可以升级为主库。
+#在复制过程中记录自己的二进制日志，备库也可以变成主库
+log_slave_updates=1
+#备库重启后不启动复制，需要手动开启
+#skip_slave_start
+#不常用
+read_only 
+sync_master_info=1
+sync_relay_log=1
+sync_relay_log_info=1
+#复制出错后，跳过所有错误
+slave-skip-errors=all
+#一个日志最大容量
+max_binlog_size = 500M
+#日志过期时间
+expire_logs_days = 9
+
+
+
+
+
+
+##############################gtid配置##################################
+
+主服务器
+vim /etc/my.cnf
+
+validate-password=0
+
+# 二进制日志
+server_id=1
+log_bin=master_log
+max_binlog_size=1000M
+binlog_format=row
+expire_logs_days=7
+sync_binlog=1
+
+#gtid配置
+gtid_mode=on
+enforce-gtid_consistency=on
+
+
+systemctl restart mysqld
+
+
+备库
+vim /etc/my.cnf
+
+validate-password=0
+server_id=2
+log_bin=/var/lib/mysql/master_log
+max_binlog_size=1000M
+binlog_format=row
+expire_logs_days=7
+sync_binlog=1
+
+relay_log=/var/lib/mysql/mysql_relay_log
+# log_slave_updates=on
+read_only=on
+
+# gtid配置
+gtid_mode=on
+enforce_gtid_consistency=on
+master_info_repository=TABLE
+relay_log_info_repository=TABLE
+
+
+stop slave;
+reset slave;
+
+systemctl restart mysqld
+
+
+主库
+mysqldump --single-transaction --master-data=2 --triggers --routines -uroot -pcpq..123 --databases test01 >> all2.sql;
+
+
+备库
+change master to master_host='192.168.1.196', \
+	master_user='repl', \
+	master_password='123456', \
+	master_auto_position=1;
+
+start slave;
+
+show slave status \G;
+
+
+
+后面的5表示执行了5个事务
+Retrieved_Gtid_Set: da776ac6-941c-11e9-a91c-08002759e027:1-5
+Executed_Gtid_Set: da776ac6-941c-11e9-a91c-08002759e027:1-5
+
+
+
+
+
+
+
+
+
+
