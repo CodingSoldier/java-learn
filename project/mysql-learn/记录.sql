@@ -276,6 +276,7 @@ sysbench --test=./oltp.lua --mysql-table-engine=innodb --oltp-table-size=10000 -
 慢查询分析工具
 mysqldumpslow
 
+<<<<<<< HEAD
 使用pt-query-digest分析慢查询
 wget https://www.percona.com/downloads/percona-toolkit/2.2.16/RPM/percona-toolkit-2.2.16-1.noarch.rpm && yum localinstall -y  percona-toolkit-2.2.16-1.noarch.rpm
 
@@ -323,15 +324,6 @@ select count(*)
 数据库分片
 自增主键全局唯一
 设置auto_increment_increment、auto_increment_offset
-
-
-
-
-
-
-
-
-
 
 
 

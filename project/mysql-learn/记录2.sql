@@ -72,10 +72,35 @@ innodb_file_per_table           设置每个表独立使用一个表空间文件
 
 错误日志      记录mysql在启动、运行、停止时出现的问题
 常规日志      记录所有发向mysql的请求，太多，用于调试，调试完后要关闭
-慢查询日志     记录符合条件的查询
+慢查询日志    记录符合条件的查询
+二进制日志    记录全部有效的数据修改日志
+中继日志      用于主从复制，临时存储主从同步的二进制日志
 
 
 
+错误日志log_error
+默认位置select @@log_error
+
+log_error_verbosity日志级别
+	1  error级别的信息
+	2  error、warning级别的信息
+	1  error、warning、note级别的信息
+
+log_error_services=[日志过滤组件]  mysql8的参数
+	
+SELECT @@log_timestamps;  日志文件中的时间，使用的是UTC时间
+
+SET GLOBAL log_timestamps='SYSTEM'   使用系统时间作为日志的时间
+执行一条会发生错误的命令
+change master to master_host='192.168.4.154';
+查看错误日志
+cat /var/log/mysqld.log
+
+常规日志
+SELECT @@general_log
+SELECT @@log_output = file存储在文件中，table存储在表中，none不存常规日志
+general_log_file  常规日志文件
+mysql.general_log 常规日志表 
 
 
 
