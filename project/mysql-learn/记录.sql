@@ -263,8 +263,10 @@ long_query_time  慢查询时间
 
 log_querues_not_using_indexes  是否记录未使用索引的SQL
 
-
 set global slow_query_log=on;
+set global long_query_time=0.001;
+SHOW VARIABLES LIKE "%long_query_time%";
+SHOW VARIABLES LIKE "%slow_query_log%";
 
 cd /usr/share/sysbench/tests/include/oltp_legacy/
 sysbench --test=./oltp.lua --mysql-table-engine=innodb --oltp-table-size=10000 --mysql-db=imooc --mysql-user=root --mysql-password=cpq..123 --oltp-tables-count=10 --mysql-socket=/var/lib/mysql/mysql.sock prepare
@@ -273,4 +275,78 @@ sysbench --test=./oltp.lua --mysql-table-engine=innodb --oltp-table-size=10000 -
 
 慢查询分析工具
 mysqldumpslow
+
+使用pt-query-digest分析慢查询
+wget https://www.percona.com/downloads/percona-toolkit/2.2.16/RPM/percona-toolkit-2.2.16-1.noarch.rpm && yum localinstall -y  percona-toolkit-2.2.16-1.noarch.rpm
+
+使用pt-query-digest
+pt-query-digest --explain h=127.0.0.1 --password=cpq..123 /var/lib/mysql/dev-slow.log > slow.rep
+
+
+实时获取性能
+查看information_schema中的PROCESSLIST表
+
+query_cache_type  设置查询缓存是否可用，建议关闭
+query_cache_size  设置查询缓存的内存大小
+query_cache_limit  设置查询缓存可用存储的最大值
+query_cache_wlock_invalidate  设置数据表被锁后是否返回缓存中的数据
+query_cache_min_res_unit   设置查询缓存分配的内存块最小单位
+
+确定查询各个阶段所消耗的时间
+set profiling=1;
+SELECT * FROM `t_ip_address` WHERE address like '%南省张家%' OR ip_end LIKE '%223.153.4.255%';
+SHOW profiles;
+SHOW profile for query [Query_ID];
+
+profiles将会被废弃，推荐使用performance_schema
+use performance_schema;
+update setup_instruments set enabled='yes', timed='yes' where name like 'stage%';
+update setup_consumers set enabled='yes' where name like 'events%';
+
+
+大表的表结构修改
+建一个新表，把老表的数据导入新表中，加一个触发器把老表数据同步到新表。
+使用工具(表需要有主键)
+pt-online-schema-change \
+--alter="MODIFY last_name VARCHAR(150)" \
+--user=root --password=cpq..123 D=sakila,t=actor_copy1 \
+--charset=utf8 --execute
+
+
+使用left join优化not in、< >
+
+数据量很大
+select count(*)
+可以新建一张汇总表，从汇总表中查询总量
+
+
+数据库分片
+自增主键全局唯一
+设置auto_increment_increment、auto_increment_offset
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

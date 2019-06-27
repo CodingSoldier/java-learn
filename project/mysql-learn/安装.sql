@@ -1,11 +1,12 @@
-
 wget http://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
+-- mysql8  wget http://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
 yum -y install mysql57-community-release-el7-11.noarch.rpm
+-- yum -y install mysql80-community-release-el7-3.noarch.rpm
 
 查看一下安装效果
 yum repolist enabled | grep mysql.*
 
-yum install -y mysql-server
+yum -y install mysql-community-server
 
 systemctl start  mysqld
 systemctl status mysqld
@@ -67,6 +68,28 @@ mysql> show variables like '%character%';
 mysql> use mysql;
 mysql> update user set password=password("new_password") where user="root"; 
 mysql> flush privileges;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
