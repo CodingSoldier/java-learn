@@ -150,17 +150,18 @@ mysqlpump -uroot -pcpq..123 --compress-output=zlib --databases learn > learn.zli
 zlib_decompress learn.zlib learn.sql
 
 使用xtrabackup
-1、安装Percona的库：
-     yum install https://www.percona.com/redir/downloads/percona-release/redhat/0.1-6/percona-release-0.1-6.noarch.rpm
-2、测试Percona库：
-     yum list|grep percona
-3、安装包：
-     yum install -y percona-xtrabackup
+yum install -y https://repo.percona.com/yum/percona-release-latest.noarch.rpm
+yum install -y percona-xtrabackup-24
+-- 卸载yum源 rpm  -e --nodeps percona-release
 
 innobackupex --help
 mkdir -p /tmp/backup
+-- 全备份
 innobackupex --user=root --password=cpq..123 /tmp/backup/
-
+-- 自定义目录/tmp/backup/20190628 --no-timestamp，并行线程数--parallel=2
+innobackupex --user=root --password=cpq..123 /tmp/backup/20190628 --no-timestamp --parallel=2
+-- 模拟灾难恢复过程，把20190628目录中的备份转为mysql文件
+innobackupex --apply-log 20190628
 
 
 
