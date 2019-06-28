@@ -41,7 +41,7 @@ public class ShouJiImport {
 
 
         //在库数据
-        TreeList<String> zaikuFileList = getDirFileList("E:\\收费系统客户信息_2019.4.24");
+        TreeList<String> zaikuFileList = getDirFileList("E:\\客户信息");
         for (String filePath : zaikuFileList) {
             zkExcelData(filePath);
         }

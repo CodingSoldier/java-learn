@@ -15,11 +15,17 @@ systemctl status mysqld
 grep "password" /var/log/mysqld.log
 mysql -uroot -p
 改变validate_password_policy策略为0，仅校验密码长度，最小长度为8位
+-- set global validate_password.policy=0;
+-- set global validate_password.length=3;
 set global validate_password_policy=0;
-ALTER USER 'root'@'localhost' IDENTIFIED BY '密码';
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'cpq..123';
+
+-- create user root@"%" IDENTIFIED BY 'cpq..123';
+-- ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'cpq..123';
+-- GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'WITH GRANT OPTION;
 
 设置用户 root 可以在任意 IP 下被访问：
-grant all privileges on *.* to root@"%" identified by "密码";
+grant all privileges on *.* to 'root'@'%' identified by "cpq..123";
 
 刷新权限使之生效：
 flush privileges;

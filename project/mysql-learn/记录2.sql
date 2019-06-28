@@ -48,8 +48,8 @@ pt-config-diff u=root,p=cpq..123,h=localhost /etc/my.cnf
 
 重要参数
 max_connections        mysql最大连接数
-interactive_timeout    交互连接的timeout时间，对sleep状态线程有效
-wait_timeout           非交互连接的timeout时间，对sleep状态线程有效
+interactive_timeout    交互连接的timeout时间，对sleep状态线程有效，mysql客户端
+wait_timeout           非交互连接的timeout时间，对sleep状态线程有效，jdbc连接池
 max_allowed_packet     控制mysql可以接受的数据包大小，主从复制时要一致
 sync_binlog            表示每写多少次缓冲会向磁盘同步一次binlog
 sort_buffer_size       每个会话使用排序缓冲区的大小
@@ -102,10 +102,64 @@ SELECT @@log_output = file存储在文件中，table存储在表中，none不存
 general_log_file  常规日志文件
 mysql.general_log 常规日志表 
 
+慢查询
+SELECT @@slow_query_log        是否开启慢查询
+SELECT @@slow_query_log_file   慢查询日志
+long_query_time                超过xx秒则记录
+log_quueries_not_using_indexes 没使用索引的查询记录到慢查询日志
+log_slow_admin_statements      记录管理命令
 
 
+二进制日志  log-bin
+SHOW variables like 'log_bin%'
+binlog_format=row | statement | mixed     记录数据、记录sql语句、混合模式
+binlog_row_image=full | minimal | noblob  记录所有列的值、记录修改列的值
+expire_logs-days    二进制日志过期时间
+purge binary logs to 'mysql-bin.010'  删除001~009的日志
+purge binary logs before '2019-04-02 22:22:22'   2019-04-02 22:22:22 之前的日志会被清除
+
+中继日志     relay_log
+relay_log   中继日志名
+relay_log_purge on|off  默认on自动清理
 
 
+innodb使用聚簇索引，聚簇索引的叶子节点指向数据行中的主键，所以主键最好使用自增主键，小而且有序。使用uuid会发生数据重排列
+innodb事物的实现方式
+原子性A 使用Undo log记录数据修改前的状态
+一致性C 使用Redo log记录数据修改后的状态
+隔离性I 使用共享锁、排他锁
+持久性  使用undo log、redo log配合实现
+
+MVCC多版本并发控制
+简单来说，读操作如果遇到了锁，会去Undo log中读取旧的值，实现写的同时也可以读。
+
+
+备份
+mysqldump --help;
+备份
+mysqldump -uroot -pcpq..123 --databases learn > learn.sql
+恢复
+mysql -uroot -pcpq..123 < learn.sql
+带where条件的备份
+mysqldump -uroot -pcpq..123 --where "ip_start='1.0.16.0'" learn t_ip_address > t_ip_address.sql
+
+mysqlpump备份
+使用zlib压缩
+mysqlpump -uroot -pcpq..123 --compress-output=zlib --databases learn > learn.zlib
+解压缩
+zlib_decompress learn.zlib learn.sql
+
+使用xtrabackup
+1、安装Percona的库：
+     yum install https://www.percona.com/redir/downloads/percona-release/redhat/0.1-6/percona-release-0.1-6.noarch.rpm
+2、测试Percona库：
+     yum list|grep percona
+3、安装包：
+     yum install -y percona-xtrabackup
+
+innobackupex --help
+mkdir -p /tmp/backup
+innobackupex --user=root --password=cpq..123 /tmp/backup/
 
 
 

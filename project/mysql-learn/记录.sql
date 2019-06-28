@@ -13,7 +13,7 @@ SET GLOBAL innodb_file_per_table='OFF';
 /var/lib/mysql/learn/ 目录下只有t2.frm，没有t2.idb，数据存储在共享表空间/var/lib/mysql/ibdata1
 
 Redo Log、Undo Log 与事务关系
-Redo Log重做日志，存储已经提交的事务，实现事务持久性
+Redo Log重做日志，存储已经提交的数据，实现事务持久性
 	重做事物缓冲区，每秒刷新到硬盘
 	innodb_log_buffer_size	16777216  #单位是字节，16M
 
@@ -23,7 +23,7 @@ Redo Log重做日志，存储已经提交的事务，实现事务持久性
 	有两个文件/var/lib/mysql/目录下的ib_logfile0、ib_logfile1
 
 
-Undo Log回滚日志，存储未提交的事务
+Undo Log回滚日志，存储旧的数据值
 
 
 mysql读锁是共享锁，写锁是独占锁；读锁与读锁可以并发执行，写锁与任何锁都互斥
@@ -88,7 +88,7 @@ max_allowed_packet 控制Mysql可以接受的包的大小，可以设置大点
 
 read_only 禁止非super权限用户写权限，用户备库中
 skip_slave_start 禁用slave自动恢复
-sql_mode  only_fuul_group_by  group by 后要列出查询列中所有非聚合函数的列
+sql_mode  only_full_group_by  group by 后要列出查询列中所有非聚合函数的列
 sync_binlog 默0是系统决定，主库要设置为1，每次事务完成后都写二进制日志文件，避免主库崩溃，有一部分二进制日志在缓冲中，导致主备不一致
 
 max_connections 最大连接数，默认100，太小，可以设置为2000
@@ -105,8 +105,6 @@ mysqlslap --password=密码 --concurrency=1,50,100 --iterations=3 --number-int-c
 基准测试sysbench
 curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.rpm.sh | sudo bash
 yum -y install sysbench
-
-
 
 
 cd /tmp
@@ -249,6 +247,12 @@ rollback;
 select * from actor_copy1 where last_name='Wills' for update;
 未能执行，由于Innodb未能通过索引筛选出last_name='WOOD'的行，所以全表锁定
 
+删除索引后
+BEGIN;
+UPDATE actor_copy1 SET first_name="t001" WHERE last_name='GUINESS';
+会锁住下面这条数据
+BEGIN;
+UPDATE actor_copy1 SET first_name="t002" WHERE last_name='WAHLBERG';
 
 重复索引
 unique key也是一种索引，列建立了unique后就没有必要在此列建立其他索引了
@@ -276,7 +280,7 @@ sysbench --test=./oltp.lua --mysql-table-engine=innodb --oltp-table-size=10000 -
 慢查询分析工具
 mysqldumpslow
 
-<<<<<<< HEAD
+
 使用pt-query-digest分析慢查询
 wget https://www.percona.com/downloads/percona-toolkit/2.2.16/RPM/percona-toolkit-2.2.16-1.noarch.rpm && yum localinstall -y  percona-toolkit-2.2.16-1.noarch.rpm
 
@@ -326,9 +330,39 @@ select count(*)
 设置auto_increment_increment、auto_increment_offset
 
 
+###################一份master节点配置#############################
+需要先关闭selinux
+vim  /etc/selinux/config
+SELINUX=disabled
 
+新建、授权/var/log/mysql存放慢查询日志文件
+mkdir -p /var/log/mysql
+chown mysql:mysql /var/log/mysql
 
+select @@global.wait_timeout;  查看全局wait_timeout时间
+select @@wait_timeout;         得到的结果是mysql客户端这种交互性连接的wait_time时间，实际上是interactive_timeout的值
 
+# 密码
+validate-password=0
+# 连接
+max_connections=1000
+wait_timeout=600
+# 慢查询
+slow_query_log=1
+slow_query_log_file=/var/log/mysql/slow_query_log_file.log
+long_query_time=5
+# 二进制日志
+server_id=4177
+log_bin=master_log
+binlog_format=row
+binlog_row_image=minimal
+#事物提交后，数据写入到二进制日志
+sync_binlog=1
+max_binlog_size=1000M
+expire_logs_days=7
+# gtid配置
+gtid_mode=on
+enforce_gtid_consistency=true
 
 
 
