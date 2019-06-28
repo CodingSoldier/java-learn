@@ -161,7 +161,41 @@ innobackupex --user=root --password=cpq..123 /tmp/backup/
 -- 自定义目录/tmp/backup/20190628 --no-timestamp，并行线程数--parallel=2
 innobackupex --user=root --password=cpq..123 /tmp/backup/20190628 --no-timestamp --parallel=2
 -- 模拟灾难恢复过程，把20190628目录中的备份转为mysql文件
-innobackupex --apply-log 20190628
+innobackupex --apply-log 2019-06-28_11-12-59
+恢复比较麻烦
+
+
+监控
+SHOW GLOBAL STATUS LIKE 'Com%'
+-- 更新数
+SHOW GLOBAL STATUS LIKE 'Com_update'
+
+SHOW GLOBAL STATUS WHERE variable_name IN ('Queries', 'uptime');
+Queries	99
+Uptime	1585
+
+SHOW GLOBAL STATUS WHERE variable_name IN ('Queries', 'uptime');
+Queries	106
+Uptime	1624
+
+每秒请求数
+QPS=(106-99)/(1624-1585)
+
+
+SHOW GLOBAL STATUS WHERE variable_name IN ('com_insert','com_delete','com_update', 'uptime');
+SHOW GLOBAL STATUS WHERE variable_name IN ('com_insert','com_delete','com_update', 'uptime');
+每秒事物处理次数
+TPS
+
+并发数
+SHOW GLOBAL STATUS LIKE 'Threads_running'
+当前连接数(有部分连接处于sleep状态，不属于并发)
+SHOW GLOBAL STATUS LIKE 'Threads_connected'
+
+缓存命中率
+-- query_cache_type	OFF  关闭了查询缓存，下面两个值也不相等
+SHOW GLOBAL STATUS LIKE 'Innodb_buffer_pool_read_requests'  从缓存池中读取的次数
+SHOW GLOBAL STATUS LIKE 'Innodb_buffer_pool_reads'       从物理磁盘读取的次数
 
 
 

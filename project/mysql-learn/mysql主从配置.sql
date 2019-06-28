@@ -215,9 +215,20 @@ show slave status \G;
 Retrieved_Gtid_Set: da776ac6-941c-11e9-a91c-08002759e027:1-5
 Executed_Gtid_Set: da776ac6-941c-11e9-a91c-08002759e027:1-5
 
-
-
-
+从库发生异常，可以跳过一个事务
+Retrieved_Gtid_Set: da776ac6-941c-11e9-a91c-08002759e027:1-5
+Executed_Gtid_Set: da776ac6-941c-11e9-a91c-08002759e027:1-4
+接收到的gtid是da776ac6-941c-11e9-a91c-08002759e027:1-5，当前执行到了da776ac6-941c-11e9-a91c-08002759e027:1-4
+第5个事务无法执行，跳过第5个事务
+stop slave;
+show variables like 'gtid_next';
+gtid_next	AUTOMATIC
+set gtid_next='da776ac6-941c-11e9-a91c-08002759e027:1-5';
+-- 注入一个空事务
+begin;commit;
+-- 还原gtid_next
+set gtid_next='AUTOMATIC';
+start slave;
 
 
 

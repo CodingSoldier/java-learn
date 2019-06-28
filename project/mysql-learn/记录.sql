@@ -350,7 +350,7 @@ wait_timeout=600
 # 慢查询
 slow_query_log=1
 slow_query_log_file=/var/log/mysql/slow_query_log_file.log
-long_query_time=5
+long_query_time=1
 # 二进制日志
 server_id=4177
 log_bin=master_log
