@@ -1,0 +1,15 @@
+教程  https://windmt.com/2018/04/24/spring-cloud-12-sleuth-zipkin/
+下载jar包
+https://search.maven.org/remote_content?g=io.zipkin.java&a=zipkin-server&v=LATEST&c=exec
+java -jar zipkin.jar
+
+
+
+
+
+
+
+
+
+
+
