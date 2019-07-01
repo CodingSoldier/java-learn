@@ -1,0 +1,33 @@
+﻿# 安装pip
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python get-pip.py
+
+# 安装shadowsocks
+pip install shadowsocks
+
+vi /etc/shadowsocks.json
+{
+    "server":"服务器ip",
+    "server_port":随便写个端口,
+    "local_port":1080,
+    "password":"密码",
+    "timeout":600,
+    "method":"aes-256-cfb"
+}
+
+# 将shadowsocks加入系统服务
+vi /etc/systemd/system/shadowsocks.service
+[Unit]
+Description=Shadowsocks
+[Service]
+TimeoutStartSec=0
+ExecStart=/usr/bin/ssserver -c /etc/shadowsocks.json
+[Install]
+WantedBy=multi-user.target
+
+
+systemctl enable shadowsocks
+systemctl start shadowsocks
+systemctl status shadowsocks
+
+
