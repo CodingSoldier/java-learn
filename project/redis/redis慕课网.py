@@ -19,6 +19,7 @@ mkdir config
 cat redis.conf | grep -v "#" | grep -v "^$" > ./config/redis-6381.conf
 
 vim config/redis-6382.conf
+protected-mode no
 daemonize yes
 port 6382
 dir "/soft/redis/data"
@@ -127,6 +128,7 @@ rdbchecksum  yes
 
 
 vim config/redis-6382.conf
+protected-mode no
 daemonize yes
 port 6382
 
@@ -205,6 +207,7 @@ bgrewriteaof
 主节点配置
 redis-6379.conf
 #bind 127.0.0.1
+protected-mode no
 daemonize yes
 logfile "log-6379.log"
 #save 900 1
@@ -216,6 +219,7 @@ appendfilename "appendonly-6379.aof"
 
 从节点配置，从节点不能执行set操作，从节点有数据会先清除旧数据
 redis-6380.conf
+protected-mode no
 #bind 127.0.0.1
 daemonize yes
 logfile "log-6380.log"
@@ -225,7 +229,7 @@ logfile "log-6380.log"
 dbfilename dump-6380.rdb
 dir /soft/redis/data
 appendfilename "appendonly-6380.aof"
-slaveof 127.0.0.1 6379
+slaveof 192.168.4.176 6379
 
 
 启动主节点
@@ -258,7 +262,7 @@ port 26379
 dir "/soft/redis/data"
 logfile "log-26379.log"
 # sentinel配置，mymaster主节点名字，2表示有2个sentinel发现master有问题则进行故障转移
-sentinel monitor mymaster 127.0.0.1 6379 2
+sentinel monitor mymaster 192.168.4.176 6379 2
 # master发生故障时间
 sentinel down-after-milliseconds mymaster 30000
 # 一次一个从节点从主节点同步数据
@@ -273,7 +277,9 @@ daemonize yes
 pidfile /var/run/redis-sentinel-26379.pid
 logfile "log-sentinel-26379.log"
 dir /tmp
-sentinel monitor mymaster 127.0.0.1 6379 2
+# 必须填写主机ip，两个sentinel认为几点下线，则线下master，建议为 sentinel几点数/2 + 1
+sentinel monitor mymaster 192.168.4.176 6379 2
+# 每秒ping节点，30s没收到节点回复则认为几点下线了
 sentinel down-after-milliseconds mymaster 30000
 sentinel parallel-syncs mymaster 1
 sentinel failover-timeout mymaster 180000
