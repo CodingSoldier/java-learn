@@ -28,9 +28,11 @@ spring:
       client:
         enabled: true
     sampler:
-      probability: 1.0 # 将采样比例设置为 1.0，也就是全部都需要。默认是 0.1
+      # 将采样比例设置为 1.0，也就是全部都需要。默认是 0.1
+      probability: 1.0
   zipkin:
-    base-url: http://localhost:9411/ # 指定了 Zipkin 服务器的地址
+    # 指定了 Zipkin 服务器的地址
+    base-url: http://localhost:9411/
 
 eureka:
   instance:
@@ -38,4 +40,4 @@ eureka:
   client:
     service-url:
       instance-id: ${spring.application.name}:${server.port}
-      defaultZone: http://localhost:10001/eureka/
+      defaultZone: http://localhost:10001/eureka/, http://localhost:10002/eureka/, http://localhost:10003/eureka/

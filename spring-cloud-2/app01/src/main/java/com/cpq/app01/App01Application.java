@@ -25,17 +25,20 @@ public class App01Application {
 
     @GetMapping("/test01/get")
     public String test01Get(){
+        System.out.println("/test01/get");
         return "test01/get";
     }
 
     @PostMapping("/test01/post")
     public Object test01Post(@RequestBody Map<String, String> map){
+        System.out.println(map.toString());
         map.put("app", "app01");
         return map;
     }
 
     @PostMapping("/test01/test02/post")
     public Object test0102Post(@RequestBody Map<String, String> map){
+        System.out.println(map.toString());
         map.put("feign", "feign");
         return app02Feign.test02Post(map);
     }
