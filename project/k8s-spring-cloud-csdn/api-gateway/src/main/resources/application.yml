@@ -12,15 +12,15 @@ spring:
           enabled: true
       routes:
         - id: TO_APP01
-          uri: lb://app01
+          uri: lb://app001
           predicates:
-            - Path=/app01/**
+            - Path=/app001/**
           filters:
             - StripPrefix=1
         - id: TO_APP02
-          uri: lb://app02
+          uri: lb://app002
           predicates:
-            - Path=/app02/**
+            - Path=/app002/**
           filters:
             - StripPrefix=1
 

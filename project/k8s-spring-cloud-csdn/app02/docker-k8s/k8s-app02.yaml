@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deployment-app02
+  name: deployment-app002
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: app02
+      app: app002
   template:
     metadata:
       labels:
-        app: app02
+        app: app002
     spec:
       containers:
-      - name: app02
-        image: codingsoldier/app02:latest
+      - name: app002
+        image: codingsoldier/app002:latest
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
@@ -23,10 +23,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: service-app02
+  name: service-app002
 spec:
   selector:
-    app: app02
+    app: app002
   ports:
   - name: http
     port: 10012

@@ -28,7 +28,7 @@ public class SysUserController {
         return json;
     }
 
-    @PostMapping("/app01/app02/demo1/demo2")
+    @PostMapping("/app001/app002/demo1/demo2")
     public JSONObject app01app02demo1demo2(HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception{
         sysUserService.app01app02demo1demo2();
         JSONObject json = new JSONObject();

@@ -79,7 +79,7 @@ public class SysUserServiceImpl implements SysUserService, ITxTransaction {
         System.out.println("执行----com.cpq.txapp01.sysuser.service.SysUserServiceImpl.restsave");
 
         restTemplate.getForObject("http://springcloud-mybatis-demo1/test01/restSave", String.class);
-        restTemplate.postForObject("http://tx-app02/sys/role/add", new HashMap<>(), String.class);
+        restTemplate.postForObject("http://tx-app002/sys/role/add", new HashMap<>(), String.class);
 
         //这里抛异常，前面的代码都回滚
         int v = 100/0;

@@ -5,7 +5,7 @@ import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(value = "tx-app01")
+@FeignClient(value = "tx-app001")
 public interface TxApp01 {
 
     @RequestMapping(value = "/sys/user/add",method = RequestMethod.POST)

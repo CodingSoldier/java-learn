@@ -12,15 +12,15 @@ spring:
           enabled: true
       routes:
         - id: TO_APP01
-          uri: lb://app01
+          uri: lb://app001
           predicates:
-            - Path=/app01/**
+            - Path=/app001/**
           filters:
             - StripPrefix=1
         - id: TO_APP02
-          uri: lb://app02
+          uri: lb://app002
           predicates:
-            - Path=/app02/**
+            - Path=/app002/**
           filters:
             - StripPrefix=1
   sleuth:
@@ -40,4 +40,20 @@ eureka:
   client:
     service-url:
       instance-id: ${spring.application.name}:${server.port}
-      defaultZone: http://localhost:10001/eureka/, http://localhost:10002/eureka/, http://localhost:10003/eureka/
+#      defaultZone: http://localhost:10001/eureka/, http://localhost:10002/eureka/, http://localhost:10003/eureka/
+      defaultZone: http://localhost:10001/eureka/
+
+# 启动熔断器，设置总超时、服务调用超时时间，超时则熔断
+feign:
+  hystrix:
+    enabled: true
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 32000
+ribbon:
+  ConnectTimeout: 2000
+  ReadTimeout: 30000

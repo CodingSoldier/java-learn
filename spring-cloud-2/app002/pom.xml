@@ -6,12 +6,12 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.0.6.RELEASE</version>
-        <relativePath/>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>api-gateway2</artifactId>
+    <groupId>com.cpq</groupId>
+    <artifactId>app002</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>api-gateway2</name>
+    <name>app002</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -31,10 +31,9 @@
     </dependencyManagement>
 
     <dependencies>
-
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -46,20 +45,10 @@
             <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
         </dependency>
 
-        <!-- 服务调用链路监控zipkin -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-sleuth</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-zipkin</artifactId>
-        </dependency>
-
     </dependencies>
 
     <build>
-        <finalName>api-gateway2</finalName>
+        <finalName>app002</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
