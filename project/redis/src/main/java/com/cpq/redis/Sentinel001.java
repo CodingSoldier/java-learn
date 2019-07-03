@@ -18,12 +18,17 @@ public class Sentinel001 {
     RedisTemplate redisTemplate;
 
     @Test
-    public void test001() throws Exception{
+    public void test001(){
         while (true){
-            String key = "two:" + new Date().getTime();
-            redisTemplate.opsForValue().set(key, new Date().getTime());
-            TimeUnit.MILLISECONDS.sleep(100L);
-            System.out.println(redisTemplate.opsForValue().get(key));
+            try {
+                String key = "two:" + new Date().getTime();
+                redisTemplate.opsForValue().set(key, new Date().getTime());
+                TimeUnit.MILLISECONDS.sleep(100L);
+                System.out.println(redisTemplate.opsForValue().get(key));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
         }
 
     }
