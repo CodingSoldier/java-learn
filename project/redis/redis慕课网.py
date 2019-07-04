@@ -302,6 +302,22 @@ vim config/redis-sentinel-26381.conf
 
 
 
+查找value非常大的key
+redis-cli --bigkeys
+
+
+info memory  查看内存
+used_memory  reids数据的内存量
+used_memory_human  reids数据的内存量加个单位，让可读性更高
+used_memory_rss   从操作系统的角度，redis进程占用的总内存
+used_memory_peak   used_memory的历史峰值
+used_memory_lua    lua引擎消耗的内存
+mem_fregmentation_ratio     used_memory_rss/used_memory，表示内存碎片率
+mem_allocator    Redis所使用的的内存分配器，默认jemalloc
+
+
+
+复制缓冲区repl_back_buffer默认1M，可以设置得更大一点
 
 
 

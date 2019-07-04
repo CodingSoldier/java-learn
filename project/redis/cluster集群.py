@@ -8,7 +8,6 @@ make install
 cd /usr/local/ruby/
 cp bin/ruby /usr/local/bin/
 cp bin/gem /usr/local/bin/
-
 ruby --version
 
 
@@ -27,10 +26,10 @@ cluster-config-file nodes-7000.conf
 cluster-require-full-coverage no
 
 配置详解
-cluster-enabled yes  启动集群
+cluster-enabled yes  启动cluster集群
 cluster-require-full-coverage no  有一个节点不可用，依旧运行集群
 
-创建其他5份配置
+再创建其他5份配置
 sed 's/7000/7001/g' config/redis-7000.conf > config/redis-7001.conf
 sed 's/7000/7002/g' config/redis-7000.conf > config/redis-7002.conf
 sed 's/7000/7003/g' config/redis-7000.conf > config/redis-7003.conf
@@ -50,10 +49,14 @@ redis-server config/redis-7005.conf
 redis-cli --cluster create  --cluster-replicas 1 \
 192.168.4.176:7000 192.168.4.176:7001 192.168.4.176:7002 192.168.4.176:7003 192.168.4.176:7004 192.168.4.176:7005
 
+创建过程需要你输入yes确认
 yes
 
 在客户端查看集群状态
 cluster info
+
+集群节点
+cluster nodes
 
 使用集群模式客户端
 redis-cli -c -p 7000
@@ -76,7 +79,9 @@ spring.redis.cluster.nodes=192.168.4.176:7000, 192.168.4.176:7001, 192.168.4.176
 
 
 
-
+cluster集群
+	redis-cli 不支持mset、mget
+	jedis支持mset、mget
 
 
 
