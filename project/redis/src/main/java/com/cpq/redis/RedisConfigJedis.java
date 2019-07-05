@@ -22,7 +22,7 @@ import java.util.List;
  JedisClusterConfig 配置
  */
 @Configuration
-public class RedisConfigJedis {
+public class RedisConfigJedis{
 
     /**
 

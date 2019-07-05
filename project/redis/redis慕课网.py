@@ -73,7 +73,7 @@ maxWaitMillis        资源池连接用尽后，调用者的最大等待时间�
 
 慢查询队列固定长度，默认128
 slowlog-max-len  
-慢查询阀值，单位微妙，默认10000
+慢查询阀值，单位微妙，默认
 slowlog-log-slower-than
 
 动态配置
@@ -115,6 +115,7 @@ save 900 1
 save 300 10
 # 60s内发生1000次写入，执行bgsave 
 save 60 1000
+
 
 #rdb文件名
 dbfilename  dump.rdb
@@ -169,7 +170,7 @@ aof_base_size      aof上次启动和重写的尺寸，单位字节
 AOF重写过程
 1、fork出子进程
 2、子进程生成新的aof文件
-3、子进程生成新的aof文件过程中，有新的写入命令，新数据会写入redis，新数据还会写入一个缓冲区，缓冲区的数据最后会写入新aof中
+3、子进程生成新的aof文件过程中，有新的写入命令，新数据会写入redis内存，新数据还会写入一个缓冲区，缓冲区的数据最后会写入新aof中
 4、新aof文件替换旧aof文件
 
 # 开启aof
@@ -319,8 +320,37 @@ mem_allocator    Redis所使用的的内存分配器，默认jemalloc
 
 复制缓冲区repl_back_buffer默认1M，可以设置得更大一点
 
+一般预留30%内存余量
+设置内存上限
+config set maxmemory 1GB
+config rewrite
+或者在配置文件中加入
+maxmemory 1gb
 
 
+noeviction: 不进行置换，表示即使内存达到上限也不进行置换，所有能引起内存增加的命令都会返回error
+allkeys-lru: 优先删除掉最近最不经常使用的key，用以保存新数据，如果没有可删除的建对象，回退到noeviction
+volatile-lru: 只从设置失效（expire set）的key中选择最近最不经常使用的key进行删除，用以保存新数据
+allkeys-random: 随机从all-keys中选择一些key进行删除，用以保存新数据
+volatile-random: 只从设置失效（expire set）的key中，选择一些key进行删除，用以保存新数据
+volatile-ttl: 只从设置失效（expire set）的key中，选出存活时间（TTL）最短的key进行删除，，如果没有，回退到noevition策略
+
+
+/etc/sysctl.conf
+vm.overcommit_momory=1 建议设置为 1
+vm.swappiness=1    1可以用swap，0宁愿杀死进程也不用swap，如果是高可用可以考虑设置为0，让从redis起来
+输出值
+cat /proc/sys/vm/overcommit_memory
+
+禁用thp
+/sys/kernel/mm/transparent_hugepage/enabled   
+never
+
+
+安全7法
+1、设置密码
+2、bind限制的是网卡，并不是客户端ip
+3、不使用root用户启动
 
 
 

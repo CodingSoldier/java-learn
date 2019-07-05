@@ -11,9 +11,11 @@ vi authorized_keys
 
 xshell使用公钥连接即可
 
-##########################ssh################################
+
 
 yum -y install lrzsz gcc gcc-c++ pcre pcre-devel zlib zlib-devel ruby wget bash-completion zlib.i686 libstdc++.i686 lsof unzip zip finger bind-utils  readline-devel autoconf  man-pages nano vim-enhanced net-tools get curl lftp make
+
+
 ###############################################linux网络#######################################################
 
 ipconfig         查看ip，负责公网
@@ -93,6 +95,8 @@ Ifup lo启动lo网卡
 Ctrl + ] 退出telnet
 
 
+
+
 ######################################################################################################
 源码包安装nginx
 
@@ -146,10 +150,24 @@ VMware配置固定ip为192.168.40.129
 ——> 起始IP地址 192.168.40.129 结束IP地址 192.168.40.130
 http://blog.csdn.net/ekey_code/article/details/73824214
 
-进入paste 模式
-:set paste
-清空文件
-:dG
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
