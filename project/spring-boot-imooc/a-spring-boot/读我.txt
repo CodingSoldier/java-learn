@@ -1,0 +1,31 @@
+只用spring-boot-starter依赖，项目启动完就停止了，要加入web依赖
+
+spring.factories 自动装配类以 XxxAutoConfiguration 命名
+
+
+Servlet方式(异步)
+    1、MyServlet
+    2、ASpringBootApplication加入注解 @ServletComponentScan("com.cpq.b.web.servlet")
+
+访问localhost:8080产生的白页由BasicErrorController产生
+
+使用jetty依赖：start-web排除tomcat依赖，引入jetty依赖
+
+spring-boot-starter-actuator
+暴露健康检查接口，通过http://localhost:8080/actuator查看
+暴露所有接口management.endpoints.web.exposure.include=*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

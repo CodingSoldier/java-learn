@@ -1,24 +1,20 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import math
 
-def fact(n):
-    return fact_iter(n, 1)
+from enum import Enum, unique
 
-def fact_iter(num, product):
-    if num == 1:
-        return product
-    return fact_iter(num - 1, num * product)
+@unique
+class Weekday(Enum):
+    Sun = 0 # Sun的value被设定为0
+    Mon = 1
+    Tue = 2
+    Wed = 3
+    Thu = 4
+    Fri = 5
+    Sat = 6
 
-print(fact(5111))	
-
-
-
-
-
-
-print()
-
-
+day1=Weekday.Mon
+print(day1)
 
 
 
