@@ -5,20 +5,3 @@ def my_abs(x):
 		return x
 	else:
 		return -x
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

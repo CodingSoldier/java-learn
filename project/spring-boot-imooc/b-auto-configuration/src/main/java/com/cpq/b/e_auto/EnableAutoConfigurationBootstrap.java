@@ -1,14 +1,15 @@
-package com.cpq.b.b;
+package com.cpq.b.e_auto;
 
+import com.cpq.b.b.Bean01;
 import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
-
-@EnableHelloWorld
-public class B_Bootstrap {
+@EnableAutoConfiguration
+public class EnableAutoConfigurationBootstrap {
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = new SpringApplicationBuilder(B_Bootstrap.class)
+        ConfigurableApplicationContext context = new SpringApplicationBuilder(EnableAutoConfigurationBootstrap.class)
                 .web(WebApplicationType.NONE)
                 .run(args);
 
@@ -18,6 +19,8 @@ public class B_Bootstrap {
         Bean01 bean01 =  context.getBean("bean01", Bean01.class);
         System.out.println("获取bean01   "+ bean01.toString());
 
+        // 关闭上下文
         context.close();
+
     }
 }

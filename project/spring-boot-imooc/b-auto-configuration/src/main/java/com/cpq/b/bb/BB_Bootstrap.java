@@ -1,14 +1,15 @@
-package com.cpq.b.b;
+package com.cpq.b.bb;
 
+import com.cpq.b.b.Bean01;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
 
-@EnableHelloWorld
-public class B_Bootstrap {
+@BB_EnableHelloWorld
+public class BB_Bootstrap {
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = new SpringApplicationBuilder(B_Bootstrap.class)
+        ConfigurableApplicationContext context = new SpringApplicationBuilder(BB_Bootstrap.class)
                 .web(WebApplicationType.NONE)
                 .run(args);
 

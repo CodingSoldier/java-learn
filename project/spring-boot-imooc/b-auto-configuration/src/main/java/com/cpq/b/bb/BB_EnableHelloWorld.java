@@ -1,4 +1,4 @@
-package com.cpq.b.b;
+package com.cpq.b.bb;
 
 import org.springframework.context.annotation.Import;
 
@@ -8,8 +8,8 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Documented
 /**
- * 使用模块装配类，HelloWorldConfiguration.class
+ * 使用接口方式装配类，HelloWorldImportSelector.class
  */
-@Import(HelloWorldConfiguration.class)
-public @interface EnableHelloWorld {
+@Import(HelloWorldImportSelector.class)
+public @interface BB_EnableHelloWorld {
 }
