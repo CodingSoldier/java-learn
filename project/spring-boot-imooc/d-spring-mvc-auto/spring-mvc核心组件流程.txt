@@ -1,0 +1,49 @@
+启动工程
+idea新建configuration ——> Remote
+拷贝  -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+运行jar包
+java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 d-spring-mvc-0.0.1-SNAPSHOT-war-exec.jar
+
+########## 请求过程  ###############
+测试接口
+http://localhost:8080
+
+请求先到委派接口
+org.springframework.web.servlet.DispatcherServlet#doDispatch(HttpServletRequest request, HttpServletResponse response)
+
+获取请求对应的处理器（术语叫handler），handler就是controller方法
+org.springframework.web.servlet.DispatcherServlet#getHandler(HttpServletRequest request)
+	HandlerExecutionChain 是controller中的方法
+
+org.springframework.web.servlet.DispatcherServlet#getHandlerAdapter(Object handler)
+
+返回页面，会有view视图
+org.springframework.web.servlet.DispatcherServlet#resolveViewName
+
+
+
+使用@EnableWebMvc注解配置的过程
+1、@EnableWebMvc 导入了配置类 @Import({DelegatingWebMvcConfiguration.class})
+2、DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport
+3、WebMvcConfigurationSupport配置了@Bean RequestMappingHandlerMapping
+
+org.springframework.web.servlet.DispatcherServlet#getHandler
+	this.handlerMappings 这里的handlerMapping都在WebMvcConfigurationSupport中有定义
+
+org.springframework.web.servlet.DispatcherServlet#getHandlerAdapter
+	this.handlerAdapters中的类在WebMvcConfigurationSupport中也有定义
+
+org.springframework.web.servlet.DispatcherServlet#initHandlerMappings 装载 this.handlerMappings
+
+org.springframework.web.servlet.DispatcherServlet#initHandlerAdapters 装载 this.handlerAdapters
+
+
+
+
+
+
+
+
+
+
+

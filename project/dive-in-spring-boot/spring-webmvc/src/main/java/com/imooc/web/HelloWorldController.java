@@ -1,8 +1,7 @@
-package com.imooc.web.controller;
+package com.imooc.web;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * HelloWorld {@link Controller}
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class HelloWorldController {
 
     @RequestMapping("")
-    public String index(@RequestParam int value, Model model) {
+    public String index() {
 //        model.addAttribute("acceptLanguage",acceptLanguage);
 //        model.addAttribute("jsessionId",jsessionId);
 //        model.addAttribute("message","Hello,World");

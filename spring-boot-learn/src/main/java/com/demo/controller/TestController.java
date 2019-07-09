@@ -5,6 +5,7 @@ import com.demo.old.boy.service.BoyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
@@ -46,7 +47,8 @@ public class TestController {
     }
 
     @GetMapping("/helloworld2")
-    public String helloworld2() {
+    public String helloworld2(@RequestParam("id") String id) {
+        System.out.println(id);
         return "helloworld2";
     }
 
