@@ -40,7 +40,9 @@ org.springframework.web.servlet.DispatcherServlet#initHandlerAdapters 装载 thi
 
 
 
-
+小技巧
+选择properties中的key，如spring.redis.lettuce.pool.max-active
+搜索工程，选择scope，过滤出*.json文件
 
 
 
