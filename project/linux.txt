@@ -151,26 +151,63 @@ VMware配置固定ip为192.168.40.129
 http://blog.csdn.net/ekey_code/article/details/73824214
 
 
+################Shell 变量##################
+xxx 变量名   $xxx 变量值
+set 查看系统已经定义的环境变量
+set -u 设定此选项，调用未声明变量时会报错
+unset xxx 删除变量
+env 查看系统环境变量
+
+export 变量名=变量值
+或者
+变量名=变量值
+export 变量名
 
 
+运算
+aa=11
+bb=22
+dd=$(expr $aa + $bb)
+dd的值是aa、bb的和，注意+左右两侧必须有空格
+
+ff=$(($aa + $bb))
+a=$(( ($aa + $bb)/$aa*$bb ))
 
 
+/etc/profile
+/etc/profile.d/*.sh
+/etc/bashrc
+~/.bash_profile
+~/.bashrc
 
+etc下的环境变量，所有用户都能用
+~家目录下的环境变量，只有当前用户可以使用
 
+~/.bash_logout  退出前执行的命令
+~/.bash_history   历史命令，退出登录后追加到文件中
+/etc/issue  本地终端开机后的提示信息
+/etc/motd  本地终端、远程终端登陆后显示信息
 
+grep "/bin/bash" /etc/passwd
 
+cut字符串截取
+root=grep "/bin/bash" /etc/passwd | cut -f 1 -d ":"
 
+printf '%s\t%s\t%s\t\n' 1 2 3 4 5 6
 
+vim student.txt
+ID	Name	Gender	Mark
+1	furong	f	85
+2	fengi	f	60
+3	cang	f	70
 
+printf '%s\t%s\t%s\t%s\n' $(cat student.txt)
 
+awk '条件1{动作1}条件2{动作2}'
+awk '{printf $2 "\t" $4 "\n"}' student.txt
+awk '{print $2 "\t" $4}' student.txt
 
-
-
-
-
-
-
-
+cat student.txt | grep -v Name | awk '$4>=70{print $2}'
 
 
 
