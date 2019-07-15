@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--User bean-->
+    <bean id="user" class="com.zs.diveinspringboot.externalizated.configuration.domain.User">
+        <property name="id" value="${user.id}"></property>
+        <property name="name" value="${user.name}"></property>
+    </bean>
+</beans>
