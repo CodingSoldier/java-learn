@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -25,6 +26,22 @@ public class WebFluxApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(WebFluxApplication.class);
+    }
+
+    @GetMapping("mvc")
+    public String mvc(){
+        println("mvc");
+        return "mvc";
+    }
+
+    @GetMapping("mono")
+    public Mono<String> mono(){
+        println("mono");
+        return Mono.just("Mono");
+    }
+
+    private static void println(String mseeage) {
+        System.out.println("[" + Thread.currentThread().getName() + "]: " + mseeage);
     }
 
     //// 原始方式
