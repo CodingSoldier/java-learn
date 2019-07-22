@@ -36,6 +36,89 @@ cat data/6382.log
 关闭
 redis-cli -p 6382 shutdown
 
+开机启动
+vim /etc/systemd/system/redis.service
+
+[Unit]
+Description=redis-server
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/local/bin/redis-server /soft/redis/redis.conf
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+
+systemctl enable redis
+systemctl start redis
+systemctl stop redis
+
+incr key
+# key自增1，如果key不存在，则设置值为1，返回自增后的值
+decr key
+# key自减1，如果key不存在，则设置为-1，返回自减后的值
+incrby key k
+# key自增k，key必须已经存在
+decrby key k
+# key自减k，key必须已经存在
+
+setnx key value / set key value nx
+# 不存在才能设置成功
+set key value xx 
+# key存在才能设置成功
+
+mset hello world java zhazha php verygood
+# 批量设置key-value
+mget hello java php
+# 批量获取key
+
+getset key newvalue
+# 设置新值并返回旧的值
+append key value
+# 将value拼接到旧值后
+strlen key
+# 返回字节串长度，一个中文为3个字节
+
+incrbyfloat key 3.5
+# 浮点自增，但是没有浮点数自减
+getrange key start end
+# 获取字符串指定下标所有值
+setrange key index value
+# 设置指定下标所有对应的值
+
+
+hset key field value
+# 设置hash key对应的field的value
+hget key field
+# 获取hash key对应的field的value
+hdel key field
+# 删除hash key对应的field的value
+hexists key field
+# 判断hash key是否有field
+hlen key
+# 获取hash key field数量
+hmget key field1 field2 ...
+# 批量获取hash key的一批field对应的值
+hmset key field1 value1 field2 value2 ...
+# 批量设置hash key的一批field value
+hgetall key
+# 返回hash key对应所有的field和value
+hvals key
+# 返回hash key对应的所有field的value
+hkeys key
+# 返回hash key对应的所有field
+hsetnx key field value
+# 设置hash key对应field的value(如果field已经存在，则失败)
+hincrby key field intCounter
+# hash key对应的field的value自增intCounter
+hincrbyfloat key field floatCounter
+# 自增浮点数版本
+
+
+
+
 遍历所有key
 keys *
 keys [pattern]
