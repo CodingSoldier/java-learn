@@ -1,6 +1,7 @@
 package com.datastructure;
 
 import java.util.Arrays;
+import java.util.Stack;
 
 /**
  * @Description
@@ -9,12 +10,12 @@ import java.util.Arrays;
  */
 public class _1_Array {
 
-    static class Array{
-        private int[] data;
+    static class Array<E>{
+        private E[] data;
         private int size;
 
         public Array(int capacity){
-            data = new int[capacity];
+            data = (E[])new Object[capacity];
             size = 0;
         }
 
@@ -31,12 +32,12 @@ public class _1_Array {
             return this.size;
         }
 
-        public void add(int index, int e){
-            if (this.size == data.length)
-                throw new RuntimeException("数组满了");
-
+        public void add(int index, E e){
             if (index < 0 || index >= data.length)
                 throw new RuntimeException("下标错误");
+
+            if (this.size == data.length)
+                resize(size*2);
 
             for (int i = size -1 ; i >= index; i--){
                 data[i + 1] = data[i];
@@ -45,13 +46,23 @@ public class _1_Array {
             size++;
         }
 
-        public int remove(int index){
-            int ret = data[index];
-            for (int i = index; i<size; i++){
+        public E remove(int index){
+            E ret = data[index];
+            for (int i = index; i<size-1; i++){
                 data[i] = data[i+1];
             }
             size--;
+            if (data.length !=0 && size < data.length/4 )
+                resize(data.length/2);
             return ret;
+        }
+
+        public void resize(int capacity){
+            E[] newData = (E[])new Object[capacity];
+            for (int i=0; i<size; i++){
+                newData[i] = data[i];
+            }
+            data = newData;
         }
 
         @Override
@@ -93,6 +104,39 @@ public class _1_Array {
         for (int num:nums)
             sum += num;
         return sum;
+    }
+
+
+
+    // 括号匹配
+    static class Solution{
+        public static boolean vaild(String s){
+            Stack<Character> stack = new Stack<>();
+            for (int i=0; i<s.length(); i++){
+                if ('(' == s.charAt(i)|| '['==s.charAt(i)
+                        ||'{'==s.charAt(i) ){
+                    stack.push(s.charAt(i));
+                }else {
+                    if (stack.isEmpty()){
+                        return false;
+                    }
+                    if (')'==s.charAt(i) && '('!= stack.pop()){
+                        return false;
+                    }
+                    if (']'==s.charAt(i) && '[' != stack.pop()){
+                        return false;
+                    }
+                    if ('}'==s.charAt(i) && '{' != stack.pop()){
+                        return false;
+                    }
+                }
+            }
+            return stack.isEmpty();
+        }
+
+        public static void main(String[] args) {
+            System.out.println(vaild("()"));
+        }
     }
 
 }
