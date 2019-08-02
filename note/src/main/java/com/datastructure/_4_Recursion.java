@@ -18,6 +18,7 @@ public class _4_Recursion {
         if (index == 0){
             return arr[0];
         }
+        // 把大问题、大数据拆成小一级问题、小一个数据的思想。本代码只处理当前节点，其余节点使用递归处理
         return arr[index] + sum(arr, index -1);
     }
 
@@ -65,12 +66,12 @@ public class _4_Recursion {
 
         // 递归删除列表中指定元素
         public static ListNode removeElements(ListNode head, int val) {
-
-           if (head == null){
-               return null;
-           }
-           head.next =removeElements(head.next, val);
-           return head.val == val ? head.next : head;
+            if (head == null){
+                return null;
+            }
+            // 把大问题、大数据拆成小一级问题、小一个数据的思想。本代码只处理当前节点，其余节点使用递归处理
+            head.next = removeElements(head.next, val);
+            return head.val == val ? head.next : head;
         }
 
 
