@@ -1,8 +1,6 @@
 package com.datastructure;
 
-import java.util.ArrayList;
 import java.util.Queue;
-import java.util.Random;
 import java.util.Stack;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -42,18 +40,22 @@ public class _5_BinarySearchTree {
         }
 
         public void add(E e){
+            // 使用root为索引
             root = add(root, e);
         }
 
         public Node add(Node node, E e){
             if (node == null){
+                // 第一次添加元素，root就为new Node(e)
                 size++;
                 return new Node(e);
             }
 
             if (e.compareTo(node.e) < 0){
+                // 在节点左边添加节点
                 node.left = add(node.left, e);
             }else if (e.compareTo(node.e) > 0){
+                // 在节点右边添加节点
                 node.right = add(node.right, e);
             }
             return node;
@@ -86,7 +88,7 @@ public class _5_BinarySearchTree {
             if (node == null){
                 return;
             }
-
+            // 打印当前元素值
             System.out.println(node.e);
             preOrder(node.left);
             preOrder(node.right);
@@ -110,7 +112,7 @@ public class _5_BinarySearchTree {
             }
         }
 
-        // 中序遍历结果从大到小排序
+        // 中序遍历，结果从小到大排序
         public void inOrder(){
             inOrder(root);
         }
@@ -125,7 +127,7 @@ public class _5_BinarySearchTree {
             inOrder(node.right);
         }
 
-        // 后续遍历，先遍历父节点的子节点，在遍历父节点
+        // 后序遍历，先遍历父节点的子节点，在遍历父节点
         public void postOrder(){
             postOrder(root);
         }
@@ -220,44 +222,45 @@ public class _5_BinarySearchTree {
 
 
         public static void main(String[] args) {
-            //BinarySearchTree<Integer> bts = new BinarySearchTree<>();
-            //int[] nums = {5, 3, 6, 8, 4, 2};
-            //for (int num:nums){
-            //    bts.add(num);
-            //}
-            ////bts.preOrder();
-            ////System.out.println("-------------");
-            ////bts.inOrder();
-            ////System.out.println("-------------");
-            ////bts.postOrder();
+            BinarySearchTree<Integer> bts = new BinarySearchTree<>();
+            int[] nums = {28, 16, 30, 22, 13, 42, 29};
+            for (int num:nums){
+                bts.add(num);
+            }
+            System.out.println("-------前序遍历------");
+            bts.preOrder();
+            System.out.println("------中序遍历-------");
+            bts.inOrder();
+            System.out.println("------后序遍历-------");
+            bts.postOrder();
             //
             ////bts.preOrderNR();
             //
             //bts.levelOrder();
 
-            BinarySearchTree<Integer> bst = new BinarySearchTree<>();
-            Random random = new Random();
-
-            int n = 1000;
-
-            // test removeMin
-            for(int i = 0 ; i < n ; i ++)
-                bst.add(random.nextInt(10000));
-
-            ArrayList<Integer> nums = new ArrayList<>();
-            while(!bst.isEmpty())
-                nums.add(bst.removeMin());
-            System.out.println(nums);
-
-            // test removeMax
-            bst = new BinarySearchTree<>();
-            for(int i = 0 ; i < n ; i ++)
-                bst.add(random.nextInt(10000));
-
-            nums = new ArrayList<>();
-            while(!bst.isEmpty())
-                nums.add(bst.removeMax());
-            System.out.println(nums);
+            //BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+            //Random random = new Random();
+            //
+            //int n = 1000;
+            //
+            //// test removeMin
+            //for(int i = 0 ; i < n ; i ++)
+            //    bst.add(random.nextInt(10000));
+            //
+            //ArrayList<Integer> nums = new ArrayList<>();
+            //while(!bst.isEmpty())
+            //    nums.add(bst.removeMin());
+            //System.out.println(nums);
+            //
+            //// test removeMax
+            //bst = new BinarySearchTree<>();
+            //for(int i = 0 ; i < n ; i ++)
+            //    bst.add(random.nextInt(10000));
+            //
+            //nums = new ArrayList<>();
+            //while(!bst.isEmpty())
+            //    nums.add(bst.removeMax());
+            //System.out.println(nums);
         }
 
     }
