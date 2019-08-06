@@ -158,48 +158,35 @@ public class _5_BinarySearchTree {
             }
         }
 
+        // 最小值元素
         public E minimum(){
-            if (size ==0)
+            if(size == 0)
                 throw new IllegalArgumentException("空树");
             Node minNode = minimum(root);
             return minNode.e;
         }
 
+        // 最小值节点
         private Node minimum(Node node){
-            if (node.left == null){
+            if( node.left == null )
                 return node;
-            }
             return minimum(node.left);
         }
 
-        public E removeMin(){
-            E cur = minimum();
-            root = removeMin(root);
-            return cur;
-        }
-
-        private Node removeMin(Node node){
-            if (node.left ==null){
-                Node rightNode = node.right;
-                node.right = null;
-                size--;
-                return rightNode;
-            }
-            node.left = removeMin(node.left);
-            return  node;
-        }
-
+        // 最大值元素
         public E maximum(){
             if(size == 0)
-                throw new IllegalArgumentException("BST is empty");
+                throw new IllegalArgumentException("空树");
             return maximum(root).e;
         }
 
+        // 最大值节点
         private Node maximum(Node node){
             if( node.right == null )
                 return node;
             return maximum(node.right);
         }
+
 
         public E removeMax(){
             E ret = maximum();
