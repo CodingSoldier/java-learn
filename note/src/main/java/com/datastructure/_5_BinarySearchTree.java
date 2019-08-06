@@ -1,7 +1,7 @@
 package com.datastructure;
 
+import java.util.ArrayList;
 import java.util.Queue;
-import java.util.Stack;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class _5_BinarySearchTree {
@@ -61,24 +61,6 @@ public class _5_BinarySearchTree {
             return node;
         }
 
-        public boolean contains(E e){
-            return contains(root, e);
-        }
-
-        public boolean contains(Node node, E e){
-            if (node == null){
-                return false;
-            }
-
-            if (e.compareTo(node.e) == 0){
-                return true;
-            }else if (e.compareTo(node.e) < 0){
-                return contains(node.left, e);
-            }else {
-                return contains(node.right, e);
-            }
-        }
-
         // 前序遍历
         public void preOrder(){
             preOrder(root);
@@ -92,24 +74,6 @@ public class _5_BinarySearchTree {
             System.out.println(node.e);
             preOrder(node.left);
             preOrder(node.right);
-        }
-
-        // 非递归方式实现前序遍历
-        public void preOrderNR(){
-            if (root == null){
-                return;
-            }
-            Stack<Node> stack = new Stack<>();
-            stack.push(root);
-            while (!stack.isEmpty()){
-                Node node = stack.pop();
-                System.out.println(node.e);
-
-                if (node.right != null)
-                    stack.push(node.right);
-                if (node.left != null)
-                    stack.push(node.left);
-            }
         }
 
         // 中序遍历，结果从小到大排序
@@ -158,47 +122,57 @@ public class _5_BinarySearchTree {
             }
         }
 
+        // 最小值元素
         public E minimum(){
-            if (size ==0)
+            if(size == 0)
                 throw new IllegalArgumentException("空树");
             Node minNode = minimum(root);
             return minNode.e;
         }
 
+        // 最小值节点
         private Node minimum(Node node){
-            if (node.left == null){
+            if( node.left == null )
                 return node;
-            }
             return minimum(node.left);
         }
 
-        public E removeMin(){
-            E cur = minimum();
-            root = removeMin(root);
-            return cur;
-        }
-
-        private Node removeMin(Node node){
-            if (node.left ==null){
-                Node rightNode = node.right;
-                node.right = null;
-                size--;
-                return rightNode;
-            }
-            node.left = removeMin(node.left);
-            return  node;
-        }
-
+        // 最大值元素
         public E maximum(){
             if(size == 0)
-                throw new IllegalArgumentException("BST is empty");
+                throw new IllegalArgumentException("空树");
             return maximum(root).e;
         }
 
+        // 最大值节点
         private Node maximum(Node node){
             if( node.right == null )
                 return node;
             return maximum(node.right);
+        }
+
+        public E removeMin(){
+            // 查找最小值
+            E ret = minimum();
+            // 删除最小节点
+            root = removeMin(root);
+            // 返回最小值
+            return ret;
+        }
+
+        public Node removeMin(Node node){
+            // node.left == null，node必然是最小节点
+            if (node.left == null){
+                // 先保存最小节点的right
+                Node nodeRight = node.right;
+                // 再把最小节点的right指向null，以便java虚拟机回收最小节点内存
+                node.right = null;
+                size--;
+                return nodeRight;
+            }
+            // node.left != null，递归node.left
+            node.left = removeMin(node.left);
+            return node;
         }
 
         public E removeMax(){
@@ -208,59 +182,94 @@ public class _5_BinarySearchTree {
         }
 
         private Node removeMax(Node node){
-
+            // node.right == null，节点必然是最大节点
             if(node.right == null){
+                // 保存最大节点的right
                 Node leftNode = node.left;
                 node.left = null;
                 size --;
                 return leftNode;
             }
-
+            // node.right != null，递归node.right
             node.right = removeMax(node.right);
             return node;
         }
 
+        public void remove(E e){
+            remove(root, e);
+        }
+
+        private Node remove(Node node, E e){
+            if (node == null)
+                return null;
+            if (e.compareTo(node.e) < 0){
+                // 递归左侧节点
+                node.left = remove(node.left, e);
+                return node;
+            }else if (e.compareTo(node.e) > 0){
+                // 递归右侧节点
+                node.right = remove(node.right, e);
+                return node;
+            }else {
+                // 删除最小值
+                if (node.left == null){
+                    Node rightNode = node.right;
+                    node.right = null;
+                    size--;
+                    return rightNode;
+                }
+                // 删除最大值
+                if (node.right == null){
+                    Node leftNode = node.left;
+                    node.left=null;
+                    size--;
+                    return leftNode;
+                }
+
+                //当前node有左右孩子，找出右树中的最小节点successor
+                Node successor = minimum(node.right);
+                // successor.right = 删除当前node最小值后的树
+                successor.right = removeMin(node.right);
+                // successor.left = 当前node节点的left
+                successor.left = node.left;
+                node.left = node.right = null;
+                // 返回successor
+                return successor;
+            }
+        }
 
         public static void main(String[] args) {
-            BinarySearchTree<Integer> bts = new BinarySearchTree<>();
+
+            BinarySearchTree<Integer> bst = new BinarySearchTree<>();
             int[] nums = {28, 16, 30, 22, 13, 42, 29};
             for (int num:nums){
-                bts.add(num);
+                bst.add(num);
             }
-            System.out.println("-------前序遍历------");
-            bts.preOrder();
-            System.out.println("------中序遍历-------");
-            bts.inOrder();
-            System.out.println("------后序遍历-------");
-            bts.postOrder();
-            //
-            ////bts.preOrderNR();
-            //
-            //bts.levelOrder();
 
-            //BinarySearchTree<Integer> bst = new BinarySearchTree<>();
-            //Random random = new Random();
-            //
-            //int n = 1000;
-            //
-            //// test removeMin
-            //for(int i = 0 ; i < n ; i ++)
-            //    bst.add(random.nextInt(10000));
-            //
-            //ArrayList<Integer> nums = new ArrayList<>();
+            //System.out.println("-------前序遍历------");
+            //bst.preOrder();
+            //System.out.println("------中序遍历-------");
+            //bst.inOrder();
+            //System.out.println("------后序遍历-------");
+            //bst.postOrder();
+            //System.out.println("------广度优先遍历-------");
+            //bst.levelOrder();
+
+
+            ArrayList<Integer> nums2 = new ArrayList<>();
+
             //while(!bst.isEmpty())
-            //    nums.add(bst.removeMin());
-            //System.out.println(nums);
-            //
-            //// test removeMax
-            //bst = new BinarySearchTree<>();
-            //for(int i = 0 ; i < n ; i ++)
-            //    bst.add(random.nextInt(10000));
-            //
-            //nums = new ArrayList<>();
+            //    nums2.add(bst.removeMin());
+            //System.out.println(nums2);
+
             //while(!bst.isEmpty())
-            //    nums.add(bst.removeMax());
-            //System.out.println(nums);
+            //    nums2.add(bst.removeMax());
+            //System.out.println(nums2);
+
+
+            bst.remove(16);
+            bst.preOrder();
+
         }
 
     }
