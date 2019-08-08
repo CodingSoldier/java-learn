@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cpq.mybatispulslearn.linyi.village_cottage.mapper.VillageCottageMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cpq.mybatispulslearn.linyi.village_cottage.entity.VillageCottage">
+        <id column="cottageID" property="cottageID" />
+        <result column="FWID" property="fwid" />
+        <result column="buildingID" property="buildingID" />
+        <result column="building_unit_name" property="buildingUnitName" />
+        <result column="LYID" property="lyid" />
+        <result column="unit" property="unit" />
+        <result column="floor" property="floor" />
+        <result column="room" property="room" />
+        <result column="villageID" property="villageID" />
+        <result column="WYID" property="wyid" />
+        <result column="position" property="position" />
+        <result column="area" property="area" />
+        <result column="type" property="type" />
+        <result column="ownername" property="ownername" />
+        <result column="ownermobile" property="ownermobile" />
+        <result column="isPublic" property="isPublic" />
+        <result column="isDel" property="isDel" />
+        <result column="relateUsers" property="relateUsers" />
+        <result column="createTime" property="createTime" />
+        <result column="createBy" property="createBy" />
+        <result column="updateTime" property="updateTime" />
+        <result column="updateBy" property="updateBy" />
+        <result column="registermobile" property="registermobile" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        cottageID, FWID, buildingID, building_unit_name, LYID, unit, floor, room, villageID, WYID, position, area, type, ownername, ownermobile, isPublic, isDel, relateUsers, createTime, createBy, updateTime, updateBy, registermobile
+    </sql>
+
+    <select id="zhuhu" resultType="map">
+        SELECT ttc.third_building_code, vilcot.room,  usercot.identity, u.truename, u.userMobile, u.sex, usercot.createTime
+        FROM third_to_cottage ttc, village_cottage vilcot, user_cottage usercot, users u
+        WHERE vilcot.villageID=12
+        AND vilcot.villageID=usercot.villageID AND vilcot.cottageID=usercot.cottageID AND usercot.status=2
+        AND vilcot.villageID=ttc.villageID AND vilcot.cottageID=ttc.cottageID
+        AND usercot.userID=u.userID
+        ORDER BY usercot.createTime
+    </select>
+
+</mapper>

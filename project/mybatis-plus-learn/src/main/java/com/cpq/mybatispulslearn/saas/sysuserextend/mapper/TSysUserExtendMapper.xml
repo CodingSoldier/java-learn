@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cpq.mybatispulslearn.saas.sysuserextend.mapper.TSysUserExtendMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cpq.mybatispulslearn.saas.sysuserextend.entity.TSysUserExtend">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="nick_name" property="nickName" />
+        <result column="id_card" property="idCard" />
+        <result column="encrypt" property="encrypt" />
+        <result column="issuper" property="issuper" />
+        <result column="role_id" property="roleId" />
+        <result column="organization_ids" property="organizationIds" />
+        <result column="admin_lasttime" property="adminLasttime" />
+        <result column="admin_lastip" property="adminLastip" />
+        <result column="admin_loginnum" property="adminLoginnum" />
+        <result column="sms_status" property="smsStatus" />
+        <result column="aisino_name" property="aisinoName" />
+        <result column="company_id" property="companyId" />
+        <result column="encrypt_flag" property="encryptFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, nick_name, id_card, encrypt, issuper, role_id, organization_ids, admin_lasttime, admin_lastip, admin_loginnum, sms_status, aisino_name, company_id, encrypt_flag
+    </sql>
+
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cpq.mybatispulslearn.linyi.third_to_cottage.mapper.ThirdToCottageMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cpq.mybatispulslearn.linyi.third_to_cottage.entity.ThirdToCottage">
+        <result column="villageID" property="villageID" />
+        <result column="buildingID" property="buildingID" />
+        <result column="cottageID" property="cottageID" />
+        <result column="third_village_code" property="thirdVillageCode" />
+        <result column="third_building_code" property="thirdBuildingCode" />
+        <result column="third_cottage_code" property="thirdCottageCode" />
+        <result column="source" property="source" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        villageID, buildingID, cottageID, third_village_code, third_building_code, third_cottage_code, source
+    </sql>
+
+</mapper>

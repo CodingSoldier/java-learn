@@ -16,8 +16,8 @@ public class CodeGenerator {
 
 
 
-    static final String TABLE_NAME = "t3";
-    static final String MODULE_NAME = "t3";
+    static final String TABLE_NAME = "users";
+    static final String MODULE_NAME = "users";
     static final String AUTHOR = "cpq";
 
     //修改TABLE_NAME、MODULE_NAME、AUTHOR后运行main方法
@@ -41,15 +41,12 @@ public class CodeGenerator {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/cpq?useUnicode=true&useSSL=false&characterEncoding=utf8");
-        dsc.setDriverName("com.mysql.jdbc.Driver");
-        dsc.setUsername("root");
-        dsc.setPassword("cpq..123");
+
         autoGenerator.setDataSource(dsc);
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.cpq.mybatispulslearn");
+        pc.setParent("com.cpq.mybatispulslearn.linyi");
         pc.setServiceImpl("service");  //在service包下生成Impl
         pc.setXml("mapper");  //在mapper生成xml
         pc.setModuleName(MODULE_NAME);
