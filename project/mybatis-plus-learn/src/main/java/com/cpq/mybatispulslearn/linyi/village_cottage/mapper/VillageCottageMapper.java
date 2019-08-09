@@ -15,5 +15,7 @@ import java.util.Map;
  * @since 2019-08-07
  */
 public interface VillageCottageMapper extends BaseMapper<VillageCottage> {
-    List<Map<String, String>> zhuhu();
+    List<Map<String, String>> allRoomPerson();
+
+    List<Map<String, String>> allRoomPersonExist();
 }

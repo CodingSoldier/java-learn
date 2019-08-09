@@ -34,14 +34,33 @@
         cottageID, FWID, buildingID, building_unit_name, LYID, unit, floor, room, villageID, WYID, position, area, type, ownername, ownermobile, isPublic, isDel, relateUsers, createTime, createBy, updateTime, updateBy, registermobile
     </sql>
 
-    <select id="zhuhu" resultType="map">
-        SELECT ttc.third_building_code, vilcot.room,  usercot.identity, u.truename, u.userMobile, u.sex, usercot.createTime
-        FROM third_to_cottage ttc, village_cottage vilcot, user_cottage usercot, users u
-        WHERE vilcot.villageID=12
+    <select id="allRoomPerson" resultType="map">
+        SELECT vilcot.villageID, vilcot.buildingID, vilcot.cottageID,
+        vilcot.building_unit_name, vilcot.floor, vilcot.room, vilcot.area,
+        u.truename, u.userMobile, usercot.identity
+        FROM village_cottage vilcot
+        LEFT JOIN user_cottage usercot
+        ON  vilcot.villageID=usercot.villageID AND vilcot.cottageID=usercot.cottageID
+        LEFT JOIN users u
+        ON usercot.userID=u.userID AND  usercot.status=2
+        WHERE vilcot.villageID=12 AND vilcot.isDel=1 AND vilcot.cottageID NOT IN (5924, 5925, 5934, 39000)
+        ORDER BY usercot.createTime
+    </select>
+
+    <select id="allRoomPersonExist" resultType="map">
+        SELECT vilcot.villageID, vilcot.buildingID, vilcot.cottageID,
+        vilcot.building_unit_name, vilcot.floor, vilcot.room, vilcot.area,
+        u.truename, u.userMobile, usercot.identity
+        FROM village_cottage vilcot, user_cottage usercot, users u
+        WHERE vilcot.villageID=12 AND vilcot.isDel=1 AND vilcot.cottageID NOT IN (5924, 5925, 5934, 39000)
         AND vilcot.villageID=usercot.villageID AND vilcot.cottageID=usercot.cottageID AND usercot.status=2
-        AND vilcot.villageID=ttc.villageID AND vilcot.cottageID=ttc.cottageID
         AND usercot.userID=u.userID
         ORDER BY usercot.createTime
     </select>
+
+    <!--
+
+
+    -->
 
 </mapper>

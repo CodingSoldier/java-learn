@@ -50,6 +50,34 @@ public class Test01 {
         put("多种经营1", "06");
     }};
 
+
+    Map<String, String> ldzhMap = new HashMap(){{
+        put("0200", "南座");
+        put("0400", "北座");
+        put("0500", "商铺");
+        put("0600", "多种经营");
+    }};
+
+    /**
+     田丁后台 住户身份
+     用户身份：1业主，2租客，3家人，4其他，5写字楼管理员，6写字楼职员
+
+     零壹 住户身份
+     1 租客  2 业主  3家人
+     */
+    Long getShenFen(String numstr){
+        if (numstr == null || "null".equals(numstr))
+            return 3L;
+        Long num = Long.parseLong(numstr);
+        if (num == 1L)
+            return 2L;
+
+        if (num == 2L)
+            return 1L;
+
+        return 3L;
+    }
+
     String getRoom(String room){
         String r = "";
 
@@ -65,10 +93,11 @@ public class Test01 {
         return r.length() == 1 ? "0"+r : r;
     }
 
-    // 生成房屋excel
-    @Test
-    public void loudong01(){
 
+
+    // 新建映射表
+    @Test
+    public void mappingTable(){
         QueryWrapper qw = new QueryWrapper();
         qw.eq("villageID", 12);
         qw.eq("isDel", 1);
@@ -82,114 +111,119 @@ public class Test01 {
         // 物业服务中心
         qw.ne("cottageID", 39000);
         List<VillageCottage> vcList =  villageCottageService.list(qw);
-        System.out.println("******数量********" + vcList.size());
+
+        for (VillageCottage vc:vcList){
+            // 田丁后台与第三方项目 映射表
+            ThirdToCottage third2Cottage = new ThirdToCottage();
+            third2Cottage.setVillageID(vc.getVillageID());
+            third2Cottage.setBuildingID(vc.getBuildingID());
+            third2Cottage.setCottageID(vc.getCottageID());
+
+            // 楼栋号
+            String loudong = ldMap.get(vc.getBuildingUnitName());
+            // 单元
+            String danyuan = "00";
+            // 实际楼层
+            String loucheng = vc.getFloor().length() == 1 ? "0"+vc.getFloor() : vc.getFloor();
+            // 室号
+            String room = getRoom(vc.getRoom());
+
+            third2Cottage.setThirdVillageCode("10450");
+            third2Cottage.setThirdBuildingCode(loudong + danyuan);
+            third2Cottage.setThirdCottageCode(loudong + danyuan + loucheng + room);
+            third2Cottage.setSource(1);
+            t2cList.add(third2Cottage);
+        }
+
+        third2CottageService.saveBatch(t2cList);
+    }
+
+
+
+
+    // 生成房屋excel
+    @Test
+    public void loudong01(){
+
+        String excelName = "房屋-住户-全量";
+        List<Map<String, String>> roomPersonList = villageCottageMapper.allRoomPerson();
+
+        //String excelName = "房屋-住户-有效";
+        //List<Map<String, String>> roomPersonList = villageCottageMapper.allRoomPersonExist();
+
+        // 一个房子一个业主
+        Set<String> set = new HashSet<>();
+        for (Map<String, String> map:roomPersonList){
+            if (!set.contains(map.get("room"))){
+                set.add(map.get("room"));
+            }else if (set.contains(map.get("room")) && "1".equals(String.valueOf(map.get("identity")))){
+                map.put("identity", "3");
+            }
+        }
 
         LinkedList<ExcelProperties.ColTitle> colTitles = new LinkedList(){{
             add(new ExcelProperties.ColTitle("*楼栋号"));
             add(new ExcelProperties.ColTitle("*单元号"));
-            add(new ExcelProperties.ColTitle("*实际楼层"));
+            add(new ExcelProperties.ColTitle("*楼层"));
             add(new ExcelProperties.ColTitle("*室号"));
             add(new ExcelProperties.ColTitle("房号名称"));
             add(new ExcelProperties.ColTitle("*房屋类型"));
-            add(new ExcelProperties.ColTitle("*建筑面积"));
-            add(new ExcelProperties.ColTitle("套内面积"));
-            add(new ExcelProperties.ColTitle("入住日期"));
-            add(new ExcelProperties.ColTitle("朝向"));
-            add(new ExcelProperties.ColTitle("几房"));
-            add(new ExcelProperties.ColTitle("几厅"));
-            add(new ExcelProperties.ColTitle("几卫"));
-            add(new ExcelProperties.ColTitle("装修"));
-            add(new ExcelProperties.ColTitle("业主姓名"));
+            add(new ExcelProperties.ColTitle("*面积"));
+
+            add(new ExcelProperties.ColTitle("住户姓名"));
             add(new ExcelProperties.ColTitle("证件类型"));
             add(new ExcelProperties.ColTitle("证件号码"));
-            add(new ExcelProperties.ColTitle("手机号码"));
+            add(new ExcelProperties.ColTitle("*手机号码"));
             add(new ExcelProperties.ColTitle("使用状态"));
-            add(new ExcelProperties.ColTitle("性别"));
-            add(new ExcelProperties.ColTitle("民族"));
-            add(new ExcelProperties.ColTitle("籍贯"));
-            add(new ExcelProperties.ColTitle("出生日期"));
-            add(new ExcelProperties.ColTitle("户籍地址"));
-            add(new ExcelProperties.ColTitle("标签"));
-            add(new ExcelProperties.ColTitle("住户可见"));
+            add(new ExcelProperties.ColTitle("*住户类型"));
+
         }};
 
-        ExcelProperties ep = new ExcelProperties("房屋", "", "", colTitles);
+        ExcelProperties ep = new ExcelProperties(excelName, "", "", colTitles);
 
-        ExcelUtil.exportExcelFile(ep, vcList, (HSSFRow row, Integer orderNum, VillageCottage vc) -> {
+        ExcelUtil.exportExcelFile(ep, roomPersonList, (HSSFRow row, Integer orderNum, Map<String, String> rp) -> {
             //回调中将数据添加到excel单元格中
             Integer cellIndex = 0;
-            if (orderNum != null){
-                ExcelUtil.createCell(row, cellIndex++, orderNum);  //序号
-            }
             // 楼栋号
-            String loudong = ldMap.get(vc.getBuildingUnitName());
+            String loudong = ldMap.get(rp.get("building_unit_name"));
             ExcelUtil.createCell(row, cellIndex++, loudong);
-            //
+            // 单元
             String danyuan = "00";
             ExcelUtil.createCell(row, cellIndex++, danyuan);
             // 实际楼层
-            String loucheng = vc.getFloor().length() == 1 ? "0"+vc.getFloor() : vc.getFloor();
+            String loucheng = rp.get("floor").length() == 1 ? "0"+rp.get("floor") : rp.get("floor");
             ExcelUtil.createCell(row, cellIndex++, loucheng);
             // 室号
-            String room = getRoom(vc.getRoom());
+            String room = getRoom(rp.get("room"));
             ExcelUtil.createCell(row, cellIndex++, room);
             // 房号名称
-            ExcelUtil.createCell(row, cellIndex++, vc.getRoom());
+            ExcelUtil.createCell(row, cellIndex++, rp.get("room"));
             // *房屋类型
             ExcelUtil.createCell(row, cellIndex++, 6);
-            // *建筑面积
-            ExcelUtil.createCell(row, cellIndex++, Float.parseFloat(vc.getArea()) < 1 ? 1.1 : vc.getArea());
+            // *面积
+            ExcelUtil.createCell(row, cellIndex++, Float.parseFloat(rp.get("area")) < 1 ? 1.1 : rp.get("area"));
 
-            // 套内面积	入住日期	朝向	几房	几厅	几卫	装修  业主姓名 证件类型	证件号码  手机号码
+            // 住户姓名
+            ExcelUtil.createCell(row, cellIndex++, rp.get("truename")==null ? "" : rp.get("truename"));
+            //证件类型	证件号码
+            cellIndex = cellIndex + 2;
+            // *手机号码
+            ExcelUtil.createCell(row, cellIndex++, rp.get("userMobile")==null ? "" : rp.get("userMobile"));
+            // 使用状态
+            cellIndex++;
+            // *住户类型
+            ExcelUtil.createCell(row, cellIndex++, getShenFen(String.valueOf(rp.get("identity"))));
 
-            //// 田丁后台与第三方项目 映射表
-            //ThirdToCottage third2Cottage = new ThirdToCottage();
-            //third2Cottage.setVillageID(vc.getVillageID());
-            //third2Cottage.setBuildingID(vc.getBuildingID());
-            //third2Cottage.setCottageID(vc.getCottageID());
-            //
-            //third2Cottage.setThirdVillageCode("10450");
-            //third2Cottage.setThirdBuildingCode(loudong + danyuan);
-            //third2Cottage.setThirdCottageCode(loudong + danyuan + loucheng + room);
-            //third2Cottage.setSource(1);
-            //t2cList.add(third2Cottage);
         });
 
-        //third2CottageService.saveBatch(t2cList);
     }
 
 
 
 
-    Map<String, String> ldzhMap = new HashMap(){{
-        put("0200", "南座");
-        put("0400", "北座");
-        put("0500", "商铺");
-        put("0600", "多种经营");
-    }};
-
-    /**
-         田丁后台 住户身份
-         用户身份：1业主，2租客，3家人，4其他，5写字楼管理员，6写字楼职员
-
-         零壹 住户身份
-         1 租客  2 业主  3家人
-     */
-    Long getShenFen(String numstr){
-        if (numstr == null)
-            return 3L;
-        Long num = Long.parseLong(numstr);
-        if (num == 1L)
-            return 2L;
-
-        if (num == 2L)
-            return 1L;
-
-        return 3L;
-    }
 
     // 生成住户excel
-    @Test
+/*    @Test
     public void zhuhu01(){
 
         List<Map<String, String>> zhuhuList = villageCottageMapper.zhuhu();
@@ -269,6 +303,6 @@ public class Test01 {
 
         });
 
-    }
+    }*/
 
 }
