@@ -1,6 +1,7 @@
 package com.example.springbootdemo;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -50,7 +51,7 @@ public class SpringbootdemoApplicationTests {
 
     @Test
     public void testGet111() {
-        System.out.println(1111111);
+        System.out.println(StringUtils.substringAfterLast("dfasdf.jpg", "."));
     }
 
 }

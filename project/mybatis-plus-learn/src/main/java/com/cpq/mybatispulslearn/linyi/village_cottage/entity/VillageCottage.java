@@ -1,12 +1,13 @@
 package com.cpq.mybatispulslearn.linyi.village_cottage.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -131,7 +132,6 @@ public class VillageCottage implements Serializable {
     @TableField("updateBy")
     private String updateBy;
 
-    private String registermobile;
 
 
 }

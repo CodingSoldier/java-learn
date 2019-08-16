@@ -48,6 +48,7 @@ public class Test01 {
         put("商铺1", "05");
         put("多种经营", "06");
         put("多种经营1", "06");
+        put("物业服务中心", "07");
     }};
 
 
@@ -56,6 +57,7 @@ public class Test01 {
         put("0400", "北座");
         put("0500", "商铺");
         put("0600", "多种经营");
+        put("0700", "物业服务中心");
     }};
 
     /**
@@ -87,6 +89,8 @@ public class Test01 {
             r = String.valueOf(num);
         }else if (room.contains("裙楼")){
             r = StringUtils.substring(room, 3, 5);
+        }else if ("物业办公室".equals(room)){
+            r = "00";
         }else if (Pattern.compile("^\\d+$").matcher(room).matches()){
             r = StringUtils.substring(room, 1, 3);
         }
@@ -108,8 +112,6 @@ public class Test01 {
         qw.ne("cottageID", 5925);
         // 多种经营101-其他
         qw.ne("cottageID", 5934);
-        // 物业服务中心
-        qw.ne("cottageID", 39000);
         List<VillageCottage> vcList =  villageCottageService.list(qw);
 
         for (VillageCottage vc:vcList){
@@ -146,7 +148,7 @@ public class Test01 {
     public void loudong01(){
 
         String excelName = "房屋-住户-全量";
-        List<Map<String, String>> roomPersonList = villageCottageMapper.allRoomPerson();
+        List<Map<String, String>> roomPersonList = villageCottageMapper.shengchan();
 
         //String excelName = "房屋-住户-有效";
         //List<Map<String, String>> roomPersonList = villageCottageMapper.allRoomPersonExist();
@@ -156,6 +158,10 @@ public class Test01 {
         for (Map<String, String> map:roomPersonList){
             if (!set.contains(map.get("room"))){
                 set.add(map.get("room"));
+                //// identity为空设置为业主
+                //if (StringUtils.isBlank(map.get("identity"))){
+                //    map.put("identity", "1");
+                //}
             }else if (set.contains(map.get("room")) && "1".equals(String.valueOf(map.get("identity")))){
                 map.put("identity", "3");
             }
@@ -191,7 +197,9 @@ public class Test01 {
             String danyuan = "00";
             ExcelUtil.createCell(row, cellIndex++, danyuan);
             // 实际楼层
-            String loucheng = rp.get("floor").length() == 1 ? "0"+rp.get("floor") : rp.get("floor");
+
+            String loucheng = String.valueOf(rp.get("floor"));
+            loucheng = loucheng.length() == 1 ? "0"+loucheng : loucheng;
             ExcelUtil.createCell(row, cellIndex++, loucheng);
             // 室号
             String room = getRoom(rp.get("room"));
@@ -204,11 +212,14 @@ public class Test01 {
             ExcelUtil.createCell(row, cellIndex++, Float.parseFloat(rp.get("area")) < 1 ? 1.1 : rp.get("area"));
 
             // 住户姓名
-            ExcelUtil.createCell(row, cellIndex++, rp.get("truename")==null ? "" : rp.get("truename"));
+            String trueName = StringUtils.isNotBlank(rp.get("truename")) ? rp.get("truename") : rp.get("customer_name");
+            ExcelUtil.createCell(row, cellIndex++, trueName);
             //证件类型	证件号码
             cellIndex = cellIndex + 2;
             // *手机号码
-            ExcelUtil.createCell(row, cellIndex++, rp.get("userMobile")==null ? "" : rp.get("userMobile"));
+            String phone = rp.get("userMobile") != null ?
+                    rp.get("userMobile") : rp.get("customer_cellphone");
+            ExcelUtil.createCell(row, cellIndex++, phone);
             // 使用状态
             cellIndex++;
             // *住户类型

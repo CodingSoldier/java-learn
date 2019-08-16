@@ -18,4 +18,6 @@ public interface VillageCottageMapper extends BaseMapper<VillageCottage> {
     List<Map<String, String>> allRoomPerson();
 
     List<Map<String, String>> allRoomPersonExist();
+
+    List<Map<String, String>> shengchan();
 }

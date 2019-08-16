@@ -41,7 +41,10 @@ public class CodeGenerator {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-
+        dsc.setUrl("jdbc:mysql://localhost:3306/cpq?useUnicode=true&useSSL=false&characterEncoding=utf8");
+        dsc.setDriverName("com.mysql.jdbc.Driver");
+        dsc.setUsername("root");
+        dsc.setPassword("poly2017");
         autoGenerator.setDataSource(dsc);
 
         // 包配置

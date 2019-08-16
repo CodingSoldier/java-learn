@@ -26,12 +26,11 @@
         <result column="createBy" property="createBy" />
         <result column="updateTime" property="updateTime" />
         <result column="updateBy" property="updateBy" />
-        <result column="registermobile" property="registermobile" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        cottageID, FWID, buildingID, building_unit_name, LYID, unit, floor, room, villageID, WYID, position, area, type, ownername, ownermobile, isPublic, isDel, relateUsers, createTime, createBy, updateTime, updateBy, registermobile
+        cottageID, FWID, buildingID, building_unit_name, LYID, unit, floor, room, villageID, WYID, position, area, type, ownername, ownermobile, isPublic, isDel, relateUsers, createTime, createBy, updateTime, updateBy
     </sql>
 
     <select id="allRoomPerson" resultType="map">
@@ -56,6 +55,11 @@
         AND vilcot.villageID=usercot.villageID AND vilcot.cottageID=usercot.cottageID AND usercot.status=2
         AND usercot.userID=u.userID
         ORDER BY usercot.createTime
+    </select>
+
+
+    <select id="shengchan" resultType="map">
+        SELECT td.*, zj.customer_cellphone, zj.customer_name FROM `tian_ding_fangjian` td LEFT JOIN tian_ding_zhen_jia zj ON td.cottageID=zj.cottageID
     </select>
 
     <!--
