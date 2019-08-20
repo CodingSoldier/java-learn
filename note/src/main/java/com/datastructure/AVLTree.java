@@ -93,33 +93,71 @@ public class AVLTree<K extends Comparable<K>, V> {
     private Node remove(Node node, K key){
         if( node == null )
             return null;
+
+        Node retNode;
         if( key.compareTo(node.key) < 0 ){
             node.left = remove(node.left , key);
-            return node;
+            // 不能直接返回node，因为后面还要修改node的高度值
+            retNode = node;
         }
         else if(key.compareTo(node.key) > 0 ){
             node.right = remove(node.right, key);
-            return node;
-        }
-        else{
+            retNode = node;
+        } else{   // key.compareTo(node.key) == 0
+
             if(node.left == null){
                 Node rightNode = node.right;
                 node.right = null;
                 size --;
-                return rightNode;
-            }
-            if(node.right == null){
+                retNode = rightNode;
+            } else if(node.right == null){
                 Node leftNode = node.left;
                 node.left = null;
                 size --;
-                return leftNode;
+                retNode = leftNode;
+            } else{
+                // 找到比待删除节点大的最小节点, 即待删除节点右子树的最小节点
+                // 用这个节点顶替待删除节点的位置
+                Node successor = minimum(node.right);
+                // 不使用removeMin，不然需要在removeMin中维护树的平衡性
+                successor.right = remove(node.right, successor.key);
+                successor.left = node.left;
+                node.left = node.right = null;
+                retNode = successor;
             }
-            Node successor = minimum(node.right);
-            successor.right = removeMin(node.right);
-            successor.left = node.left;
-            node.left = node.right = null;
-            return successor;
         }
+
+        if(retNode == null)
+            return null;
+
+        // 更新height
+        retNode.height = 1 + Math.max(getHeight(retNode.left), getHeight(retNode.right));
+
+        // 计算平衡因子
+        int balanceFactor = getBalanceFactor(retNode);
+
+        // 维护树的平衡性
+        // LL
+        if (balanceFactor > 1 && getBalanceFactor(retNode.left) >= 0)
+            return rightRotate(retNode);
+
+        // RR
+        if (balanceFactor < -1 && getBalanceFactor(retNode.right) <= 0)
+            return leftRotate(retNode);
+
+        // LR
+        if (balanceFactor > 1 && getBalanceFactor(retNode.left) < 0) {
+            retNode.left = leftRotate(retNode.left);
+            return rightRotate(retNode);
+        }
+
+        // RL
+        if (balanceFactor < -1 && getBalanceFactor(retNode.right) > 0) {
+            retNode.right = rightRotate(retNode.right);
+            return leftRotate(retNode);
+        }
+
+        return retNode;
     }
 
     private Node rightRotate(Node y){
@@ -244,6 +282,12 @@ public class AVLTree<K extends Comparable<K>, V> {
             }
             System.out.println("单词去重后的总数: " + map.getSize());
             System.out.println("是否平衡: " + map.isBalanced());
+
+            for (String word:words){
+                map.remove(word);
+                if (!map.isBalanced())
+                    throw new RuntimeException("这句话打印出来，就不平衡了");
+            }
         }
     }
 }
