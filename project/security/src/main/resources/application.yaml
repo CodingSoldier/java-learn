@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: security
+  datasource:
+    url: jdbc:mysql://localhost:3306/cpq?useSSL=true
+    username: root
+    password: polo2017
+    driver-class-name: com.mysql.jdbc.Driver
+
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    password: cpq..123
+    timeout: 0
+    pool:
+      max-active: 8
+      max-idle: 8
+      min-idle: 0
+      max-wait: -1
