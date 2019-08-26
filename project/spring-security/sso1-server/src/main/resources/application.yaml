@@ -13,7 +13,8 @@ spring:
 #    username: root
 #    password: cpq..123
   redis:
-    host: 192.168.4.205
+    host: localhost
+#    host: 192.168.4.205
     port: 6379
     password:
 server:
