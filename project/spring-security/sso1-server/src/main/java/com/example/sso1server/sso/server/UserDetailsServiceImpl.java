@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * @Date: 2019/3/21 11:24
  * @Description:
  */
-@Service
+@Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired

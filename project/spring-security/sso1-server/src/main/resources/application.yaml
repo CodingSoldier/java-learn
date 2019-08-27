@@ -17,5 +17,13 @@ spring:
 #    host: 192.168.4.205
     port: 6379
     password:
+    lettuce:
+      pool:
+        # 最大活跃链接数 默认8
+        max-active: 8
+        # 最大空闲连接数 默认8
+        max-idle: 8
+        # 最小空闲连接数 默认0
+        min-idle: 0
 server:
   port: 8080

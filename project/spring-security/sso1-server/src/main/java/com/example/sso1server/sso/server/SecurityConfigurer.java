@@ -1,6 +1,5 @@
 package com.example.sso1server.sso.server;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,31 +10,21 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Resource;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
-    @Autowired
+    @Resource
     UserDetailsService userDetailsService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Resource
+    private PasswordEncoder bCryptPasswordEncoder;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
-
-
-
-    //@Bean
-    //public static NoOpPasswordEncoder passwordEncoder() {
-    //    return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
-    //}
-
-    //@Override
-    //public void configure(WebSecurity web) throws Exception {
-    //    super.configure(web);
-    //}
 
     @Override
     @Bean
