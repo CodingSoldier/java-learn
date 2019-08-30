@@ -10,9 +10,13 @@ public class Test01 {
     public void contextLoads() {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         //加密"0"
-        String encode = bCryptPasswordEncoder.encode("0");
-        System.out.println(encode);
-    //  $2a$10$iyVj57zh63lG1KIIXVP0BObYl1IBYcAvdmi5.upqIit7HvHj82nT6
+        String encode1 = bCryptPasswordEncoder.encode("123dfadfas");
+        System.out.println(encode1);
+        String encode2 = bCryptPasswordEncoder.encode("123dfadfas");
+        System.out.println(encode2);
+        System.out.println(bCryptPasswordEncoder.matches("123dfadfas", encode1));
+        System.out.println(bCryptPasswordEncoder.matches("123dfadfas", encode2));
+
     }
 
 }
