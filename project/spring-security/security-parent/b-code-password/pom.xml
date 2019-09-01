@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>a-userpassword-sms</artifactId>
+    <artifactId>b-code-password</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <description>Demo project for Spring Boot</description>
 
@@ -58,7 +58,7 @@
             <version>1.1.6.RELEASE</version>
         </dependency>
 
-<!--        <dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
@@ -66,8 +66,7 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.44</version>
-        </dependency>-->
-
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -90,7 +89,7 @@
 
 
     <build>
-        <finalName>a-userpassword-sms</finalName>
+        <finalName>b-code-password</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

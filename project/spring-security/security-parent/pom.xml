@@ -33,6 +33,7 @@
 
     <modules>
         <module>a-userpassword-sms</module>
+        <module>b-code-password</module>
     </modules>
 
     <build>
