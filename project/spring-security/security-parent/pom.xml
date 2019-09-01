@@ -32,9 +32,7 @@
     </dependencyManagement>
 
     <modules>
-        <module>security-core</module>
-        <module>security-browser</module>
-        <module>security-demo</module>
+        <module>a-userpassword-sms</module>
     </modules>
 
     <build>
