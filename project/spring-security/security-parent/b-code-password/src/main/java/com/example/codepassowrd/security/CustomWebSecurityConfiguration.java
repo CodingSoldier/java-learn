@@ -65,7 +65,7 @@ public class CustomWebSecurityConfiguration extends WebSecurityConfigurerAdapter
                 .and()
                 .authorizeRequests()   //允许请求
                 //登录页面不需要授权,不配置这个会导致页面跳转死循环
-                .antMatchers("/sign-in.html", "/authentication/request", "/code/*").permitAll()
+                .antMatchers("/sign-in.html", "/authentication/request", "/code/*", "/qqLogin/**").permitAll()
                 .anyRequest()    //任何请求
                 .authenticated()  //需要校验
                 .and()

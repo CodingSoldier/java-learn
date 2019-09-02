@@ -1,9 +1,9 @@
 package com.example.codepassowrd.social;
 
+import com.example.codepassowrd.social.qq.CustomSpringSocialConfigurer;
 import com.example.codepassowrd.social.qq.connect.QQConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -30,6 +30,8 @@ public class SocialConfigurer extends SocialConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
+    @Value("${social.qq.filterProcessesUrl}")
+    String filterProcessesUrl;
     @Value("${social.qq.provider-id}")
     String providerId;
     @Value("${social.qq.app-id}")
@@ -66,7 +68,7 @@ public class SocialConfigurer extends SocialConfigurerAdapter {
     // 社交配置类，需要apply到CustomWebSecurityConfiguration中
     @Bean
     public SpringSocialConfigurer springSocialConfigurer(){
-        return new SpringSocialConfigurer();
+        return new CustomSpringSocialConfigurer(filterProcessesUrl);
     }
 
 
