@@ -1,8 +1,8 @@
 package com.example.codepassowrd.social.qq;
 
 import com.example.codepassowrd.social.qq.api.QQApi;
+import com.example.codepassowrd.social.qq.connect.QQOAuth2Template;
 import org.springframework.social.oauth2.AbstractOAuth2ServiceProvider;
-import org.springframework.social.oauth2.OAuth2Template;
 
 /**
  * QQ服务提供者
@@ -19,7 +19,7 @@ public class QQServiceProvider extends AbstractOAuth2ServiceProvider<QQApi> {
 
     public QQServiceProvider(String appId, String appSecret) {
         // 服务提供商中的OAuth2Operations
-        super(new OAuth2Template(appId, appSecret, URL_AUTHORIZE, URL_ACCESS_TOKEN));
+        super(new QQOAuth2Template(appId, appSecret, URL_AUTHORIZE, URL_ACCESS_TOKEN));
     }
 
     @Override
