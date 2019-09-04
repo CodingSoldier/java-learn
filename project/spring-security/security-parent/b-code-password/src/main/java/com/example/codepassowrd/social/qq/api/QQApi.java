@@ -21,8 +21,6 @@ public class QQApi extends AbstractOAuth2ApiBinding {
     private String appId;
     private String openId;
 
-    private ObjectMapper objectMapper;
-
     public QQApi(String accessToken, String appId) {
         // accessToken放在请求参数中
         super(accessToken, TokenStrategy.ACCESS_TOKEN_PARAMETER);
@@ -44,6 +42,7 @@ public class QQApi extends AbstractOAuth2ApiBinding {
 
         QQUserInfo qqUserInfo = null;
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
             qqUserInfo = objectMapper.readValue(result, QQUserInfo.class);
             qqUserInfo.setOpenId(openId);
         }catch (Exception e){

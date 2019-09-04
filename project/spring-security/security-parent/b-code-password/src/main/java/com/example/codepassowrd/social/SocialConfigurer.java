@@ -16,6 +16,7 @@ import org.springframework.social.connect.ConnectionFactory;
 import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
+import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.social.security.AuthenticationNameUserIdSource;
 import org.springframework.social.security.SpringSocialConfigurer;
 
@@ -30,14 +31,16 @@ public class SocialConfigurer extends SocialConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
-    @Value("${social.qq.filterProcessesUrl}")
-    String filterProcessesUrl;
     @Value("${social.qq.provider-id}")
     String providerId;
     @Value("${social.qq.app-id}")
     String appId;
     @Value("${social.qq.app-secret}")
     String appSecret;
+    @Value("${social.qq.filterProcessesUrl}")
+    String filterProcessesUrl;
+    @Value("${social.qq.sign-up}")
+    String signUp;
 
     @Override
     public void addConnectionFactories(ConnectionFactoryConfigurer configurer,
@@ -64,11 +67,17 @@ public class SocialConfigurer extends SocialConfigurerAdapter {
         return repository;
     }
 
-
     // 社交配置类，需要apply到CustomWebSecurityConfiguration中
     @Bean
     public SpringSocialConfigurer springSocialConfigurer(){
-        return new CustomSpringSocialConfigurer(filterProcessesUrl);
+        CustomSpringSocialConfigurer ssc = new CustomSpringSocialConfigurer(filterProcessesUrl);
+        ssc.signupUrl(signUp);
+        return ssc;
+    }
+
+    @Bean
+    public ProviderSignInUtils providerSignInUtils(ConnectionFactoryLocator connectionFactoryLocator){
+        return new ProviderSignInUtils(connectionFactoryLocator, getUsersConnectionRepository(connectionFactoryLocator));
     }
 
 
