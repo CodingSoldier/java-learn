@@ -18,17 +18,17 @@ import org.springframework.stereotype.Component;
 public class CustomSocialUserDetailsService implements SocialUserDetailsService {
 
     @Autowired
-    PasswordEncoder bCryptPasswordEncoder;
+    PasswordEncoder passwordEncoder;
 
     @Override
     public SocialUserDetails loadUserByUserId(String userId) throws UsernameNotFoundException {
         log.info("登陆用户名：" + userId);
 
         // 最后一项是权限
-        SocialUser user = new SocialUser(userId, bCryptPasswordEncoder.encode("123456"), AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
+        SocialUser user = new SocialUser(userId, passwordEncoder.encode("123456"), AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
 
         //7参数构造函数，判断用户是否过期、密码冻结之类的
-        //user = new User(username, bCryptPasswordEncoder.encode("123456"),
+        //user = new User(username, passwordEncoder.encode("123456"),
         //        true, true, true, true,
         //        AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
 

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    PasswordEncoder bCryptPasswordEncoder;
+    PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -26,12 +26,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         log.info("登陆用户名：" + username);
 
         // 最后一项是权限
-        User user = new User(username, bCryptPasswordEncoder.encode("123456"), AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
+        //User user = new User(username, passwordEncoder.encode("123456"), AuthorityUtils.commaSeparatedStringToAuthorityList("admin, ROLE_USER"));
 
         //7参数构造函数，判断用户是否过期、密码冻结之类的
-        //user = new User(username, bCryptPasswordEncoder.encode("123456"),
-        //        true, true, true, true,
-        //        AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
+        User user = new User(username, passwordEncoder.encode("123456"),
+                true, true, true, true,
+                AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"));
 
         return user;
     }
