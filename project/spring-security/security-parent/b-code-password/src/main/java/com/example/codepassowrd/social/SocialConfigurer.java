@@ -30,6 +30,8 @@ public class SocialConfigurer extends SocialConfigurerAdapter {
 
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private CustomConnectionSignUp customConnectionSignUp;
 
     @Value("${social.qq.provider-id}")
     String providerId;
@@ -64,6 +66,8 @@ public class SocialConfigurer extends SocialConfigurerAdapter {
     @Override
     public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
         JdbcUsersConnectionRepository repository = new JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, Encryptors.noOpText());
+        //自动注册，不跳转注册页面，中文会乱码
+        repository.setConnectionSignUp(customConnectionSignUp);
         return repository;
     }
 
@@ -75,6 +79,7 @@ public class SocialConfigurer extends SocialConfigurerAdapter {
         return ssc;
     }
 
+    // 通过此工具类拿社交信息
     @Bean
     public ProviderSignInUtils providerSignInUtils(ConnectionFactoryLocator connectionFactoryLocator){
         return new ProviderSignInUtils(connectionFactoryLocator, getUsersConnectionRepository(connectionFactoryLocator));

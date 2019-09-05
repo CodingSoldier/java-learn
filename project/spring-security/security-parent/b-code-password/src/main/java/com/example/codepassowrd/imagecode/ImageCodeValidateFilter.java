@@ -1,6 +1,6 @@
 package com.example.codepassowrd.imagecode;
 
-import com.example.codepassowrd.Constants;
+import com.example.codepassowrd.common.Constants;
 import com.example.codepassowrd.exception.CustomAuthenticationException;
 import com.example.codepassowrd.handler.AuthenticationFailureHandler;
 import org.apache.commons.lang3.StringUtils;

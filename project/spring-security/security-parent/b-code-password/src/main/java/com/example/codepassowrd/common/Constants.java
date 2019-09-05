@@ -1,4 +1,4 @@
-package com.example.codepassowrd;
+package com.example.codepassowrd.common;
 
 public class Constants {
 

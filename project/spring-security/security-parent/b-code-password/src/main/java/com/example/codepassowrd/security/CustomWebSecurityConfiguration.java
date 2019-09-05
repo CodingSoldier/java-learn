@@ -1,6 +1,6 @@
 package com.example.codepassowrd.security;
 
-import com.example.codepassowrd.Constants;
+import com.example.codepassowrd.common.Constants;
 import com.example.codepassowrd.handler.AuthenticationFailureHandler;
 import com.example.codepassowrd.handler.AuthenticationSuccessHandler;
 import com.example.codepassowrd.imagecode.ImageCodeValidateFilter;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    String[] permitUrl = {"/sign-in.html", "/sign-up.html", "/authentication/request", "/code/*", "/qqLogin/**"};
+    String[] permitUrl = {"/sign-in.html", "/sign-up.html", "/authentication/request", "/code/*", "/qqLogin/**", "/user/**"};
 
     @Autowired
     AuthenticationSuccessHandler authenticationSuccessHandler;
