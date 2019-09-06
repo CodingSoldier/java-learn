@@ -84,8 +84,7 @@ public class CustomAuthorizationServerConfiguration extends AuthorizationServerC
     // 解决 oauth/token  401
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-        oauthServer
-                .tokenKeyAccess("permitAll()")
+        oauthServer.tokenKeyAccess("permitAll()")   //访问token key(jwt的签名)，允许。默认是denyAll()
                 .checkTokenAccess("permitAll()")
                 .allowFormAuthenticationForClients();
     }
