@@ -34,7 +34,7 @@
     <modules>
         <module>a-userpassword-sms</module>
         <module>b-code-password</module>
-        <!--<module>c-auth2</module>-->
+        <module>c-auth2</module>
     </modules>
 
     <build>
