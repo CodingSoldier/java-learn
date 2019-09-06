@@ -2,11 +2,11 @@ package com.example.cauth2.sms;
 
 import com.example.cauth2.handler.CustomAuthenticationFailureHandler;
 import com.example.cauth2.handler.CustomAuthenticationSuccessHandler;
+import com.example.cauth2.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
@@ -22,7 +22,7 @@ public class SmsMobileAuthenticationSecurityConfig extends SecurityConfigurerAda
     @Autowired
     CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
     @Autowired
-    private UserDetailsService customUserDetailsService;
+    private CustomUserDetailsService customUserDetailsService;
 
     @Override
     public void configure(HttpSecurity http) {
