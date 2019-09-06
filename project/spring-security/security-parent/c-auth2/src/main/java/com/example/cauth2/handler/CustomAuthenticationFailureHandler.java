@@ -15,9 +15,9 @@ import java.io.IOException;
 /**
  * 登陆失败处理器
  */
-@Component("authenticationFailureHandler")
 @Slf4j
-public class AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+@Component("customAuthenticationFailureHandler")
+public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     @Autowired
     private ObjectMapper objectMapper;

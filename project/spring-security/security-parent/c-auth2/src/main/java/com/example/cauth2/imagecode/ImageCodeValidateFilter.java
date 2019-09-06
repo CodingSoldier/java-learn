@@ -2,7 +2,7 @@ package com.example.cauth2.imagecode;
 
 import com.example.cauth2.common.Constants;
 import com.example.cauth2.exception.CustomAuthenticationException;
-import com.example.cauth2.handler.AuthenticationFailureHandler;
+import com.example.cauth2.handler.CustomAuthenticationFailureHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
@@ -29,7 +29,7 @@ public class ImageCodeValidateFilter extends OncePerRequestFilter {
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
     @Autowired
-    AuthenticationFailureHandler authenticationFailureHandler;
+    CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -40,7 +40,7 @@ public class ImageCodeValidateFilter extends OncePerRequestFilter {
                 validateImageCode(new ServletWebRequest(request));
             }catch (Exception e){
                 // 校验图片验证码抛出异常，直接调用失败handler
-                authenticationFailureHandler.onAuthenticationFailure(request, response, new CustomAuthenticationException(e.getMessage()));
+                customAuthenticationFailureHandler.onAuthenticationFailure(request, response, new CustomAuthenticationException(e.getMessage()));
                 // 返回，不再调用后续链路
                 return;
             }

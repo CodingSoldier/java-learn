@@ -1,7 +1,7 @@
 package com.example.cauth2.sms;
 
-import com.example.cauth2.handler.AuthenticationFailureHandler;
-import com.example.cauth2.handler.AuthenticationSuccessHandler;
+import com.example.cauth2.handler.CustomAuthenticationFailureHandler;
+import com.example.cauth2.handler.CustomAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -18,9 +18,9 @@ import org.springframework.stereotype.Component;
 public class SmsMobileAuthenticationSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
     @Autowired
-    AuthenticationSuccessHandler authenticationSuccessHandler;
+    CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     @Autowired
-    AuthenticationFailureHandler authenticationFailureHandler;
+    CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
     @Autowired
     private UserDetailsService customUserDetailsService;
 
@@ -30,8 +30,8 @@ public class SmsMobileAuthenticationSecurityConfig extends SecurityConfigurerAda
         // filter链路设置authenticationManager
         smsMobileAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
         // 设置成功失败处理器
-        smsMobileAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
-        smsMobileAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
+        smsMobileAuthenticationFilter.setAuthenticationSuccessHandler(customAuthenticationSuccessHandler);
+        smsMobileAuthenticationFilter.setAuthenticationFailureHandler(customAuthenticationFailureHandler);
 
         // Provider注入，UserDetailsService
         SmsMobileAuthenticationProvider smsMobileAuthenticationProvider = new SmsMobileAuthenticationProvider();

@@ -31,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         //7参数构造函数，判断用户是否过期、密码冻结之类的
         User user = new User(username, passwordEncoder.encode("123456"),
                 true, true, true, true,
-                AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"));
+                AuthorityUtils.commaSeparatedStringToAuthorityList("admin,ROLE_USER"));
 
         return user;
     }

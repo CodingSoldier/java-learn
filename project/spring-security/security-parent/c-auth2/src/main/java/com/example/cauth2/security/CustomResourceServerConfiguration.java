@@ -1,8 +1,7 @@
 package com.example.cauth2.security;
 
-import com.example.cauth2.common.Constants;
-import com.example.cauth2.handler.AuthenticationFailureHandler;
-import com.example.cauth2.handler.AuthenticationSuccessHandler;
+import com.example.cauth2.handler.CustomAuthenticationFailureHandler;
+import com.example.cauth2.handler.CustomAuthenticationSuccessHandler;
 import com.example.cauth2.imagecode.ImageCodeValidateFilter;
 import com.example.cauth2.sms.SmsCodeValidateFilter;
 import com.example.cauth2.sms.SmsMobileAuthenticationSecurityConfig;
@@ -16,16 +15,16 @@ import org.springframework.social.security.SpringSocialConfigurer;
 
 @EnableResourceServer
 @Configuration
+//@Order(Ordered.HIGHEST_PRECEDENCE)
 public class CustomResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     String[] permitUrl = {"/sign-in.html", "/sign-up.html",
-            //"/oauth/authorize",
             "/authentication/request", "/code/*", "/qqLogin/**", "/user/**"};
 
     @Autowired
-    AuthenticationSuccessHandler authenticationSuccessHandler;
+    CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     @Autowired
-    AuthenticationFailureHandler authenticationFailureHandler;
+    CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
     @Autowired
     SmsMobileAuthenticationSecurityConfig smsMobileAuthenticationSecurityConfig;
 
@@ -46,23 +45,23 @@ public class CustomResourceServerConfiguration extends ResourceServerConfigurerA
         // 4、添加自定义过滤器filter，图片验证码过滤器、短信验证码过滤器、手机号校验过滤链
         // 在账号密码校验过滤器前面添加validateCodeFilter
         http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
-                // 在账号密码校验过滤器前面添加短信验证码过滤器
+        //         在账号密码校验过滤器前面添加短信验证码过滤器
                 .addFilterBefore(smsCodeValidateFilter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin()   //表单登陆
-                .loginPage("/authentication/request")  // 请求资源未授权，跳转到此controller接口
+        .formLogin()   //表单登陆
+                //.loginPage("/authentication/request")  // 请求资源未授权，跳转到此controller接口
                 // 用户名密码登陆默认使用UsernamePasswordAuthenticationFilter处理，登陆url是/login
-                .loginProcessingUrl(Constants.URL_LOGIN_PASSWORD)
+                //.loginProcessingUrl(Constants.URL_LOGIN_PASSWORD)
                 // 登录成功后，调用authenticationSuccessHandler，返回response
-                .successHandler(authenticationSuccessHandler)
+                .successHandler(customAuthenticationSuccessHandler)
                 // 登陆失败处理器
-                .failureHandler(authenticationFailureHandler)
+                .failureHandler(customAuthenticationFailureHandler)
                 .and()
                 // 应用手机号+短信验证码中的手机号校验
                 .apply(smsMobileAuthenticationSecurityConfig)
                 .and()
                 //社交配置
-                .apply(springSocialConfigurer)
-                .and()
+                //.apply(springSocialConfigurer)
+                //.and()
                 .authorizeRequests()   //允许请求
                 //登录页面不需要授权,不配置这个会导致页面跳转死循环
                 .antMatchers(permitUrl).permitAll()
