@@ -1,5 +1,6 @@
 package com.example.esecurity.security;
 
+import com.example.esecurity.common.Constants;
 import com.example.esecurity.handler.CustomAuthenticationFailureHandler;
 import com.example.esecurity.handler.CustomAuthenticationSuccessHandler;
 import com.example.esecurity.imagecode.ImageCodeValidateFilter;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
@@ -21,7 +23,7 @@ import org.springframework.social.security.SpringSocialConfigurer;
 public class CustomResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     String[] permitUrl = {"/sign-in.html", "/sign-up.html",
-            "/authentication/request", "/code/*", "/qqLogin/**", "/user/**"};
+            "/authentication/request", "/code/*", "/qqLogin/**"};
 
     @Autowired
     CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
@@ -46,13 +48,13 @@ public class CustomResourceServerConfiguration extends ResourceServerConfigurerA
     public void configure(HttpSecurity http) throws Exception {
         // 4、添加自定义过滤器filter，图片验证码过滤器、短信验证码过滤器、手机号校验过滤链
         // 在账号密码校验过滤器前面添加validateCodeFilter
-        http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+        //http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
         //         在账号密码校验过滤器前面添加短信验证码过滤器
-                .addFilterBefore(smsCodeValidateFilter, UsernamePasswordAuthenticationFilter.class)
+        http.addFilterBefore(smsCodeValidateFilter, UsernamePasswordAuthenticationFilter.class)
         .formLogin()   //表单登陆
-                //.loginPage("/authentication/request")  // 请求资源未授权，跳转到此controller接口
+                .loginPage("/authentication/request")  // 请求资源未授权，跳转到此controller接口
                 // 用户名密码登陆默认使用UsernamePasswordAuthenticationFilter处理，登陆url是/login
-                //.loginProcessingUrl(Constants.URL_LOGIN_PASSWORD)
+                .loginProcessingUrl(Constants.URL_LOGIN_PASSWORD)
                 // 登录成功后，调用authenticationSuccessHandler，返回response
                 .successHandler(customAuthenticationSuccessHandler)
                 // 登陆失败处理器
@@ -62,11 +64,14 @@ public class CustomResourceServerConfiguration extends ResourceServerConfigurerA
                 .apply(smsMobileAuthenticationSecurityConfig)
                 .and()
                 //社交配置
-                //.apply(springSocialConfigurer)
-                //.and()
+                .apply(springSocialConfigurer)
+                .and()
                 .authorizeRequests()   //允许请求
                 //登录页面不需要授权,不配置这个会导致页面跳转死循环
                 .antMatchers(permitUrl).permitAll()
+                // /security/role/admin角色为ADMIN的用户可以访问，CustomUserDetailsService配置ROLE_ADMIN
+                .antMatchers(HttpMethod.GET, "/security/role/admin").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/security/role/user").hasRole("USER")
                 .anyRequest()    //任何请求
                 .authenticated()  //需要校验
                 .and()
