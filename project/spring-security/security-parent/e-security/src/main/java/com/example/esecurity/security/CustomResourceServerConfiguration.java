@@ -1,5 +1,6 @@
 package com.example.esecurity.security;
 
+import com.example.esecurity.authorize.AuthorizeConfigManager;
 import com.example.esecurity.common.Constants;
 import com.example.esecurity.handler.CustomAuthenticationFailureHandler;
 import com.example.esecurity.handler.CustomAuthenticationSuccessHandler;
@@ -23,7 +24,7 @@ import org.springframework.social.security.SpringSocialConfigurer;
 public class CustomResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     String[] permitUrl = {"/sign-in.html", "/sign-up.html",
-            "/authentication/request", "/code/*", "/qqLogin/**"};
+            "/authentication/request", "/code/**", "/qqLogin/**"};
 
     @Autowired
     CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
@@ -42,6 +43,9 @@ public class CustomResourceServerConfiguration extends ResourceServerConfigurerA
     //社交配置
     @Autowired
     SpringSocialConfigurer springSocialConfigurer;
+
+    @Autowired
+    AuthorizeConfigManager authorizeConfigManager;
 
 
     @Override
@@ -66,18 +70,21 @@ public class CustomResourceServerConfiguration extends ResourceServerConfigurerA
                 //社交配置
                 .apply(springSocialConfigurer)
                 .and()
-                .authorizeRequests()   //允许请求
-                //登录页面不需要授权,不配置这个会导致页面跳转死循环
-                .antMatchers(permitUrl).permitAll()
-                // /security/role/admin角色为ADMIN的用户可以访问，CustomUserDetailsService配置ROLE_ADMIN
-                .antMatchers(HttpMethod.GET, "/security/role/admin").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/security/role/user").hasRole("USER")
-                .anyRequest()    //任何请求
-                .authenticated()  //需要校验
-                .and()
+                //.authorizeRequests()   //允许请求
+                ////登录页面不需要授权,不配置这个会导致页面跳转死循环
+                //.antMatchers(permitUrl).permitAll()
+                //// /security/role/admin角色为ADMIN的用户可以访问，CustomUserDetailsService配置ROLE_ADMIN
+                //.antMatchers(HttpMethod.GET, "/security/role/admin").hasRole("ADMIN")
+                //.antMatchers(HttpMethod.GET, "/security/role/user").hasRole("USER")
+                //.anyRequest()    //任何请求
+                //.authenticated()  //需要校验
+                //.and()
                 .cors()
                 .and()
                 .csrf().disable();  //禁用csrf，否则，登录后会重定向到登录页
+
+        // 权限控制写到此模块中
+        authorizeConfigManager.config(http.authorizeRequests());
 
     }
 
