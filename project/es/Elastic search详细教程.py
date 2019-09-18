@@ -786,6 +786,79 @@ POST test_search_index/doc/_bulk
 {"username":"Michell","job":"ruby engineer","age":26,"birth":"1987-08-07","isMarried":false,"salary":12000}
 
 
+# 分布式系统深度分页问题，会在所有分片上都执行from=10000, size=2，合并所有分片数据之后再筛选出from=10000, size=2
+# es为防止数据太大，限制分页只能获取前一万条数据，下面的查询报错
+GET test_search_index/_search
+{
+  "from": 10000,
+  "size": 2
+}
+
+# 这个查询可以用，因为分页数据没超过一万
+GET test_search_index/_search
+{
+  "from": 9998,
+  "size": 2
+}
+
+
+# scroll遍历文档集API，在遍历的时候创建一个快照，避免了深度分页的问题，但是由于是快照，所以数据不是实时的
+
+# 创建一个快照搜索，scroll=5m快照有效期是5分钟，每次返回1个文档
+# 返回结果中会有scroll_id，下一个scroll查询会用到
+GET test_search_index/_search?scroll=5m
+{
+  "size": 1
+}
+
+# 下一个快照查询，可以重新指定快照过期时间，防止快照过期
+# 当hits为空数组的时候，就可以结束遍历了
+POST _search/scroll
+{
+  "scroll": "5m",
+  "scroll_id": "DnF1ZXJ5VGhlbkZldGNoBQAAAAAAABg3FlVEREw4TjNLU2ZLUnJxaXlzSlZaZkEAAAAAAAAYOBZVRERMOE4zS1NmS1JycWl5c0pWWmZBAAAAAAAAGDkWVURETDhOM0tTZktScnFpeXNKVlpmQQAAAAAAABg1FlVEREw4TjNLU2ZLUnJxaXlzSlZaZkEAAAAAAAAYNhZVRERMOE4zS1NmS1JycWl5c0pWWmZB"
+}
+
+
+# 删除所有快照
+DELETE _search/scroll/_all
+
+
+
+# search_after避免深度分页的性能问题，提供实时获取下一页文档的能力
+# 缺点：不能指定页数并且只能获取下一页不能获取上一页
+
+# 第一步为正常搜索，但查询中必须带有sort值
+GET test_search_index/_search
+{
+  "size": 1,
+  "sort": {
+    "age": "desc",
+    "_id": "desc"
+  }
+}
+
+# 下一次查询的时候search_after写上一步返回结果中的sort
+GET test_search_index/_search
+{
+  "size": 1,
+  "search_after": ["28", "2"],
+  "sort": {
+    "age": "desc",
+    "_id": "desc"
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
