@@ -38,6 +38,8 @@
 
         <!--<module>d-sso-server</module>-->
         <!--<module>d-sso-client1</module>-->
+
+        <module>e-security</module>
     </modules>
 
     <build>

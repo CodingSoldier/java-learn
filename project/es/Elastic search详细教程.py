@@ -746,13 +746,25 @@ GET test_search_index/_search
 }
 
 
+############# 集群  #################
+使用cerebro管理集群，双击 cerebro.bat 启动cerebro
+启动3个节点
+.\elasticsearch.bat -E cluster.name=my_cluster -E path.data=my_cluster_node1 -E node.name=node1 -E http.port=5200
+.\elasticsearch.bat -E cluster.name=my_cluster -E path.data=my_cluster_node2 -E node.name=node2 -E http.port=5300
+.\elasticsearch.bat -E cluster.name=my_cluster -E path.data=my_cluster_node3 -E node.name=node3 -E http.port=5400
 
+# 指定3个分片和1个副本
+# 结果是在集群的3个节点上建立1个主分片和1个副分片，总共6个分片
+# 仔细观察发现，主分片和副本分片不会在同一个节点上
+PUT test_index
+{
+  "settings": {
+    "number_of_shards": 3,
+    "number_of_replicas": 1
+  }
+}
 
-
-
-
-
-
+# 集群有3个节点，索引设置5个分片，也是可以的
 
 
 
@@ -772,6 +784,14 @@ POST test_search_index/doc/_bulk
 {"username":"Niko","job":"web engineer","age":18,"birth":"1994-08-07","isMarried":false,"salary":5000}
 {"index":{"_id":"6"}}
 {"username":"Michell","job":"ruby engineer","age":26,"birth":"1987-08-07","isMarried":false,"salary":12000}
+
+
+
+
+
+
+
+
 
 
 
