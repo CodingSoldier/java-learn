@@ -1,0 +1,90 @@
+app.js、Gruntfile.js可到github上下载
+https://github.com/mobz/elasticsearch-head/releases
+
+修改app.js，需要将192.168.4.178改为你的主机名
+this.base_uri = this.config.base_uri || this.prefs.get("app-base_uri") || "http://192.168.4.178:9200";
+
+修改Gruntfile.js
+options: {
+  port: 9100,
+  hostname: '*',
+  base: '.',
+  keepalive: true
+}
+
+修改app.js
+http://192.168.4.178:9200  主机名
+this.base_uri = this.config.base_uri || this.prefs.get("app-base_uri") || "http://192.168.4.178:9200";
+
+
+修改Gruntfile.js
+options: {
+	port: 9100,
+	hostname: '*',
+	base: '.',
+	keepalive: true
+}
+
+#####################
+elasticsearch.yml
+
+cluster.name: "elasticsearch"
+network.host: 0.0.0.0
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+
+
+
+
+##################################
+在/etc/sysctl.conf中添加vm.max_map_count=262144
+vim /etc/sysctl.conf
+vm.max_map_count=262144
+#是配置生效
+sysctl -p
+
+安装docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+
+创建volume目录，并修改目录用户和用户组
+mkdir -pv /usr/share/elasticsearch/data
+chown 1000:1000 /usr/share/elasticsearch/data
+停止      docker-compose down
+删除      docker-compose down -v
+后台启动  docker-compose up -d
+
+
+docker-compose.yml
+version: '2.2'
+services:
+  # es
+  elasticsearch:
+    image: elasticsearch:6.6.2
+    container_name: elasticsearch
+    environment:
+      - cluster.name=elasticsearch-cluster
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"      
+    volumes:
+      - /usr/share/elasticsearch/data:/usr/share/elasticsearch/data
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - 9200:9200
+      - 9300:9300
+    mem_limit: 1024m
+    #不限制cpu不然启动很慢
+    restart: always
+ 
+ # es-head
+  elasticsearch-head:
+    image: mobz/elasticsearch-head:5
+    container_name: elasticsearch-head
+    ports:
+      - 9100:9100
+    volumes:
+      - ./Gruntfile.js:/usr/src/app/Gruntfile.js
+      - ./app.js:/usr/src/app/_site/app.js
+    restart: always
+    mem_limit: 128m
+    cpus: 0.05 

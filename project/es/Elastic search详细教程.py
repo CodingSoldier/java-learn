@@ -851,12 +851,516 @@ GET test_search_index/_search
 
 
 
+# 聚合分析，获取age的最小值
+# size=0表示不返回文档内容
+GET test_search_index/_search
+{
+  "size":0,
+  "aggs":{
+    "min_age":{
+      "min":{
+        "field":"age"
+      }
+    }
+  }
+}
+
+# 最大值
+GET test_search_index/_search
+{
+  "size":0,
+  "aggs":{
+    "max_age":{
+      "max":{
+        "field":"age"
+      }
+    }
+  }
+}
+
+
+# 求多个聚合值
+GET test_search_index/_search
+{
+  "size":0,
+  "aggs":{
+    "min_age":{
+      "min":{
+        "field":"age"
+      }
+    },    
+    "max_age":{
+      "max":{
+        "field":"age"
+      }
+    },
+    "avg_age":{
+      "avg":{
+        "field":"age"
+      }
+    }    
+  }
+}
+
+# cardinality查找字段不相同值的个数
+GET test_search_index/_search
+{
+  "size":0,
+  "aggs":{
+    "count_of_job":{
+      "cardinality":{
+        "field":"job.keyword"
+      }
+    }
+  }
+}
+
+# stats返回一系列统计值
+GET test_search_index/_search
+{
+  "size":0,
+  "aggs":{
+    "stats_age":{
+      "stats":{
+        "field":"age"
+      }
+    }
+  }
+}
+
+# 百分位数统计
+GET test_search_index/_search
+{
+  "size":0,
+  "aggs":{
+    "per_salary":{
+      "percentiles":{
+        "field":"salary"
+      }
+    }
+  }
+}
+
+
+# bucket 按照一定的规则将文档分配到不同的桶中，已达到分类分析的目的
+GET test_search_index/_search
+{
+  "size": 0,
+  "aggs": {
+    "jobs": {
+      "terms": {
+        "field": "job.keyword",
+        "size": 5
+      }
+    }
+  }
+}
+
+# 区间分桶，key是指定返回结果中的key
+GET test_search_index/_search
+{
+  "size": 0,
+  "aggs": {
+    "salary_range": {
+      "range": {
+        "field": "salary",
+        "ranges": [
+          {
+            "key": "<10000",
+            "to": 10000
+          },
+          {
+            "key": "10000~20000",
+            "from": 10000,
+            "to": 20000
+          },
+          {
+            "key": ">20000",
+            "from": 20000
+          }          
+        ]
+      }
+    }
+  }
+}
+
+# 分桶后再对桶内数据做聚合分析
+GET test_search_index/_search
+{
+  "size": 0,
+  "aggs":{
+    "jobs":{
+      "terms": {
+        "field": "job.keyword",
+        "size": 10
+      },
+      "aggs": {
+        "age_range": {
+            "range":{
+              "field": "age",
+              "ranges":[
+                {
+                  "to": 20
+                },
+                {
+                  "from": 20,
+                  "to": 30
+                },
+                {
+                  "from": 30
+                }                
+              ]
+            }
+        }
+      }
+    }
+  }
+}
+
+# 对分桶结果做指标分析
+GET test_search_index/_search
+{
+  "size": 0,
+  "aggs":{
+    "jobs":{
+      "terms": {
+        "field": "job.keyword",
+        "size": 10
+      },
+      "aggs": {
+        "salary": {
+            "stats":{
+              "field": "salary"
+            }
+        }
+      }
+    }
+  }
+}
+
+# Pipeline聚合分析
+# 对聚合分析的结果再次进行聚合分析，而且支持链式调用
+# 语句中包含buckets_path就是Pipeline聚合分析
+# Pipeline聚合分析结果。Parent结果内嵌到现有的聚合分析结果中。Sibling结果和现有的聚合分析结果同级
+
+# min_bucket找出最小的桶
+# buckets_path即路径，路径为jobs里面的avg_salary
+GET test_search_index/_search
+{
+  "size": 0,
+  "aggs":{
+    "jobs":{
+      "terms": {
+        "field": "job.keyword",
+        "size": 10
+      },
+      "aggs": {
+        "avg_salary": {
+            "avg":{
+              "field": "salary"
+            }
+        }
+      }
+    },
+    "min_salary_by_job":{
+      "min_bucket":{
+        "buckets_path": "jobs>avg_salary"
+      }
+    }    
+  }
+}
+
+
+# derivative求导数是内嵌到参数中
+GET test_search_index/_search
+{
+  "size": 0,
+  "aggs":{
+    "birth":{
+      "date_histogram": {
+        "field": "birth",
+        "interval": "year",
+        "min_doc_count": 0
+      },
+      "aggs": {
+        "avg_salary": {
+            "avg":{
+              "field": "salary"
+            }
+        },
+        "derivative_avg_salary":{
+          "derivative":{
+            "buckets_path": "avg_salary"
+          }
+        }          
+      }
+    }
+  }
+}
+
+# 聚合搜索+排序
+GET test_search_index/_search
+{
+  "size": 0,
+  "aggs":{
+    "jobs":{
+      "terms":{
+        "field": "job.keyword",
+        "size": 10,
+        "order":[
+          {
+            "_count": "asc"
+          },
+          {
+            "_key": "desc"
+          }          
+        ]
+      }
+    }
+  }
+}
+
+
+
+
+# 字段中包含大文本的处理，比如文章内容
+DELETE bolog_index
+
+# title字段type为text类型可以用于分词搜索
+# 再添加keyword类型，可以用于排序、聚合、全文匹配
+PUT bolog_index
+{
+  "mappings": {
+    "doc":{
+      "properties":{
+        "title":{
+          "type":"text",
+          "fields":{
+            "keyword":{
+              "type": "keyword",
+              "ignore_above": 100
+            }
+          }
+        },
+        "publish_date":{
+          "type": "date"
+        },
+        "author":{
+          "type":"keyword",
+          "ignore_above": 100
+        },
+        "abstract":{
+          "type": "text"
+        },  
+        "url":{
+          "enabled": false
+        },
+        "content":{
+          "type": "text"
+        }
+      }
+    }
+  }
+}
+
+# 插入数据
+PUT bolog_index/doc/1
+{
+  "title": "blog title",
+  "content": "blog content"
+}
+
+# 获取数据
+GET bolog_index/_search
 
 
 
 
 
+# 删除索引
+DELETE bolog_index
 
+#_source.enabled=false，查询时候返回结果不会返回_source字段
+# 因为content字段数据很多，不用返回content字段的内容
+PUT bolog_index
+{
+  "mappings": {
+    "doc":{
+      "_source":{
+        "enabled": false
+      },
+      "properties":{
+        "title":{
+          "type":"text",
+          "fields":{
+            "keyword":{
+              "type": "keyword",
+              "ignore_above": 100
+            }
+          },
+          "store": true
+        },
+        "publish_date":{
+          "type": "date",
+          "store": true
+        },
+        "author":{
+          "type":"keyword",
+          "ignore_above": 100,
+          "store": true
+        },
+        "abstract":{
+          "type": "text",
+          "store": true
+        },  
+        "url":{
+          "type": "keyword",
+          "doc_values": false,
+          "norms": false,
+          "ignore_above": 100,
+          "store": true
+        },
+        "content":{
+          "type": "text",
+          "store": true
+        }
+      }
+    }
+  }
+}
+
+# 插入数据
+PUT bolog_index/doc/1
+{
+  "title": "blog title",
+  "content": "blog content"
+}
+
+# 获取数据
+GET bolog_index/_search
+
+# 获取数据，这种是在分区返回数据时只返回出title字段，而不是返回文档所有字段后过滤出指定字段，效率就高了
+GET bolog_index/_search
+{
+  "stored_fields": ["title"]
+}
+
+#高亮搜索，content中返回高亮内容
+GET bolog_index/_search
+{
+  "stored_fields": ["title"],
+  "query":{
+    "match": {
+      "content": "blog"
+    }
+  },
+  "highlight":{
+    "fields": {"content": {}}
+  }
+}
+
+
+
+
+########### 重建索引，新索引不需要提前创建，但这样似乎就是改索引名字而已。
+# "conflicts": "proceed"冲突时候覆盖
+POST _reindex
+{
+  "conflicts": "proceed",
+  "source": {
+    "index": "bolog_index"
+  },
+  "dest":{
+    "index": "bolog_new_index"
+  }
+}
+
+# 获取数据
+GET bolog_new_index/_search
+
+# 删除索引
+DELETE bolog_new_index
+
+# 先新建索引，索引的mapping可以修改
+PUT bolog_new_index
+{
+  "mappings": {
+    "doc":{
+      "_source":{
+        "enabled": false
+      },
+      "properties":{
+        "title":{
+          "type":"text",
+          "fields":{
+            "keyword":{
+              "type": "keyword",
+              "ignore_above": 100
+            }
+          },
+          "store": true
+        },
+        "publish_date":{
+          "type": "date",
+          "store": true
+        },
+        "author":{
+          "type":"keyword",
+          "ignore_above": 100,
+          "store": true
+        },
+        "abstract":{
+          "type": "text",
+          "store": true
+        },  
+        "url":{
+          "type": "keyword",
+          "doc_values": false,
+          "norms": false,
+          "ignore_above": 100,
+          "store": true
+        },
+        "content":{
+          "type": "text",
+          "store": true
+        }
+      }
+    }
+  }
+}
+
+# 数据迁移，重建索引
+POST _reindex
+{
+  "conflicts": "proceed",
+  "source": {
+    "index": "bolog_index"
+  },
+  "dest":{
+    "index": "bolog_new_index"
+  }
+}
+
+# 获取数据
+GET bolog_new_index/_search
+{
+  "stored_fields": ["title"]
+}
+
+
+
+
+
+# 集群设置  https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
+# JVM内存不要超过31GB
+# 预留一半内存给操作系统，用来做文件缓存
+
+
+
+# elasticsearch.yml 关闭xpack安全校验，在kibana中使用就不需要输入账号密码
+xpack.security.enabled: false
+
+kibana中的Monitoring有监控功能
 
 
 
