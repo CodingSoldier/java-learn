@@ -1092,7 +1092,7 @@ GET test_search_index/_search
           "derivative":{
             "buckets_path": "avg_salary"
           }
-        }          
+        }
       }
     }
   }
@@ -1113,7 +1113,7 @@ GET test_search_index/_search
           },
           {
             "_key": "desc"
-          }          
+          }
         ]
       }
     }
@@ -1123,7 +1123,7 @@ GET test_search_index/_search
 
 
 
-# 字段中包含大文本的处理，比如文章内容
+# 字段中包含大文本(比如文章内容)的处理
 DELETE bolog_index
 
 # title字段type为text类型可以用于分词搜索
