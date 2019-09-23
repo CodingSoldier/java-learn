@@ -7,10 +7,10 @@ pip install shadowsocks
 
 vi /etc/shadowsocks.json
 {
-    "server":"服务器ip",
-    "server_port":随便写个端口,
+    "server":"XXXXXXx",
+    "server_port":80,
     "local_port":1080,
-    "password":"密码",
+    "password":"XXX",
     "method":"aes-256-cfb"
 }
 
@@ -27,11 +27,19 @@ ExecStart=/usr/bin/ssserver -c /etc/shadowsocks.json
 [Install]
 WantedBy=multi-user.target
 
+# 更改.service文件后，都要重载守护进程更新systemctl
+systemctl daemon-reload
 
 systemctl enable /etc/systemd/system/shadowsocks.service
 systemctl start shadowsocks
 systemctl status shadowsocks
 
+systemctl stop shadowsocks
+
+systemctl restart shadowsocks
+
+
+nohup /usr/bin/ssserver -c /etc/shadowsocks.json &
 
 安装锐速进行加速
 http://cw760.github.io/2018/01/18/%E5%9C%A8Digitalocean%E4%B8%8A%E6%90%AD%E5%BB%BAShadowsocks%E5%B9%B6%E4%BD%BF%E7%94%A8%E9%94%90%E9%80%9F%E8%BF%9B%E8%A1%8C%E5%8A%A0%E9%80%9F%E4%BC%98%E5%8C%96/
