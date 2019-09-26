@@ -12,6 +12,20 @@ vi authorized_keys
 xshell使用公钥连接即可
 
 
+liunx允许账号密码远程登录
+vi /etc/ssh/sshd_config
+	PermitRootLogin yes
+	PermitEmptyPasswords yes
+	PasswordAuthentication yes
+	
+service sshd restart
+
+
+linux修改密码
+	passwd root
+	输入简单密码会提示太简单，无视提示，再次输入简单密码即可成功
+
+
 
 yum -y install lrzsz gcc gcc-c++ pcre pcre-devel zlib zlib-devel ruby wget bash-completion zlib.i686 libstdc++.i686 lsof unzip zip finger bind-utils  readline-devel autoconf  man-pages nano vim-enhanced net-tools get curl lftp make
 

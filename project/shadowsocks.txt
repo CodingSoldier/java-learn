@@ -30,9 +30,10 @@ WantedBy=multi-user.target
 # 更改.service文件后，都要重载守护进程更新systemctl
 systemctl daemon-reload
 
-systemctl enable /etc/systemd/system/shadowsocks.service
 systemctl start shadowsocks
 systemctl status shadowsocks
+
+systemctl enable /etc/systemd/system/shadowsocks.service
 
 systemctl stop shadowsocks
 
