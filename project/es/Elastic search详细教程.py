@@ -786,6 +786,48 @@ POST test_search_index/doc/_bulk
 {"username":"Michell","job":"ruby engineer","age":26,"birth":"1987-08-07","isMarried":false,"salary":12000}
 
 
+# sort排序
+GET test_search_index/_search
+{
+  "query": {
+    "match": {
+      "username": "alfred"
+    }
+  },
+  "sort":{
+    "birth": "desc"
+  }
+}
+
+# 多字段排序
+GET test_search_index/_search
+{
+  "sort":[{
+    "birth": "desc"
+  },{
+    "_score": "desc"
+  },{
+    "_doc": "desc"
+  }]
+}
+
+# text类型的字符串排序会报错，因为这时候是操作倒排索引，但是倒排索引是无法实现排序的
+GET test_search_index/_search
+{
+  "sort":[{
+    "username": "desc"
+  }]
+}
+
+# 字段名加上keyword就会使用正排索引，对文档原始内容进行排序，这就不会报错了
+GET test_search_index/_search
+{
+  "sort":[{
+    "username.keyword": "desc"
+  }]
+}
+
+
 # 分布式系统深度分页问题，会在所有分片上都执行from=10000, size=2，合并所有分片数据之后再筛选出from=10000, size=2
 # es为防止数据太大，限制分页只能获取前一万条数据，下面的查询报错
 GET test_search_index/_search

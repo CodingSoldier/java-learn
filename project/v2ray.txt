@@ -1,0 +1,37 @@
+﻿linux服务器安装v2ray
+	wget https://install.direct/go.sh
+	bash go.sh
+	systemctl start v2ray
+
+	vi /etc/v2ray/config.json 查看配置文件
+		记录inbounds中的 port、protocol、settings.clients.id
+
+	service v2ray start|stop|status|reload|restart|force-reload 
+
+	service v2ray restart
+
+	/usr/bin/v2ray/v2ray -help
+
+window服务器安装v2ray
+	https://github.com/v2ray/v2ray-core/releases  下载v2ray window版本
+	修改配置文件config.json
+		inbounds.port 可以改下端口如 2333
+		outbounds加入一个元素
+		{
+    "protocol": "vmess",
+    "settings": {
+      "vnext": [{
+        "address": "", // 服务器地址，请修改为你自己的服务器 ip 或域名
+        "port": 35991,  // 服务器/etc/v2ray/config.json  inbounds.port
+        "users": [{ "id": "服务器/etc/v2ray/config.json  inbounds.settings.clients.id" }]
+      }]
+    }
+  },
+
+  	双击v2ray.exe运行
+
+配置chrome浏览器
+	安装拓展  Proxy SwitchyOmega
+	导入/导出 ——>  在线恢复   https://github.com/FelisCatus/SwitchyOmega/wiki/GFWList.bak  点击恢复
+	GFWeb  ——> 代理端口写 服务端  inbounds.port  ——> 点击应用选项
+	浏览器右上角点击Proxy SwitchyOmega，选择自动切换
