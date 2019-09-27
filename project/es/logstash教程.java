@@ -20,7 +20,8 @@
         输入hello，返回json数据，json中多了一个name属性
 
 
-
+Apache日志实例
+  .\bin\logstash.bat -f .\demo_data_learn\imooc_log\ls.conf
 
 
 
