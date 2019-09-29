@@ -6,9 +6,14 @@
 	vi /etc/v2ray/config.json 查看配置文件
 		记录inbounds中的 port、protocol、settings.clients.id
 
-	service v2ray start|stop|status|reload|restart|force-reload 
+  service v2ray start
+  service v2ray stop
+  service v2ray status
+  service v2ray reload
+  service v2ray restart
+	service v2ray force-reload
 
-	service v2ray restart
+
 
 	/usr/bin/v2ray/v2ray -help
 
@@ -35,3 +40,75 @@ window服务器安装v2ray
 	导入/导出 ——>  在线恢复   https://github.com/FelisCatus/SwitchyOmega/wiki/GFWList.bak  点击恢复
 	GFWeb  ——> 代理端口写 服务端  inbounds.port  ——> 点击应用选项
 	浏览器右上角点击Proxy SwitchyOmega，选择自动切换
+
+
+
+动态端口
+服务器配置：
+{
+  "inbounds":[
+  { 
+      "port": 37192,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "XXX",
+            "alterId": 64
+          }
+        ],
+        "detour": { 
+          "to": "dynamicPort"
+        }
+      }
+    },
+    {
+      "protocol": "vmess",
+      "port": "10000-20000",
+      "tag": "dynamicPort",
+      "settings": {
+        "default": {
+          "alterId": 64
+        }
+      },
+      "allocate": {
+        "strategy": "random",
+        "concurrency": 2,
+        "refresh": 3
+      }
+    }
+  ]
+}	
+
+客户端配置：
+{
+  "outbounds": [
+    {
+      "protocol": "vmess",
+      "settings": {
+        "vnext": [
+          {
+            "address": "",
+            "port": 20621,
+            "users": [
+              {
+                "id": "",
+                "alterId": 64
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
+
+
+
+
+
+
+
+
+
+
