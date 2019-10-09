@@ -47,7 +47,7 @@ window服务器安装v2ray
 服务器配置：
 {
   "inbounds":[
-  { 
+    { 
       "port": 37192,
       "protocol": "vmess",
       "settings": {

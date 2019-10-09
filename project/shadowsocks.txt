@@ -16,6 +16,8 @@ vi /etc/shadowsocks.json
 
 # 将shadowsocks加入系统服务
 vi /etc/systemd/system/shadowsocks.service
+可能在这里
+vi /usr/lib/systemd/system/shadowsocks.service
 
 [Unit]
 Description=Shadowsocks Client Service
