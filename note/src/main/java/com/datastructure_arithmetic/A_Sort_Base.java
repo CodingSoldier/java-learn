@@ -153,54 +153,69 @@ public class A_Sort_Base<T> {
 
 
 
-
+    // 归并排序
     public void mergeSort(int[] arr){
         mergeSegment(arr, 0, arr.length-1);
     }
 
-    public void mergeSegment(int[] arr, int minIndex, int maxIndex){
+    /**
+     * 归并排序私有方法
+     * @param arr
+     * @param minIndex 最小下标
+     * @param maxIndex 最大下标
+     */
+    private void mergeSegment(int[] arr, int minIndex, int maxIndex){
         if (minIndex >= maxIndex){
             return;
         }
 
-        int middleIndex = (minIndex + maxIndex)/2;
+        int middleIndex = (minIndex+maxIndex)/2;
+        // 数组平分为两段，然后再递归对分段后的数组再分段
         mergeSegment(arr, minIndex, middleIndex);
         mergeSegment(arr, middleIndex+1, maxIndex);
-
-        segmentMergeSort(arr, minIndex, middleIndex, maxIndex);
+        // 两段数组合并、排序
+        segmentsMergeSort(arr, minIndex, middleIndex, maxIndex);
     }
 
-    public void segmentMergeSort(int[] arr, int minIndex, int middleIndex, int maxIndex){
+    /**
+     * 合并、排序相邻的两个数组段
+     * @param arr
+     * @param minIndex 左边数组段最小下标
+     * @param middleIndex 中间下标
+     * @param maxIndex 右边数组段最大下标
+     */
+    private void segmentsMergeSort(int[] arr, int minIndex, int middleIndex, int maxIndex){
+        // 临时数组，存储两个数组段的元素
         int[] segmentArr = new int[maxIndex - minIndex + 1];
-        for (int i=minIndex; i<=maxIndex; i++){
+
+        //将数组arr[minIndex]到arr[maxIndex]的元素存储到segmentsArr
+        for (int i = minIndex; i <= maxIndex; i++){
             segmentArr[i-minIndex] = arr[i];
         }
 
-        int leftSegmentIndex=minIndex, rightSegmentIndex=middleIndex+1;
+        int leftSegmentIndex = minIndex, rightSegmentIndex = middleIndex+1;
 
-        //遍历segmentArr
-        for (int current=minIndex; current<=maxIndex; current++){
+        // 将segmentsArr
+        for (int currentIndex=minIndex; currentIndex<=maxIndex; currentIndex++){
             if (leftSegmentIndex > middleIndex){
-                arr[current] = segmentArr[rightSegmentIndex - minIndex];
+                arr[currentIndex] = segmentArr[rightSegmentIndex - minIndex];
                 rightSegmentIndex++;
             }else if (rightSegmentIndex > maxIndex){
-                arr[current] = segmentArr[leftSegmentIndex - minIndex];
+                arr[currentIndex] = segmentArr[leftSegmentIndex - minIndex];
                 leftSegmentIndex++;
             }else if (segmentArr[leftSegmentIndex - minIndex] < segmentArr[rightSegmentIndex - minIndex]){
-                arr[current] = segmentArr[leftSegmentIndex - minIndex];
+                arr[currentIndex] = segmentArr[leftSegmentIndex - minIndex];
                 leftSegmentIndex++;
             }else {
-                arr[current] = segmentArr[rightSegmentIndex - minIndex];
+                arr[currentIndex] = segmentArr[rightSegmentIndex - minIndex];
                 rightSegmentIndex++;
             }
         }
-
     }
-
 
     @Test
     public void test_mergeSort() {
-        int[] arr1 = generateIntArray(100000, 0, 100000);
+        int[] arr1 = Utils.generateIntArray(1000, 0, 1000);
 
         long time1 = new Date().getTime();
         mergeSort(arr1);
@@ -210,7 +225,5 @@ public class A_Sort_Base<T> {
             System.out.println(arr1[i]);
         }
     }
-
-
 
 }
