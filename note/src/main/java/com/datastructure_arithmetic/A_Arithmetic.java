@@ -341,25 +341,14 @@ public class A_Arithmetic<T> {
         arr[l] = arr[random];
         arr[random] = temp;
 
-        int j = l;
-        for (int i = l+1; i<=r; i++){
-            // arr[i]小于arr[l]，j++，之后arr[j]、arr[i]再交换位置
-            if (arr[i] < arr[l]){
-                j++;
-                int v = arr[j];
-                arr[j] = arr[i];
-                arr[i] = v;
-            }
-        }
-
         //int i=l+1, j = r;
         //while (true){
         //    // arr[i]小于arr[l]，i++向后遍历
-        //    while (arr[i] < arr[l]){
+        //    while (i <= r && arr[i] < arr[l]){
         //        i++;
         //    }
         //    //arr[j]大于arr[l], j--向前遍历
-        //    while (arr[j] > arr[l]){
+        //    while (j >= l+1 && arr[j] > arr[l]){
         //        j--;
         //    }
         //    // 退出循环
@@ -368,17 +357,26 @@ public class A_Arithmetic<T> {
         //    }
         //
         //    // 交换位置，避免重复元素都集中在一端
-        //    int v = arr[i];
+        //    int temp2 = arr[i];
         //    arr[i] = arr[j];
-        //    arr[j] = v;
+        //    arr[j] = temp2;
         //
         //    i++;
         //    j--;
         //
         //}
 
+        int i=l+1, j=r;
+        while (true){
+            while (i<=r && arr[i]>arr[l]){
+                i++;
+            }
+            while (j>=l+1 && )
+        }
+
         /**
-         * 此时 arr[i] >= arr[l]，arr[j] <= arr[l]
+         * 上面的循环是通过 break 退出循环，
+         * 即前面两个内层while循环退出了，则此时必然是 arr[i] >= arr[l]，arr[j] <= arr[l]
          * 所以是arr[l]是跟arr[j]交换位置
          */
         int v = arr[l];
@@ -407,7 +405,7 @@ public class A_Arithmetic<T> {
     public void test_quickSort() {
 
         // 数组中存在大量重复值的情况
-        int[] arr1 = generateIntArray(100000, 0, 10);
+        int[] arr1 = generateIntArray(100000, 0, 100000);
 
         // 快速排序
         Long t1 = new Date().getTime();
