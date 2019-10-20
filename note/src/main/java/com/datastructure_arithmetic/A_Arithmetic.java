@@ -296,17 +296,103 @@ public class A_Arithmetic<T> {
 
 
 
+
+
+    //// 快速排序
+    //public void quickSort(int[] arr){
+    //    quickSort(arr, 0, arr.length-1);
+    //}
+    //
+    //// 快速排序私有方法
+    //private void quickSort(int[] arr, int l, int r){
+    //
+    //    if (l >= r){
+    //        return;
+    //    }
+    //
+    //    // 优化1
+    //    // 当需要排序的数据量很小的时候，使用插入排序提高效率
+    //    // 这种优化适用于很多的高级算法
+    //    // 插入排序请看这篇博客 https://mp.csdn.net/postedit/102546480
+    //    if (r - l <= 15){
+    //        for (int i = l; i<=r; i++){
+    //            int e = arr[i];
+    //            int j;
+    //            for (j=i; j-1>=l && arr[j-1] > e; j--){
+    //                arr[j] = arr[j-1];
+    //            }
+    //            arr[j] = e;
+    //        }
+    //        return;
+    //    }
+    //
+    //    // 分割、排序数组arr
+    //    int p = partition(arr, l, r);
+    //    // 左右两边元素递归，使用相同的方式排序
+    //    quickSort(arr, l, p-1);
+    //    quickSort(arr, p+1, r);
+    //}
+    //
+    //// 分割、排序数组arr，并发返回分割点下标
+    //private int partition(int[] arr, int l, int r){
+    //
+    //    // 优化2
+    //    // 随机选择一个元素和标定点互换位置
+    //    int random = l + new Random().nextInt(r - l + 1);
+    //    int temp = arr[l];
+    //    arr[l] = arr[random];
+    //    arr[random] = temp;
+    //
+    //    // 优化3
+    //    // 双路快速排序
+    //    int i=l+1, j = r;
+    //    while (true){
+    //        // arr[i]小于arr[l]，i++向后遍历
+    //        while (i <= r && arr[i] < arr[l]){
+    //            i++;
+    //        }
+    //        //arr[j]大于arr[l], j--向前遍历
+    //        while (j >= l+1 && arr[j] > arr[l]){
+    //            j--;
+    //        }
+    //        // 退出循环
+    //        if (i>j){
+    //            break;
+    //        }
+    //
+    //        // 交换位置，避免重复元素都集中在一端
+    //        int temp2 = arr[i];
+    //        arr[i] = arr[j];
+    //        arr[j] = temp2;
+    //
+    //        i++;
+    //        j--;
+    //
+    //    }
+    //
+    //    /**
+    //     * 上面的循环是通过 break 退出循环，
+    //     * 即前面两个内层while循环退出了，则此时必然是 arr[i] >= arr[l]，arr[j] <= arr[l]
+    //     * 所以是arr[l]是跟arr[j]交换位置
+    //     */
+    //    int v = arr[l];
+    //    arr[l] = arr[j];
+    //    arr[j] = v;
+    //
+    //    return j;
+    //}
+
+
+
+
+
     // 快速排序
     public void quickSort(int[] arr){
-        quickSort(arr, 0, arr.length-1);
+        quickSort3Ways(arr, 0, arr.length-1);
     }
 
-    // 快速排序私有方法
-    private void quickSort(int[] arr, int l, int r){
-
-        if (l >= r){
-            return;
-        }
+    // 3路快速排序
+    private void quickSort3Ways(int[] arr, int l, int r){
 
         // 优化1
         // 当需要排序的数据量很小的时候，使用插入排序提高效率
@@ -324,16 +410,6 @@ public class A_Arithmetic<T> {
             return;
         }
 
-        // 分割、排序数组arr
-        int p = partition(arr, l, r);
-        // 左右两边元素递归，使用相同的方式排序
-        quickSort(arr, l, p-1);
-        quickSort(arr, p+1, r);
-    }
-
-    // 分割、排序数组arr，并发返回分割点下标
-    private int partition(int[] arr, int l, int r){
-
         // 优化2
         // 随机选择一个元素和标定点互换位置
         int random = l + new Random().nextInt(r - l + 1);
@@ -341,49 +417,50 @@ public class A_Arithmetic<T> {
         arr[l] = arr[random];
         arr[random] = temp;
 
-        //int i=l+1, j = r;
-        //while (true){
-        //    // arr[i]小于arr[l]，i++向后遍历
-        //    while (i <= r && arr[i] < arr[l]){
-        //        i++;
-        //    }
-        //    //arr[j]大于arr[l], j--向前遍历
-        //    while (j >= l+1 && arr[j] > arr[l]){
-        //        j--;
-        //    }
-        //    // 退出循环
-        //    if (i>j){
-        //        break;
-        //    }
-        //
-        //    // 交换位置，避免重复元素都集中在一端
-        //    int temp2 = arr[i];
-        //    arr[i] = arr[j];
-        //    arr[j] = temp2;
-        //
-        //    i++;
-        //    j--;
-        //
-        //}
+        /**
+         * 前提：arr[l+1]至arr[lt] 小于 arr[l]
+         * 定义lt=1，则初始化时，小于arr[l]的数组段是空的
+         */
+        int lt = l;
+        /**
+         * 前提：arr[gt]值arr[r] 大于 arr[l]
+         * 定义gt=r+1，则初始化时，大于arr[l]的数组段是空的
+         */
+        int gt = r+1;
 
-        int i=l+1, j=r;
-        while (true){
-            while (i<=r && arr[i]>arr[l]){
+        int i = l+1;
+
+        while (i < gt){
+            if (arr[i] < arr[l]){
+                int temp2 = arr[i];
+                arr[i] = arr[lt+1];
+                arr[lt+1] = temp2;
+
+                lt++;
+                i++;
+            }else if (arr[i] > arr[l]){
+                int temp2 = arr[i];
+                arr[i] = arr[gt-1];
+                arr[gt-1] = temp2;
+
+                gt--;
+            }else {
                 i++;
             }
-            while (j>=l+1 && )
         }
 
-        /**
-         * 上面的循环是通过 break 退出循环，
-         * 即前面两个内层while循环退出了，则此时必然是 arr[i] >= arr[l]，arr[j] <= arr[l]
-         * 所以是arr[l]是跟arr[j]交换位置
-         */
-        int v = arr[l];
-        arr[l] = arr[j];
-        arr[j] = v;
+        // 遍历完，最后要交换arr[l]与arr[lt]的位置
+        int temp3 = arr[l];
+        arr[l] = arr[lt];
+        arr[lt] = temp3;
 
-        return j;
+        /**
+         * 此时 arr[l]至arr[lt-1] 小于 v
+         * arr[lt]至arr[gt-1] 等于 v
+         * arr[gt]至arr[r] 大于 v
+         */
+        quickSort3Ways(arr, l, lt-1);
+        quickSort3Ways(arr, gt, r);
     }
 
     /**
@@ -410,12 +487,24 @@ public class A_Arithmetic<T> {
         // 快速排序
         Long t1 = new Date().getTime();
         quickSort(arr1);
-        System.out.println(new Date().getTime() - t1);
 
         for (int i=0; i<arr1.length; i++){
             System.out.println(arr1[i]);
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
