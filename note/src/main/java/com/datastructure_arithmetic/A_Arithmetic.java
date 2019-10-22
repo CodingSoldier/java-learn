@@ -2,6 +2,7 @@ package com.datastructure_arithmetic;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
@@ -491,6 +492,7 @@ public class A_Arithmetic<T> {
         for (int i=0; i<arr1.length; i++){
             System.out.println(arr1[i]);
         }
+
     }
 
 
