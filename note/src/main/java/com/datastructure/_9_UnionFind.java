@@ -122,7 +122,6 @@ public class _9_UnionFind {
                 root[pRoot] = qRoot;
                 rank[qRoot] += 1;
             }
-
         }
 
 
