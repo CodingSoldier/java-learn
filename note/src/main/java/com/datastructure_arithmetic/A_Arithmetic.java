@@ -2,9 +2,11 @@ package com.datastructure_arithmetic;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Random;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @Description
@@ -497,6 +499,194 @@ public class A_Arithmetic<T> {
 
 
 
+
+
+
+
+
+
+
+
+
+// 稠密图 - 邻接矩阵
+public static class DenseGraph{
+    private int n;  //节点数
+    private int m;  //边数
+    private boolean directed;  //是否为有向图
+    private boolean[][] g;  //图的具体数据
+
+    public DenseGraph(int n, boolean directed){
+        if (n <= 0){
+            throw new RuntimeException("越界");
+        }
+        this.n = n;
+        this.m = 0;   //初始化没有任何边
+        // g初始化为 n*n 的布尔矩阵，每一个g[i][j]均为false，没有任何边
+        // false为boolean型变量的默认值
+        this.directed = directed;
+        g = new boolean[n][n];
+    }
+
+    // 返回节点个数
+    public int V(){
+        return n;
+    }
+
+    // 返回边的个数
+    public int E(){
+        return m;
+    }
+
+    public void addEdge(int v, int w){
+        if (v < 0 && v >= n || w < 0 && w >= n){
+            throw new RuntimeException("越界");
+        }
+
+        if (hasEdge(v, w)){
+            return;
+        }
+
+        g[v][w] = true;
+        if (!directed){
+            g[w][v] = true;
+        }
+
+        m++;
+    }
+
+    boolean hasEdge(int v, int w){
+        if (v < 0 && v >= n || w < 0 && w >= n){
+            throw new RuntimeException("越界");
+        }
+        return g[v][w];
+    }
+
+    public Iterable<Integer> adj(int v){
+        Vector<Integer> adjV = new Vector<>();
+        for (int i=0; i<n; i++){
+            if (g[v][i]){
+                adjV.add(i);
+            }
+        }
+        return adjV;
+    }
+
+    public static void main(String[] args) {
+        DenseGraph dg = new DenseGraph(4, false);
+        dg.addEdge(1, 1);
+        dg.addEdge(3, 3);
+        System.out.println(dg.hasEdge(0, 0));
+        System.out.println(dg.hasEdge(1, 1));
+    }
+
+}
+
+
+// 稀疏图 - 邻接表
+public static class SparseGraph{
+    private int n;     //节点数
+    private int m;     // 边数
+    private boolean directed;    // 是否为有向图
+    private Vector<Integer>[] g;  // 图的具体数据
+
+    public SparseGraph(int n, boolean directed){
+        this.n = n;
+        this.m = 0;  //没有任何边
+        this.directed = directed;
+
+        // g初始化为n个空的vector，表示每一个g[i]都为空，即便没有任何边
+        g = (Vector<Integer>[]) new Vector[n];
+        for (int i=0; i<n; i++){
+            g[i] = new Vector<Integer>();
+        }
+    }
+
+    public int V(){return n;}
+    public int E(){return m;}
+
+    public void addEdge(int v, int w){
+        g[v].add(w);
+        if (v != w && !directed){
+            g[w].add(v);
+        }
+        m++;
+    }
+
+    boolean hasEdge(int v, int w){
+        for (int i=0; i<g[v].size(); i++){
+            if (g[v].elementAt(i) == w){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        SparseGraph sg = new SparseGraph(4, true);
+        sg.addEdge(2,3);
+        System.out.println(sg.hasEdge(3,2));
+        System.out.println(sg.hasEdge(2,3));
+    }
+
+}
+
+
+// 图的接口
+public static interface Graph {
+
+    public int V();
+    public int E();
+    public void addEdge( int v , int w );
+    boolean hasEdge( int v , int w );
+    void show();
+    public Iterable<Integer> adj(int v);
+}
+
+
+
+public static class ReadGraph{
+    private Scanner scanner;
+
+    public ReadGraph(Graph graph, String filename){
+
+        readFile(filename);
+
+        try {
+            int V = scanner.nextInt();
+            if (V < 0){
+                throw new RuntimeException("顶点非负");
+            }
+
+            int E = scanner.nextInt();
+            if (E<0){
+                throw new RuntimeException("图连接线非负");
+            }
+
+            for (int i=0; i<E; i++){
+                int v = scanner.nextInt();
+                int w = scanner.nextInt();
+                graph.addEdge(v, w);
+            }
+        }catch (Exception e){
+
+        }
+    }
+
+    // 读取文件
+    private void readFile(String filename){
+        try {
+            File file = new File(filename);
+            if (file.exists()){
+                FileInputStream fis = new FileInputStream(file);
+                scanner = new Scanner(new BufferedInputStream(fis), "UTF-8");
+                scanner.useLocale(Locale.ENGLISH);
+            }
+        }catch (IOException e){
+
+        }
+    }
+
+}
 
 
 
