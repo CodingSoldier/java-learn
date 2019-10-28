@@ -15,7 +15,7 @@ public class Io_Utils {
     //从流中读取内容并转为List<String>
     @Test
     public void t1() throws Exception{
-        String path1 = "E:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\Lang3.java";
+        String path1 = "getNodeEdgeNum:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\Lang3.java";
         InputStream is = new FileInputStream(path1);
         List<String> list = IOUtils.readLines(is,"utf-8");
         for (String line:list){
@@ -27,7 +27,7 @@ public class Io_Utils {
     //字符写入输出流
     @Test
     public void t2() throws Exception{
-        String path1 = "E:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\Lang3.txt";
+        String path1 = "getNodeEdgeNum:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\Lang3.txt";
         OutputStream os = new FileOutputStream(path1);
         IOUtils.write("将字符串写入输出流",os,"utf-8");
         os.close();
@@ -37,7 +37,7 @@ public class Io_Utils {
     // try-width-resource，在try后面的括号中创建流，try代码块运行结束，括号中创建的流将会被自动关闭
     @Test
     public void t3() throws Exception{
-        String path = "E:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\Lang3.txt";
+        String path = "getNodeEdgeNum:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\Lang3.txt";
         try (
             OutputStream os = new FileOutputStream(path);
             InputStream is = new FileInputStream(path);

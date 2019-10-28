@@ -12,8 +12,8 @@ public class E_In_Re_Ou_Wr {
      */
     @Test
     public void t() throws Exception{
-        String i = "E:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\b_file01.txt";
-        String o = "E:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\E_file01.txt";
+        String i = "getNodeEdgeNum:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\b_file01.txt";
+        String o = "getNodeEdgeNum:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\E_file01.txt";
 
         InputStreamReader isr = new InputStreamReader(new BufferedInputStream(new FileInputStream(i)));
         //转换流可设置编码

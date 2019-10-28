@@ -57,7 +57,7 @@ class Countries {
             {"MOZAMBIQUE","Maputo"}, {"NAMIBIA","Windhoek"},
             {"NIGER","Niamey"}, {"NIGERIA","Abuja"},
             {"RWANDA","Kigali"},
-            {"SAO TOME E PRINCIPE","Sao Tome"},
+            {"SAO TOME getNodeEdgeNum PRINCIPE","Sao Tome"},
             {"SENEGAL","Dakar"}, {"SEYCHELLES","Victoria"},
             {"SIERRA LEONE","Freetown"}, {"SOMALIA","Mogadishu"},
             {"SOUTH AFRICA","Pretoria/Cape Town"},
@@ -622,7 +622,7 @@ class MapEntry<K, V> implements Map.Entry<K, V>{
  //P493 简单HashMap实现，P495练习25
 class SimpleHashMap<K, V> extends AbstractMap<K,V>{
     static final int SIZE = 997; //共有997个槽位
-    // Map实际上是数组，数组中的元素是LinkedList<MapEntry<K, V>>
+    // Map实际上是数组，数组中的元素是LinkedList<MapEntry<K, getNodeTotal>>
     LinkedList<MapEntry<K, V>>[] buckets = new LinkedList[SIZE];
 
     public V put(K key, V value){

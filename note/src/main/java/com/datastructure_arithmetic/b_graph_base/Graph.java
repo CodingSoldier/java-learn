@@ -3,10 +3,10 @@ package com.datastructure_arithmetic.b_graph_base;
 // 图的接口
 public interface Graph {
 
-    public int V();
-    public int E();
-    public void addEdge(int v, int w);
-    boolean hasEdge(int v, int w);
+    int getNodeTotal();
+    int getNodeEdgeNum();
+    void addEdge(int node1, int node2);
+    boolean hasEdge(int node1, int node2);
     void show();
-    public Iterable<Integer> adj(int v);
+    Iterable<Integer> adjacentNode(int node);
 }

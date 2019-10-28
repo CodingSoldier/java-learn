@@ -12,14 +12,14 @@ public class B_File {
     @Test
     public void file1() throws Exception{
         //构造函数1，通过文件路径创建File
-        File file = new File("E:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\b_file-img-r01.png");
+        File file = new File("getNodeEdgeNum:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\b_file-img-r01.png");
         System.out.println(file);
     }
 
     @Test
     public void file2() throws Exception{
         //构造函数2，通过new出文件夹的File对象，再new出文件夹中文件的File对象。
-        File parentFile = new File("E:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\bfile\\a");
+        File parentFile = new File("getNodeEdgeNum:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\bfile\\a");
         //parentFile.mkdir();  //目录： D:/a/b 若D:/a存在，则创建b，若D:/a不存在，无法创建b
         parentFile.mkdirs();    //目录： D:/a/b 若D:/a不存在，也可以创建D:/a/b
         File file = new File(parentFile, "b_file-img-r01.png");
@@ -31,8 +31,8 @@ public class B_File {
     @Test
     public void file3() throws Exception{
         //通过文件夹路径、文件名的形式创建File实例
-        //String parentFilePath = "E:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\bfile\\a\\文件夹不存在";
-        String parentFilePath = "E:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\bfile\\a";
+        //String parentFilePath = "getNodeEdgeNum:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\bfile\\a\\文件夹不存在";
+        String parentFilePath = "getNodeEdgeNum:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\bfile\\a";
         File file = new File(parentFilePath, "b_file-img-r01.png");
         System.out.println("文件是否存在： "+file.exists());
     }
@@ -40,7 +40,7 @@ public class B_File {
     @Test
     public void method() throws Exception{
 
-        String path = "E:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io";
+        String path = "getNodeEdgeNum:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io";
         File file = new File(path);
         //获取文件名
         String[] fileNames = file.list();  //如果file.exists()为false，文件不存在，这file.list()返回null

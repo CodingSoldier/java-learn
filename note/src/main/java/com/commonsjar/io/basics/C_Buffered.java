@@ -9,8 +9,8 @@ public class C_Buffered {
     @Test
     public void file1() throws Exception{
 
-        String ip = "E:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\c_big.png";
-        String op = "E:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\c_big_c.png";
+        String ip = "getNodeEdgeNum:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\c_big.png";
+        String op = "getNodeEdgeNum:\\workspace\\java-learn\\note\\src\\main\\java\\com\\commonsjar\\io\\c_big_c.png";
         InputStream is = new BufferedInputStream(new FileInputStream(ip));
         OutputStream os = new BufferedOutputStream(new FileOutputStream(op));
         byte[] array = new byte[1024*8];  //BufferedInputStream、BufferedOutputStream的默认的缓冲区大小都是8K

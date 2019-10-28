@@ -98,10 +98,10 @@ class SlowMap2<K,V> extends AbstractMap<K,V> {
         @Override
         public boolean contains(Object o) {
             //if(o instanceof MapEntry) {
-            //    MapEntry<K,V> e = (MapEntry<K,V>)o;
+            //    MapEntry<K,getNodeTotal> e = (MapEntry<K,getNodeTotal>)o;
             //    K key = e.getKey();
             //    if(keys.contains(key))
-            //        return e.equals(new MapEntry<K,V>(key, get(key)));
+            //        return e.equals(new MapEntry<K,getNodeTotal>(key, get(key)));
             //}
             return false;
         }
@@ -109,9 +109,9 @@ class SlowMap2<K,V> extends AbstractMap<K,V> {
         @Override
         public boolean remove(Object o) {
             //if(contains(o)) {
-            //    MapEntry<K,V> e = (MapEntry<K,V>)o;
+            //    MapEntry<K,getNodeTotal> e = (MapEntry<K,getNodeTotal>)o;
             //    K key = e.getKey();
-            //    V val = e.getValue();
+            //    getNodeTotal val = e.getValue();
             //    keys.remove(key);
             //    values.remove(val);
             //    return true;

@@ -2,50 +2,54 @@ package com.datastructure_arithmetic.b_graph_base;
 
 import java.util.Vector;
 
-// 稀疏图 - 邻接表
-public class SparseGraph implements Graph {
+/**
+ * @Description
+ * @Author chenpiqian
+ * @Date: 2019-10-28
+ */
+public class SparseGraph implements Graph{
 
-    private int n;  // 节点数
-    private int m;  // 边数
+    private int nodeTotal;  // 节点数
+    private int nodeEdgeNum;  // 节点的边数
     private boolean directed;   // 是否为有向图
-    private Vector<Integer>[] g; // 图的具体数据
+    private Vector<Integer>[] dataArrVector; // 图的具体数据
 
     // 构造函数
-    public SparseGraph( int n , boolean directed ){
-        assert n >= 0;
-        this.n = n;
-        this.m = 0;    // 初始化没有任何边
+    public SparseGraph(int nodeTotal , boolean directed ){
+        assert nodeTotal >= 0;
+        this.nodeTotal = nodeTotal;
+        this.nodeEdgeNum = 0;    // 初始化没有任何边
         this.directed = directed;
-        // g初始化为n个空的vector, 表示每一个g[i]都为空, 即没有任和边
-        g = (Vector<Integer>[])new Vector[n];
-        for(int i = 0 ; i < n ; i ++)
-            g[i] = new Vector<Integer>();
+        // dataArrVector初始化为nodeTotal个空的vector, 表示每一个dataArrVector[i]都为空, 即没有任何边
+        dataArrVector = (Vector<Integer>[])new Vector[nodeTotal];
+        for(int i = 0 ; i < nodeTotal ; i ++)
+            dataArrVector[i] = new Vector<Integer>();
     }
 
-    public int V(){ return n;} // 返回节点个数
-    public int E(){ return m;} // 返回边的个数
+    public int getNodeTotal(){ return nodeTotal;} // 返回节点个数
+    public int getNodeEdgeNum(){ return nodeEdgeNum;} // 返回节点边的个数
 
     // 向图中添加一个边
-    public void addEdge( int v, int w ){
+    public void addEdge(int node1, int node2){
 
-        assert v >= 0 && v < n ;
-        assert w >= 0 && w < n ;
+        assert node1 >= 0 && node1 < nodeTotal;
+        assert node2 >= 0 && node2 < nodeTotal;
 
-        g[v].add(w);
-        if( v != w && !directed )
-            g[w].add(v);
+        dataArrVector[node1].add(node2);
+        if( node1 != node2 && !directed )
+            dataArrVector[node2].add(node1);
 
-        m ++;
+        nodeEdgeNum++;
     }
 
-    // 验证图中是否有从v到w的边
-    public boolean hasEdge( int v , int w ){
+    // 验证图中是否有从node1到node2的边
+    public boolean hasEdge(int node1, int node2){
 
-        assert v >= 0 && v < n ;
-        assert w >= 0 && w < n ;
+        assert node1 >= 0 && node1 < nodeTotal;
+        assert node2 >= 0 && node2 < nodeTotal;
 
-        for( int i = 0 ; i < g[v].size() ; i ++ )
-            if( g[v].elementAt(i) == w )
+        for(int i = 0; i < dataArrVector[node1].size() ; i ++ )
+            if( dataArrVector[node1].elementAt(i) == node2)
                 return true;
         return false;
     }
@@ -53,19 +57,31 @@ public class SparseGraph implements Graph {
     // 显示图的信息
     public void show(){
 
-        for( int i = 0 ; i < n ; i ++ ){
+        for(int i = 0; i < nodeTotal; i ++ ){
             System.out.print("vertex " + i + ":\t");
-            for( int j = 0 ; j < g[i].size() ; j ++ )
-                System.out.print(g[i].elementAt(j) + "\t");
+            for(int j = 0; j < dataArrVector[i].size() ; j ++ )
+                System.out.print(dataArrVector[i].elementAt(j) + "\t");
             System.out.println();
         }
     }
 
-    // 返回图中一个顶点的所有邻边
-    // 由于java使用引用机制，返回一个Vector不会带来额外开销,
-    public Iterable<Integer> adj(int v) {
-        assert v >= 0 && v < n;
-        return g[v];
+
+    /**
+     * 获取相邻节点
+     * @param node
+     * @return
+     */
+    public Iterable<Integer> adjacentNode(int node){
+        assert node >= 0 && node < nodeTotal;
+        // 邻接表，dataArrVector[node]中的节点都和node相连接
+        return dataArrVector[node];
+    }
+
+    public static void main(String[] args) {
+        SparseGraph dg = new SparseGraph(4, false);
+        dg.addEdge(1,2);
+
+        dg.show();
     }
 
 }
