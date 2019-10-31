@@ -175,4 +175,60 @@ pipeline {
 
 
 
+pipeline script from SCM 例子
+
+#!groovy
+pipeline {
+	agent any
+	stages {
+		stage('克隆代码') {	
+			steps {
+				echo "代码分支： ${params.git_branch}"
+				// 递归删除旧的代码
+				// deleteDir()
+
+				// 通过 Pipeline Syntax 生成语法
+				git branch: "${params.git_branch}", credentialsId: 'cb9567cd-88c5-4153-ac24-11051bd8ea6b', url: "${params.git_url}"
+			}
+		}
+		stage('编译代码') {
+			steps {
+				echo "编译代码，跳过测试用例"
+				dir("${pwd()}/${params.project_name}"){
+					sh "/usr/local/software/apache-maven-3.6.0/bin/mvn clean package -Dmaven.test.skip=true"
+				}
+			}
+		}
+		stage('构建Docker镜像') {
+			steps {
+				dir("${pwd()}/${params.project_name}/target"){
+					sh "cp /usr/local/software/tenant/docker/Dockerfile ${pwd()}/"
+					sh "cp /usr/local/software/tenant/docker/run.sh ${pwd()}/"
+					sh "chmod a+x run.sh"
+					sh "docker build -t ${params.project_name} ."
+				}
+			}
+		}
+		stage('运行Docker容器') {
+			steps {
+				sh "docker rm -f ${params.project_name} || true"
+				sh "docker run -d --net='host' --restart=always --name=${params.project_name} -m 620m  ${params.project_name}"
+			}
+		}		
+	}	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

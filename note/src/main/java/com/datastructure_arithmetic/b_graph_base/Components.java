@@ -1,10 +1,10 @@
 package com.datastructure_arithmetic.b_graph_base;
 
-// 求无权图的连通分量
+// 连通分量
 public class Components {
 
     Graph G;                    // 图的引用
-    private boolean[] visited;  // 记录深度遍历的过程中节点是否被访问
+    private boolean[] visited; // 记录深度遍历的过程中节点是否被访问
     private int count;         // 记录连通分量个数
     private int[] id;           // 每个节点所对应的连通分量标记
 

@@ -2,11 +2,7 @@ package com.datastructure_arithmetic.b_graph_base;
 
 import java.util.Vector;
 
-/**
- * @Description
- * @Author chenpiqian
- * @Date: 2019-10-28
- */
+// 稀疏图 -- 邻接表
 public class SparseGraph implements Graph{
 
     private int nodeTotal;  // 节点数
