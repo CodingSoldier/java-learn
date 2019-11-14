@@ -1,9 +1,0 @@
-server:
-   port: 8088
-logging:
-  level:
-    com:
-      demo: info
-
-variable:
-  a: 生产环境

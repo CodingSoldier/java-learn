@@ -225,6 +225,26 @@ cat student.txt | grep -v Name | awk '$4>=70{print $2}'
 
 
 
+Centos6、Centos7的变化
+   系统                Centos6                     Centos7
+文件系统       ext4                            xfs
+修改主机名     /etc/sysconfig/network          /etc/hostname
+修改时区       /etc/sysconfig/clock            timedatectl set-timezone Asia/TOkyo
+查看ip信息     ifconfig                        ip
+修改DNS地址    /etc/resolv.conf                -
+查看端口状态   netstat                         ss   
+防火墙        iptables                         firewalld
+服务管理      System V init                    systemd
+时间同步服务   ntp                             chrony
+
+Centos7
+	默认支持docker，内核支持OverlayFS、Repo源支持
+	不再支持32位操作系统
+
+Centos6修改时间：cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+Centos7修改时间：timedatectl set-timezone Asia/Shanghai
+				主板时间修改为本地时间  timedatectl set-local-rtc 1
+				主板时间还原   timedatectl set-local-rtc 0
 
 
 

@@ -1,0 +1,37 @@
+CORS跨域资源共享:
+	限制：
+		默认允许的方法： GET、HEAD、POST
+		默认允许的Content-Type: text/plain、multipart/form-data、application/x-www-form-urlencoded
+		请求头也有限制
+		XMLHttpRequestUpload对象没有注册任何时间监听
+		请求中没有使用ReadableStream对象
+
+	CORS预请求 OPTIONS
+		返回的 Response Headers中告诉浏览器CORS允许东西
+	response头中的Access-Control-Max-Age控制浏览器发送跨域请求验证的时间
+
+Chrome查看Connection ID可以查看http请求是否属于同一个TCP连接
+Chrome查看Request Headers、Response Headers中有Connection:Keep-Alive即为长连接，http发送完，TCP连接不会关闭
+
+response头：
+	Cache-Control: max-age=5, s-maxage=20
+		max-age=5浏览器缓存时间5秒，代理服务器缓存时间20秒
+	Cache-Control: max-age=5, s-maxage=20, private
+		private不允许使用代理缓存
+	Cache-Control: max-age=5, s-maxage=20, no-store
+		no-store所有地方都不使用缓存
+
+使用nginx使用HTTPS
+	nginx下新建certs目录。并在目录下生成私钥和证书
+	openssl req -x509 -newkey rsa:2048 -nodes -sha256 -keyout localhost-private-key.pem -out localhost-cert.pem
+	hosts配置 127.0.0.1       testhttps.com
+	访问地址 https://testhttps.com/test/001
+
+
+
+
+
+
+
+
+

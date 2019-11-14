@@ -1,9 +1,0 @@
-server:
-   port: 8087
-logging:
-  level:
-    com:
-      demo: DEBUG  #打印sql
-
-variable:
-  a: 测试环境
