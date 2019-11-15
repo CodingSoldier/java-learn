@@ -246,6 +246,87 @@ Centos7修改时间：timedatectl set-timezone Asia/Shanghai
 				主板时间修改为本地时间  timedatectl set-local-rtc 1
 				主板时间还原   timedatectl set-local-rtc 0
 
+参数补全
+yum install -y bash-completion
+
+使用ss替代了nestat
+查看某种状态下的连接
+ss -luntp state established
+
+统计个数 |wc -l
+
+通过端口查询
+ss -na sport eq :22
+
+
+
+
+***************************Systemd变化***************************
+              Centos6         Centto7
+服务管理      service         systemctl
+启动项管理    chkconfig       systemctl
+系统启动级别   init           systemctl
+定时任务       cron           timer
+日志管理       syslog         Systemd-journal
+
+systemd通过文件类型来识别是哪种管理类型
+文件拓展名      作用
+.service      系统服务
+.target       模拟实现运行级别
+.device       定义内核识别设备
+.mount        文件系统挂载点
+.socket       进程间通信用的socket文件
+.timer        定时器
+.snapshot     文件系统快照
+.swap         swap设备
+.automount    自动挂载点
+.path         监视文件或者目录
+.scope        外部线程
+.slice        分层次管理系统进程
+
+
+systemctl -t help   支持的服务类型
+systemctl -h 支持的参数
+
+systemd命令
+
+systemctl 、systemctl list-units      查看激活的单元
+systemctl --failed                    运行失败的单元
+systemctl list-unit-files             所有可用的单元
+systemctl help <单元>                 单元的帮助手册页
+systemctl daemon-reload               重新载入systemd，扫描新的或有变动的单元
+
+
+systemctl start 单元   激活单元
+systemctl stop 单元   停止单元
+systemctl restart 单元   重启单元
+systemctl reload 单元   重启单元
+systemctl status 单元   重载单元
+systemctl is-enabled 单元   检查单元是否配置为启动单元
+systemctl enable 单元   开机激活单元
+systemctl enabled --now 单元   开机启动并立即启动这个单元
+systemctl disable 单元 取消开机自动激活单元
+systemctl mask 单元 禁用一个单元，间接启动也不可能
+systemctl unmask 单元 取消禁用的某个单元
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
