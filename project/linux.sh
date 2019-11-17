@@ -309,13 +309,55 @@ systemctl disable 单元 取消开机自动激活单元
 systemctl mask 单元 禁用一个单元，间接启动也不可能
 systemctl unmask 单元 取消禁用的某个单元
 
+systemctl cat 单元   查看 单元.service 文件
 
 
+自定义service文件
 
+vim imoocc_gen.sh
 
+#!/bin/bash
 
+# 输出当前shell的pid
+echo $$ >> /var/run/imoocc_gen.pid
 
+#循环输出
+while :
+do
+	echo "Hi,imoocc,"$(date) >> /tmp/imoocc.res
+	sleep 1
+done
 
+输出pid
+cat /opt/imoocc_gen.sh 和 ps -ef|grep imoocc_gen 结果一样
+拷贝一份service文件，再改改
+cd /usr/lib/systemd/system
+cp nginx.service imoocc_gen.service
+
+vim imoocc_gen.service
+
+[Unit]
+Description=des
+# after可以去掉
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+# 不产生子进程，使用simple（默认）
+Type=simple
+# 指定pid
+PIDFile=/var/run/imoocc_gen.pid
+# 一定要使用全路径
+ExecStart=/bin/sh /opt/imoocc_gen.sh
+# 停止
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+
+# 先reload再start
+systemctl daemon-reload
+systemctl start imoocc_gen.service
+systemctl status imoocc_gen.service 
 
 
 
