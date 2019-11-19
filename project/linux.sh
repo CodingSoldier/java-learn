@@ -359,9 +359,22 @@ systemctl daemon-reload
 systemctl start imoocc_gen.service
 systemctl status imoocc_gen.service 
 
+定时任务
+/usr/lib/systemd/system/imoocc_gen.timer 
+[Unit]
+Description=timer unit - Print info
+Documentation=http://imoocc.com
+
+[Timer]
+Unit=imoocc_gen.service
+OnCalendar=2019-11-19 18:36:00
+
+[Install]
+WantedBy=multi-user.target
 
 
-
+查看定时任务
+systemctl list-timers
 
 
 
