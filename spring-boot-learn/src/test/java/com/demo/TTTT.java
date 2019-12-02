@@ -20,6 +20,7 @@ public class TTTT {
 
 
     /**
+     * 可以跟前端商量下，前端可能可以实现传符合格式要求的音频
      * 将本地音频文件转换成mp3格式文件
      *
      * @param localFilePath 本地音频文件物理路径
@@ -45,35 +46,16 @@ public class TTTT {
         encoder.encode(source, target, attrs);
     }
 
-    //@Test
-    //public void changeLocalSourceToMp31() throws Exception {
-    //
-    //    AudioInfo audioInfo = new AudioInfo();
-    //
-    //    File source = new File(localFilePath);
-    //    File target = new File(targetPath);
-    //    AudioAttributes audio = new AudioAttributes();
-    //    Encoder encoder = new Encoder();
-    //
-    //    audio.setCodec("libmp3lame");
-    //    //audio.
-    //    EncodingAttributes attrs = new EncodingAttributes();
-    //    attrs.setFormat("mp3");
-    //    //attrs.set
-    //    attrs.setAudioAttributes(audio);
-    //
-    //    encoder.encode(source, target, attrs);
-    //}
-
-
-
+    /**
+     * 腾讯文档地址  https://cloud.tencent.com/document/product/1093/37308
+     */
     @Test
     public void test0011() throws Exception{
         //采用本地语音上传方式调用
         try{
             //重要：<Your SecretId>、<Your SecretKey>需要替换成客户自己的账号信息
             //请参考接口说明中的使用步骤1进行获取。
-            Credential cred = new Credential("", "");
+            Credential cred = new Credential("AKIDkJgoofU1PYemfsrzqTs6C3ScfWAZusoS", "Yt33oMhwqXzIPK0KUVHtKZaMwMgw64rQ");
 
             HttpProfile httpProfile = new HttpProfile();
             httpProfile.setEndpoint("asr.tencentcloudapi.com");
@@ -87,7 +69,6 @@ public class TTTT {
             SentenceRecognitionRequest req = SentenceRecognitionRequest.fromJsonString(params, SentenceRecognitionRequest.class);
 
 
-            //changeLocalSourceToMp3("D:\\lfasr.wav", "D:\\lfasr.mp3");
             changeLocalSourceToMp3("D:\\1111.m4a", "D:\\lfasr.mp3");
             File file = new File("D:\\lfasr.mp3");
             FileInputStream inputFile = new FileInputStream(file);
