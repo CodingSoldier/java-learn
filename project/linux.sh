@@ -390,3 +390,9 @@ firewall-cmd --set-default-zone=home
 修改网卡接口区域
 firewall-cmd --zone=home --change-interface=enp0s3
 
+
+
+检查nginx配置是否正确
+nginx -t -c /etc/nginx/nginx.conf
+
+
