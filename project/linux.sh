@@ -377,9 +377,8 @@ WantedBy=multi-user.target
 systemctl list-timers
 
 
-
-
-
+添加端口
+firewall-cmd --zone=home --add-port=80/tcp
 
 
 
