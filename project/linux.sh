@@ -377,10 +377,20 @@ WantedBy=multi-user.target
 systemctl list-timers
 
 
+防火墙
+/lib/firewalld/zones
+启动防火墙
+systemctl start firewalld.service 
+查看默认区域
+firewall-cmd --list-all
+查看9个区域
+firewall-cmd --list-all-zones
+设置默认区域
+firewall-cmd --set-default-zone=home
+修改网卡接口区域
+firewall-cmd --zone=home --change-interface=enp0s3
+
 添加端口
 firewall-cmd --zone=home --add-port=80/tcp
-
-
-
 
 
