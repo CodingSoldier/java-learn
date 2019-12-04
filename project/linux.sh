@@ -424,5 +424,42 @@ firewall-cmd --reload
 检查nginx配置是否正确
 nginx -t -c /etc/nginx/nginx.conf
 
+通过公网linux登陆私网linux
+ssh 私网ip
+yes
+输入密码
+
+
+GRE  深圳、杭州都创建有公网ip的ECS
+两个ECS都安装GRE
+查看模块是否安装  lsmod | grep ip_gre
+安装模块    modprobe ip_gre
+
+# 在 172.31.0.252 添加GRE隧道，112.74.22.58 远程公网ip，172.31.0.252是当前机器内网ip
+ip tunnel add tun1 mode gre remote 112.74.22.58 local 172.31.0.252
+# 激活隧道
+ip link set tun1 up
+# 设置互联地址
+ip addr add 192.168.1.1 peer 192.168.1.2 dev tun1
+# 添加路由，10.165.0.0/24 是远程公网ip ECS所在专有网络VPC的交换机
+ip route add 10.165.0.0/24 dev tun1
+
+# 在 10.165.0.8 添加GRE隧道，121.41.65.63 远程公网ip，10.165.0.8是当前机器内网ip
+ip tunnel add tun1 mode gre remote 121.41.65.63 local 10.165.0.8
+# 激活隧道
+ip link set tun1 up
+# 设置互联地址，要反过来
+ip addr add 192.168.1.2 peer 192.168.1.1 dev tun1
+# 添加路由，172.31.0.0/24 是远程公网ip ECS所在专有网络VPC的交换机
+ip route add 172.31.0.0/24 dev tun1
+
+公网121.41.65.63内网172.31.0.252添加安全组，信任网段10.165.0.0/24可入
+公网112.74.22.58内网10.165.0.8添加安全组，信任网段172.31.0.0/24可入
+
+
+
+
+
+
 
 
