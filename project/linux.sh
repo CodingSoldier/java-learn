@@ -390,7 +390,35 @@ firewall-cmd --set-default-zone=home
 修改网卡接口区域
 firewall-cmd --zone=home --change-interface=enp0s3
 
-添加端口
+开放端口，阿里云还需要安全组规则
 firewall-cmd --zone=home --add-port=80/tcp
+开发端口后再使配置永久生效
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+移除开放端口
+firewall-cmd --zone=public --remove-port=80/tcp
+
+重载firewall，不会关闭已经建立的连接
+firewall-cmd --reload
+重载firewall，会关闭所有连接
+firewall-cmd --complete-reload
+
+移除端口，使用 firewall-cmd --list-all 不会展示已经移除的端口，需要 firewall-cmd --reload  才会看到
+firewall-cmd --zone=public --remove-port=80/tcp --permanent
+
+查看firewall可用服务文件
+ll /usr/lib/firewalld/services
+
+添加服务白名单
+firewall-cmd --zone=public --add-service=http
+
+执行 firewall-cmd --list-all
+services会多了http services: ssh dhcpv6-client http
+
+# 多区域组合，默认区域是drop
+firewall-cmd --set-default-zone=drop
+# 192.168.3.0/24 trusted区域配置指定网段配置可以访问
+firewall-cmd --zone=trusted --add-source=192.168.3.0/24 --permanent
+firewall-cmd --reload
+
 
 
