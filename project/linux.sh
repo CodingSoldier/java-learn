@@ -421,4 +421,8 @@ firewall-cmd --zone=trusted --add-source=192.168.3.0/24 --permanent
 firewall-cmd --reload
 
 
+检查nginx配置是否正确
+nginx -t -c /etc/nginx/nginx.conf
+
+
 
