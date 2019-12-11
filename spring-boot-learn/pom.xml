@@ -110,20 +110,20 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
-        <dependency>
+<!--        <dependency>
             <groupId>com.tencentcloudapi</groupId>
             <artifactId>tencentcloud-sdk-java</artifactId>
-            <!-- go to https://search.maven.org/search?q=tencentcloud-sdk-java and get the latest version. -->
-            <!-- 请到https://search.maven.org/search?q=tencentcloud-sdk-java查询最新版本 -->
+            &lt;!&ndash; go to https://search.maven.org/search?q=tencentcloud-sdk-java and get the latest version. &ndash;&gt;
+            &lt;!&ndash; 请到https://search.maven.org/search?q=tencentcloud-sdk-java查询最新版本 &ndash;&gt;
             <version>3.0.93</version>
         </dependency>
 
-        <!-- 音频格式转换 -->
+        &lt;!&ndash; 音频格式转换 &ndash;&gt;
         <dependency>
             <groupId>it.sauronsoftware</groupId>
             <artifactId>jave</artifactId>
             <version>1.0.2</version>
-        </dependency>
+        </dependency>-->
 
     </dependencies>
 
