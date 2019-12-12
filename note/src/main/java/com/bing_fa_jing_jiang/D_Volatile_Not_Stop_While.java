@@ -4,7 +4,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class D_Volatile_Not_Stop {
+public class D_Volatile_Not_Stop_While {
 
 
 static class Producer implements Runnable{
@@ -35,7 +35,7 @@ static class Producer implements Runnable{
                 }catch (InterruptedException e){
                     e.printStackTrace();
                 }finally {
-                    System.out.println("生产者结束，但是这句话很可能不会执行");
+                    System.out.println("生产者结束，但是这句话很可能不会马上执行");
                 }
                 System.out.println(num + "是100的倍数，被放到仓库中了。");
             }

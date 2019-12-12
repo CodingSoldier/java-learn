@@ -12,6 +12,7 @@ public class C_Stop_Thread {
 
     /**
      * java只能通过interrupt来通知线程停止线程，至于是否中断线程，由线程本身自己决定
+     * 调用interrupt()仅仅是将线程的中断标记位设置为true，并不是中断线程的意思
      *
      * 线程停止：
      *    1、run方法运行完了
@@ -108,7 +109,8 @@ public class C_Stop_Thread {
                     num++;
                     try {
                         /**
-                         * sleep状态被中断，线程的isInterrupted标记位会被清除
+                         * sleep状态被中断，抛出线程InterruptedException，
+                         * 抛出InterruptedException后，线程的中断标记位就会重置为false
                          * !Thread.currentThread().isInterrupted() 就变成了true
                          * 并且中断异常被catch了，while循环会继续执行
                          * 这是一种错误使用中断的方式
