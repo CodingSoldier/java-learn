@@ -10,9 +10,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class B_Start_Run {
 
-    /**
-     *
-     */
     @Test
     public void startrun() throws Exception{
         Runnable runnable = () -> {
@@ -28,7 +25,7 @@ public class B_Start_Run {
         thread.start();
 
         /**
-         * 线程不能连续调用两次start()，因为线程start后就变成了其他状态，在start()源码中，若线程状态不是未启动状态，就抛出异常
+         * 线程不能连续调用两次start()，因为线程start后就变成了其他状态，在start()源码中有if判断，若线程状态不是未启动状态，就抛出异常
          * start()其实使用的是native虚拟机本地方法
          */
         //thread.start();

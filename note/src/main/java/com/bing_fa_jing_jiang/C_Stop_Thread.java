@@ -91,6 +91,7 @@ public class C_Stop_Thread {
         //});
         //thread.start();
         //TimeUnit.SECONDS.sleep(1L);
+        //// 设置线程thread中断标记位为true
         //thread.interrupt();
 
 
@@ -125,6 +126,8 @@ public class C_Stop_Thread {
         thread.start();
         TimeUnit.SECONDS.sleep(1L);
         thread.interrupt();
+
+
 
         /**
          * java响应中断方法总结：

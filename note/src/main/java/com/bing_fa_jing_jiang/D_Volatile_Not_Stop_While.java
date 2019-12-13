@@ -25,8 +25,8 @@ static class Producer implements Runnable{
          * while条件使用volatile boolean canceled 无法停止线程
          * 比如当阻塞队列BlockingQueue满了，storage.put方法就会执行await()方法，当前线程处于等待状态，线程阻塞。
          * 并且当BlockingQueue处于队列已满的状态，消费者在此时不消费，则生产者线程将一直阻塞。
-         * 外部的main线程执行canceled=true也无法立即停止线程，因为队列满了，生产者线程一直处于等待状态
-         * 只有当消费者再消费一个数据，生产者从等待状态变成运行状态，生产者线程不摘阻塞，while循环得以继续运行，while循环才会退出，生产者线程运行结束
+         * 外部的main线程执行canceled=true也无法立即停止线程，因为队列满了，生产者线程一直处于阻塞在storage.put()方法
+         * 只有当消费者再消费一个数据，生产者从等待状态变成运行状态，生产者线程不再阻塞，while循环得以继续运行，while循环才会退出，生产者线程运行结束
          */
         while (num <= 10000 && !canceled){
             if (num % 100 == 0){

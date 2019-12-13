@@ -20,7 +20,7 @@ static class Producer implements Runnable{
 
         /**
          * 使用interrupt()设置中断标记位，并使用 Thread.currentThread().isInterrupted() 作为while的判断条件
-         * while必须中必须要有阻塞操作，以便执行interrupt()的时候，阻塞方法抛出InterruptedException
+         * while中必须要有阻塞操作，以便执行interrupt()的时候，阻塞方法抛出InterruptedException
          * catch异常必须在while的外部，不然catch异常后，while会继续运行
          */
         try {
