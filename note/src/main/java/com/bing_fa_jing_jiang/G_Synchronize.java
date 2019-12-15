@@ -130,6 +130,11 @@ public class G_Synchronize {
      *    在一个方法中是可重入的
      *    可重入不要求是同一个方法
      *    可重入不要求在同一个类中
+     *
+     * 可重入原理：加锁次数计数器
+     *     JVM负责跟踪对象被加锁的次数
+     *     线程第一次给对象加锁的时候，计数器变为1，相同线程在此对象上再次获得锁时，计数器会递增
+     *     当任务离开时，计数器递减，当计数为0时，锁被释放
      */
     @Test
     public void synchronizeKeChongRu() throws Exception{
