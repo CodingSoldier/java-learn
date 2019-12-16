@@ -1,5 +1,7 @@
 package com.bing_fa_jing_jiang;
 
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -62,3 +64,138 @@ public class H_Wait_Notify {
     }
 
 }
+
+
+/**
+ * 生产者-消费者 模式
+ */
+class DateStorage{
+
+    private LinkedList<Date> storage;
+    private int maxSize = 10;
+
+    public DateStorage() {
+        this.storage = new LinkedList<Date>();
+    }
+
+    public synchronized void put(){
+        // 存储满了，生产线程等待
+        while (storage.size() == maxSize){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("生产商品，"+storage.add(new Date())+"。当前商品个数"+storage.size());
+        // 唤醒其他线程
+        notify();
+    }
+
+    public synchronized void take(){
+        while (storage.size() == 0){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("消费商品，"+storage.poll()+"。当前商品个数"+storage.size());
+        // 唤醒其他线程
+        notify();
+    }
+}
+
+class DateProducer implements Runnable{
+
+    private DateStorage storage;
+
+    public DateProducer(DateStorage storage) {
+        this.storage = storage;
+    }
+
+    @Override
+    public void run() {
+        for (int i=0; i<100; i++){
+            storage.put();
+        }
+    }
+}
+
+class DateConsumer implements Runnable{
+
+    private DateStorage storage;
+
+    public DateConsumer(DateStorage storage) {
+        this.storage = storage;
+    }
+
+    @Override
+    public void run() {
+        for (int i=0; i<100; i++){
+            storage.take();
+        }
+    }
+}
+
+class DatePS{
+    public static void main(String[] args) {
+        DateStorage dateStorage = new DateStorage();
+        DateProducer dateProducer = new DateProducer(dateStorage);
+        DateConsumer dateConsumer = new DateConsumer(dateStorage);
+
+        Thread pt = new Thread(dateProducer);
+        Thread st = new Thread(dateConsumer);
+        pt.start();
+        st.start();
+    }
+}
+
+
+
+
+class SleepDontReleaseLock implements Runnable{
+
+    @Override
+    public void run() {
+        synchronized (this){
+            String name = Thread.currentThread().getName();
+            System.out.println(name+"线程，同步代码块开始");
+            try {
+                /**
+                 * 在同步代码块中
+                 * 线程sleep()不会释放锁，sleep()必须接收一个时间参数
+                 * 线程在sleep()时间到了之后，线程会释放锁
+                 *
+                 * sleep()也不会释放LOCK接口同步代码块中的锁
+                 */
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(name + "线程，同步代码块结束");
+        }
+    }
+
+    public static void main(String[] args) {
+        SleepDontReleaseLock s = new SleepDontReleaseLock();
+        new Thread(s).start();
+        new Thread(s).start();
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
