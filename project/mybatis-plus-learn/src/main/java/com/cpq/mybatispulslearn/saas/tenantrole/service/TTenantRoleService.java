@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2019-04-18
  */
 public interface TTenantRoleService extends IService<TTenantRole> {
-
+    void test();
 }
