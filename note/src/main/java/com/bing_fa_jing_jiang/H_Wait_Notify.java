@@ -186,8 +186,81 @@ class SleepDontReleaseLock implements Runnable{
 }
 
 
+/**
+ * join
+ */
+class JoinInterrupt{
+
+    public static void main(String[] args) {
+        Thread mainThread = Thread.currentThread();
+        Thread thread1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    /**
+                     * 子线程加入主线程，主线程是WAITING状态
+                     * 主线程发生中断，主线程从WAITING状态变成RUNNABLE，主线程继续运行，
+                     * 主线程结束，子线程不会结束，子线程继续运行它的run方法
+                     */
+                    System.out.println(mainThread.getState());
+                    mainThread.interrupt();
+                    TimeUnit.SECONDS.sleep(3);
+                    System.out.println("子线程执行完毕");
+                }catch (InterruptedException e) {
+                    System.out.println("子线程中断发生中断");
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread1.start();
+        try {
+            System.out.println("子线程加入主线程");
+            thread1.join();
+        } catch (InterruptedException e) {
+            System.out.println("主线程中断异常");
+            e.printStackTrace();
+        }
+        System.out.println("主线程运行完毕");
+    }
+
+}
 
 
+
+
+class JoinPrinciple {
+
+    public static void main(String[] args) throws InterruptedException {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(Thread.currentThread().getName() + "执行完毕");
+            }
+        });
+
+        thread.start();
+        System.out.println("开始等待子线程运行完毕");
+
+        //thread.join();
+
+        /**
+         * thread.join()的等价与下面的3行代码，join()方法内部就是调用了wait(0)
+         * 当线程执行到同步代码块，由于thread.wait()导致当前线程登陆，注意是当前main线程等待，而不是thread等待，可以将锁thread换成obj来理解
+         * 并且当thread.run()执行完毕，jvm会唤醒锁等待的线程？
+         */
+        synchronized (thread){
+            thread.wait();
+        }
+
+        System.out.println("所有子线程执行完毕");
+    }
+}
 
 
 
