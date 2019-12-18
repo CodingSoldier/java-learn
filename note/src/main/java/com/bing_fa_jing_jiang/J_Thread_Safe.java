@@ -6,8 +6,7 @@ import java.util.concurrent.TimeUnit;
  * @author chenpiqian
  * @date: 2019-12-17
  */
-public class Thread_Safe {
-
+public class J_Thread_Safe {
 
 
 }
@@ -53,7 +52,6 @@ class TestNewNotFinishObj{
         System.out.println("已经初始化完成的实例"+newNotFinishObj);
     }
 }
-
 
 
 

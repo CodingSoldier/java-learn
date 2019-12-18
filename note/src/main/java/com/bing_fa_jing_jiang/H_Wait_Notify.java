@@ -4,10 +4,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author chenpiqian
- * @date: 2019-12-13
- */
 public class H_Wait_Notify {
 
     public static Object obj = new Object();
@@ -251,7 +247,7 @@ class JoinPrinciple {
 
         /**
          * thread.join()的等价与下面的3行代码，join()方法内部就是调用了wait(0)
-         * 当线程执行到同步代码块，由于thread.wait()导致当前线程登陆，注意是当前main线程等待，而不是thread等待，可以将锁thread换成obj来理解
+         * 当线程执行到同步代码块，由于thread.wait()导致当前线程等待，注意是当前main线程等待，而不是thread等待，可以将锁thread换成obj来理解
          * 并且当thread.run()执行完毕，jvm会唤醒锁等待的线程？
          */
         synchronized (thread){
