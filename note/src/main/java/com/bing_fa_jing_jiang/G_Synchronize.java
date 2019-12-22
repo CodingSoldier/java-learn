@@ -228,23 +228,24 @@ public class G_Synchronize {
         //thread2.join();
 
 
-        /**
-         * 可重入不要求是同一个类
-         * 子类覆盖父类的synchronize方法，并且在同步方法内调用父类方法
-         */
-        class Thread1{
-            public synchronized void method1(){
-                System.out.println("父类方法");
-            }
-        }
-        class Thread2 extends Thread1{
-            @Override
-            public synchronized void method1(){
-                System.out.println("子类方法");
-                super.method1();
-            }
-        }
-        new Thread2().method1();
+        ///**
+        // * 可重入不要求是同一个类
+        // * 子类覆盖父类的synchronize方法，并且在同步方法内调用父类方法
+        // */
+        //class Thread1{
+        //    public synchronized void method1(){
+        //        System.out.println("父类方法");
+        //    }
+        //}
+        //class Thread2 extends Thread1{
+        //    @Override
+        //    public synchronized void method1(){
+        //        System.out.println("子类方法");
+        //        super.method1();
+        //    }
+        //}
+        //new Thread2().method1();
+
     }
 
 
@@ -290,11 +291,6 @@ public class G_Synchronize {
         thread1.join();
         thread2.join();
     }
-
-    /**
-     * synchronized原理：
-     *    每个java
-     */
 
 
 }
