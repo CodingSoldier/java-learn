@@ -49,7 +49,8 @@ class RedissonRlock {
     @Scheduled(cron="10 */1 * * * ?")
     void test2() {
         /**
-         * 使用redisTemplate的setIfAbsent方法似乎也是可以的，但不知道此方法是否是发送了2个redis语句请求
+         * setIfAbsent使用pipeline一次发送多条指令
+         * 但是在redis服务端，pipeline中的指令仍然是一条一条的执行，所以当redis执行setNx后宕机，任然会有死锁的可能
          */
         Boolean b = RedisUtil.setIfAbsent("redis-lock-key", "value", Duration.ofSeconds(20));
         if (b !=null && b){
@@ -58,5 +59,6 @@ class RedissonRlock {
             System.out.println("####redis没没没获取到锁");
         }
     }
+
 
 }
