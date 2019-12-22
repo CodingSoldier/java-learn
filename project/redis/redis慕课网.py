@@ -69,6 +69,11 @@ setnx key value / set key value nx
 set key value xx 
 # key存在才能设置成功
 
+time
+#获取Unix时间（秒为单位），后面加上3个0就是时间戳
+expireat key unix时间(秒)
+#后面的时间单位是时间戳少3个0
+
 mset hello world java zhazha php verygood
 # 批量设置key-value
 mget hello java php
@@ -138,6 +143,34 @@ del key
 
 key在多少秒后过期
 expire key seconds
+
+
+分布式锁
+setnx key value      key不存在就设置值
+expire key seconds   设置过期时间
+del key              代码执行完成后要删除锁
+这有个bug，假如服务A在执行完 setnx key value 之后就重启或宕机，锁就已经存在，但没有设置过期时间。其他服务执行 setnx key value永远返回0，当服务A重启后 set key value 也是返回0
+
+双重防死锁
+setnx key value     value设置为 时间戳+timeout
+expire key seconds  设置过期时间timeout/1000
+    if (setnx返回1)
+        del key   删除key
+    else
+        获取旧的value  时间戳+time
+        if (时间戳+time != null && 当前时间戳 > value){
+            getSet key 当前时间戳 + timeout
+
+            # getSet是原子性的
+            # getSet的结果 == null 说明key对应的值不存在了，也就是获取了锁
+            # getSet的结果 != 旧的value时间戳+time 说明还有一个线程X执行了getSet把key对应的value给改了，也就是当前线程不能获取锁，是线程X获取了锁
+            if (getSet的结果 == null || (getSet的结果 == 旧的value时间戳+time)){
+                获取到锁了
+            }
+        }
+
+
+
 
 
 jedis配置
