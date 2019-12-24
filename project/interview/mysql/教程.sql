@@ -8,9 +8,9 @@ hash索引仅能满足相等操作，不能用于范围查询、排序，无法�
 Innodb主键组织 在索引中，数据存储在叶子节点？
 
 密集索引可以理解为叶子节点存储主键外还保存其他列的数据
-稀疏索引可以理解为叶子节点保存主键和行数据地址
+稀疏索引可以理解为叶子节点保存主键和行数据地址指针
 Innodb主键使用密集索引，如果没有定义主键，则Innodb会新建虚拟主键
-主键索引：索引和数据都在叶子节点，只有一次查找
+主键索引：主键和数据都在叶子节点，只有一次查找
 非主键索引：叶子节点不存储数据地址，而是存储主键值，然后通过主键去查找数据，所以要有两次查找才能找到数据
 
 # 1.找到mysql的my.cnf配置文件，将max_heap_table_size改大些，改成4000M，重启下mysql服务即可。
@@ -135,7 +135,8 @@ insert into test_myisam (name,unique_id,normal_id) values('a',1,1),('d',4,4),('h
 EXPLAIN SELECT name FROM person_info_large ORDER BY `name` DESC;
 EXPLAIN SELECT account FROM person_info_large ORDER BY `account` DESC;
 
-EXPLAIN SQL 主要查看type、extra， rows似乎没什么用
+
+# EXPLAIN SQL 主要查看type、extra， rows似乎没什么用
 
 # 使用的索引竟然是有unique索引的account
 EXPLAIN SELECT COUNT(id) FROM person_info_large;
@@ -145,6 +146,21 @@ EXPLAIN SELECT COUNT(id) FROM person_info_large FORCE INDEX (PRIMARY);
 # 而且使用主键索引确实比使用unique索引慢
 
 
+# 联合索引，最左匹配原则
+KEY `index_area_title` (`area`,`title`)
+# 能用到索引
+EXPLAIN SELECT * FROM person_info_large WHERE title='1rmDlCfwxtF0BwsnMFJW' AND area='ZXnPJYkFsCROxI2ZJsnA';
+# 能用到索引
+EXPLAIN SELECT * FROM person_info_large WHERE area='ZXnPJYkFsCROxI2ZJsnA' AND title='1rmDlCfwxtF0BwsnMFJW';
+# 能用到索引
+EXPLAIN SELECT * FROM person_info_large WHERE name='1rmDlCfwxtF0BwsnMFJW' AND area='ZXnPJYkFsCROxI2ZJsnA';
+# 没用到
+EXPLAIN SELECT * FROM person_info_large WHERE title='ZXnPJYkFsCROxI2ZJsnA' AND name='1rmDlCfwxtF0BwsnMFJW';
+
+最左前缀匹配原则
+    1、mysql会一直向右匹配知道遇到范围查询(> < between like)就停止匹配，
+    比如：简历索引(a,b,c,d)的联合索引，查询语句是：a=3 and b=4 and c>5 and d=6 只用到了a、b索引
+    2、=和in可以乱序，比如：索引(a,b,c)，查询语句 b=2 and a=1 and c=3 也能用到索引，mysql查询优化器会将SQL语句优化成可以识别的形式
 
 
 
