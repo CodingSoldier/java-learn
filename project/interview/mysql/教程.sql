@@ -158,9 +158,10 @@ EXPLAIN SELECT * FROM person_info_large WHERE name='1rmDlCfwxtF0BwsnMFJW' AND ar
 EXPLAIN SELECT * FROM person_info_large WHERE title='ZXnPJYkFsCROxI2ZJsnA' AND name='1rmDlCfwxtF0BwsnMFJW';
 
 最左前缀匹配原则
-    1、mysql会一直向右匹配知道遇到范围查询(> < between like)就停止匹配，
+    1、mysql会一直向右匹配直到遇到范围查询(> < between like)就停止匹配，
     比如：简历索引(a,b,c,d)的联合索引，查询语句是：a=3 and b=4 and c>5 and d=6 只用到了a、b索引
     2、=和in可以乱序，比如：索引(a,b,c)，查询语句 b=2 and a=1 and c=3 也能用到索引，mysql查询优化器会将SQL语句优化成可以识别的形式
+
 
 
 
