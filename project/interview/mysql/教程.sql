@@ -163,6 +163,25 @@ EXPLAIN SELECT * FROM person_info_large WHERE title='ZXnPJYkFsCROxI2ZJsnA' AND n
     2、=和in可以乱序，比如：索引(a,b,c)，查询语句 b=2 and a=1 and c=3 也能用到索引，mysql查询优化器会将SQL语句优化成可以识别的形式
 
 
+update、delete、insert这些语句也会有分为好几步3操作，比方根据where条件查找多行、更新多行，但这多次的读、写操作都会被锁锁住
+单独 select 的SQL语句不会锁住增删改查操作
+
+
+having 用于对函数进行条件筛选，where 不能作用于函数
+# HAVING可以筛选函数
+SELECT user_id, avg(`system_user_id`) FROM t_user_system_mapper GROUP BY `user_id` HAVING AVG(`system_user_id`)>60;
+
+# 报错，WHERE不可以筛选函数
+SELECT user_id, avg(`system_user_id`) FROM t_user_system_mapper WHERE AVG(`system_user_id`)>60 GROUP BY `user_id`;
+
+
+
+
+
+
+
+
+
 
 
 
