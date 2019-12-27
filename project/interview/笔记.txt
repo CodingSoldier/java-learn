@@ -1,3 +1,10 @@
+###########网络###############
+Wireshark抓包
+    http://myo2o.yitiaojieinfo.com/myo2o/frontend/index
+    过滤规则  (ip.src == 115.28.159.6 and tcp.port == 56724) or( ip.dst == 115.28.159.6 and tcp.port == 56724)
+
+
+################redis##############
 1、从海量数据中查找出含有固定前缀的key
 	错误方式： keys XXX*会有性能问题
 	正确方式： SACN cursor MATCH pattern COUNT count
@@ -18,6 +25,16 @@ RDB持久化是将内存数据一次写入磁盘，是全量操作
 AOF持久化：记录除了查询以外的所有变更数据库状态指令，以append的增量形式追加保存到AOF文件中
 
 redis4.0之后默认使用RDB-AOF混合持久化方式
+
+
+
+
+###################linux##################
+find / -name "XXX*"     全局查找文件，*是通配符
+find / -iname "XXX*"    iname忽略大小写
+
+# 查找包含nginx字符串的文件
+grep "nginx" XXX*     XXX*是文件前缀
 
 
 
