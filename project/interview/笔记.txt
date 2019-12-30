@@ -29,18 +29,21 @@ redis4.0之后默认使用RDB-AOF混合持久化方式
 
 
 
-###################linux##################
+################### linux ##################
 find / -name "XXX*"     全局查找文件，*是通配符
 find / -iname "XXX*"    iname忽略大小写
 
 # 查找包含nginx字符串的文件
 grep "nginx" XXX*     XXX*是文件前缀
 
+grep 星期一  文件      在文件中查找星期一
 
+# sed流编辑器
+# s//将cron_date.txt中的日替换为天，仅在终端中暂时替换结果，不真正替换
+sed 's/日/天/' cron_date.txt
 
-
-
-
+# -i真正替换文件
+sed -i 's/日/天/' cron_date.txt 
 
 
 

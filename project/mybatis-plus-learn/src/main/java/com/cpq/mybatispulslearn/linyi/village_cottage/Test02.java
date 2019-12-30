@@ -18,6 +18,4 @@ public class Test02 {
         System.out.println("*******"+StringUtils.substring("裙楼110", 3, 5));
     }
 
-
-
 }
