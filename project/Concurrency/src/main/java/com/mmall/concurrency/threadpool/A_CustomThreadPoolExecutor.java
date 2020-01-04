@@ -1,4 +1,4 @@
-package com.mmall.concurrency.my;
+package com.mmall.concurrency.threadpool;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @Author chenpiqian
  * @Date: 2019-06-20
  */
-public class CustomThreadPoolExecutor {
+public class A_CustomThreadPoolExecutor {
 
 
     private ThreadPoolExecutor pool = null;
@@ -19,21 +19,23 @@ public class CustomThreadPoolExecutor {
      *
      * corePoolSize 核心线程池大小----1
      * maximumPoolSize 最大线程池大小----3
-     * keepAliveTime 线程池中超过corePoolSize数目的空闲线程最大存活时间----30+单位TimeUnit
+     *
+     * keepAliveTime 线程池中超过maximumPoolSize数目的空闲线程最大存活时间----30+单位TimeUnit
      * TimeUnit keepAliveTime时间单位----TimeUnit.MINUTES
      * workQueue 阻塞队列----new ArrayBlockingQueue<Runnable>(5)====5容量的阻塞队列
      * threadFactory 新建线程工厂----new CustomThreadFactory()====定制的线程工厂
      * rejectedExecutionHandler 当提交任务数超过maxmumPoolSize+workQueue之和时,
      *                          即当提交第41个任务时(前面线程都没有执行完,此测试方法中用sleep(100)),
      *                                任务会交给RejectedExecutionHandler来处理
+     *
      */
     public void init() {
         pool = new ThreadPoolExecutor(
-                1,
                 3,
+                10,
                 30,
-                TimeUnit.MINUTES,
-                new ArrayBlockingQueue<Runnable>(5),
+                TimeUnit.SECONDS,
+                new ArrayBlockingQueue<Runnable>(50),
                 new CustomThreadFactory(),
                 new CustomRejectedExecutionHandler());
     }
@@ -57,7 +59,7 @@ public class CustomThreadPoolExecutor {
         @Override
         public Thread newThread(Runnable r) {
             Thread t = new Thread(r);
-            String threadName = CustomThreadPoolExecutor.class.getSimpleName() + count.addAndGet(1);
+            String threadName = A_CustomThreadPoolExecutor.class.getSimpleName() + count.addAndGet(1);
             System.out.println(threadName);
             t.setName(threadName);
             return t;
@@ -81,14 +83,14 @@ public class CustomThreadPoolExecutor {
 
 
     // 测试构造的线程池
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
 
-        CustomThreadPoolExecutor exec = new CustomThreadPoolExecutor();
+        A_CustomThreadPoolExecutor exec = new A_CustomThreadPoolExecutor();
         // 1.初始化
         exec.init();
 
         ExecutorService pool = exec.getCustomThreadPoolExecutor();
-        for(int i=1; i<100; i++) {
+        for(int i=1; i<3; i++) {
             System.out.println("提交第" + i + "个任务!");
             pool.execute(new Runnable() {
                 @Override
@@ -107,10 +109,6 @@ public class CustomThreadPoolExecutor {
         // 2.销毁----此处不能销毁,因为任务没有提交执行完,如果销毁线程池,任务也就无法执行了
         // exec.destory();
 
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        TimeUnit.MINUTES.sleep(1111);
     }
 }

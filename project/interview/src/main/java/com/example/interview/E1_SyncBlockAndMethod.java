@@ -134,10 +134,6 @@ public class E1_SyncBlockAndMethod {
  *    写volatile变量时，JMM会把该线程工作内存中的共享变量立刻刷新到主内存中
  *    读volatile变量时，JMM会把该线程工作内存中的共享变量先置为无效，再到主内存读取
  *
- *
- *
- *
- *
  */
 
 }
