@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @NotThreadSafe
-public class CountExample1111 {
+public class CountExample {
 
     public static void main(String[] args) throws Exception {
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
