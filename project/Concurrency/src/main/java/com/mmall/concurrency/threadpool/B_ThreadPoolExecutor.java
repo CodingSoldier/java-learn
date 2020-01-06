@@ -36,6 +36,15 @@ public class B_ThreadPoolExecutor {
      * 线程池的线程空闲时是 WAIT状态
      * 当线程池线程数超过corePoolSize，之后线程数减少，最少减为corePoolSize个
      *
+     * 不要用Executors工厂类，因为可能最大线程数未限制或者队列为无界队列
+     * 使用ThreadPoolExecutor自定义线程池
+     *
+     * 计算机密集型：cpq核数加1
+     * IO密集型（网络请求多）：cpq核数/0.8 或者 cpq核数/0.9
+     *
+     * 用bean来创建线程池，在bean销毁时调用线程池的shutdown方法。
+     * 在服务关闭的时候调用线程池的shutdown方法
+     *
      */
     //public void init() {
     //    pool = new ThreadPoolExecutor(
@@ -77,7 +86,7 @@ public class B_ThreadPoolExecutor {
                 5,
                 30,
                 TimeUnit.SECONDS,
-                new ArrayBlockingQueue<Runnable>(2));
+                new ArrayBlockingQueue<Runnable>(20));
     }
 
     public ExecutorService getCustomThreadPoolExecutor() {
@@ -98,7 +107,7 @@ public class B_ThreadPoolExecutor {
                 public void run() {
                     try {
                         System.out.println(">>>task is running=====");
-                        TimeUnit.SECONDS.sleep(1);
+                        TimeUnit.SECONDS.sleep(5);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -106,5 +115,6 @@ public class B_ThreadPoolExecutor {
             });
         }
 
+        pool.shutdown();
     }
 }
