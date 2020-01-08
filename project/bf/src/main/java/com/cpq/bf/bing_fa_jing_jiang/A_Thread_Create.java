@@ -100,17 +100,5 @@ public class A_Thread_Create {
         TimeUnit.MINUTES.sleep(1L);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 }

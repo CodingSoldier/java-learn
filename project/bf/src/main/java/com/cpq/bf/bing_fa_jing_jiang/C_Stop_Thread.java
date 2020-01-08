@@ -10,6 +10,94 @@ import java.util.concurrent.TimeUnit;
  */
 public class C_Stop_Thread {
 
+    //public static void main(String[] args) throws Exception{
+    //    Thread t0 = new Thread(new Runnable() {
+    //        @Override
+    //        public void run() {
+    //            int num = 0;
+    //            while (num < Integer.MAX_VALUE){
+    //                System.out.println(Thread.currentThread().getName() + "正在执行");
+    //            }
+    //        }
+    //    });
+    //    t0.start();
+    //
+    //    TimeUnit.MILLISECONDS.sleep(100);
+    //
+    //    // 执行t0.interrupt()，但是t0还在继续运行
+    //    t0.interrupt();
+    //}
+
+
+    //public static void main(String[] args) throws Exception{
+    //    Thread t0 = new Thread(new Runnable() {
+    //        @Override
+    //        public void run() {
+    //            // 当前线程的中断状态为true则退出while循环
+    //            while (!Thread.currentThread().isInterrupted()){
+    //                System.out.println(Thread.currentThread().getName() + "正在执行");
+    //            }
+    //        }
+    //    });
+    //    t0.start();
+    //
+    //    TimeUnit.MILLISECONDS.sleep(100);
+    //
+    //    // 执行t0.interrupt()，t0的中断状态变为true
+    //    t0.interrupt();
+    //}
+
+
+    //public static void main(String[] args) throws Exception{
+    //    Thread t0 = new Thread(new Runnable() {
+    //        @Override
+    //        public void run() {
+    //            while (!Thread.currentThread().isInterrupted()){
+    //                try {
+    //                    System.out.println(Thread.currentThread().getName() + "正在执行");
+    //
+    //                    // 在线程中加入sleep()这种可以响应中断的代码，并在while循环中把异常捕获
+    //                    TimeUnit.MILLISECONDS.sleep(1);
+    //                }catch (InterruptedException e){
+    //                    // 发生InterruptedException之后，线程的中断状态会被变成false
+    //                    e.printStackTrace();
+    //                }
+    //            }
+    //        }
+    //    });
+    //    t0.start();
+    //
+    //    TimeUnit.MILLISECONDS.sleep(100);
+    //
+    //    t0.interrupt();
+    //}
+
+
+    public static void main(String[] args) throws Exception{
+        Thread t0 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (!Thread.currentThread().isInterrupted()){
+                        System.out.println(Thread.currentThread().getName() + "正在执行");
+                        // 在线程中加入sleep()这种可以响应中断的代码
+                        TimeUnit.MILLISECONDS.sleep(1);
+                    }
+                // 将捕获异常的代码放到while循环之外，捕获异常之后不再有循环代码
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        t0.start();
+
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        t0.interrupt();
+    }
+
+
+
     /**
      * java只能通过interrupt来通知线程停止线程，至于是否中断线程，由线程本身自己决定
      * 调用interrupt()仅仅是将线程的中断标记位设置为true，并不是中断线程的意思
@@ -41,58 +129,58 @@ public class C_Stop_Thread {
 
 
 
-        //// 在run()中加入Thread.currentThread().isInterrupted()
-        //Thread thread = new Thread(new Runnable() {
-        //    @Override
-        //    public void run() {
-        //        Integer num = 0;
-        //        // 当线程发出中断信号，则跳出while循环，run方法马上运行结束，线程也就停止了
-        //        while (!Thread.currentThread().isInterrupted()
-        //                && num < Integer.MAX_VALUE){
-        //            if (num % 100 == 0){
-        //                System.out.println("当前数字 " + num);
-        //                System.out.println("当前数字长度 " + num.toString().length());
-        //            }
-        //            num++;
-        //        }
-        //    }
-        //});
-        //thread.start();
-        //// @Test线程睡眠一会儿，然后调用thread.interrupt()，thread线程暂停了
-        //TimeUnit.SECONDS.sleep(1L);
-        //thread.interrupt();
-
-
-
-
+        // 在run()中加入Thread.currentThread().isInterrupted()
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 Integer num = 0;
-                while (num < 100){
-                    System.out.println("执行一小段时间，当前数字 " + num);
+                // 当线程发出中断信号，则跳出while循环，run方法马上运行结束，线程也就停止了
+                while (!Thread.currentThread().isInterrupted()
+                        && num < Integer.MAX_VALUE){
+                    if (num % 100 == 0){
+                        System.out.println("当前数字 " + num);
+                        System.out.println("当前数字长度 " + num.toString().length());
+                    }
                     num++;
                 }
-
-                /**
-                 *  线程处于sleep状态，thread.interrupt()可以中断线程
-                 *  正是由于sleep状态可以被中断，所以sleep方法抛出显式异常，告诉调用者要处理异常
-                 *  从异常信息也可以看出来，sleep响应中断就是抛出一个异常InterruptedException
-                 *  而catch这个异常后，run方法不会结束，还会继续运行后面的代码
-                 */
-                try {
-                    TimeUnit.SECONDS.sleep(2L);
-                }catch (InterruptedException e){
-                    e.printStackTrace();
-                }
-
-                System.out.println("线程中断后，后面的代码也会会会会执行");
             }
         });
         thread.start();
+        // @Test线程睡眠一会儿，然后调用thread.interrupt()，thread线程暂停了
         TimeUnit.SECONDS.sleep(1L);
-        // 设置线程thread中断标记位为true
         thread.interrupt();
+
+
+
+
+        //Thread thread = new Thread(new Runnable() {
+        //    @Override
+        //    public void run() {
+        //        Integer num = 0;
+        //        while (num < 100){
+        //            System.out.println("执行一小段时间，当前数字 " + num);
+        //            num++;
+        //        }
+        //
+        //        /**
+        //         *  线程处于sleep状态，thread.interrupt()可以中断线程
+        //         *  正是由于sleep状态可以被中断，所以sleep方法抛出显式异常，告诉调用者要处理异常
+        //         *  从异常信息也可以看出来，sleep响应中断就是抛出一个异常InterruptedException
+        //         *  而catch这个异常后，run方法不会结束，还会继续运行后面的代码
+        //         */
+        //        try {
+        //            TimeUnit.SECONDS.sleep(2L);
+        //        }catch (InterruptedException e){
+        //            e.printStackTrace();
+        //        }
+        //
+        //        System.out.println("线程中断后，后面的代码也会会会会执行");
+        //    }
+        //});
+        //thread.start();
+        //TimeUnit.SECONDS.sleep(1L);
+        //// 设置线程thread中断标记位为true
+        //thread.interrupt();
 
 
 
