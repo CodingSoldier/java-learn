@@ -3,6 +3,7 @@ package com.cpq.bf.interview;
 public class G_Spring {
 
 /**
+
  BeanFactory是Spring框架的基础设施，面向spring
  ApplicationContext面向使用spring框架的开发者
 

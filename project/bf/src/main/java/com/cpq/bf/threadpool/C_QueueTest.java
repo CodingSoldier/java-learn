@@ -2,7 +2,6 @@ package com.cpq.bf.threadpool;
 
 import org.junit.Test;
 
-import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
@@ -64,47 +63,25 @@ public class C_QueueTest {
         //    }
         //}).start();
 
-        //new Thread(() -> {
-        //    try {
-        //        sq.put(1);
-        //        System.out.println("生产成功"+1);
-        //
-        //        sq.put(2);
-        //        /**
-        //         * 给SynchronousQueue添加元素后，若消费者没有消费，则线程会在put方法内阻塞
-        //         * take方法也一样，当SynchronousQueue没有数据，执行take方法，线程会阻塞，直到队列中添加了元素
-        //         */
-        //        System.out.println("生产成功"+2);
-        //
-        //    } catch (InterruptedException e) {
-        //        e.printStackTrace();
-        //    }
-        //}).start();
-        //new Thread(() -> {
-        //    try {
-        //        Integer i = sq.take();
-        //        System.out.println("消费成功"+i);
-        //    } catch (InterruptedException e) {
-        //        e.printStackTrace();
-        //    }
-        //}).start();
 
-        /**
-         * 多线程环境下 SynchronousQueue 任然是
-         */
-        for (int i=0; i<10; i++){
-            new Thread(() -> {
-                System.out.println("创建线程");
-                try {
-                    int num = new Random(1).nextInt(100);
-                    sq.put(num);
-                    System.out.println("生产成功"+num);
+        new Thread(() -> {
+            try {
+                sq.put(1);
+                System.out.println("生产成功"+1);
 
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }).start();
-        }
+
+                sq.put(2);
+                /**
+                 * 给SynchronousQueue添加元素后，若消费者没有消费，则线程会在put方法内阻塞
+                 * 调用的是 UNSAFE.park(false, 0L);
+                 * take方法也一样，当SynchronousQueue没有数据，执行take方法，线程会阻塞，直到队列中添加了元素
+                 */
+                System.out.println("生产成功"+2);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
         new Thread(() -> {
             try {
                 Integer i = sq.take();
@@ -113,6 +90,7 @@ public class C_QueueTest {
                 e.printStackTrace();
             }
         }).start();
+
 
         TimeUnit.MINUTES.sleep(1);
 

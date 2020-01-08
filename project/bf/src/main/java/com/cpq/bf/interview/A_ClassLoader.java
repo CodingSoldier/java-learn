@@ -5,10 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-/**
- * @author chenpiqian
- * @date: 2019-12-30
- */
 public class A_ClassLoader {
 
     /**
@@ -66,27 +62,25 @@ public class A_ClassLoader {
     static class TestClassLoader{
         public static void main(String[] args) throws Exception{
 
-            //// 创建自定义类加载器
-            //MyClassLoader m = new MyClassLoader("D:\\third-code\\java-learn\\project\\interview\\src\\", "myClassLoader");
-            ///**
-            // * 先执行 javac AA_Wali.java 编译为class文件
-            // * 加载AA_Wali.class
-            // */
-            //Class c = m.loadClass("AA_Wali");
-            //// 创建类实例
-            //c.newInstance();
-
-
+            // 创建自定义类加载器，自定义类加载器需要指定类加载路径
+            MyClassLoader m = new MyClassLoader("D:\\third-code\\java-learn\\project\\bf\\src\\main\\java\\com\\cpq\\bf\\interview\\", "myClassLoader");
             /**
-             * 双亲委派模型，看图 A_双亲委派模型.jpg
-             * 为什么使用双亲委派模型加载类： 避免同样的字节码多次加载，浪费内存
+             * 先执行 javac AA_Wali.java 编译为class文件
+             * 加载AA_Wali.class
              */
-            MyClassLoader m = new MyClassLoader("D:\\third-code\\java-learn\\project\\interview\\src\\", "myClassLoader");
-            System.out.println(m.getParent());
-            System.out.println(m.getParent().getParent());
-            System.out.println(m.getParent().getParent().getParent());
-            // Bootstrap ClassLoader是本地方法实现的，不能通过java代码获取
+            Class c = m.loadClass("AA_Wali");
+            // 创建类实例
+            c.newInstance();
 
+            ///**
+            // * 双亲委派模型，看图 A_双亲委派模型.jpg
+            // * 为什么使用双亲委派模型加载类： 避免同样的字节码多次加载，浪费内存
+            // */
+            //MyClassLoader m = new MyClassLoader("D:\\third-code\\java-learn\\project\\interview\\src\\", "myClassLoader");
+            //System.out.println(m.getParent());
+            //System.out.println(m.getParent().getParent());
+            //System.out.println(m.getParent().getParent().getParent());
+            //// Bootstrap ClassLoader是本地方法实现的，不能通过java代码获取
 
         }
 

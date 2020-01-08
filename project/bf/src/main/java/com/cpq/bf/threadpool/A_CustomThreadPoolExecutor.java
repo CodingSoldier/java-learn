@@ -10,9 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class A_CustomThreadPoolExecutor {
 
-
     private ThreadPoolExecutor pool = null;
-
 
     /**
      * 线程池初始化方法
@@ -39,7 +37,6 @@ public class A_CustomThreadPoolExecutor {
                 new CustomThreadFactory(),
                 new CustomRejectedExecutionHandler());
     }
-
 
     public void destory() {
         if(pool != null) {

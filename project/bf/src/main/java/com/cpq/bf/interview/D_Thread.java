@@ -18,7 +18,7 @@ public class D_Thread {
                         System.out.println("AAAAAAAA wait10ms");
                         /**
                          * wait(时间)会释放锁，
-                         * 但是等待时间到期后，应该是进入block状态，等待另一个线程释放锁
+                         * 等待时间到期后，应该是进入block状态，等待另一个线程释放锁
                          */
                         lock.wait(10);
                         System.out.println("AAAAAAAA 结束");
@@ -39,11 +39,6 @@ public class D_Thread {
                     try {
                         System.out.println("BBBBBB 获取到锁，sleep2000ms");
                         Thread.sleep(2000);
-                        System.out.println("BBBBBB while循环");
-                        int i = 1;
-                        while (i>0){
-                            int ii = 1;
-                        }
                         System.out.println("BBBBBB 结束");
                     } catch (InterruptedException e){
                         e.printStackTrace();
