@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cpq.shiro.user.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cpq.shiro.user.entity.User">
+        <id column="uid" property="uid" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        uid, username, password
+    </sql>
+
+    <resultMap id="userMap" type="com.cpq.shiro.user.entity.UserVo">
+        <id property="uid" column="uid" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <collection property="roles" ofType="com.cpq.shiro.user.entity.Role">
+            <id property="rid" column="rid" />
+            <result property="rname" column="rname" />
+            <collection property="permissions" ofType="com.cpq.shiro.user.entity.Permission">
+                <id property="pid" column="pid" />
+                <result property="name" column="name"/>
+                <result property="url" column="url" />
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="findByUsername" parameterType="string" resultMap="userMap">
+      SELECT u.*, r.*, p.*
+      FROM user u
+        INNER JOIN user_role ur on ur.uid = u.uid
+        INNER JOIN role r on r.rid = ur.rid
+        INNER JOIN permission_role pr on pr.rid = r.rid
+        INNER JOIN permission p on pr.pid = p.pid
+      WHERE u.username = #{username}
+    </select>
+
+</mapper>
