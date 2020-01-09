@@ -2,6 +2,8 @@ package com.cpq.bf.bing_fa_jing_jiang;
 
 import org.junit.Test;
 
+import java.util.Random;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -17,6 +19,7 @@ public class C_Stop_Thread {
     //            int num = 0;
     //            while (num < Integer.MAX_VALUE){
     //                System.out.println(Thread.currentThread().getName() + "正在执行");
+    //                System.out.println("中断状态："+Thread.currentThread().isInterrupted());
     //            }
     //        }
     //    });
@@ -73,17 +76,52 @@ public class C_Stop_Thread {
     //}
 
 
+    //public static void main(String[] args) throws Exception{
+    //    Thread t0 = new Thread(new Runnable() {
+    //        @Override
+    //        public void run() {
+    //            try {
+    //                while (!Thread.currentThread().isInterrupted()){
+    //                    System.out.println(Thread.currentThread().getName() + "正在执行");
+    //                    System.out.println("中断状态："+Thread.currentThread().isInterrupted());
+    //                    // 在线程中加入sleep()这种可以响应中断的代码
+    //                    TimeUnit.MILLISECONDS.sleep(1);
+    //                }
+    //            // 将捕获异常的代码放到while循环之外，捕获异常之后不再有循环代码
+    //            }catch (InterruptedException e){
+    //                e.printStackTrace();
+    //            }
+    //            System.out.println("中断状态：" + Thread.currentThread().isInterrupted());
+    //        }
+    //    });
+    //    t0.start();
+    //
+    //    TimeUnit.MILLISECONDS.sleep(100);
+    //
+    //    t0.interrupt();
+    //}
+
+    // 停止生产标识
+    public static volatile boolean stopProduce = false;
+
     public static void main(String[] args) throws Exception{
+        // 资源队列，用于公共存储资源
+        LinkedBlockingQueue lbq = new LinkedBlockingQueue(3);
+
         Thread t0 = new Thread(new Runnable() {
             @Override
             public void run() {
+                int i = 0;
                 try {
-                    while (!Thread.currentThread().isInterrupted()){
-                        System.out.println(Thread.currentThread().getName() + "正在执行");
-                        // 在线程中加入sleep()这种可以响应中断的代码
-                        TimeUnit.MILLISECONDS.sleep(1);
+                    while (i<Integer.MAX_VALUE && !stopProduce){
+                        System.out.println("生产 "+i);
+                        /**
+                         * 当LinkedBlockingQueue队列满了，put方法会将线程设置为WAIT状态
+                         * 若没有消费者消费LinkedBlockingQueue中的资源，线程会一直在这里等待，没法运行while判断
+                         */
+                        lbq.put(i);
+                        i++;
                     }
-                // 将捕获异常的代码放到while循环之外，捕获异常之后不再有循环代码
                 }catch (InterruptedException e){
                     e.printStackTrace();
                 }
@@ -91,9 +129,28 @@ public class C_Stop_Thread {
         });
         t0.start();
 
-        TimeUnit.MILLISECONDS.sleep(100);
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (new Random().nextInt(100)>5){
+                        // 消费资源
+                        System.out.println("消费 "+lbq.take());
+                    }
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        t1.start();
 
-        t0.interrupt();
+        TimeUnit.MILLISECONDS.sleep(10);
+
+        // 设置停止生产标识为true，但是t0没有停止，还处于WAIT状态
+        stopProduce =true;
+
+        // 消费一个LinkedBlockingQueue的资源后，t0从WAIT状态变为RUNNABLE，执行while判断后退出循环，线程结束
+        //lbq.take();
     }
 
 
@@ -126,7 +183,6 @@ public class C_Stop_Thread {
         //// @Test 线程睡眠一会儿，然后调用thread.interrupt()，但是thread线程没有暂停
         //TimeUnit.SECONDS.sleep(1L);
         //thread.interrupt();
-
 
 
         // 在run()中加入Thread.currentThread().isInterrupted()

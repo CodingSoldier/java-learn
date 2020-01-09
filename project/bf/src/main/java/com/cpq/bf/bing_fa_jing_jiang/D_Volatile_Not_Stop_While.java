@@ -35,7 +35,7 @@ static class Producer implements Runnable{
                 }catch (InterruptedException e){
                     e.printStackTrace();
                 }finally {
-                    //System.out.println("生产者结束，但是这句话很可能不会马上执行");
+                    // System.out.println("生产者结束，但是这句话很可能不会马上执行");
                 }
                 System.out.println(num + "是100的倍数，被放到仓库中了。");
             }

@@ -1,13 +1,10 @@
 package com.cpq.bf.bing_fa_jing_jiang;
 
-/**
- * @author chenpiqian
- * @date: 2019-12-17
- */
-public class I_Catch_Thread_Exception {
 
+public class I_Catch_Thread_Exception {
     /**
-     * 线程未捕获异常处理器
+     * 线程未捕获异常处理器接口 Thread.UncaughtExceptionHandler
+     * 此接口会在线程由于未捕获异常而突然终止时被调用
      */
     public static class CustomUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler{
 
@@ -27,11 +24,14 @@ public class I_Catch_Thread_Exception {
     public static void main(String[] args) {
 
         /**
-         * 设置线程未捕获异常捕获器，捕获并处理全局异常
+         * 设置默认未捕获异常处理器
          */
-        Thread.setDefaultUncaughtExceptionHandler(new CustomUncaughtExceptionHandler("自定义捕获器"));
+        Thread.setDefaultUncaughtExceptionHandler(new CustomUncaughtExceptionHandler("自定义未捕获异常处理器"));
 
         new Thread(new Runnable() {
+            /**
+             * Runnable接口中的run方法没有抛出受检查异常，实现类的run方法也就只能抛出不受检查的异常RuntimeException
+             */
             @Override
             public void run() {
                 throw new RuntimeException();
