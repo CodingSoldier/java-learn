@@ -89,9 +89,10 @@ public class ShiroConfiguration {
     public DefaultWebSecurityManager securityManager(@Qualifier("authRealm") AuthRealm authRealm) {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         manager.setRealm(authRealm);
+
         //manager.setSessionManager(customSessionManage);
         //manager.setCacheManager(redisCacheManager);
-        manager.setCacheManager(new MemoryConstrainedCacheManager());
+
         return manager;
     }
 
@@ -99,6 +100,8 @@ public class ShiroConfiguration {
     public AuthRealm authRealm(@Qualifier("credentialMatcher") CredentialMatcher matcher) {
         AuthRealm authRealm = new AuthRealm();
         authRealm.setCredentialsMatcher(matcher);
+        // 缓存设置在Realm中更合适，设置在manager中的缓存最终也是给Realm使用
+        authRealm.setCacheManager(new MemoryConstrainedCacheManager());
         return authRealm;
     }
 

@@ -8,6 +8,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.cache.Cache;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,16 @@ public class AuthRealm extends AuthorizingRealm {
         info.addStringPermissions(permissionList);
         info.addRoles(roleNameList);
         return info;
+    }
+
+    @Override
+    public Cache<Object, AuthorizationInfo> getAuthorizationCache() {
+        Cache<Object, AuthorizationInfo> cache = super.getAuthorizationCache();
+        if(cache == null) {
+            return cache;
+        }
+        //cache.clear();
+        return cache;
     }
 
 }
