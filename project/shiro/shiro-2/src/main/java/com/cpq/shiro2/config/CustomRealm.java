@@ -1,4 +1,4 @@
-package com.cpq.shiro2;
+package com.cpq.shiro2.config;
 
 
 import org.apache.shiro.authc.AuthenticationException;

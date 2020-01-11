@@ -1,4 +1,4 @@
-package com.cpq.shiro2.case1;
+package com.cpq.shiro2.ctrl;
 
 import com.cpq.shiro2.user.entity.UserVo;
 import org.apache.shiro.SecurityUtils;
@@ -59,7 +59,7 @@ public class TestController {
         try {
             subject.login(token);
             UserVo userVo = (UserVo) subject.getPrincipal();
-            session.setAttribute("user", userVo);
+            //session.setAttribute("user", userVo);
             return "index";
         } catch (Exception e) {
             e.printStackTrace();

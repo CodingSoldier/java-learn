@@ -1,5 +1,6 @@
 package com.cpq.shiro2;
 
+import com.cpq.shiro2.config.CustomRealm;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;

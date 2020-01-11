@@ -1,4 +1,4 @@
-package com.cpq.shiro2.case1;
+package com.cpq.shiro2.ctrl;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

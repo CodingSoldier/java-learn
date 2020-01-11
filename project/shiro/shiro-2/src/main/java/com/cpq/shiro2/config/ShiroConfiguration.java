@@ -4,9 +4,11 @@ import com.cpq.shiro2.filter.RoleAnyFilter;
 import com.cpq.shiro2.session.CustomSessionManage;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.mgt.SessionStorageEvaluator;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.mgt.DefaultWebSessionStorageEvaluator;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -39,7 +41,6 @@ public class ShiroConfiguration {
 
         bean.setLoginUrl("/login");
         bean.setSuccessUrl("/index");
-        bean.setUnauthorizedUrl("/unauthorized");
         bean.setUnauthorizedUrl("/unauthorized");
 
         LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
@@ -76,11 +77,19 @@ public class ShiroConfiguration {
         return bean;
     }
 
+
+    @Bean
+    protected SessionStorageEvaluator sessionStorageEvaluator(){
+        DefaultWebSessionStorageEvaluator sessionStorageEvaluator = new DefaultWebSessionStorageEvaluator();
+        sessionStorageEvaluator.setSessionStorageEnabled(false);
+        return sessionStorageEvaluator;
+    }
+
     @Bean("securityManager")
     public DefaultWebSecurityManager securityManager(@Qualifier("authRealm") AuthRealm authRealm) {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         manager.setRealm(authRealm);
-        manager.setSessionManager(customSessionManage);
+        //manager.setSessionManager(customSessionManage);
         //manager.setCacheManager(redisCacheManager);
         manager.setCacheManager(new MemoryConstrainedCacheManager());
         return manager;
@@ -89,7 +98,6 @@ public class ShiroConfiguration {
     @Bean("authRealm")
     public AuthRealm authRealm(@Qualifier("credentialMatcher") CredentialMatcher matcher) {
         AuthRealm authRealm = new AuthRealm();
-        //authRealm.setCacheManager(redisCacheManager);
         authRealm.setCredentialsMatcher(matcher);
         return authRealm;
     }
