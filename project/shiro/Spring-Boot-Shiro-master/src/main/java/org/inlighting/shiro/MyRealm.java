@@ -80,4 +80,13 @@ public class MyRealm extends AuthorizingRealm {
         return simpleAuthorizationInfo;
     }
 
+    /**
+     * 在Realm中覆盖方法没有用，程序运行时不会调用此方法，所以CacheManager还是null
+     * 可以在ShiroConfig中收到调用一次setCacheManager(new MemoryConstrainedCacheManager())
+     * 这也如同执行manager.setRealm(realm) 一样，而不是覆盖DefaultWebSecurityManager中的set方法
+     */
+    //@Override
+    //public void setCacheManager(CacheManager cacheManager) {
+    //    super.setCacheManager(new MemoryConstrainedCacheManager());
+    //}
 }

@@ -37,12 +37,12 @@ public class TestController {
         return "unauthorized";
     }
 
-    @RequestMapping("/admin")
+    @RequestMapping("/ad")
     public String admin() {
         return "admin success";
     }
 
-    @RequestMapping("/edit")
+    @RequestMapping("/ed")
     public String edit() {
         return "edit success";
     }

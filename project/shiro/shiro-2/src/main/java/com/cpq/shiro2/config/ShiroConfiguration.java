@@ -61,10 +61,10 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/druid/**", "anon");
 
         // /admin接口只允许admin角色访问
-        filterChainDefinitionMap.put("/admin", "roles[admin]");
+        filterChainDefinitionMap.put("/ad", "roles[admin]");
 
         // /edit接口只有edit权限才能访问
-        filterChainDefinitionMap.put("/edit", "perms[edit]");
+        filterChainDefinitionMap.put("/ed", "perms[edit]");
 
         // url使用自定义自定义Filter
         //filterChainDefinitionMap.put("/any/role/**", "roleAny[admin]");
