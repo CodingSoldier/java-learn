@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.generator.config.PackageConfig;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
-import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
 
 // 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
@@ -69,7 +68,7 @@ public class CodeGenerator {
         strategy.setInclude(TABLE_NAME);
         autoGenerator.setStrategy(strategy);
 
-        autoGenerator.setTemplateEngine(new FreemarkerTemplateEngine());
+        //autoGenerator.setTemplateEngine(new FreemarkerTemplateEngine());
 
         autoGenerator.execute();
 

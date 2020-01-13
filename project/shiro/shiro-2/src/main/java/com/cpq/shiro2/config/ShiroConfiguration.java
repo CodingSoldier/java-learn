@@ -43,8 +43,10 @@ public class ShiroConfiguration {
         bean.setSuccessUrl("/index");
         bean.setUnauthorizedUrl("/unauthorized");
 
+        // 由于使用FIRST MATCH WINS原则，必须使用LinkedHashMap
         LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         /**
+         * https://waylau.gitbooks.io/apache-shiro-1-2-x-reference/content/III.%20Web%20Applications/10.%20Web.html
          * /index  使用 authc 拦截器
          * /login  使用 anon 拦截器，不拦截
          *
@@ -60,8 +62,19 @@ public class ShiroConfiguration {
         // druid请求不拦截，以便打开druid监控页面
         filterChainDefinitionMap.put("/druid/**", "anon");
 
-        // /admin接口只允许admin角色访问
+        // admin接口只允许admin角色访问
+        // RolesAuthorizationFilter.java 只覆盖了isAccessAllowed()方法
         filterChainDefinitionMap.put("/admin", "roles[admin]");
+
+
+        /**
+         * 一个星号*表示一级，两个星号**表示多级
+         * 匹配到第一个规则后，链路就会短路，不再匹配后面的规则
+         * 下面配置的结果是/test/add、/test/role/add都需要admin角色才能访问
+         */
+        filterChainDefinitionMap.put("/**/add", "roles[admin]");
+        filterChainDefinitionMap.put("/test/add", "user");
+        filterChainDefinitionMap.put("/test/role/add", "anon");
 
         // /edit接口只有edit权限才能访问
         filterChainDefinitionMap.put("/edit", "perms[edit]");

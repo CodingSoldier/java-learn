@@ -22,17 +22,28 @@ public class ShiroConfig {
     public DefaultWebSecurityManager getManager(MyRealm realm) {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         // 使用自己的realm
+        // 缓存设置在Realm中更合适，设置在manager中的缓存最终也是给Realm使用，无状态下没用
+        //realm.setCacheManager(new MemoryConstrainedCacheManager());
         manager.setRealm(realm);
 
         /*
          * 关闭shiro自带的session，详情见文档
          * http://shiro.apache.org/session-management.html#SessionManagement-StatelessApplications%28Sessionless%29
+         *
+         * 这将防止 Shiro 使用 Subject 的会话来存储所有跨请求/调用/消息的Subject 状态。只要确保你对每个请求进行了身份验证，这样 Shiro 将会对给定的请求/调用/消息知道它的 Subject 是谁。
          */
         DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
         DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
         defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
         subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
         manager.setSubjectDAO(subjectDAO);
+
+        //// web应用默认使用基于容器的SessionManager
+        //DefaultSessionManager sessionManager = new DefaultSessionManager();
+        //// 一小时
+        //Long timeout = 1000 * 60 * 60L;
+        //sessionManager.setGlobalSessionTimeout(timeout);
+        //manager.setSessionManager(sessionManager);
 
         return manager;
     }

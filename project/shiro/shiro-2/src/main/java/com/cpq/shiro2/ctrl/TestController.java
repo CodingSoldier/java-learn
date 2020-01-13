@@ -47,6 +47,16 @@ public class TestController {
         return "edit success";
     }
 
+    @RequestMapping("/test/add")
+    public String add() {
+        return "/test/add";
+    }
+
+    @RequestMapping("/test/role/add")
+    public String add2() {
+        return "/test/role/add";
+    }
+
     /**
      * 登陆接口
      */

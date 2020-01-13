@@ -9,6 +9,7 @@ import org.inlighting.bean.ResponseBean;
 import org.inlighting.database.UserService;
 import org.inlighting.database.UserBean;
 import org.inlighting.exception.UnauthorizedException;
+import org.inlighting.shiro.JWTToken;
 import org.inlighting.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,11 @@ public class WebController {
         String password = body.get("password");
         UserBean userBean = userService.getUser(username);
         if (userBean.getPassword().equals(password)) {
-            return new ResponseBean(200, "Login success", JWTUtil.sign(username, password));
+            String token = JWTUtil.sign(username, password);
+            JWTToken jwtToken = new JWTToken(token);
+            Subject subject = SecurityUtils.getSubject();
+            subject.login(jwtToken);
+            return new ResponseBean(200, "Login success", token);
         } else {
             throw new UnauthorizedException();
         }

@@ -28,6 +28,8 @@ public class AuthRealm extends AuthorizingRealm {
      * authenticationToken.getCredentials() 是密码
      *
      * SimpleAuthenticationInfo(Object principal, Object credentials, String realmName)中的principal可以是一个类对象
+     * AuthenticatingRealm.getAuthenticationInfo有判断会有
+     * AuthenticationInfo info = this.getCachedAuthenticationInfo(token);
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {

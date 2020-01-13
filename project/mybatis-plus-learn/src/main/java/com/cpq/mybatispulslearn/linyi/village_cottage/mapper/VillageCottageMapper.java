@@ -1,7 +1,8 @@
 package com.cpq.mybatispulslearn.linyi.village_cottage.mapper;
 
-import com.cpq.mybatispulslearn.linyi.village_cottage.entity.VillageCottage;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.cpq.mybatispulslearn.linyi.village_cottage.entity.VillageCottage;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.Map;
  * @author cpq
  * @since 2019-08-07
  */
+@Mapper
 public interface VillageCottageMapper extends BaseMapper<VillageCottage> {
     List<Map<String, String>> allRoomPerson();
 

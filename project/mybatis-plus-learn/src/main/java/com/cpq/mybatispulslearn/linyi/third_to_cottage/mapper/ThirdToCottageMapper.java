@@ -1,7 +1,8 @@
 package com.cpq.mybatispulslearn.linyi.third_to_cottage.mapper;
 
-import com.cpq.mybatispulslearn.linyi.third_to_cottage.entity.ThirdToCottage;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.cpq.mybatispulslearn.linyi.third_to_cottage.entity.ThirdToCottage;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author cpq
  * @since 2019-08-07
  */
+@Mapper
 public interface ThirdToCottageMapper extends BaseMapper<ThirdToCottage> {
 
 }
