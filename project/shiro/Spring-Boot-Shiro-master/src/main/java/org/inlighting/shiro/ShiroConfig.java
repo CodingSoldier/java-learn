@@ -1,5 +1,6 @@
 package org.inlighting.shiro;
 
+import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -20,6 +21,7 @@ public class ShiroConfig {
 
     @Bean("securityManager")
     public DefaultWebSecurityManager getManager(MyRealm realm) {
+        realm.setCacheManager(new MemoryConstrainedCacheManager());
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         // 使用自己的realm
         // 缓存设置在Realm中更合适，设置在manager中的缓存最终也是给Realm使用，无状态下没用
