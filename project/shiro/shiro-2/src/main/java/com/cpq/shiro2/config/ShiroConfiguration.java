@@ -9,7 +9,6 @@ import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSource
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.mgt.DefaultWebSessionStorageEvaluator;
-import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -72,7 +71,7 @@ public class ShiroConfiguration {
          * 匹配到第一个规则后，链路就会短路，不再匹配后面的规则
          * 下面配置的结果是/test/add、/test/role/add都需要admin角色才能访问
          */
-        filterChainDefinitionMap.put("/**/add", "roles[admin]");
+        //filterChainDefinitionMap.put("/**/add", "roles[admin]");
         filterChainDefinitionMap.put("/test/add", "user");
         filterChainDefinitionMap.put("/test/role/add", "anon");
 
@@ -132,11 +131,11 @@ public class ShiroConfiguration {
         return advisor;
     }
 
-    @Bean
-    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
-        DefaultAdvisorAutoProxyCreator creator = new DefaultAdvisorAutoProxyCreator();
-        creator.setProxyTargetClass(true);
-        return creator;
-    }
+    //@Bean
+    //public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+    //    DefaultAdvisorAutoProxyCreator creator = new DefaultAdvisorAutoProxyCreator();
+    //    creator.setProxyTargetClass(true);
+    //    return creator;
+    //}
 
 }

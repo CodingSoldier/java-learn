@@ -1,7 +1,5 @@
 package org.inlighting.shiro;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -23,9 +21,17 @@ import java.util.Set;
 @Service
 public class MyRealm extends AuthorizingRealm {
 
-    private static final Logger LOGGER = LogManager.getLogger(MyRealm.class);
+    //private static final Logger LOGGER = LogManager.getLogger(MyRealm.class);
 
     private UserService userService;
+
+
+
+    /**
+     *  clearCachedAuthorizationInfo(PrincipalCollection principals)
+     *  用于清除指定用户的授权信息
+     *
+     */
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -89,4 +95,5 @@ public class MyRealm extends AuthorizingRealm {
     //public void setCacheManager(CacheManager cacheManager) {
     //    super.setCacheManager(new MemoryConstrainedCacheManager());
     //}
+
 }

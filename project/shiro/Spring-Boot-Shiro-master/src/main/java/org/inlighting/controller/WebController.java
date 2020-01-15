@@ -1,13 +1,14 @@
 package org.inlighting.controller;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.*;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.inlighting.bean.ResponseBean;
-import org.inlighting.database.UserService;
 import org.inlighting.database.UserBean;
+import org.inlighting.database.UserService;
 import org.inlighting.exception.UnauthorizedException;
 import org.inlighting.shiro.JWTToken;
 import org.inlighting.util.JWTUtil;
@@ -20,7 +21,7 @@ import java.util.Map;
 @RestController
 public class WebController {
 
-    private static final Logger LOGGER = LogManager.getLogger(WebController.class);
+    //private static final Logger LOGGER = LogManager.getLogger(WebController.class);
 
     private UserService userService;
 
