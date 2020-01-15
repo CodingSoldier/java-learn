@@ -21,6 +21,7 @@ public class JwtToken implements AuthenticationToken {
     }
 
     // credentials设置为空字符串
+    // TODO 设置密码
     @Override
     public Object getCredentials() {
         return "";
