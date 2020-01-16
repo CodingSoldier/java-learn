@@ -1,4 +1,4 @@
-package com.github.demo.configuration;
+package com.github.demo.realm;
 
 import com.github.demo.dto.UserDto;
 import com.github.demo.service.UserService;

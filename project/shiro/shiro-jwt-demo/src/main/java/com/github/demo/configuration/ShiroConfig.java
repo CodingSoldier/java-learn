@@ -1,5 +1,7 @@
 package com.github.demo.configuration;
 
+import com.github.demo.realm.DbShiroRealm;
+import com.github.demo.realm.JWTShiroRealm;
 import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authc.pam.FirstSuccessfulStrategy;
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator;

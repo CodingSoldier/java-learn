@@ -1,15 +1,10 @@
 package org.inlighting.shiro;
 
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
-import org.apache.shiro.session.mgt.DefaultSessionManager;
-import org.apache.shiro.spring.LifecycleBeanPostProcessor;
-import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
@@ -66,12 +61,12 @@ public class ShiroConfig {
         //subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
         //manager.setSubjectDAO(subjectDAO);
 
-        // web应用默认使用基于容器的SessionManager
-        DefaultSessionManager sessionManager = new DefaultSessionManager();
-        // 一小时
-        Long timeout = 1000 * 60 * 60L;
-        sessionManager.setGlobalSessionTimeout(timeout);
-        manager.setSessionManager(sessionManager);
+        //// web应用默认使用基于容器的SessionManager
+        //DefaultSessionManager sessionManager = new DefaultSessionManager();
+        //// 一小时
+        //Long timeout = 1000 * 60 * 60L;
+        //sessionManager.setGlobalSessionTimeout(timeout);
+        //manager.setSessionManager(sessionManager);
 
         return manager;
     }
@@ -105,25 +100,27 @@ public class ShiroConfig {
     /**
      * 下面的代码是添加注解支持
      */
-    @Bean
-    @DependsOn("lifecycleBeanPostProcessor")
-    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
-        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
-        // 强制使用cglib，防止重复代理和可能引起代理出错的问题
-        // https://zhuanlan.zhihu.com/p/29161098
-        defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
-        return defaultAdvisorAutoProxyCreator;
-    }
+    //@Bean
+    //@DependsOn("lifecycleBeanPostProcessor")
+    //public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+    //    DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+    //    // 强制使用cglib，防止重复代理和可能引起代理出错的问题
+    //    // https://zhuanlan.zhihu.com/p/29161098
+    //    // 默认就是true了
+    //    defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
+    //    return defaultAdvisorAutoProxyCreator;
+    //}
 
-    @Bean
-    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-        return new LifecycleBeanPostProcessor();
-    }
+    //@Bean
+    //public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+    //    return new LifecycleBeanPostProcessor();
+    //}
 
-    @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(DefaultWebSecurityManager securityManager) {
-        AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
-        advisor.setSecurityManager(securityManager);
-        return advisor;
-    }
+    // 使用shiro注解，默认也是开启了
+    //@Bean
+    //public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(DefaultWebSecurityManager securityManager) {
+    //    AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
+    //    advisor.setSecurityManager(securityManager);
+    //    return advisor;
+    //}
 }

@@ -1,5 +1,8 @@
-package com.github.demo.configuration;
+package com.github.demo.realm;
 
+import com.github.demo.configuration.JWTCredentialsMatcher;
+import com.github.demo.configuration.JWTToken;
+import com.github.demo.configuration.JwtUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;

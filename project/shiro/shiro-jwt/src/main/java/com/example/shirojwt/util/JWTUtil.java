@@ -1,10 +1,11 @@
-package com.example.shirojwt;
+package com.example.shirojwt.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.shirojwt.common.Constant;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
@@ -12,13 +13,10 @@ import java.util.Date;
 
 public class JWTUtil {
 
-    // 过期时间一天
-    private static final long EXPIRE_TIME = 60*60*1000;
-
     // 生成签名
     public static String sign(String username, String secret) {
         try {
-            Date date = new Date(System.currentTimeMillis()+EXPIRE_TIME);
+            Date date = new Date(System.currentTimeMillis()+ Constant.EXPIRE_TIME);
             Algorithm algorithm = Algorithm.HMAC256(secret);
             // 附带username信息
             return JWT.create()

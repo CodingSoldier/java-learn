@@ -1,5 +1,6 @@
 package com.example.shirojwt;
 
+import com.example.shirojwt.common.Constant;
 import org.apache.shiro.authc.AuthenticationToken;
 
 /**
@@ -20,10 +21,9 @@ public class JwtToken implements AuthenticationToken {
         return this.token;
     }
 
-    // credentials设置为空字符串
-    // TODO 设置密码
+    // 由于getPrincipal没返回username，而是返回token，所以credentials设置为空字符串即可
     @Override
     public Object getCredentials() {
-        return "";
+        return Constant.CREDENTIALS_EMPTY;
     }
 }
