@@ -73,5 +73,10 @@ public class Ctrl1 {
         return Result.success("/user/edit");
     }
 
+    @GetMapping("/user/delete")
+    public Result delete(){
+        return Result.success("/user/delete");
+    }
+
 
 }

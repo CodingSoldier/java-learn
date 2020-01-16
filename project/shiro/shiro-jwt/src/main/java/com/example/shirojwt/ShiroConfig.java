@@ -1,6 +1,7 @@
 package com.example.shirojwt;
 
 
+import com.example.shirojwt.filter.CustomPermissionsAuthorizationFilter;
 import com.example.shirojwt.filter.JwtFilter;
 import com.example.shirojwt.model.UserService;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -48,6 +49,7 @@ public class ShiroConfig {
 
         //添加filter，factoryBean.getFilters()获取到的是引用，可直接添加值
         factoryBean.getFilters().put("jwt", new JwtFilter());
+        factoryBean.getFilters().put("customPerms", new CustomPermissionsAuthorizationFilter());
 
         Map<String, String> origin = factoryBean.getFilterChainDefinitionMap();
         LinkedHashMap<String, String> definitionMap = new LinkedHashMap();
@@ -61,6 +63,7 @@ public class ShiroConfig {
         definitionMap.put("/open/**", "anon");
 
         // 似乎只能使用注解校验权限
+        definitionMap.put("/user/delete", "jwt, customPerms[delete]");
         definitionMap.put("/**", "jwt");
         factoryBean.setFilterChainDefinitionMap(definitionMap);
         return factoryBean;

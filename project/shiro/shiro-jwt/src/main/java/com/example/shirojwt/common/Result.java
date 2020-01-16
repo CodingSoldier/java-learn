@@ -2,12 +2,18 @@ package com.example.shirojwt.common;
 
 import lombok.Data;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author chenpiqian
  * @date: 2020-01-16
  */
 @Data
-public class Result<T> {
+public class Result<T> implements Serializable {
+
+    private static final long serialVersionUID=1L;
 
     private int status;
     private String message;
@@ -36,6 +42,13 @@ public class Result<T> {
 
     public static Result fail(int status, String message){
         return new Result(status, message, null);
+    }
+
+    public static Map<String, String> failMap(String message){
+        Map<String, String> map = new HashMap<>();
+        map.put("status", Constant.CODE_FAIL.toString());
+        map.put("message", message);
+        return map;
     }
 
 }
