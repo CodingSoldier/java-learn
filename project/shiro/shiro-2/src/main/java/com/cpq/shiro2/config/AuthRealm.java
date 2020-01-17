@@ -65,6 +65,8 @@ public class AuthRealm extends AuthorizingRealm {
         return info;
     }
 
+
+
     //@Override
     //public Cache<Object, AuthorizationInfo> getAuthorizationCache() {
     //    Cache<Object, AuthorizationInfo> cache = super.getAuthorizationCache();

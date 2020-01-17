@@ -1,16 +1,13 @@
 package com.example.shirojwt.filter;
 
 import com.example.shirojwt.common.Result;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.shirojwt.util.WebUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author chenpiqian
@@ -19,24 +16,20 @@ import java.util.Map;
 @Slf4j
 public class CustomPermissionsAuthorizationFilter extends PermissionsAuthorizationFilter {
 
-    ObjectMapper objectMapper = new ObjectMapper();
-
     /**
-     * 返回自定义信息给前端
+     * 用户无权访问url时，此方法会被调用
+     * 默认实现为org.apache.shiro.web.filter.authz.AuthorizationFilter#onAccessDenied()
+     * 覆盖父类的方法，返回自定义信息给前端
+     *
+     * https://shiro.apache.org/static/1.3.2/apidocs/index.html?overview-summary.html
+     * 接口api上说：
+     *    AuthorizationFilter子类(权限授权过滤器)的onAccessDenied()应该永远返回false，那么在onAccessDenied()内就必然要发送response响应给前端，不然前端就收不到任何数据
+     *    AuthenticationFilter、AuthenticatingFilter子类（身份认证过滤器）的onAccessDenied()的返回值则没有限制
      */
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws IOException {
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json; charset=utf-8");
-        try (PrintWriter out = response.getWriter();){
-            Map<String, String> result = new HashMap<>();
-            if (out != null){
-                throw new IOException("io异常");
-            }
-            out.print(objectMapper.writeValueAsString(Result.failMap("权限不足")));
-        }catch (IOException e){
-            log.error("", e);
-        }
+        WebUtil.sendResponse(response, Result.fail("权限不足"));
         return false;
     }
+
 }

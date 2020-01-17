@@ -3,19 +3,18 @@ package com.example.shirojwt.common;
 import lombok.Data;
 
 /**
- * @author chenpiqian
- * @date: 2020-01-16
+ * 自定义异常
  */
 @Data
-public class MyException extends RuntimeException {
+public class CustomException extends RuntimeException {
 
     private Integer code = 0;
 
-    public MyException(String message) {
+    public CustomException(String message) {
         super(message);
     }
 
-    public MyException(Integer code, String message) {
+    public CustomException(Integer code, String message) {
         super(message);
         this.code = code;
     }

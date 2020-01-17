@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.shirojwt.common.Constant;
+import org.apache.shiro.crypto.hash.Md5Hash;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
@@ -58,6 +59,29 @@ public class JWTUtil {
         Date now = Calendar.getInstance().getTime();
         DecodedJWT jwt = JWT.decode(token);
         return jwt.getExpiresAt().before(now);
+    }
+
+    public static boolean test(){
+        System.out.println("*****************");
+        return true;
+    }
+
+    public static void main(String[] args) throws Exception{
+        /**
+         *      * admin  admin-pwd
+         *      * cudrOtherUser  cudrOtherUser-pwd
+         *      * viewUser  viewUser-pwd
+         */
+        Date date = new Date(System.currentTimeMillis()+ 1000*60);
+        Algorithm algorithm = Algorithm.HMAC256(new Md5Hash("viewUser-pwd").toString());
+        // 附带username信息
+        String token =  JWT.create()
+                .withClaim("username", "viewUser")
+                .withExpiresAt(date)
+                .sign(algorithm);
+        System.out.println(token);
+
+
     }
 
 }

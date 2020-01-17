@@ -7,8 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author chenpiqian
- * @date: 2020-01-16
+ * 返回统一的数据结构
  */
 @Data
 public class Result<T> implements Serializable {
