@@ -20,7 +20,7 @@ public class WebUtil {
     /**
      * response发送响应数据Result
      * @param body responseBody数据
-         */
+     */
     public static void sendResponse(ServletResponse response, Result body) throws IOException{
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");

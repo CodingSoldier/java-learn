@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * @author chenpiqian
- * @date: 2020-01-15
+ * 这个类主要是模拟从数据库获取数据
  */
 @Service
 @Data

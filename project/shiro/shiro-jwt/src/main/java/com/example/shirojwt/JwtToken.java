@@ -15,7 +15,7 @@ public class JwtToken implements AuthenticationToken {
         this.token = token;
     }
 
-    // token作为principal
+    // token作为principal，
     @Override
     public Object getPrincipal() {
         return this.token;

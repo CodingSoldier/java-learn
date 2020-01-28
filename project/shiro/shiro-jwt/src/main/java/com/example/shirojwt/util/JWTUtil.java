@@ -6,15 +6,21 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.shirojwt.common.Constant;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.crypto.hash.Md5Hash;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
 
+@Slf4j
 public class JWTUtil {
 
-    // 生成签名
+    /**
+     * 生成签名
+     * @param username 用户名
+     * @param secret   用户密码，使用Algorithm.HMAC256(secret)作为用户秘钥
+     */
     public static String sign(String username, String secret) {
         try {
             Date date = new Date(System.currentTimeMillis()+ Constant.EXPIRE_TIME);
@@ -30,17 +36,22 @@ public class JWTUtil {
         }
     }
 
-    // 校验token
+    /**
+     * 校验token
+     * @param token token
+     * @param username 用户名
+     * @param secret 用户密码
+     */
     public static boolean verify(String token, String username, String secret) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm)
                     .withClaim("username", username)
                     .build();
-            DecodedJWT jwt = verifier.verify(token);
+            verifier.verify(token);
             return true;
         } catch (Exception exception) {
-            exception.printStackTrace();
+            log.error("异常", exception);
             return false;
         }
     }
@@ -55,16 +66,13 @@ public class JWTUtil {
         }
     }
 
+    // token是否过期
     public static boolean isExpired(String token) {
         Date now = Calendar.getInstance().getTime();
         DecodedJWT jwt = JWT.decode(token);
         return jwt.getExpiresAt().before(now);
     }
 
-    public static boolean test(){
-        System.out.println("*****************");
-        return true;
-    }
 
     public static void main(String[] args) throws Exception{
         /**

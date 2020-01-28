@@ -7,7 +7,6 @@ import com.example.shirojwt.model.Role;
 import com.example.shirojwt.model.User;
 import com.example.shirojwt.service.UserService;
 import com.example.shirojwt.util.JWTUtil;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
@@ -29,18 +28,30 @@ import java.util.List;
 
 public class JwtRealm extends AuthorizingRealm {
 
-    // 模式UserService获取数据库数据
     private UserService userService;
 
-    // 最好保持单例
+    /**
+     * 最好保持单例
+     * JwtRealm可以不交给spring管理，在创建JwtRealm的时候需要创建者传递参数UserService
+     */
     public JwtRealm(UserService userService) {
         this.userService = userService;
 
-        // 启动认证缓存，默认是false
+        /**
+         * 启动认证缓存，默认是false。源码如下
+         * org.apache.shiro.realm.AuthenticatingRealm#AuthenticatingRealm()
+         *     this.authenticationCachingEnabled = false;
+         */
         this.setAuthenticationCachingEnabled(true);
-        // 启动授权缓存，默认是true
+
+        /**
+         * 启动授权缓存，默认就是true，代码如下
+         * org.apache.shiro.realm.AuthorizingRealm#AuthorizingRealm()
+         *     this.authorizationCachingEnabled = true;
+         */
         // this.setAuthorizationCachingEnabled(true);
-        // 设置缓存
+
+        // 设置缓存管理器，使用shiro自带的MemoryConstrainedCacheManager即可
         this.setCacheManager(new MemoryConstrainedCacheManager());
 
     }
@@ -53,9 +64,9 @@ public class JwtRealm extends AuthorizingRealm {
 
     /**
      * 认证用户
-     * @param authenticationToken
-     * @return
-     * @throws AuthenticationException
+     * 本方法被 org.apache.shiro.realm.AuthenticatingRealm#getAuthenticationInfo()调用
+     *    AuthenticationInfo info = this.getCachedAuthenticationInfo(token);
+     *    如果在缓存通过token中获取到用户认证，就不调用本方法
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken){
@@ -83,8 +94,12 @@ public class JwtRealm extends AuthorizingRealm {
 
     /**
      * 用户授权
-     * @param principalCollection
-     * @return
+     * 本方法被 org.apache.shiro.realm.AuthorizingRealm#getAuthorizationInfo() 调用
+     *     Cache<Object, AuthorizationInfo> cache = this.getAvailableAuthorizationCache();
+     *     如果获取到了缓存，就通过cache.get(key);获取授权数据，key就是principal
+     *
+     *     若缓存不存在，在调用了本方法后，会将本方法返回的AuthorizationInfo添加到缓存中
+     *     cache.put(key, info);
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
