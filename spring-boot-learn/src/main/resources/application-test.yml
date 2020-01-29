@@ -1,0 +1,10 @@
+server:
+   port: 8081
+
+spring:
+  profiles:
+    active: test
+  datasource:
+    url: jdbc:mysql://localhost:3306/cpq?useUnicode=true&useSSL=false&characterEncoding=utf8
+    username: root
+    password: cpq..123

@@ -47,12 +47,17 @@
             <optional>true</optional>
         </dependency>
 
-        <!--database-->
-        <!--<dependency>
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.44</version>
-        </dependency>-->
+            <version>5.1.46</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.1.12</version>
+        </dependency>
 
         <!--redis-->
         <!--<dependency>-->
@@ -116,42 +121,63 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
-<!--        <dependency>
-            <groupId>com.tencentcloudapi</groupId>
-            <artifactId>tencentcloud-sdk-java</artifactId>
-            &lt;!&ndash; go to https://search.maven.org/search?q=tencentcloud-sdk-java and get the latest version. &ndash;&gt;
-            &lt;!&ndash; 请到https://search.maven.org/search?q=tencentcloud-sdk-java查询最新版本 &ndash;&gt;
-            <version>3.0.93</version>
-        </dependency>
-
-        &lt;!&ndash; 音频格式转换 &ndash;&gt;
-        <dependency>
-            <groupId>it.sauronsoftware</groupId>
-            <artifactId>jave</artifactId>
-            <version>1.0.2</version>
-        </dependency>-->
 
     </dependencies>
 
+    <!--配置环境的profile-->
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <!--使用${environment}获取值-->
+                <environment>dev</environment>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <environment>test</environment>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <environment>prod</environment>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
-        <finalName>spring-boot-lean</finalName>
+        <finalName>spring-boot-lean-${environment}</finalName>
+
         <resources>
-            <!--mapper.xml打包-->
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-                <filtering>false</filtering>
-            </resource>
-            <!--resource资源文件打包-->
+            <!--&lt;!&ndash;mapper.xml打包&ndash;&gt;-->
+            <!--<resource>-->
+                <!--<directory>src/main/java</directory>-->
+                <!--<includes>-->
+                    <!--<include>**/*.xml</include>-->
+                <!--</includes>-->
+                <!--<filtering>false</filtering>-->
+            <!--</resource>-->
+
+            <!--排除环境配置文件-->
             <resource>
                 <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>application-*.yml</exclude>
+                </excludes>
+            </resource>
+
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <!-- 打包时包含的文件 -->
                 <includes>
-                    <include>**/*.*</include>
+                    <include>application-${environment}.yml</include>
                 </includes>
             </resource>
         </resources>
+
 
         <plugins>
             <plugin>

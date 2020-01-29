@@ -1,22 +1,23 @@
 package com.demo.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/test")
 public class TestController {
 
+    @Value("${spring.datasource.url}")
+    String dbUrl;
 
     @GetMapping("/001")
-    public String test01(HttpServletRequest request) throws Exception{
-        System.out.println("request.getRemoteHost()" + request.getRemoteHost());
-        System.out.println(request.getHeader("Host"));
-        return "test001";
+    public String test01(){
+        System.out.println(dbUrl);
+        return dbUrl;
     }
 
 
