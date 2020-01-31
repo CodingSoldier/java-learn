@@ -19,7 +19,7 @@ public class JWTUtil {
     /**
      * 生成签名
      * @param username 用户名
-     * @param secret   用户密码，使用Algorithm.HMAC256(secret)作为用户秘钥
+     * @param secret   用户密码，使用Algorithm.HMAC256(secret)作为签发token的秘钥。若签发token时都使用同一个秘钥，会存在秘钥泄露的风险。
      */
     public static String sign(String username, String secret) {
         try {

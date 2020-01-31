@@ -28,6 +28,9 @@ public class MyControllerAdvice {
              */
             result.setStatus(((CustomException) ex).getCode());
             result.setMessage(ex.getMessage());
+        }else if (ex instanceof CustomAuthenticationException){
+            result.setStatus(((CustomAuthenticationException) ex).getCode());
+            result.setMessage(ex.getMessage());
         }else if (ex instanceof NullPointerException){
             result.setMessage("空指针异常");
         }

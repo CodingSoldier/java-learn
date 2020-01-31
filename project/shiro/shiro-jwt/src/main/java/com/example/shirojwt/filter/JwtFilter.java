@@ -82,6 +82,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      * 身份认证未通过，执行此方法
      * 返回true，继续处理请求
      * 返回false，不继续处理请求，结束过滤器链
+     * BasicHttpAuthenticationFilter源码中也是在onAccessDenied()方法内调用executeLogin
      *
      * 调用链源码
      * org.apache.shiro.web.filter.AccessControlFilter#onPreHandle(){
@@ -119,4 +120,5 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         }
         return r;
     }
+
 }

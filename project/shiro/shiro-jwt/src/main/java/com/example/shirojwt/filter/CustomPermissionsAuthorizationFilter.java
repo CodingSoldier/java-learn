@@ -21,8 +21,7 @@ public class CustomPermissionsAuthorizationFilter extends PermissionsAuthorizati
      * 默认实现为org.apache.shiro.web.filter.authz.AuthorizationFilter#onAccessDenied()
      * 覆盖父类的方法，返回自定义信息给前端
      *
-     * https://shiro.apache.org/static/1.3.2/apidocs/index.html?overview-summary.html
-     * 接口api上说：
+     * 接口doc上说：
      *    AuthorizationFilter子类(权限授权过滤器)的onAccessDenied()应该永远返回false，那么在onAccessDenied()内就必然要发送response响应给前端，不然前端就收不到任何数据
      *    AuthenticationFilter、AuthenticatingFilter子类（身份认证过滤器）的onAccessDenied()的返回值则没有限制
      */

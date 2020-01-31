@@ -44,11 +44,11 @@ public class ShiroConfig {
          * 禁止session持久化存储
          * 一定要禁止session持久化。不然清除认证缓存、授权缓存后，shiro依旧能从session中读取到认证信息
          */
-        //DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
-        //DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
-        //defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
-        //subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
-        //manager.setSubjectDAO(subjectDAO);
+        DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
+        DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
+        defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
+        subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
+        manager.setSubjectDAO(subjectDAO);
 
         return manager;
     }
@@ -77,15 +77,13 @@ public class ShiroConfig {
         definitionMap.put("/open/**", "anon");
 
         /**
-         * 需要权限的url会经过两个过滤器jwt、customPerms
+         * 由于禁用了session存储，shiro不会存储用户的认证状态，所以在接口授权之前要先认证用户，不然CustomPermissionsAuthorizationFilter不知道用户是谁
          * 实际项目中可以将这些接口权限规则放到数据库中去
          */
+        definitionMap.put("/user/add", "jwt, customPerms["+userService.getUserAdd().getName()+"]");
         definitionMap.put("/user/delete", "jwt, customPerms["+userService.getUserDelete().getName()+"]");
         definitionMap.put("/user/edit", "jwt, customPerms["+userService.getUserEdit().getName()+"]");
-        definitionMap.put("/user/add", "jwt, customPerms["+userService.getUserAdd().getName()+"]");
         definitionMap.put("/user/view", "jwt, customPerms["+userService.getUserView().getName()+"]");
-        definitionMap.put("/test/other", "jwt, customPerms["+userService.getTestOther().getName()+"]");
-        definitionMap.put("/role/permission/edit", "jwt, customPerms["+userService.getRolePermisssionEdit().getName()+"]");
 
         // 前面的规则都没匹配到，最后添加一条规则，所有的接口都要经过com.example.shirojwt.filter.JwtFilter这个过滤器验证
         definitionMap.put("/**", "jwt");
@@ -94,6 +92,4 @@ public class ShiroConfig {
 
         return factoryBean;
     }
-
-
 }

@@ -1,4 +1,4 @@
-package com.example.shirojwt.common;
+package com.example.shirojwt.task;
 
 import com.example.shirojwt.JwtRealm;
 import lombok.extern.slf4j.Slf4j;

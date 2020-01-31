@@ -1,20 +1,17 @@
 package com.example.shirojwt.controller;
 
 import com.example.shirojwt.JwtRealm;
-import com.example.shirojwt.JwtToken;
 import com.example.shirojwt.common.CustomException;
 import com.example.shirojwt.common.Result;
 import com.example.shirojwt.model.User;
 import com.example.shirojwt.service.UserService;
 import com.example.shirojwt.util.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.mgt.DefaultFilterChainManager;
 import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
 import org.apache.shiro.web.servlet.AbstractShiroFilter;
@@ -43,7 +40,8 @@ public class OpenApiCtrl {
     UserService userService;
 
     /**
-     * 登陆接口
+     * 登陆
+     * 开放接口，不使用shiro拦截，生成令牌并返回给前端
      * 用户名             密码
      * admin           admin-pwd
      * cudrOtherUser   cudrOtherUser-pwd
@@ -54,6 +52,7 @@ public class OpenApiCtrl {
         String username = userVo.getUsername();
         String password = userVo.getPassword();
 
+        // 用户名密码校验
         User user = userService.getUser(username);
         if (user == null){
             throw new CustomException("无此用户");
@@ -62,17 +61,21 @@ public class OpenApiCtrl {
             throw new CustomException("用户名或密码错误");
         }
 
-        String authorization = JWTUtil.sign(username, user.getPassword());
+        // 生成令牌
+        String token = JWTUtil.sign(username, user.getPassword());
 
-        JwtToken jwtToken = new JwtToken(authorization);
-        Subject subject = SecurityUtils.getSubject();
-        subject.login(jwtToken);
+        /**
+         * 在登陆接口中就执行shiro用户认证，用于测试不禁用session存储的情形
+         */
+        //JwtToken jwtToken = new JwtToken(token);
+        //Subject subject = SecurityUtils.getSubject();
+        //subject.login(jwtToken);
 
-        return Result.success(authorization);
+        return Result.success(token);
     }
 
     /**
-     * 测试动态修改url安全配置
+     * 测试动态修改接口授权配置
      */
     @GetMapping("/definition/test")
     public Result test1() throws Exception{
@@ -84,25 +87,20 @@ public class OpenApiCtrl {
         manager.getFilterChains().clear();
         shiroFilterFactoryBean.getFilterChainDefinitionMap().clear();
 
-
         // 生成新的definitionMap
         LinkedHashMap<String, String> definitionMap = new LinkedHashMap<>();
         definitionMap.put("/open/**", "anon");
-        /**
-         * 把这些url权限校验取消掉
-         * definitionMap.put("/**", "jwt") 将匹配到user的请求url，只要登陆就能访问
-         */
-        //definitionMap.put("/user/delete", "jwt, customPerms["+userService.getUserDelete().getName()+"]");
-        //definitionMap.put("/user/edit", "jwt, customPerms["+userService.getUserEdit().getName()+"]");
-        //definitionMap.put("/user/add", "jwt, customPerms["+userService.getUserAdd().getName()+"]");
-        //definitionMap.put("/user/view", "jwt, customPerms["+userService.getUserView().getName()+"]");
+
+        definitionMap.put("/user/delete", "jwt, customPerms["+userService.getUserDelete().getName()+"]");
+        definitionMap.put("/user/edit", "jwt, customPerms["+userService.getUserEdit().getName()+"]");
+        definitionMap.put("/user/add", "jwt, customPerms["+userService.getUserAdd().getName()+"]");
+        definitionMap.put("/user/view", "jwt, customPerms["+userService.getUserView().getName()+"]");
         definitionMap.put("/test/other", "jwt, customPerms["+userService.getTestOther().getName()+"]");
         definitionMap.put("/role/permission/edit", "jwt, customPerms["+userService.getRolePermisssionEdit().getName()+"]");
+
         definitionMap.put("/**", "jwt");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(definitionMap);
-
-
 
         // 重新构建生成权限过滤链
         for (Map.Entry<String, String> entry : definitionMap.entrySet()) {
@@ -116,6 +114,7 @@ public class OpenApiCtrl {
 
     /**
      * 测试清除jwtRealm缓存
+     * MemoryConstrainedCacheManager使用的是Map作为缓存，必须用定时器清理
      */
     @GetMapping("/cache/test")
     public Result test2(){
