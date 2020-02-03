@@ -1,17 +1,98 @@
-﻿# 安装pip
+﻿# https://github.com/shadowsocks/shadowsocks-libev
+yum install gcc gettext autoconf libtool automake make pcre-devel asciidoc xmlto c-ares-devel libev-devel libsodium-devel mbedtls-devel -y
+
+# mbedtls 2.16.3
+cd /
+wget https://tls.mbed.org/download/mbedtls-2.16.3-gpl.tgz
+tar -xf mbedtls-2.16.3-gpl.tgz
+cd mbedtls-2.16.3
+
+make
+make DESTDIR=/usr install
+ldconfig
+
+# libsodium
+cd /
+wget https://download.libsodium.org/libsodium/releases/libsodium-1.0.18-stable.tar.gz
+tar -zxf libsodium-1.0.18-stable.tar.gz
+cd libsodium-stable
+
+./configure --prefix=/usr
+make && make check
+sudo make install
+sudo ldconfig
+
+# shadowsocks-libev
+wget https://github.com/shadowsocks/shadowsocks-libev/releases/download/v3.3.4/shadowsocks-libev-3.3.4.tar.gz
+tar -zxvf shadowsocks-libev-3.3.4.tar.gz
+cd shadowsocks-libev-3.3.4
+./configure --prefix=/usr/local/ss && make
+make install
+
+mkdir /etc/shadowsocks-libev
+vi /etc/shadowsocks-libev/config.json
+{
+	"server":"0.0.0.0",
+	"server_port":9999,
+	"local_port":1080,
+	"password":"XXX",
+	"method":"chacha20-ietf-poly1305",
+	"fast_open": false
+}
+
+# systemctl服务
+vi /etc/systemd/system/shadowsocks-libev.service
+[Unit]
+Description=Shadowsocks-libev Server
+Documentation=https://shadowsocks.org/en/
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/local/ss/bin/ss-server -c /etc/shadowsocks-libev/config.json -u
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+
+
+systemctl daemon-reload
+
+systemctl start shadowsocks-libev
+systemctl status shadowsocks-libev
+
+systemctl enable shadowsocks-libev
+
+
+
+
+
+
+
+docker pull shadowsocks/shadowsocks-libev
+docker run -e PASSWORD=cpq..123 -e METHOD=chacha20-ietf-poly1305 -p9999:8388 -p9999:8388/udp --name sss  -d shadowsocks/shadowsocks-libev
+
+
+
+
+
+
+# 安装pip
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python get-pip.py
 
 # 安装shadowsocks
 pip install shadowsocks
+# pip uninstall shadowsocks
 
 vi /etc/shadowsocks.json
 {
-    "server":"XXXXXXx",
+    "server":"138.68.251.147",
     "server_port":80,
     "local_port":1080,
     "password":"XXX",
-    "method":"aes-256-cfb"
+    "method":"chacha20-ietf-poly1305"
 }
 
 # 将shadowsocks加入系统服务
