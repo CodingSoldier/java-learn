@@ -4106,7 +4106,7 @@ class RandomGenerator {
     public static class
     String extends CountingGenerator.String {
         // Plug in the random Character generator:
-        { cg = new Character(); } // Instance initializer
+        { cg = new Character(); } // Instance c_initializer
         public String() {}
         public String(int length) { super(length); }
     }

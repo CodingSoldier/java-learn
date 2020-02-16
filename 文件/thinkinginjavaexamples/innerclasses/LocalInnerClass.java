@@ -26,7 +26,7 @@ public class LocalInnerClass {
   Counter getCounter2(final String name) {
     return new Counter() {
       // Anonymous inner class cannot have a named
-      // constructor, only an instance initializer:
+      // constructor, only an instance c_initializer:
       {
         print("Counter()");
       }

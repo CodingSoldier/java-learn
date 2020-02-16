@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -15,7 +16,7 @@ public class TestController {
     String dbUrl;
 
     @GetMapping("/001")
-    public String test01(){
+    public String test01(HttpServletRequest request){
         System.out.println(dbUrl);
         return dbUrl;
     }

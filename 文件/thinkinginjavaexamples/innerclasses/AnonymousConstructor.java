@@ -12,7 +12,7 @@ abstract class Base {
 public class AnonymousConstructor {
   public static Base getBase(int i) {
     return new Base(i) {
-      { print("Inside instance initializer"); }
+      { print("Inside instance c_initializer"); }
       public void f() {
         print("In anonymous f()");
       }
@@ -24,6 +24,6 @@ public class AnonymousConstructor {
   }
 } /* Output:
 Base constructor, i = 47
-Inside instance initializer
+Inside instance c_initializer
 In anonymous f()
 *///:~
