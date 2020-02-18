@@ -1,1 +1,7 @@
+# 系统初始化器
 org.springframework.context.ApplicationContextInitializer=com.example.bspringboot.c_initializer.FirstInitializer
+
+# 监听器，多个事件实现类使用逗号隔开
+org.springframework.context.ApplicationListener=com.example.bspringboot.d_listener.A_Listener,com.example.bspringboot.d_listener.D_Listener
+
+

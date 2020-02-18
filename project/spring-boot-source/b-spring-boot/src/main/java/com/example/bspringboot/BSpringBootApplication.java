@@ -9,10 +9,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BSpringBootApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(BSpringBootApplication.class, args);
 
+        // 硬编码添加系统初始化器
         //SpringApplication springApplication = new SpringApplication(BSpringBootApplication.class);
         //springApplication.addInitializers(new SecondInitializer());
+        //springApplication.run(args);
+
+        //// 硬编码方式添加监听器
+        //SpringApplication springApplication = new SpringApplication(BSpringBootApplication.class);
+        //springApplication.addListeners(new B_Listener());
         //springApplication.run(args);
     }
 
