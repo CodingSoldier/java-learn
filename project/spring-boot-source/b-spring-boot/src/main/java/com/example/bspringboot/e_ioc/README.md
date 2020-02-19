@@ -15,6 +15,12 @@ org.springframework.context.support.AbstractApplicationContext.refresh()作用�
     2、spring框架启动流程
 
 org.springframework.context.support.AbstractApplicationContext.refresh()方法体内调用了13个子方法
-
+    org.springframework.context.support.AbstractApplicationContext.prepareRefresh();
+        设置容器状态：AbstractApplicationContext#this.active.set(true);
+        初始化属性设置：AbstractApplicationContext.initPropertySources()
+        检查必备属性是否存在：AbstractApplicationContext#getEnvironment().validateRequiredProperties();
+    org.springframework.context.support.AbstractApplicationContext.obtainFreshBeanFactory()
+        设置beanFactory的序列化id
+        获取beanFactory
 
 

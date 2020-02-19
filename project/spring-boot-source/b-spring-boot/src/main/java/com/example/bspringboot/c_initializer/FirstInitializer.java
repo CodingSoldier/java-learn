@@ -45,6 +45,9 @@ public class FirstInitializer implements ApplicationContextInitializer<Configura
         MapPropertySource mps = new MapPropertySource("firstInitializer", map);
         environment.getPropertySources().addLast(mps);
         System.out.println("#############FirstInitializer.initialize 运行");
+
+        // 设置必备属性，application.properties中必须配置required.a
+        environment.setRequiredProperties("required.a");
     }
 
 }
