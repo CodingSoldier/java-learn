@@ -21,6 +21,13 @@ public class BSpringBootApplication {
         //SpringApplication springApplication = new SpringApplication(BSpringBootApplication.class);
         //springApplication.addListeners(new B_Listener());
         //springApplication.run(args);
+
+        //// 硬编码方式修改banner
+        //SpringApplication springApplication = new SpringApplication(BSpringBootApplication.class);
+        //springApplication.setBanner(new ResourceBanner(new ClassPathResource("banner2.txt")));
+        //springApplication.run(args);
+
+
     }
 
 }
