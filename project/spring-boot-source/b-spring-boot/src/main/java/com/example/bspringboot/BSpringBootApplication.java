@@ -27,7 +27,6 @@ public class BSpringBootApplication {
         //springApplication.setBanner(new ResourceBanner(new ClassPathResource("banner2.txt")));
         //springApplication.run(args);
 
-
     }
 
 }
