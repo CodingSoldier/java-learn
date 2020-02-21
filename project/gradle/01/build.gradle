@@ -1,0 +1,38 @@
+//task hello{
+//    doLast {
+//        println 'hello world!'
+//    }
+//}
+
+
+
+/*
+task hello << {
+    println 'hello world!'
+}
+
+task intro(dependsOn: hello) << {
+    println "i am gradle"
+}
+*/
+
+
+
+task taskX(dependsOn: 'taskY') << {
+    println 'taskX'
+}
+task taskY << {
+    println 'taskY'
+}
+
+
+
+
+
+
+
+
+
+
+
+

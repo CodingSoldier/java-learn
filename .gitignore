@@ -23,4 +23,9 @@
 
 /spring-boot-learn/log
 /spring-cloud-2/zipkin-server/zipkin-server-2.12.9-exec.jar
-/out
+out
+.gradle
+build
+/project/gradle/gradle01/gradle
+out
+repos
