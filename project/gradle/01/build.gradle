@@ -1,3 +1,5 @@
+import com.sun.org.apache.xalan.internal.xsltc.compiler.Copy
+
 //task hello{
 //    doLast {
 //        println 'hello world!'
@@ -17,6 +19,7 @@ task intro(dependsOn: hello) << {
 */
 
 
+/*
 
 task taskX(dependsOn: 'taskY') << {
     println 'taskX'
@@ -24,11 +27,19 @@ task taskX(dependsOn: 'taskY') << {
 task taskY << {
     println 'taskY'
 }
+*/
 
 
 
 
 
+task(hello) << {
+    println "hello"
+}
+task(copy, type: Copy){
+    form(file('srcDir'))
+    into(buildDir)
+}
 
 
 
