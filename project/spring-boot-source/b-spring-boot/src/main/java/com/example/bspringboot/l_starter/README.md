@@ -34,8 +34,16 @@ starter介绍：
     weather.rate=wr
 4、使用WeatherStarterTest测试
 
+starter原理
+org.springframework.boot.autoconfigure.AutoConfigurationImportSelector#getAutoConfigurationEntry
+    使用SpringFactoriesLoader加载org.springframework.boot.autoconfigure.EnableAutoConfiguration的实现类
+    org.springframework.boot.autoconfigure.AutoConfigurationImportSelector.getCandidateConfigurations
+        org.springframework.boot.autoconfigure.condition.OnPropertyCondition.Spec.collectProperties 添加断点条件key.equals("weather.enable")
 
-
-
+starter自动配置类导入
+    启动类上加@SpringBootApplication
+    引入AutoConfigurationImportSelector
+    在ConfigurationClassParser中处理
+    获取spring.factories中EnableAutoConfiguration实现
 
 
