@@ -21,4 +21,21 @@ starter介绍：
     作用：大幅提升开发效率
 
 
+1、自定义一个starter：c-spring-boot-weather-starter
+2、引入依赖
+    <dependency>
+        <groupId>com.example</groupId>
+        <artifactId>c-spring-boot-weather-starter</artifactId>
+        <version>0.0.1</version>
+    </dependency>
+3、配置：
+    weather.enable=true
+    weather.type=wt
+    weather.rate=wr
+4、使用WeatherStarterTest测试
+
+
+
+
+
 
