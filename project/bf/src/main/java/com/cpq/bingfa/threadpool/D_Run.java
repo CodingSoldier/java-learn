@@ -2,8 +2,6 @@ package com.cpq.bf.threadpool;
 
 import org.junit.Test;
 
-import java.util.concurrent.*;
-
 public class D_Run {
 
     @Test
