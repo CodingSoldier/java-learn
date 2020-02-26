@@ -1,0 +1,71 @@
+JVM如何加载.class文件
+	1、Class Loader加载class文件到内存
+	2、使用在JVM内存模型分配存储空间
+	3、Execution Engine对命令进行解析
+	4、通过Native Interface 融合不同语言，调用本地方法为java所用
+
+JVM类装载过程：
+    1、通过ClassLoader加载class字节码，生成Class对象
+    2、检查class文件的正确性、安全性
+    3、为类变量（static变量）分配存储空间并设置类变量的类型默认值
+    4、JVM将常量池内符号引用转换为直接引用
+    5、类变量赋值和执行静态代码块
+
+ClassLoader的种类
+	BootStrapClassLoader: C++编写，加载核心库java.*
+	ExtClassLoader: java编写，加载扩展库 javax.*
+	AppClassLoader: java编写，加载程序所在目录
+
+
+查看 C-JDK8内存模型.jpg
+程序计数器（Program Counter Register）：
+    和线程是一对一关系，即线程私有
+    当前线程所执行的字节码行号指示器（逻辑）
+    改变计数器的值来选取下一条需要执行的字节码指令
+    对java方法计数，如果是Native方法则计数器值为Undefined
+    不会发生内存泄漏
+Java虚拟机栈（Stack）
+    java方法执行的内存模型
+        局部变量表和操作数栈
+            局部变量表：包含方法执行过程中的所有变量
+            操作数栈：入栈、出栈、复制、交换、产生消费变量
+    包含多个栈帧
+本地方法栈
+    native方法使用
+元空间（MetaSpace）
+    元空间使用本地内存（本地内存不在jvm申请的内存中，即直接使用机器的内存），而永久代使用的是jvm的内存，避免出现永久代内存溢出
+Java堆（Head）
+    对象实例的分配区域
+
+
+-Xms: 堆的初始值
+-Xmx: 堆能达到的最大值
+一般将-Xms、-Xmx这两个参数设置为一样
+-Xss: 每个线程虚拟机栈的大小
+
+
+可以作为GC Root的对象：
+    虚拟机栈中引用的对象（即栈帧本地变量表中引用的对象）
+    常量引用的对象
+    静态属性引用的对象
+    Native方法中引用的对象
+    活跃线程的引用对象
+
+
+
+java异常处理消耗性能的地方
+    try-catch块影响jvm的优化
+    异常对象实例需要保存栈快照等信息，开销较大
+
+
+
+
+
+
+
+
+
+
+
+
+
