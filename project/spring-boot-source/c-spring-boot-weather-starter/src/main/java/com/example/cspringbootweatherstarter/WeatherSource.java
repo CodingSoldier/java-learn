@@ -5,9 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "weather")
 public class WeatherSource {
 
-    private String type;
+    private String type = "type默认";
 
-    private String rate;
+    private String rate = "rate默认";
 
     public String getType() {
         return type;

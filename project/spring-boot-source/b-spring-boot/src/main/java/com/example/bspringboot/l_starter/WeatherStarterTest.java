@@ -20,6 +20,5 @@ public class WeatherStarterTest {
         System.out.println("########## "+ weatherService.getRate());
         System.out.println("########## "+ weatherService.getType());
 
-        System.out.println("########## 未启动自定义starter");
     }
 }
