@@ -25,6 +25,21 @@ org.slf4j.LoggerFactory.getILoggerFactory()
 日志寻址    
 org.slf4j.LoggerFactory.findPossibleStaticLoggerBinderPathSet 返回集合的size是2
 
+logger.debug("只在debug日志级别打印日志，但是直接使用字符串拼接的形式，仍然会执行字符串拼接，但不打印日志。消耗性能" + obj)
+logger.debug("使用占位符大括号{}作为占位符，就只会在debug模式下才执行字符串替换{}", obj1, obj2)
+
+logback日志配置信息：
+    <configuration scan="true" scanPeriod="60 seconds" debug="false"/>
+    scan：设置为true时，配置文件若发生变化，将会重新加载
+    scanPeriod：扫描时间间隔，若没给出时间单位，默认为毫秒
+    debug：若设置为true，将打印出logback内部日志信息
+
+
+
+
+
+
+
 
 
 

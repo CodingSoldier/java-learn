@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <contextName>b-spring-boot</contextName>
+
+    <property resource="application.properties"/>
+    <property name="LOG_PATH" value="${logging.path}:-${user.home}/${spring.application.name}/logs"></property>
+    <!--改变控制台日志格式-->
+    <!--<property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr%boldBlue(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(-&#45;&#45;){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %n%4c %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>-->
+    <!--<include resource="org/springframework/boot/logging/logback/base.xml" />-->
+
+    <appender name="APPLICATION"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <encoder>
+            <pattern>%date{HH:mm:ss} %contextName [%t] %p %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <maxFileSize>50MB</maxFileSize>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="com.demo.*.mapper" level="DEBUG" additivity="false">
+        <append-ref ref="APPLICATION"/>
+        <append-ref ref="STDOUT"/>
+    </logger>
+
+    <!--<root level="warn">-->
+        <!--<append-ref ref="APPLICATION"/>-->
+        <!--<append-ref ref="STDOUT"/>-->
+    <!--</root>-->
+
+</configuration>
