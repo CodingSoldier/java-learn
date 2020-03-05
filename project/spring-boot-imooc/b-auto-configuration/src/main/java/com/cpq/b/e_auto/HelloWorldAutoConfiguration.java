@@ -1,6 +1,6 @@
 package com.cpq.b.e_auto;
 
-import com.cpq.b.b.EnableHelloWorld;
+import com.cpq.b.b_import.EnableHelloWorld;
 import com.cpq.b.d_condition.ConditionalOnSystemProperty;
 import org.springframework.context.annotation.Configuration;
 

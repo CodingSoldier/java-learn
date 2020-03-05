@@ -1,4 +1,4 @@
-package com.cpq.b.a;
+package com.cpq.b.a_paisheng;
 
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
         @FirstLevelRepository  自定义注解也可以装配bean
             @SecondLevelRepository 继续派生
  */
-@ComponentScan("com.cpq.b.a")
+@ComponentScan("com.cpq.b.a_paisheng")
 public class A_Bootstrap {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = new SpringApplicationBuilder(A_Bootstrap.class)

@@ -1,4 +1,4 @@
-package com.cpq.b.b;
+package com.cpq.b.b_import;
 
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;

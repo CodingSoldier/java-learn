@@ -1,6 +1,6 @@
 package com.cpq.b.e_auto;
 
-import com.cpq.b.b.Bean01;
+import com.cpq.b.b_import.Bean01;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;

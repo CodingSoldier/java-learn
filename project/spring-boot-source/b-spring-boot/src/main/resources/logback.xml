@@ -4,7 +4,7 @@
     <contextName>b-spring-boot</contextName>
 
     <property resource="application.properties"/>
-    <property name="LOG_PATH" value="${logging.path}:-${user.home}/${spring.application.name}/logs"></property>
+    <property name="LOG_PATH" value="${logging.path:-${user.home}/${spring.application.name}/logs}"></property>
     <!--改变控制台日志格式-->
     <!--<property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr%boldBlue(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(-&#45;&#45;){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %n%4c %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>-->
     <!--<include resource="org/springframework/boot/logging/logback/base.xml" />-->
@@ -24,13 +24,8 @@
     </appender>
 
     <logger name="com.demo.*.mapper" level="DEBUG" additivity="false">
-        <append-ref ref="APPLICATION"/>
-        <append-ref ref="STDOUT"/>
+        <appender-ref ref="APPLICATION"/>
+        <!--<appender-ref ref="STDOUT"/>-->
     </logger>
-
-    <!--<root level="warn">-->
-        <!--<append-ref ref="APPLICATION"/>-->
-        <!--<append-ref ref="STDOUT"/>-->
-    <!--</root>-->
 
 </configuration>

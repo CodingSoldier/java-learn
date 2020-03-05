@@ -10,11 +10,10 @@ import org.springframework.context.annotation.Bean;
  * @Author chenpiqian
  * @Date: 2019-07-08
  */
-public class ConditionalOnSystemPropertyBootstrap {
+public class BootstrapConditionalOnSystemProperty {
 
     /**
      * com.cpq.b.d_condition.OnSystemPropertyCondition#matches()条件满足，则装配bean
-     * @return
      */
     @Bean
     @ConditionalOnSystemProperty(name = "user.name", value = "Administrator")
@@ -23,7 +22,7 @@ public class ConditionalOnSystemPropertyBootstrap {
     }
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = new SpringApplicationBuilder(ConditionalOnSystemPropertyBootstrap.class)
+        ConfigurableApplicationContext context = new SpringApplicationBuilder(BootstrapConditionalOnSystemProperty.class)
                 .web(WebApplicationType.NONE)
                 .run(args);
 

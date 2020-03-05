@@ -7,6 +7,10 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Documented
+/**
+ * @Conditional是注解，
+ * XXCondition是Condition的实现，是判断条件
+ */
 @Conditional(OnSystemPropertyCondition.class)
 public @interface ConditionalOnSystemProperty {
 

@@ -1,4 +1,4 @@
-package com.cpq.b.bb;
+package com.cpq.b.bb_importselector;
 
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;

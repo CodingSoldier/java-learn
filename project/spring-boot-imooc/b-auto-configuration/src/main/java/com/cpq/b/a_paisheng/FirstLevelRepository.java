@@ -1,4 +1,4 @@
-package com.cpq.b.a;
+package com.cpq.b.a_paisheng;
 
 import org.springframework.stereotype.Repository;
 

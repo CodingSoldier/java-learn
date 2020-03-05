@@ -1,12 +1,11 @@
-package com.cpq.b.bb;
+package com.cpq.b.b_import;
 
-import com.cpq.b.b.Bean01;
 import org.springframework.context.annotation.Bean;
 
-public class BB_HelloWorldConfiguration {
+public class HelloWorldConfiguration {
     @Bean
     public String helloWorld() { // 方法名即 Bean 名称
-        return "Hello,World bb";
+        return "Hello,World 2018";
     }
 
     @Bean

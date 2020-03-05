@@ -1,6 +1,6 @@
-package com.cpq.b.bb;
+package com.cpq.b.bb_importselector;
 
-import com.cpq.b.b.Bean01;
+import com.cpq.b.b_import.Bean01;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
