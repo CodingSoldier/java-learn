@@ -1,0 +1,12 @@
+# 系统初始化器，键值前后都不要有空格，不然无法启动
+org.springframework.context.ApplicationContextInitializer=\
+com.cpq.cspringbootapplication.a_context.AfterHelloWorldInitializer,\
+com.cpq.cspringbootapplication.a_context.HelloWorldInitializer
+
+# 事件监听器
+org.springframework.context.ApplicationListener=\
+com.cpq.cspringbootapplication.b_listener.AfterHelloWorldApplicationListener,\
+com.cpq.cspringbootapplication.b_listener.HelloWorldApplicationListener
+
+
+
