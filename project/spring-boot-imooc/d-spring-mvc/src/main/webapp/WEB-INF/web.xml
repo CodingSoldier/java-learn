@@ -1,5 +1,8 @@
 <web-app>
 
+
+
+    <!--部署DispatcherServlet-->
     <servlet>
         <servlet-name>app</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -10,9 +13,13 @@
         </init-param>
     </servlet>
 
+    <!-- servlet与路径映射
+         将所有路径都映射到app这个servlet上 -->
     <servlet-mapping>
         <servlet-name>app</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+
+
 
 </web-app>

@@ -6,7 +6,12 @@ com.cpq.cspringbootapplication.a_context.HelloWorldInitializer
 # 事件监听器
 org.springframework.context.ApplicationListener=\
 com.cpq.cspringbootapplication.b_listener.AfterHelloWorldApplicationListener,\
-com.cpq.cspringbootapplication.b_listener.HelloWorldApplicationListener
+com.cpq.cspringbootapplication.b_listener.HelloWorldApplicationListener,\
+com.cpq.cspringbootapplication.e_listener_order.TestConfigFileApplicationListener
+
+# SpringApplicationRunListener 实现配置
+org.springframework.boot.SpringApplicationRunListener=\
+com.cpq.cspringbootapplication.d_runlistener.HelloWorldRunListener
 
 
 

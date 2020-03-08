@@ -45,6 +45,7 @@
 
     <build>
         <plugins>
+            <!--使用插件启动，模拟springboot启动-->
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>

@@ -1,12 +1,22 @@
-启动工程
-idea新建configuration ——> Remote
-拷贝  -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
-运行jar包
-java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 d-spring-mvc-0.0.1-SNAPSHOT-war-exec.jar
+spring-framework认识：
+    映射：HandlerMapping
+    适配：HandlerAdapter
+    执行：HandlerExecutionChain
+    页面渲染：ViewResolve
+    国际化：LocaleResolver，LocaleContextResolver
+    个性化：ThemeResolver
+    异常解析：HandlerExceptionResolver
 
-########## 请求过程  ###############
-测试接口
-http://localhost:8080
+
+启动工程
+    idea新建configuration ——> Remote
+    拷贝  -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    运行jar包
+    java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 d-spring-mvc-0.0.1-SNAPSHOT-war-exec.jar
+
+    ########## 请求过程  ###############
+    测试接口
+    http://localhost:8080
 
 请求先到委派接口
 org.springframework.web.servlet.DispatcherServlet#doDispatch(HttpServletRequest request, HttpServletResponse response)
