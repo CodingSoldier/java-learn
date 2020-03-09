@@ -1,0 +1,29 @@
+spring-boot自动装配：
+    DispatcherServletAutoConfiguration
+        DispatcherServletAutoConfiguration.DispatcherServletConfiguration
+        DispatcherServlet配置类
+            DispatcherServletAutoConfiguration.DispatcherServletConfiguration.dispatcherServlet()
+            创建DispatcherServlet
+
+        @AutoConfigureAfter(ServletWebServerFactoryAutoConfiguration.class)
+        ServletWebServerFactoryAutoConfiguration创建servlet内置容器
+   WebMvcAutoConfiguration
+   替换@EnableWebMVC注解
+        WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter
+        mvc配置
+            WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter.defaultViewResolver()
+            调整view的前缀后缀
+
+
+spring-boot简化了配置，相当于只需要写ESpringBootApplication.java引导类
+
+IDEA有bug，必须运行war包才能访问jsp页面
+    java -jar e-springboot-0.0.1-SNAPSHOT.war
+
+小技巧
+选择properties中的key，如spring.redis.lettuce.pool.max-active
+搜索工程，选择scope，过滤出*.json文件
+
+
+
+

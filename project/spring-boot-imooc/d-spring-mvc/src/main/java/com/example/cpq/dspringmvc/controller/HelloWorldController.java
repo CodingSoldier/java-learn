@@ -21,18 +21,4 @@ public class HelloWorldController {
         return "index";
     }
 
-    //    @RequestMapping("")
-//    public String index(@RequestParam int value, Model model) {
-//        System.out.println(new ResponseEntity<Map>(HttpStatus.OK));
-////        model.addAttribute("acceptLanguage",acceptLanguage);
-////        model.addAttribute("jsessionId",jsessionId);
-////        model.addAttribute("message","Hello,World");
-//
-//        /**
-//         * 返回值是view name
-//         * ViewResolver通过view name生成View
-//         */
-//        return "index";
-//    }
-
 }

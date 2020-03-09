@@ -2,45 +2,20 @@
 idea新建configuration ——> Remote
 拷贝  -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
 运行jar包
-java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 d-spring-mvc-0.0.1-SNAPSHOT-war-exec.jar
+java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 d-spring-mvc-auto-0.0.1-SNAPSHOT-war-exec.jar
 
 ########## 请求过程  ###############
 测试接口
 http://localhost:8080
 
 
-SpringMVC注解驱动
+WebMvcConfig.java。SpringMVC注解驱动
     注解配置    @Configuration    Spring范式注解
     组件激活    @EnableWebMvc     Spring模块装配
     自定义组件  WebMvcConfigurer  Spring Bean 配置
 
-WebMvcConfig.java
-    Spring Web MVC配置类
-
-使用@EnableWebMvc注解配置的过程
-1、@EnableWebMvc 导入了配置类 @Import({DelegatingWebMvcConfiguration.class})
-2、DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport
-3、WebMvcConfigurationSupport配置了@Bean RequestMappingHandlerMapping
-
-org.springframework.web.servlet.DispatcherServlet#getHandler
-	this.handlerMappings 这里的handlerMapping都在WebMvcConfigurationSupport中有定义
-
-org.springframework.web.servlet.DispatcherServlet#getHandlerAdapter
-	this.handlerAdapters中的类在WebMvcConfigurationSupport中也有定义
-
-org.springframework.web.servlet.DispatcherServlet#initHandlerMappings 装载 this.handlerMappings
-
-org.springframework.web.servlet.DispatcherServlet#initHandlerAdapters 装载 this.handlerAdapters
-
-
-
-
-小技巧
-选择properties中的key，如spring.redis.lettuce.pool.max-active
-搜索工程，选择scope，过滤出*.json文件
-
-
-
-
+    模型属性    @ModelAttribute
+    请求头     @RequestHeader
+    Cookie    @CookieValue
 
 
