@@ -8,19 +8,14 @@ java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 d-s
 测试接口
 http://localhost:8080
 
-请求先到委派接口
-org.springframework.web.servlet.DispatcherServlet#doDispatch(HttpServletRequest request, HttpServletResponse response)
 
-获取请求对应的处理器（术语叫handler），handler就是controller方法
-org.springframework.web.servlet.DispatcherServlet#getHandler(HttpServletRequest request)
-	HandlerExecutionChain 是controller中的方法
+SpringMVC注解驱动
+    注解配置    @Configuration    Spring范式注解
+    组件激活    @EnableWebMvc     Spring模块装配
+    自定义组件  WebMvcConfigurer  Spring Bean 配置
 
-org.springframework.web.servlet.DispatcherServlet#getHandlerAdapter(Object handler)
-
-返回页面，会有view视图
-org.springframework.web.servlet.DispatcherServlet#resolveViewName
-
-
+WebMvcConfig.java
+    Spring Web MVC配置类
 
 使用@EnableWebMvc注解配置的过程
 1、@EnableWebMvc 导入了配置类 @Import({DelegatingWebMvcConfiguration.class})
