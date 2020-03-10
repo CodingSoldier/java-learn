@@ -11,14 +11,10 @@ import java.util.Map;
 @Controller
 public class HelloWorldController {
 
-    // 返回jsp
-    @RequestMapping("")
-    public String index2(@RequestHeader("Accept-Language") String acceptLanguage,
-                         @CookieValue("JSESSIONID") String jsessionId,
-                         Model model) {
+    // 返回jsp，还是得打成war包才能访问
+    @RequestMapping("/index")
+    public String index2(Model model) {
         System.out.println(new ResponseEntity<Map>(HttpStatus.OK));
-        model.addAttribute("acceptLanguage",acceptLanguage);
-        model.addAttribute("jsessionId",jsessionId);
         return "index";
     }
 

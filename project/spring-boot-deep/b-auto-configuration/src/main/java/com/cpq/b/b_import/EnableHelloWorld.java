@@ -2,8 +2,6 @@ package com.cpq.b.b_import;
 
 import org.springframework.context.annotation.Import;
 
-import java.lang.annotation.*;
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented

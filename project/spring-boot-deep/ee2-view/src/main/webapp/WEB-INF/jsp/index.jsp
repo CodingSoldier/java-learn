@@ -12,7 +12,5 @@
 </head>
 <body>
     <h2>${message}</h2>
-    <h2>${acceptLanguage}</h2>
-    <h2>${jsessionId}</h2>
 </body>
 </html>
