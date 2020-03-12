@@ -18,8 +18,8 @@ public class Test01 {
 
     @Test
     public void contextLoads() {
-        System.out.println("###########"+beanA.getName());
-        System.out.println("###########"+beanA2.getName());
+        System.out.println("###########" + beanA.getName());
+        System.out.println("###########" + beanA2.getName());
     }
 
 }

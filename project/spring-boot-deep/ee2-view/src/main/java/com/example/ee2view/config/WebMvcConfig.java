@@ -15,7 +15,7 @@ public class WebMvcConfig {
     /**
      * 框架中配置bean的方式
      * WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter#defaultViewResolver()
-     *
+     * <p>
      * 自定义配置bean
      * 设置InternalResourceViewResolver的优先级高于ThymeleafViewResolver
      */

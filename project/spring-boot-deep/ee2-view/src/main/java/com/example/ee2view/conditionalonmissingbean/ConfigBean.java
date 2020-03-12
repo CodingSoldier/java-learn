@@ -12,20 +12,20 @@ import org.springframework.context.annotation.Configuration;
 public class ConfigBean {
 
     @Bean
-    public BeanA beanA(){
+    public BeanA beanA() {
         return new BeanA("beanA");
     }
 
     /**
-       不会创建defaultBeanA，
-       @Autowired
-       BeanA defaultBeanA; 不报错，但注入的是beanA
-
-       https://juejin.im/post/5d4239785188255d5f403e05
+     * 不会创建defaultBeanA，
+     *
+     * @Autowired BeanA defaultBeanA; 不报错，但注入的是beanA
+     * <p>
+     * https://juejin.im/post/5d4239785188255d5f403e05
      */
     @Bean
     @ConditionalOnMissingBean
-    public BeanA defaultBeanA(){
+    public BeanA defaultBeanA() {
         return new BeanA("defaultBeanA");
     }
 
@@ -34,7 +34,7 @@ public class ConfigBean {
      */
     @Bean
     @ConditionalOnMissingBean(name = "defaultBeanA")
-    public BeanA beanA2(){
+    public BeanA beanA2() {
         return new BeanA("beanA2");
     }
 
