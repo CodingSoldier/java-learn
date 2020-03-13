@@ -6,11 +6,10 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
 @MapperScan("com.example.bspringboot.mapper")
-@PropertySource({"classpath:properties-16.properties"})
+//@PropertySource({"classpath:properties-16.properties"})
 @Import({MyDeferredImportSelector.class, MyImportSelector.class})
 public class BSpringBootApplication {
 

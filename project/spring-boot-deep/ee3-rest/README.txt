@@ -34,6 +34,92 @@ DispatcherServlet.doDispatch
            开始执行方法HelloworldRestController.helloWorld()本身就是ServletInvocableHandlerMethod类型
 
 
+请求：localhost:8080/hello-world/param?message=123456
+RequestMappingHandlerAdapter.invokeHandlerMethod
+    ServletInvocableHandlerMethod invocableMethod = createInvocableHandlerMethod(handlerMethod);
+    invocableMethod的method属性就是HelloworldRestController.helloWorldParam
+
+    if (this.argumentResolvers != null) {
+        invocableMethod.setHandlerMethodArgumentResolvers(this.argumentResolvers);
+    }
+    有参数，invocableMethod设置参数解析器，总共有26个参数解析器
+
+    invocableMethod.invokeAndHandle(webRequest, mavContainer);
+    开始调用方法
+        InvocableHandlerMethod.invokeForRequest
+            Object[] args = getMethodArgumentValues(request, mavContainer, providedArgs);
+            将请求参数，转换为方法实际参数列表
+
+            Object returnValue = doInvoke(args);
+            InvocableHandlerMethod.doInvoke
+            调用方法
+                getBridgedMethod().invoke(getBean(), args);
+                反射调用方法
+
+            ### 后面的乱了 ###
+            MethodParameter[] parameters = getMethodParameters();
+            获取到方法参数
+
+            HandlerMethodArgumentResolverComposite.resolveArgument
+                HandlerMethodArgumentResolver resolver = getArgumentResolver(parameter);
+                最终获取到RequestParamMethodArgumentResolver
+                    Object[] args = getMethodArgumentValues(request, mavContainer, providedArgs);
+                    获取请求参数
+                        this.argumentResolvers.supportsParameter(parameter)
+                        判断argumentResolvers是否支持此参数
+                            RequestParamMethodArgumentResolver.supportsParameter
+                            判断参数是否有@RequestParam
+                resolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory);
+                AbstractNamedValueMethodArgumentResolver.resolveArgument
+                    NamedValueInfo namedValueInfo = getNamedValueInfo(parameter);
+                    获取方法中的参数名
+                        StandardReflectionParameterNameDiscoverer#getParameterNames(java.lang.reflect.Method)
+                        实际上是通过反射获取方法参数名列表
+                    Object arg = resolveName(resolvedName.toString(), nestedParameter, webRequest);
+                    通过参数名获取请求中参数的值
+                    RequestParamMethodArgumentResolver.resolveName()
+                        String[] paramValues = request.getParameterValues(name);
+                        最终是通过request.getParameterValues(name);获取参数值
+
+ServletInvocableHandlerMethod.invokeAndHandle
+处理请求
+    Object returnValue = invokeForRequest(webRequest, mavContainer, providedArgs);
+    调用controller方法，获得返回值
+
+    this.returnValueHandlers.handleReturnValue(returnValue, getReturnValueType(returnValue), mavContainer, webRequest);
+    this.returnValueHandlers是HandlerMethodReturnValueHandlerComposite，处理返回结果
+    HandlerMethodReturnValueHandlerComposite.returnValueHandlers共有15个对象
+        HandlerMethodReturnValueHandler handler = selectHandler(returnValue, returnType);
+        HandlerMethodReturnValueHandlerComposite.selectHandler
+            迭代this.returnValueHandlers，通过supportsReturnType()方法返回处理返回值的HandlerMethodReturnValueHandler
+            最终返回RequestResponseBodyMethodProcessor
+        handler.handleReturnValue(returnValue, returnType, mavContainer, webRequest);
+        RequestResponseBodyMethodProcessor.handleReturnValue 处理请求
+            writeWithMessageConverters(returnValue, returnType, inputMessage, outputMessage);
+            Converters是一些序列化、反序列化器
 
 
+POST请求：
+localhost:8080/echo/user1
+    {
+        "id": 1,
+        "name": "名称"
+    }
 
+调用栈：
+user1:16, UserRestController (com.example.ee3rest.controller2)
+........................
+doInvoke:209, InvocableHandlerMethod (org.springframework.web.method.support)
+invokeForRequest:136, InvocableHandlerMethod (org.springframework.web.method.support)
+invokeAndHandle:102, ServletInvocableHandlerMethod (org.springframework.web.servlet.mvc.method.annotation)
+invokeHandlerMethod:877, RequestMappingHandlerAdapter (org.springframework.web.servlet.mvc.method.annotation)
+handleInternal:783, RequestMappingHandlerAdapter (org.springframework.web.servlet.mvc.method.annotation)
+handle:87, AbstractHandlerMethodAdapter (org.springframework.web.servlet.mvc.method)
+
+
+    HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
+    处理此请求的HandlerAdapter是RequestMappingHandlerAdapter
+doDispatch:991, DispatcherServlet (org.springframework.web.servlet)
+doService:925, DispatcherServlet (org.springframework.web.servlet)
+processRequest:974, FrameworkServlet (org.springframework.web.servlet)
+doPost:877, FrameworkServlet (org.springframework.web.servlet)
