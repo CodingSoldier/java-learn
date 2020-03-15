@@ -109,13 +109,20 @@ localhost:8080/echo/user1
 调用栈：
 user1:16, UserRestController (com.example.ee3rest.controller2)
 ........................
+
+    returnValue返回的是User实例
+    Object returnValue = doInvoke(args);
+    执行controller方法
 doInvoke:209, InvocableHandlerMethod (org.springframework.web.method.support)
+
+    this.argumentResolvers是一个组合对象类，共有26种参数解析器
+    InvocableHandlerMethod.getMethodArgumentValues
+    Object[] args = this.getMethodArgumentValues(request, mavContainer, providedArgs);
 invokeForRequest:136, InvocableHandlerMethod (org.springframework.web.method.support)
 invokeAndHandle:102, ServletInvocableHandlerMethod (org.springframework.web.servlet.mvc.method.annotation)
 invokeHandlerMethod:877, RequestMappingHandlerAdapter (org.springframework.web.servlet.mvc.method.annotation)
 handleInternal:783, RequestMappingHandlerAdapter (org.springframework.web.servlet.mvc.method.annotation)
 handle:87, AbstractHandlerMethodAdapter (org.springframework.web.servlet.mvc.method)
-
 
     HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
     处理此请求的HandlerAdapter是RequestMappingHandlerAdapter
@@ -123,3 +130,46 @@ doDispatch:991, DispatcherServlet (org.springframework.web.servlet)
 doService:925, DispatcherServlet (org.springframework.web.servlet)
 processRequest:974, FrameworkServlet (org.springframework.web.servlet)
 doPost:877, FrameworkServlet (org.springframework.web.servlet)
+
+
+POST请求：
+localhost:8080/echo/user1
+处理返回值流程
+doInvoke:209, InvocableHandlerMethod (org.springframework.web.method.support)
+    AbstractMessageConverterMethodProcessor.writeWithMessageConverters
+        List<MediaType> requestedMediaTypes = getAcceptableMediaTypes(request);
+        是请求头中Accept的值 */*
+
+        List<MediaType> producibleMediaTypes = getProducibleMediaTypes(request, valueType, declaredType);
+        RequestResponseBodyMethodProcessor能返回的媒体类型，有4个
+
+        requestedType.isCompatibleWith(producibleType)
+        请求的媒体类型，生成的媒体类型是否兼容
+        由于请求头的Accept是 */*，即请求的媒体类型与所有生成的媒体兼容
+
+            AbstractGenericHttpMessageConverter.write
+            向前端输出响应结果
+
+
+localhost:8080/echo/user/produces
+指定具体的生成媒体类型
+AbstractMessageConverterMethodProcessor.writeWithMessageConverters()
+    List<MediaType> requestedMediaTypes = getAcceptableMediaTypes(request);
+    List<MediaType> producibleMediaTypes = getProducibleMediaTypes(request, valueType, declaredType);
+    controller接口指定了一个生产媒体类型，producibleMediaTypes就只有一个
+        AbstractMessageConverterMethodProcessor.getProducibleMediaTypes()
+        返回可以生产的媒体类型，从@RequestMapping.produces，或者从this.messageConverters中取值，或者返回全部媒体类型
+
+
+
+自定义messageConverter
+    1、新增 PropertiesHttpMessageConverter
+    2、RestWebMvcConfigurer添加PropertiesHttpMessageConverter
+    3、新增ControllerConverter.addProps
+    4、发请求
+        curl --location --request POST 'localhost:8080/add/props' \
+        --header 'Content-Type: text/properties' \
+        --data-raw 'id:1
+        name:我自己'
+
+
