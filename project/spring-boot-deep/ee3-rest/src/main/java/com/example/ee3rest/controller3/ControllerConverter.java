@@ -20,4 +20,12 @@ public class ControllerConverter {
         return prop;
     }
 
+
+    @PostMapping(value = "/test/resolver",
+    consumes = "text/properties",
+    produces = "text/properties")
+    public Properties testResolver( Properties prop) {
+        return prop;
+    }
+
 }

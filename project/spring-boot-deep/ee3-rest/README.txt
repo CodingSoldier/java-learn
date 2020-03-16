@@ -173,3 +173,26 @@ AbstractMessageConverterMethodProcessor.writeWithMessageConverters()
         name:我自己'
 
 
+自定义ArgumentResolver
+    1、新增 PropertiesHandlerMethodArgumentResolver
+    2、RestWebMvcConfigurer添加PropertiesHandlerMethodArgumentResolver
+    3、新增 ControllerConverter.testResolver
+    4、发请求
+        curl -X POST \
+          http://localhost:8080/test/resolver \
+          -H 'Content-Type: text/properties' \
+          -d 'id:1,
+              name:名称'
+
+
+自定义ReturnValueHandler
+    1、新增 PropertiesHandlerMethodReturnValueHandler
+    2、RestWebMvcConfigurer添加PropertiesHandlerMethodReturnValueHandler
+    3、新增ControllerReturnValue.returnValue
+    4、发请求
+        curl -X POST \
+          http://localhost:8080/test/return/value \
+          -H 'Content-Type: text/properties' \
+          -d 'id:1,
+            name:名称'
+
