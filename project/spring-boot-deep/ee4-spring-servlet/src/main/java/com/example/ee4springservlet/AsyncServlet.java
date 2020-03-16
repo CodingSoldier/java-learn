@@ -1,14 +1,12 @@
 package com.example.ee4springservlet;
 
-import javax.servlet.AsyncContext;
-import javax.servlet.AsyncEvent;
-import javax.servlet.AsyncListener;
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
 异步servlet原生写法
@@ -52,13 +50,13 @@ public class AsyncServlet extends HttpServlet {
                 }
             });
 
-            // 注释这些代码，不返回responseBody，模拟timeout
-            //System.out.println("servlet方法");
-            //ServletResponse servletResponse = asyncContext.getResponse();
-            //servletResponse.setContentType("text/plain;charset=UTF-8");
-            //PrintWriter writer = servletResponse.getWriter();
-            //writer.println("输出responseBody");
-            //writer.flush();
+             //注释这些代码，不返回responseBody，模拟timeout
+            System.out.println("servlet方法");
+            ServletResponse servletResponse = asyncContext.getResponse();
+            servletResponse.setContentType("text/plain;charset=UTF-8");
+            PrintWriter writer = servletResponse.getWriter();
+            writer.println("输出responseBody");
+            writer.flush();
         }
     }
 }

@@ -9,6 +9,9 @@ idea新建configuration ——> Remote
 运行jar包
 java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 ee4-spring-servlet-0.0.1-SNAPSHOT-war-exec.jar
 
+localhost:8080/hello-world
+    DeferredResultMethodReturnValueHandler.handleReturnValue()
+    由于使用了@ResponseBody注解，返回值由HandlerMethodReturnValueHandler的子类DeferredResultMethodReturnValueHandler来处理
 
 
 
