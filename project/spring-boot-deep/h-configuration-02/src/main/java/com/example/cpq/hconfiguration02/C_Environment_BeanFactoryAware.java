@@ -1,5 +1,8 @@
 package com.example.cpq.hconfiguration02;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -7,22 +10,25 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
+/**
+ * 实现BeanFactoryAware接口获取environment对象
+ */
 @EnableAutoConfiguration
-public class B_Environment {
+public class C_Environment_BeanFactoryAware implements BeanFactoryAware {
 
-    /**
-     * 通过Environment获取属性，注入到bean中
-     * user02是一个ioc bean，springboot会自动注入所需的ioc bean：environment
-     */
+    Environment environment;
+
+    // 给environment变量赋值
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.environment = beanFactory.getBean(Environment.class);
+    }
+
+
     @Bean
-    public User02 user02(Environment environment){
-        // getProperty，未配置，值为null
-        Long id = environment.getProperty("user.id.no", Long.class);
-
-        // getRequiredProperty必须填写
+    public User02 user02(){
+        Long id = environment.getRequiredProperty("user.id", Long.class);
         String name = environment.getRequiredProperty("user.name", String.class);
-
-        //读取不到则使用默认值
         Integer ageNew = environment.getProperty("user.ageNew", Integer.class, 100);
 
         User02 user02 = new User02();
@@ -33,15 +39,15 @@ public class B_Environment {
     }
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext app = new SpringApplicationBuilder(B_Environment.class)
+        ConfigurableApplicationContext app = new SpringApplicationBuilder(C_Environment_BeanFactoryAware.class)
                 .web(WebApplicationType.NONE)
                 .run(args);
 
         User02 user02 = app.getBean( User02.class);
         System.err.println("用户bean"+user02);
 
-
         app.close();
     }
+
 
 }

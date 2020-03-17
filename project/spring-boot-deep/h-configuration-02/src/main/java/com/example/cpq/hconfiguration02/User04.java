@@ -1,14 +1,11 @@
 package com.example.cpq.hconfiguration02;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
 
-// 类上使用前缀
-@ConfigurationProperties(prefix = "user")
 @Validated
-public class User03 {
+public class User04 {
 
     private Long id;
     private String name;
@@ -56,7 +53,7 @@ public class User03 {
 
     @Override
     public String toString() {
-        return "User03{" +
+        return "User04{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +

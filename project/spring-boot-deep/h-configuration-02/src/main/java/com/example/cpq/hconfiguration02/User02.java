@@ -6,6 +6,15 @@ public class User02 {
     private String name;
     private Integer age;
 
+    public User02() {
+    }
+
+    public User02(Long id, String name, Integer age) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+    }
+
     @Override
     public String toString() {
         return "User{" +

@@ -4,13 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!--使用PropertyPlaceholderConfigurer读取配置文件，user-context.xml就可以通过${}获取properties中的配置-->
-
-    <!--<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">-->
-        <!--<property name="location" value="classpath:/META-INF/default.properties"></property>-->
-        <!--<property name="fileEncoding" value="UTF-8"></property>-->
-    <!--</bean>-->
-
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <!--<property name="location" value="classpath:/META-INF/default.properties"></property>-->
         <property name="location" value="classpath:application.properties"></property>
         <property name="fileEncoding" value="UTF-8"></property>
     </bean>

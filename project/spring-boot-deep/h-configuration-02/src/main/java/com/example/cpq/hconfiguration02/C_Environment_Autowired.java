@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
 @EnableAutoConfiguration
-public class C_Environment {
+public class C_Environment_Autowired {
 
     // @Autowired注入Environment
     @Autowired
@@ -30,7 +30,7 @@ public class C_Environment {
     }
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext app = new SpringApplicationBuilder(C_Environment.class)
+        ConfigurableApplicationContext app = new SpringApplicationBuilder(C_Environment_Autowired.class)
                 .web(WebApplicationType.NONE)
                 .run(args);
 
