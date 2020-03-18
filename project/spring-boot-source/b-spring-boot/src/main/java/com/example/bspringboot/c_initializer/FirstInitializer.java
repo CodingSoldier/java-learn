@@ -15,7 +15,6 @@ import java.util.Map;
 @Order(1)
 public class FirstInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-
     /**
      * 自定义系统初始化器，配置spring属性
      * 需要添加 META-INF/spring.factories
