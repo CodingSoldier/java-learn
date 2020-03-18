@@ -1,0 +1,15 @@
+# application run 事件监听器
+org.springframework.boot.SpringApplicationRunListener=com.example.cpq.hconfiguration02.F_RunListener
+
+# application监听器
+org.springframework.context.ApplicationListener=\
+com.example.cpq.hconfiguration02.G_EnvironmentPreparedEventListener
+
+#PostProcessor
+org.springframework.boot.env.EnvironmentPostProcessor=\
+com.example.cpq.hconfiguration02.H_EnvironmentPostProcessor
+
+# Initializer
+org.springframework.context.ApplicationContextInitializer=\
+com.example.cpq.hconfiguration02.I_ApplicationContextInitializer
+
