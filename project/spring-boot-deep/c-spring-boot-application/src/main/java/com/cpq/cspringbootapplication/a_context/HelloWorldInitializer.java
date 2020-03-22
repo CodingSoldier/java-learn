@@ -9,7 +9,8 @@ import org.springframework.core.annotation.Order;
 
 系统初始化器
 
-不带泛型子类的写法，接口中也没有泛型子类
+
+
 public class HelloWorldInitializer implements ApplicationContextInitializer {
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {

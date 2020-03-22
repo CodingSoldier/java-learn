@@ -12,20 +12,7 @@ import org.springframework.core.annotation.Order;
 @Order(4)
 public class D_Listener implements SmartApplicationListener {
 
-/**
- * 监听的事件
- supportsEventType:20, D_Listener (com.example.bspringboot.d_listener)
- supportsEventType:72, GenericApplicationListenerAdapter (org.springframework.context.event)
- supportsEvent:353, AbstractApplicationEventMulticaster (org.springframework.context.event)
- retrieveApplicationListeners:229, AbstractApplicationEventMulticaster (org.springframework.context.event)
- getApplicationListeners:197, AbstractApplicationEventMulticaster (org.springframework.context.event)
- multicastEvent:134, SimpleApplicationEventMulticaster (org.springframework.context.event)
- multicastEvent:127, SimpleApplicationEventMulticaster (org.springframework.context.event)
- starting:70, EventPublishingRunListener (org.springframework.boot.context.event)
- starting:47, SpringApplicationRunListeners (org.springframework.boot)
- run:305, SpringApplication (org.springframework.boot)
- main:24, BSpringBootApplication (com.example.bspringboot)
- */
+    // 断点调试
     @Override
     public boolean supportsEventType(Class<? extends ApplicationEvent> eventType) {
         return ApplicationPreparedEvent.class.isAssignableFrom(eventType)

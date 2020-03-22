@@ -12,11 +12,13 @@ public class B_Bootstrap {
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        String helloWorld = context.getBean("helloWorld",String.class);
-        System.out.println("获取到bean " + helloWorld);
+        //String helloWorld = context.getBean("helloWorld",String.class);
+        //System.out.println("获取到bean " + helloWorld);
+        //
+        //Bean01 bean01 =  context.getBean("bean01", Bean01.class);
+        //System.out.println("获取bean01   "+ bean01.toString());
 
-        Bean01 bean01 =  context.getBean("bean01", Bean01.class);
-        System.out.println("获取bean01   "+ bean01.toString());
+        System.out.println("context   "+context.toString());
 
         context.close();
     }

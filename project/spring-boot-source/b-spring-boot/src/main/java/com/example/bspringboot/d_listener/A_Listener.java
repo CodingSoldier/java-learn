@@ -5,8 +5,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.Order;
 
 /**
- * 监听ApplicationStartedEvent
- * 在spring.factories中配置监听接口实现类
+  监听ApplicationStartedEvent
+  在spring.factories中配置监听接口实现类
 
  监听器注册阶段：
  监听器注册的源码跟系统初始化器几乎是一样的，源码：
@@ -31,9 +31,6 @@ public class A_Listener implements ApplicationListener<ApplicationStartedEvent> 
  multicastEvent:139, SimpleApplicationEventMulticaster (org.springframework.context.event)
      # ApplicationListener<?> listener : getApplicationListeners(event, type) 获取type类型even的监听器列表
         # retrieveApplicationListeners(eventType, sourceType, retriever); 返回监听了此even的监听器
-           # doInvokeListener:172, SimpleApplicationEventMulticaster (org.springframework.context.event)
-              # invokeListener:165, SimpleApplicationEventMulticaster (org.springframework.context.event)
-                 # listener.onApplicationEvent(event);调用实现类的onApplicationEvent()
  publishEvent:403, AbstractApplicationContext (org.springframework.context.support)
  publishEvent:360, AbstractApplicationContext (org.springframework.context.support)
  started:98, EventPublishingRunListener (org.springframework.boot.context.event)
