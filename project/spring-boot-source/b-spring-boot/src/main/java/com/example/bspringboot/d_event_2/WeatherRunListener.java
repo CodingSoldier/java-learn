@@ -14,7 +14,6 @@ public class WeatherRunListener {
      *         weatherRunListener.rain();
      *         weatherRunListener.snow();
      */
-
     @Autowired
     private WeatherEventMulticaster eventMulticaster;
 

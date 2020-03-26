@@ -43,8 +43,8 @@ public class C_Environment_BeanFactoryAware implements BeanFactoryAware {
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        User02 user02 = app.getBean( User02.class);
-        System.err.println("用户bean"+user02);
+        User02 user02 = app.getBean(User02.class);
+        System.err.println("用户bean   "+user02);
 
         app.close();
     }

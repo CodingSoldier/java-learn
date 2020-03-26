@@ -12,7 +12,8 @@ org.springframework.context.annotation.ConfigurationClassPostProcessor.processCo
 
  
 org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions()
-    do{}while()循环
+    do{
+    }while()循环
 
 org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass
     判断Bean注解
