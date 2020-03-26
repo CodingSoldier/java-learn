@@ -1,10 +1,9 @@
-
 spring:
-  application:
   jta:
+    # 事务管理器唯一标识符
     transaction-manager-id: txManager
   datasource:
-    # Druid数据源配置。hikari不支持MysqlXADataSource连接
+    # Druid连接池配置。spring-boot-2默认连接池hikari不支持MysqlXADataSource
     type: com.alibaba.druid.pool.xa.DruidXADataSource
     # 最小空闲连接
     min-pool-size: 5
@@ -26,7 +25,6 @@ spring:
       url: jdbc:mysql://localhost:3306/shiro?useUnicode=true&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useSSL=false
       username: root
       password: cpq..123
-
 
 mybatis-plus:
   configuration:

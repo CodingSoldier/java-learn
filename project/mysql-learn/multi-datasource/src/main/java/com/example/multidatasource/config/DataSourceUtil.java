@@ -17,8 +17,12 @@ public class DataSourceUtil {
 
     public static final String DATA_SOURCE_PREFIX = "spring.datasource.";
 
+    /**
+     * 创建AtomikosDataSourceBean是使用Atomikos连接池的首选类
+     */
     public static AtomikosDataSourceBean createAtomikosDataSourceBean(String uniqueResourceName, Environment environment, String dataBase ){
         AtomikosDataSourceBean atomikosDataSourceBean = new AtomikosDataSourceBean();
+        // 这些设置大家可以进入源码中看java-doc
         // 数据源唯一标识
         atomikosDataSourceBean.setUniqueResourceName(uniqueResourceName);
         // XADataSource实现类，使用DruidXADataSource
@@ -42,7 +46,18 @@ public class DataSourceUtil {
         return atomikosDataSourceBean;
     }
 
+    /**
+     * 创建SqlSessionFactory实例
+     */
     public static SqlSessionFactory createSqlSessionFactory(DataSource dataSource) throws Exception{
+        /**
+         * 必须使用MybatisSqlSessionFactoryBean，
+         * 不能使用SqlSessionFactoryBean，不然会报invalid bound statement (not found)
+         *
+         * com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration#sqlSessionFactory(javax.sql.DataSource)
+         * 源码中也是使用MybatisSqlSessionFactoryBean
+         * 并且源码中使用了@ConditionalOnMissingBean，即IOC中如果存在了SqlSessionFactory实例，mybatis-plus就不创建SqlSessionFactory实例了
+         */
         MybatisSqlSessionFactoryBean sessionFactoryBean = new MybatisSqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource);
         MybatisConfiguration configuration = new MybatisConfiguration();

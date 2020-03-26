@@ -16,8 +16,8 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
  */
 public class MybatisPlusGeneratorShiro {
 
-    static final String TABLE_NAME = "t_users";
-    static final String MODULE_NAME = "users";
+    static final String TABLE_NAME = "t_role";
+    static final String MODULE_NAME = "role";
     static final String AUTHOR = "chenpiqian";
 
     //修改TABLE_NAME、MODULE_NAME、AUTHOR后运行main方法
