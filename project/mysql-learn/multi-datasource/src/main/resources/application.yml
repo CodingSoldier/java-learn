@@ -1,0 +1,35 @@
+
+spring:
+  application:
+  jta:
+    transaction-manager-id: txManager
+  datasource:
+    # Druid数据源配置。hikari不支持MysqlXADataSource连接
+    type: com.alibaba.druid.pool.xa.DruidXADataSource
+    # 最小空闲连接
+    min-pool-size: 5
+    # 池中最大连接数
+    max-pool-size: 20
+    # 设置连接在池中被自动销毁之前保留的最大秒数。 可选，默认为0（无限制）。
+    max-life-time: 60
+    # 返回连接前用于测试连接的SQL查询
+    test-query: SELECT 1
+
+    # 多数据源配置
+    cpq-db:
+      name: cpq
+      url: jdbc:mysql://localhost:3306/cpq?useUnicode=true&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useSSL=false
+      username: root
+      password: cpq..123
+    shiro-db:
+      name: shiro
+      url: jdbc:mysql://localhost:3306/shiro?useUnicode=true&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useSSL=false
+      username: root
+      password: cpq..123
+
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  #打印sql
+
+
