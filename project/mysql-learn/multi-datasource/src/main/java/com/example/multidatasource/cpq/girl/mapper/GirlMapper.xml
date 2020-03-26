@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.multidatasource.cpq.girl.mapper.GirlMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.multidatasource.cpq.girl.entity.Girl">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="boy_friend" property="boyFriend" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, boy_friend
+    </sql>
+
+</mapper>
