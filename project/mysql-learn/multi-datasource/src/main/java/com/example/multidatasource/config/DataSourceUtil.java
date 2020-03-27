@@ -9,10 +9,6 @@ import org.springframework.core.env.Environment;
 
 import javax.sql.DataSource;
 
-/**
- * @author chenpiqian
- * @date: 2020-03-26
- */
 public class DataSourceUtil {
 
     public static final String DATA_SOURCE_PREFIX = "spring.datasource.";

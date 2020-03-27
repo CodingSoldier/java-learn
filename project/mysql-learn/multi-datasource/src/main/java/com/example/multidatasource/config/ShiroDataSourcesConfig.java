@@ -10,9 +10,7 @@ import org.springframework.core.env.Environment;
 import javax.sql.DataSource;
 
 /**
- * @Description TODO
- * @Author bingfeng
- * @Date 2019/11/20 17:09
+ * shiro数据库配置类
  */
 @Configuration
 @MapperScan(basePackages = "com.example.multidatasource.shiro.**.mapper",
@@ -23,7 +21,6 @@ public class ShiroDataSourcesConfig {
     public static final String DATA_SOURCE_NAME = "shiroDataSource";
     public static final String SQL_SESSION_FACTORY = "shiroSqlSessionFactory";
 
-
     @Bean(DATA_SOURCE_NAME)
     public DataSource dataSource(Environment environment) {
         return DataSourceUtil.createAtomikosDataSourceBean(DATA_SOURCE_NAME, environment, DATABASE_PREFIX);
@@ -33,5 +30,4 @@ public class ShiroDataSourcesConfig {
     public SqlSessionFactory sqlSessionFactory(@Qualifier(DATA_SOURCE_NAME) DataSource dataSource) throws Exception {
         return DataSourceUtil.createSqlSessionFactory(dataSource);
     }
-
 }

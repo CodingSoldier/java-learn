@@ -21,7 +21,6 @@ public class CommonService {
         Girl girl = new Girl();
         girl.setName("name "+msg);
         boolean b1 = girlService.save(girl);
-
         Role role = new Role();
         role.setRoleName("role-name"+msg);
         boolean b2 = roleService.save(role);

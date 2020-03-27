@@ -10,6 +10,9 @@ import org.springframework.core.env.Environment;
 
 import javax.sql.DataSource;
 
+/**
+ * cpq数据库配置类
+ */
 @Configuration
 @MapperScan(basePackages = "com.example.multidatasource.cpq.**.mapper",
         sqlSessionFactoryRef = CpqDataSourcesConfig.SQL_SESSION_FACTORY)
