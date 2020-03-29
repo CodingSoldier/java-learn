@@ -41,6 +41,8 @@ public class FirstInitializer implements ApplicationContextInitializer<Configura
 
         Map<String, Object> map = new HashMap<>();
         map.put("key1", "value1");
+
+        // 新建属性源，并添加属性源。（第2点）
         MapPropertySource mps = new MapPropertySource("firstInitializer", map);
         environment.getPropertySources().addLast(mps);
         System.out.println("#############FirstInitializer.initialize 运行");
