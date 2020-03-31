@@ -1,6 +1,5 @@
 package com.example.bspringboot;
 
-import com.example.bspringboot.c_initializer.SecondInitializer;
 import com.example.bspringboot.j_bean.MyDeferredImportSelector;
 import com.example.bspringboot.j_bean.MyImportSelector;
 import org.mybatis.spring.annotation.MapperScan;
@@ -17,12 +16,12 @@ public class BSpringBootApplication {
 
     public static void main(String[] args) {
 
-        //SpringApplication.run(BSpringBootApplication.class, args);
+        SpringApplication.run(BSpringBootApplication.class, args);
 
-         //硬编码添加系统初始化器
-        SpringApplication springApplication = new SpringApplication(BSpringBootApplication.class);
-        springApplication.addInitializers(new SecondInitializer());
-        springApplication.run(args);
+        // //硬编码添加系统初始化器
+        //SpringApplication springApplication = new SpringApplication(BSpringBootApplication.class);
+        //springApplication.addInitializers(new SecondInitializer());
+        //springApplication.run(args);
 
         //// 硬编码方式添加监听器
         //SpringApplication springApplication = new SpringApplication(BSpringBootApplication.class);

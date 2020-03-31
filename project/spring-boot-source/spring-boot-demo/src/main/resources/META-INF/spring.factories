@@ -1,2 +1,2 @@
-org.springframework.context.ApplicationContextInitializer=com.example.springbootdemo.FirstInitializer,\
-com.example.springbootdemo.FirstOrderedInitializer
+org.springframework.context.ApplicationContextInitializer=com.example.springbootdemo.initializer.FirstInitializer,\
+com.example.springbootdemo.initializer.FirstOrderedInitializer

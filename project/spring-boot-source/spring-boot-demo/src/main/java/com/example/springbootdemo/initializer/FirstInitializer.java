@@ -1,4 +1,4 @@
-package com.example.springbootdemo;
+package com.example.springbootdemo.initializer;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -18,7 +18,7 @@ public class FirstInitializer implements ApplicationContextInitializer<Configura
     /**
      * 在resources目录下新建/META-INF/spring.factories目录与文件。
      * 在resources/META-INF/spring.factories配置：
-     * org.springframework.context.ApplicationContextInitializer=com.example.springbootdemo.FirstInitializer
+     * org.springframework.context.ApplicationContextInitializer=com.example.springbootdemo.initializer.FirstInitializer
      *
      * spring.factories的配置规则是: 接口全名=实现类全名
      */
