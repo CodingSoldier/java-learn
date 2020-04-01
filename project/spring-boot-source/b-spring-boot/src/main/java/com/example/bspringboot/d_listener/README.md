@@ -35,8 +35,8 @@ org.springframework.context.event.SimpleApplicationEventMulticaster#multicastEve
 org.springframework.context.event.SimpleApplicationEventMulticaster#doInvokeListener
 
  
-
-
+获取事件泛型
+GenericApplicationListenerAdapter#resolveDeclaredEventType(java.lang.Class<?>)
 
 https://juejin.im/post/5ce3c268f265da1b7c60ed88
 
@@ -54,6 +54,10 @@ SpringApplicationRunListeners
 
 			SimpleApplicationEventMulticaster#multicastEvent()
 			#有线程池则用线程池，没有就是用当前线程执行invokeListener(listener, event)
+				
+				SimpleApplicationEventMulticaster#resolveDefaultEventType()
+				# 获取eventType
+					ResolvableType#resolved就是具体Event的Class
 
 				AbstractApplicationEventMulticaster#getApplicationListeners()
 				# 返回与给定事件类型匹配的ApplicationListeners的集合。 不匹配的听众会被早期排除。
@@ -62,6 +66,9 @@ SpringApplicationRunListeners
 					# 监听器是否支持此事件，
 					# 如果是GenericApplicationListener的实现类，直接调用实现类的 supportsEventType()、supportsSourceType()。
 					# 如果不是，创建GenericApplicationListenerAdapter，此类也有supportsEventType()、supportsSourceType()
+					
+					# 调试
+					# 打断点 listener 等于 DelegatingApplicationListener
 
 						GenericApplicationListenerAdapter#supportsEventType()
 						# this.declaredEventType.isAssignableFrom(eventType))

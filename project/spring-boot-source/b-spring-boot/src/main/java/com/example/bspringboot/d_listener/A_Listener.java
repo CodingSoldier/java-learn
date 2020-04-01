@@ -2,7 +2,6 @@ package com.example.bspringboot.d_listener;
 
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.core.annotation.Order;
 
 /**
   监听ApplicationStartedEvent
@@ -20,7 +19,7 @@ import org.springframework.core.annotation.Order;
      使得监听的内部实现与外部调用隔离开了，外包并不会直接调用监听类，而是调用EventPublishingRunListener封装的方法，比方说调用EventPublishingRunListener就不会涉及new Event()
 
 */
-@Order(1)
+//@Order(1)
 public class A_Listener implements ApplicationListener<ApplicationStartedEvent> {
 /**
  监听器执行阶段：
