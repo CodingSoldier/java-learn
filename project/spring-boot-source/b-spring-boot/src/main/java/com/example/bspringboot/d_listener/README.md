@@ -65,10 +65,10 @@ SpringApplicationRunListeners
 					AbstractApplicationEventMulticaster#supportsEvent()
 					# 监听器是否支持此事件，
 					# 如果是GenericApplicationListener的实现类，直接调用实现类的 supportsEventType()、supportsSourceType()。
-					# 如果不是，创建GenericApplicationListenerAdapter，此类也有supportsEventType()、supportsSourceType()
+					# 如果不是，创建 GenericApplicationListenerAdapter，此类也有 supportsEventType()、supportsSourceType()
 					
 					# 调试
-					# 打断点 listener 等于 DelegatingApplicationListener
+					# 打断点listener等于DelegatingApplicationListener
 
 						GenericApplicationListenerAdapter#supportsEventType()
 						# this.declaredEventType.isAssignableFrom(eventType))
@@ -78,7 +78,6 @@ SpringApplicationRunListeners
 
 					SimpleApplicationEventMulticaster#doInvokeListener()
 					# 执行调用动作
-
 
 
 
