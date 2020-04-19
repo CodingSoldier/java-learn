@@ -1,22 +1,22 @@
 package com.example.springbootdemo;
 
-import com.example.springbootdemo.initializer.SecondInitializer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.PropertySource;
 
+import java.util.Properties;
+
+@PropertySource("classpath:application-property-source.properties")
 @SpringBootApplication
 public class SpringBootDemoApplication {
-
     public static void main(String[] args) {
 
-        //SpringApplication.run(SpringBootDemoApplication.class, args);
+        System.setProperty("test.property", "9、Java系统属性（System.getProperties()）");
 
-        // 第2中添加系统初始化器的方式
-        SpringApplication springApplication = new SpringApplication(SpringBootDemoApplication.class);
-        springApplication.addInitializers(new SecondInitializer());
-        springApplication.run(args);  // 这句代码打上断点调试
+        SpringApplication app = new SpringApplication(SpringBootDemoApplication.class);
+        Properties properties = new Properties();
+        properties.setProperty("test.property", "17、默认属性（通过设置SpringApplication.setDefaultProperties指定）");
+        app.setDefaultProperties(properties);
+        app.run(args);
     }
-
-
-
 }

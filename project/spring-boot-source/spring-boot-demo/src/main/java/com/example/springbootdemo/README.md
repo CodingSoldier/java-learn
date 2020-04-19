@@ -63,7 +63,8 @@ org.springframework.beans.factory.Aware
 aware_processor包模仿MyEnvironmentAware#setEnvironment()源码的
     org.springframework.context.support.ApplicationContextAwareProcessor.postProcessBeforeInitialization()
         org.springframework.context.support.ApplicationContextAwareProcessor#invokeAwareInterfaces()
-            
+
+listeners.environmentPrepared(environment);            
 org.springframework.boot.context.config.ConfigFileApplicationListener.Loader.load()
     initializeProfiles()先加载命令行配置的profile
     load(...)然后加载默认的配置文件比如application.properties
