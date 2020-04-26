@@ -1,146 +1,21 @@
-﻿# https://github.com/shadowsocks/shadowsocks-libev
-yum install gcc gettext autoconf libtool automake make pcre-devel asciidoc xmlto c-ares-devel libev-devel libsodium-devel mbedtls-devel -y
+﻿安装依赖
+yum install epel-release -y
+yum install gcc gettext autoconf libtool automake make pcre-devel asciidoc xmlto c-ares-devel libev-devel libsodium-devel mbedtls-devel wget vim  -y
 
-# mbedtls 2.16.3
-cd /
-wget https://tls.mbed.org/download/mbedtls-2.16.3-gpl.tgz
-tar -xf mbedtls-2.16.3-gpl.tgz
-cd mbedtls-2.16.3
+安装yum源
+cd  /etc/yum.repos.d/
+wget https://copr.fedorainfracloud.org/coprs/librehat/shadowsocks/repo/epel-7/librehat-shadowsocks-epel-7.repo
 
-make
-make DESTDIR=/usr install
-ldconfig
+yum -y install shadowsocks-libev
 
-# libsodium
-cd /
-wget https://download.libsodium.org/libsodium/releases/libsodium-1.0.18-stable.tar.gz
-tar -zxf libsodium-1.0.18-stable.tar.gz
-cd libsodium-stable
+vim /etc/shadowsocks-libev/config.json
 
-./configure --prefix=/usr
-make && make check
-sudo make install
-sudo ldconfig
-
-# shadowsocks-libev
-wget https://github.com/shadowsocks/shadowsocks-libev/releases/download/v3.3.4/shadowsocks-libev-3.3.4.tar.gz
-tar -zxvf shadowsocks-libev-3.3.4.tar.gz
-cd shadowsocks-libev-3.3.4
-./configure --prefix=/usr/local/ss && make
-make install
-
-mkdir /etc/shadowsocks-libev
-vi /etc/shadowsocks-libev/config.json
 {
-	"server":"0.0.0.0",
-	"server_port":9999,
-	"local_port":1080,
-	"password":"XXX",
-	"method":"chacha20-ietf-poly1305",
-	"fast_open": false
+    修改配置
 }
 
-# systemctl服务
-vi /etc/systemd/system/shadowsocks-libev.service
-[Unit]
-Description=Shadowsocks-libev Server
-Documentation=https://shadowsocks.org/en/
-After=network.target
-
-[Service]
-Type=simple
-User=root
-ExecStart=/usr/local/ss/bin/ss-server -c /etc/shadowsocks-libev/config.json -u
-Restart=on-abort
-
-[Install]
-WantedBy=multi-user.target
-
-
-systemctl daemon-reload
-
+systemctl enable shadowsocks-libev
 systemctl start shadowsocks-libev
 systemctl status shadowsocks-libev
 
-systemctl enable shadowsocks-libev
 
-
-
-
-
-
-
-docker pull shadowsocks/shadowsocks-libev
-docker run -e PASSWORD=cpq..123 -e METHOD=chacha20-ietf-poly1305 -p9999:8388 -p9999:8388/udp --name sss  -d shadowsocks/shadowsocks-libev
-
-
-
-
-
-
-# 安装pip
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python get-pip.py
-
-# 安装shadowsocks
-pip install shadowsocks
-# pip uninstall shadowsocks
-
-vi /etc/shadowsocks.json
-{
-    "server":"138.68.251.147",
-    "server_port":80,
-    "local_port":1080,
-    "password":"XXX",
-    "method":"chacha20-ietf-poly1305"
-}
-
-# 将shadowsocks加入系统服务
-vi /etc/systemd/system/shadowsocks.service
-可能在这里
-vi /usr/lib/systemd/system/shadowsocks.service
-
-[Unit]
-Description=Shadowsocks Client Service
-After=network.target
-[Service]
-Type=simple
-User=root
-ExecStart=/usr/bin/ssserver -c /etc/shadowsocks.json
-[Install]
-WantedBy=multi-user.target
-
-# 更改.service文件后，都要重载守护进程更新systemctl
-systemctl daemon-reload
-
-systemctl start shadowsocks
-systemctl status shadowsocks
-systemctl restart shadowsocks
-
-systemctl enable /etc/systemd/system/shadowsocks.service
-
-systemctl stop shadowsocks
-
-systemctl restart shadowsocks
-
-
-nohup /usr/bin/ssserver -c /etc/shadowsocks.json &
-
-安装锐速进行加速
-http://cw760.github.io/2018/01/18/%E5%9C%A8Digitalocean%E4%B8%8A%E6%90%AD%E5%BB%BAShadowsocks%E5%B9%B6%E4%BD%BF%E7%94%A8%E9%94%90%E9%80%9F%E8%BF%9B%E8%A1%8C%E5%8A%A0%E9%80%9F%E4%BC%98%E5%8C%96/
-降级内核
-rpm -ivh http://dl.iforday.com/kernel/kernel-3.10.0-229.1.2.el7.x86_64.rpm --force --nodeps
-rpm -qa|grep kernel  如果229内核在列表中，这安装成功
-reboot -h now
-uname -a
-确认内核已经降级3.10
-
-wget -N --no-check-certificate \
-https://raw.githubusercontent.com/91yun/serverspeeder/master/serverspeeder-all.sh \
-&& bash serverspeeder-all.sh
-
-查看锐速是否运行
-service serverSpeeder status
-
-
-https://github.com/FelisCatus/SwitchyOmega/wiki/GFWList.bak
