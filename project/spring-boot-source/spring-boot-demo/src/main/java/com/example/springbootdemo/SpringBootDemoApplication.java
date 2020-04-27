@@ -9,6 +9,7 @@ import java.util.Properties;
 @PropertySource("classpath:application-property-source.properties")
 @SpringBootApplication
 public class SpringBootDemoApplication {
+
     public static void main(String[] args) {
 
         System.setProperty("test.property", "9、Java系统属性（System.getProperties()）");
@@ -19,4 +20,5 @@ public class SpringBootDemoApplication {
         app.setDefaultProperties(properties);
         app.run(args);
     }
+
 }
