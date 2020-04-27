@@ -12,8 +12,14 @@ public class MyApplicationRunner implements ApplicationRunner {
     @Value("${test.property}")
     String testProperty;
 
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("###输出test.property："+testProperty);
+
+
+        System.out.println("###输出test.property："+MyEnvironmentAware.getProperty("test.property"));
+
+        System.out.println("###输出test.placeholder："+MyEnvironmentAware.getProperty("test.placeholder"));
     }
 }

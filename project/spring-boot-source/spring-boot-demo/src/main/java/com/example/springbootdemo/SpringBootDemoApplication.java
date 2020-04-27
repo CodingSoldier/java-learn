@@ -19,6 +19,7 @@ public class SpringBootDemoApplication {
         properties.setProperty("test.property", "17、默认属性（通过设置SpringApplication.setDefaultProperties指定）");
         app.setDefaultProperties(properties);
         app.run(args);
+
     }
 
 }

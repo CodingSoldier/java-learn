@@ -85,15 +85,31 @@ org.springframework.boot.context.config.ConfigFileApplicationListener.Loader#loa
 org.springframework.boot.context.config.ConfigFileApplicationListener.Loader.asDocuments()处理application.properties中的spring.profiles.active、spring.profiles.include
     List<Document> documents = loadDocuments(loader, name, resource);    
     获取到的documents包含两个属性activeProfiles、includeProfiles
+    documents的propertySource的source就包含了配置文件中的键值对test.property
+    
+org.springframework.core.env.MutablePropertySources.addLast
+    MutablePropertySources类 将source添加到 List<PropertySource<?>> propertySourceList = this.propertySourceList  
+    this.propertySourceList.add(propertySource);  
+
+    org.springframework.boot.context.config.ConfigFileApplicationListener.Loader 
+    的 loaded 属性定义是 Map<Profile, MutablePropertySources> loaded
+    
+    即ConfigFileApplicationListener.Loader -> loaded属性是一个map，key是profile名称，value是MutablePropertySources对象
+    MutablePropertySources的this.propertySourceList属性的PropertySource对象的source就存储了配置文件的key-value
+      
+    
 回到org.springframework.boot.context.config.ConfigFileApplicationListener.Loader.load()
     this.loaded是LinedHashMap{key是profile: value是配置文件}。this.loaded..source是配置文件中的键值
     this.loaded中默认配置文件application.properties的key是null  
+    
 org.springframework.boot.context.config.ConfigFileApplicationListener.Loader#addLoadedPropertySource()
     MutablePropertySources destination = this.environment.getPropertySources(); 获取环境配置集合
-    将this.load..source中的配置添加到destination当中，配置文件的key-value添加给environment就完成了
+    this.environment 的 destination 是各种配置类型例如：
+        OriginTrackedMapPropertySource是由properties文件创建的对象
+        JsonPropertySource包含了SPRING_APPLICATION_JSON的配置
   
   
 
+org.springframework.boot.context.properties.source.ConfigurationPropertySourcesPropertySource.findConfigurationProperty()
+    循环Environment的PropertySources
 
-
-   
