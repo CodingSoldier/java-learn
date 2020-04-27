@@ -20,6 +20,6 @@ public class MyApplicationRunner implements ApplicationRunner {
 
         System.out.println("###输出test.property："+MyEnvironmentAware.getProperty("test.property"));
 
-        System.out.println("###输出test.placeholder："+MyEnvironmentAware.getProperty("test.placeholder"));
+        System.out.println("###输出test.placeholder："+MyEnvironmentAware.getProperty("num"));
     }
 }

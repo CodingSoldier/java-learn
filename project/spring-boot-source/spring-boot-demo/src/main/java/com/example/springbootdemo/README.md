@@ -70,6 +70,7 @@ org.springframework.boot.context.config.ConfigFileApplicationListener.Loader.loa
     load(...)然后加载默认的配置文件比如application.properties
         加载application.properties后会读取application.properties中配置的spring.profiles.active、spring.profiles.include
             再加载spring.profiles.active、spring.profiles.include中配置的文件
+            
     但有意思的是，即便获取了命令行中的配置，但是this.profiles=[null, 命令行中配置的profile]，在循环处理this.profiles的时候，由于第一个元素是null，仍然是先处理默认配置文件application.properties
 org.springframework.boot.context.config.ConfigFileApplicationListener.Loader#initializeProfiles()
     获取程序启动参数中配置的--spring.profiles.active、--spring.profiles.include配置的profile，此方法不会处理配置文件中的这两个属性，只会处理程序启动参数中的这两个配置。为什么只有命令行中配置的参数才生效？因为此时任然未加载任何properties配置文件，this.profiles仍然是一个[null]。后面的代码会查找命令行--spring.profiles.default的配置，没有配置则返回default  
@@ -109,7 +110,11 @@ org.springframework.boot.context.config.ConfigFileApplicationListener.Loader#add
         JsonPropertySource包含了SPRING_APPLICATION_JSON的配置
   
   
-
-org.springframework.boot.context.properties.source.ConfigurationPropertySourcesPropertySource.findConfigurationProperty()
+org.springframework.core.env.PropertySourcesPropertyResolver.getProperty()
+循环出PropertyResolver中的每个配置类    
+    org.springframework.boot.context.properties.source.ConfigurationPropertySourcesPropertySource.findConfigurationProperty()
     循环Environment的PropertySources
+
+    value = resolveNestedPlaceholders((String) value);
+    处理占位符，占位符没有先后顺序
 

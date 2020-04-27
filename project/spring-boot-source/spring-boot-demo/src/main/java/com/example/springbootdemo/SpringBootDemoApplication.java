@@ -2,6 +2,7 @@ package com.example.springbootdemo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.env.RandomValuePropertySource;
 import org.springframework.context.annotation.PropertySource;
 
 import java.util.Properties;
@@ -13,6 +14,8 @@ public class SpringBootDemoApplication {
     public static void main(String[] args) {
 
         System.setProperty("test.property", "9、Java系统属性（System.getProperties()）");
+
+        RandomValuePropertySource random = new RandomValuePropertySource("myRandom");
 
         SpringApplication app = new SpringApplication(SpringBootDemoApplication.class);
         Properties properties = new Properties();
