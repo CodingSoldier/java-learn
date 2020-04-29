@@ -15,7 +15,7 @@ https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-featu
          	name=SPRING_APPLICATION_JSON
          	value={"test.property":"5、来自SPRING_APPLICATION_JSON（嵌入在环境变量或系统属性中的内联JSON）的属性"}
         
-        
+        +
     6、ServletConfig初始化参数
     7、ServletContext初始化参数
     8、java:comp/env中的JNDI属性
@@ -64,26 +64,70 @@ aware_processor包模仿MyEnvironmentAware#setEnvironment()源码的
     org.springframework.context.support.ApplicationContextAwareProcessor.postProcessBeforeInitialization()
         org.springframework.context.support.ApplicationContextAwareProcessor#invokeAwareInterfaces()
 
-listeners.environmentPrepared(environment);            
-org.springframework.boot.context.config.ConfigFileApplicationListener.Loader.load()
-    initializeProfiles()先加载命令行配置的profile
-    load(...)然后加载默认的配置文件比如application.properties
-        加载application.properties后会读取application.properties中配置的spring.profiles.active、spring.profiles.include
-            再加载spring.profiles.active、spring.profiles.include中配置的文件
-            
-    但有意思的是，即便获取了命令行中的配置，但是this.profiles=[null, 命令行中配置的profile]，在循环处理this.profiles的时候，由于第一个元素是null，仍然是先处理默认配置文件application.properties
-org.springframework.boot.context.config.ConfigFileApplicationListener.Loader#initializeProfiles()
-    获取程序启动参数中配置的--spring.profiles.active、--spring.profiles.include配置的profile，此方法不会处理配置文件中的这两个属性，只会处理程序启动参数中的这两个配置。为什么只有命令行中配置的参数才生效？因为此时任然未加载任何properties配置文件，this.profiles仍然是一个[null]。后面的代码会查找命令行--spring.profiles.default的配置，没有配置则返回default  
-org.springframework.boot.context.config.ConfigFileApplicationListener.Loader.getSearchLocations()
-    判断是否配置了spring.config.location，若没有则查找默认路径，共配置了4个classpath:/,classpath:/config/,file:./,file:./config/
-org.springframework.boot.context.config.ConfigFileApplicationListener.Loader.getSearchNames()
-    若没配置spring.config.name，则获取默认的配置文件前缀application 
-org.springframework.boot.context.config.ConfigFileApplicationListener.Loader.load(String location, String name, Profile profile, DocumentFilterFactory filterFactory, DocumentConsumer consumer)
-    this.propertySourceLoaders有2个loader：PropertiesPropertySourceLoader（"properties", "xml"）、YamlPropertySourceLoader（"yml", "yaml"）开始加载默认配置文件，比如application.properties
-org.springframework.boot.context.config.ConfigFileApplicationListener.Loader#loadForFileExtension()
-    刚开始时 profile == null，加载application.properties
-    然后读取到application.properties中配置spring.profiles.active、spring.profiles.include，判断条件profile != null，读取spring.profiles.active、spring.profiles.include配置文件
-org.springframework.boot.context.config.ConfigFileApplicationListener.Loader.asDocuments()处理application.properties中的spring.profiles.active、spring.profiles.include
+org.springframework.boot.SpringApplication.prepareEnvironment
+准备环境
+    org.springframework.boot.SpringApplicationRunListeners.environmentPrepared
+    listeners.environmentPrepared(environment);
+    监听       
+        org.springframework.boot.context.config.ConfigFileApplicationListener.Loader.load()
+            initializeProfiles()
+                this.profiles.add(null);  
+                首先添加了一个null元素，可以把 application.properties 的profile认为是null
+
+                Set<Profile> activatedViaProperty = getProfilesFromProperty(ACTIVE_PROFILES_PROPERTY);
+                Set<Profile> includedViaProperty = getProfilesFromProperty(INCLUDE_PROFILES_PROPERTY);                
+                此时还没加载配置文件，只能先加载命令行配置的spring.profiles.active、spring.profiles.include
+
+                if this.profiles.size() == 1 
+                this.profiles.add(defaultProfile);
+                如果命令行没有配置 spring.profiles.active、spring.profiles.include 就加一个default的profile
+    
+            initializeProfiles()执行完后
+            this.profiles=[null, 命令行中配置的spring.profiles.active和spring.profiles.include/或者default]
+
+
+org.springframework.boot.context.config.ConfigFileApplicationListener.Loader#load()
+    ConfigFileApplicationListener.Loader.getSearchLocations()
+    查找配置文件的路径，默认会查找4个路径 classpath:/,classpath:/config/,file:./,file:./config/
+    可以通过 --spring.config.additional-location 添加新的配置文件路径
+
+    org.springframework.boot.context.config.ConfigFileApplicationListener.Loader.getSearchNames()
+    若没配置spring.config.name，则获取文件名，不带文件类型 application
+    这样是为了能加载properties和yaml文件
+
+    org.springframework.boot.context.config.ConfigFileApplicationListener.Loader#load()
+    使用this.propertySourceLoaders加载配置文件
+    this.propertySourceLoaders有2个loader：PropertiesPropertySourceLoader（"properties", "xml"）、YamlPropertySourceLoader（"yml", "yaml"）
+
+        org.springframework.boot.context.config.ConfigFileApplicationListener.Loader#loadForFileExtension
+        加载配置文件
+
+可以看出来：
+    1、先循环路径
+    2、循环加载器，不同的加载器加载不同的配置文件类型
+    3、通过加载器在路径中加载配置文件    
+
+org.springframework.boot.context.config.ConfigFileApplicationListener.Loader#loadDocuments
+    List<PropertySource<?>> loaded = loader.load(name, resource);
+    将文件加载到this.loadDocumentsCache
+        org.springframework.boot.env.PropertiesPropertySourceLoader#load
+        Properties文件加载器
+            org.springframework.boot.env.OriginTrackedPropertiesLoader#load(boolean)
+            加载方法        
+    先将文件加载为PropertySource对象
+    documents = asDocuments(loaded);
+    将loaded转为document对象
+    this.loadDocumentsCache.put(cacheKey, documents);
+    将document添加到缓存
+
+org.springframework.core.env.MutablePropertySources#addLast
+    this.propertySourceList.add(propertySource);
+    将配置文件生成的对象添加到 this.propertySourceList 中，this.propertySourceList是一个 new CopyOnWriteArrayList<>()
+
+// org.springframework.boot.context.config.ConfigFileApplicationListener.Loader#loadForFileExtension()
+//     刚开始时 profile == null，加载application.properties
+//     然后读取到application.properties中配置spring.profiles.active、spring.profiles.include，判断条件profile != null，读取spring.profiles.active、spring.profiles.include配置文件
+// org.springframework.boot.context.config.ConfigFileApplicationListener.Loader.asDocuments()处理application.properties中的spring.profiles.active、spring.profiles.include
     List<Document> documents = loadDocuments(loader, name, resource);    
     获取到的documents包含两个属性activeProfiles、includeProfiles
     documents的propertySource的source就包含了配置文件中的键值对test.property
@@ -98,6 +142,11 @@ org.springframework.core.env.MutablePropertySources.addLast
     即ConfigFileApplicationListener.Loader -> loaded属性是一个map，key是profile名称，value是MutablePropertySources对象
     MutablePropertySources的this.propertySourceList属性的PropertySource对象的source就存储了配置文件的key-value
       
+
+load(...)然后加载默认的配置文件比如application.properties
+    加载application.properties后会读取application.properties中配置的spring.profiles.active、spring.profiles.include
+        再加载spring.profiles.active、spring.profiles.include中配置的文件
+
     
 回到org.springframework.boot.context.config.ConfigFileApplicationListener.Loader.load()
     this.loaded是LinedHashMap{key是profile: value是配置文件}。this.loaded..source是配置文件中的键值
