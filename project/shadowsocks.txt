@@ -17,5 +17,41 @@ vim /etc/shadowsocks-libev/config.json
 systemctl enable shadowsocks-libev
 systemctl start shadowsocks-libev
 systemctl status shadowsocks-libev
+systemctl stop shadowsocks-libev
 
 
+
+
+
+yum install firewalld -y
+systemctl start firewalld
+
+
+服务端安装ocserv
+wget https://gitee.com/lookingdreamer/SPPPOTools/raw/master/centos/vpn/anyconnect/ocserv-auto.sh
+
+/bin/bash ocserv-auto.sh
+
+IPv4:		127.0.0.1 159.65.130.40 10.15.0.5
+Port:		443
+Username:	user
+Password:	cpq..
+
+启动服务
+service ocserv start
+关闭服务器
+service ocserv stop
+重启服务
+service ocserv restart
+
+
+
+客户端安装 openconnect-gui
+https://github.com/openconnect/openconnect-gui/releases
+
+Ctrl+N
+请输入http://ip:port
+再输入用户名密码
+
+
+https://159.65.130.40:443

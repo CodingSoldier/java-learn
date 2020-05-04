@@ -82,8 +82,9 @@ org.springframework.boot.SpringApplication.prepareEnvironment
                 this.profiles.add(defaultProfile);
                 如果命令行没有配置 spring.profiles.active、spring.profiles.include 就加一个default的profile
     
-            initializeProfiles()执行完后
-            this.profiles=[null, 命令行中配置的spring.profiles.active和spring.profiles.include/或者default]
+
+initializeProfiles()执行完后，this.profiles=[null, 命令行中配置的spring.profiles.active和spring.profiles.include/或者default]。
+在本教程中this.profiles=[null, "dev"]
 
 
 org.springframework.boot.context.config.ConfigFileApplicationListener.Loader#load()
@@ -92,8 +93,7 @@ org.springframework.boot.context.config.ConfigFileApplicationListener.Loader#loa
     可以通过 --spring.config.additional-location 添加新的配置文件路径
 
     org.springframework.boot.context.config.ConfigFileApplicationListener.Loader.getSearchNames()
-    若没配置spring.config.name，则获取文件名，不带文件类型 application
-    这样是为了能加载properties和yaml文件
+    若没配置spring.config.name，则获取文件名，不带文件类型，例如：application。这样是为了能加载properties和yaml文件
 
     org.springframework.boot.context.config.ConfigFileApplicationListener.Loader#load()
     使用this.propertySourceLoaders加载配置文件
@@ -124,10 +124,6 @@ org.springframework.core.env.MutablePropertySources#addLast
     this.propertySourceList.add(propertySource);
     将配置文件生成的对象添加到 this.propertySourceList 中，this.propertySourceList是一个 new CopyOnWriteArrayList<>()
 
-// org.springframework.boot.context.config.ConfigFileApplicationListener.Loader#loadForFileExtension()
-//     刚开始时 profile == null，加载application.properties
-//     然后读取到application.properties中配置spring.profiles.active、spring.profiles.include，判断条件profile != null，读取spring.profiles.active、spring.profiles.include配置文件
-// org.springframework.boot.context.config.ConfigFileApplicationListener.Loader.asDocuments()处理application.properties中的spring.profiles.active、spring.profiles.include
     List<Document> documents = loadDocuments(loader, name, resource);    
     获取到的documents包含两个属性activeProfiles、includeProfiles
     documents的propertySource的source就包含了配置文件中的键值对test.property
