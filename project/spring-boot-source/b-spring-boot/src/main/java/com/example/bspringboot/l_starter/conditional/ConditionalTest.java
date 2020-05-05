@@ -9,6 +9,7 @@ class ConditionalTest {
 
     @Test
     void contextLoads() {
+
         System.out.println("##########"+ApplicationUtil.getApplicationContext().getBean("conBean"));
     }
 

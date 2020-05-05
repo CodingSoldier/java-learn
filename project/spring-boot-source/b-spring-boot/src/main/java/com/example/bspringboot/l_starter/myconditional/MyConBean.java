@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 @MyConditionalOnProperty({"bean.my.conditional1", "bean.my.conditional2"})
 /**
- * 执行流程：
+执行流程：
  @MyConditionalOnProperty 使用了 @Conditional(MyOnPropertyCondition.class)
  MyOnPropertyCondition.java实现了Condition接口
  MyOnPropertyCondition#matches()获取注解@MyConditionalOnProperty的value。
