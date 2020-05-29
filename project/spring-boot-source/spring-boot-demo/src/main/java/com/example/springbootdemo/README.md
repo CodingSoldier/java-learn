@@ -15,7 +15,6 @@ https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-featu
          	name=SPRING_APPLICATION_JSON
          	value={"test.property":"5、来自SPRING_APPLICATION_JSON（嵌入在环境变量或系统属性中的内联JSON）的属性"}
         
-        +
     6、ServletConfig初始化参数
     7、ServletContext初始化参数
     8、java:comp/env中的JNDI属性
@@ -124,7 +123,7 @@ org.springframework.core.env.MutablePropertySources#addLast
     this.propertySourceList.add(propertySource);
     将配置文件生成的对象添加到 this.propertySourceList 中，this.propertySourceList是一个 new CopyOnWriteArrayList<>()
 
-    List<Document> documents = loadDocuments(loader, name, resource);    
+    List<Document> documents = loadDocuments(loader, name, resource);
     获取到的documents包含两个属性activeProfiles、includeProfiles
     documents的propertySource的source就包含了配置文件中的键值对test.property
     
