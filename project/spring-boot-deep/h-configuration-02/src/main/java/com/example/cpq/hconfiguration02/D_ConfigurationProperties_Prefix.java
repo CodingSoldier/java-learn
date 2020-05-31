@@ -19,10 +19,8 @@ public class D_ConfigurationProperties_Prefix {
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        User03 user03 = app.getBean( User03.class);
+        User03 user03 = app.getBean(User03.class);
         System.err.println("用户bean"+user03);
-
-
         app.close();
     }
 

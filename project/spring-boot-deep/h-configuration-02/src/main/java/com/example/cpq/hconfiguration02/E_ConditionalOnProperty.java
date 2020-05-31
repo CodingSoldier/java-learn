@@ -13,7 +13,7 @@ public class E_ConditionalOnProperty {
 
     /**
      * @ConditionalOnProperty 通过属性配置条件
-     * havingValue：如果name/value的值与havingValue相等，则满足条件
+     * havingValue：如果 name/value 的值与 havingValue 相等，则满足条件
      * 一般与@Bean配合，组成条件装配
      *
      * @ConfigurationProperties 读取属性

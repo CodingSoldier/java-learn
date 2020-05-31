@@ -21,8 +21,6 @@ systemctl stop shadowsocks-libev
 
 
 
-
-
 yum install firewalld -y
 systemctl start firewalld
 
@@ -35,7 +33,7 @@ wget https://gitee.com/lookingdreamer/SPPPOTools/raw/master/centos/vpn/anyconnec
 IPv4:		127.0.0.1 159.65.130.40 10.15.0.5
 Port:		443
 Username:	user
-Password:	cpq..
+Password:	c
 
 启动服务
 service ocserv start

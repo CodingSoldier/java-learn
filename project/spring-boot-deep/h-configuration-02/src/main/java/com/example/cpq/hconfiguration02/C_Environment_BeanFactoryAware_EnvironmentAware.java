@@ -52,7 +52,7 @@ public class C_Environment_BeanFactoryAware_EnvironmentAware implements BeanFact
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        User02 user02 = app.getBean( User02.class);
+        User02 user02 = app.getBean(User02.class);
         System.err.println("用户bean"+user02);
 
         app.close();

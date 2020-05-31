@@ -13,7 +13,7 @@ public class BootstrapEnableAutoConfiguration {
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        String helloWorld = context.getBean("helloWorld",String.class);
+        String helloWorld = context.getBean("helloWorld", String.class);
         System.out.println("获取到bean " + helloWorld);
 
         Bean01 bean01 =  context.getBean("bean01", Bean01.class);
