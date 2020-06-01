@@ -1,6 +1,6 @@
 package com.cpq.b.e_auto;
 
-import com.cpq.b.b_import.EnableHelloWorld;
+import com.cpq.b.b_import.EnableMyBeans;
 import com.cpq.b.d_condition.ConditionalOnSystemProperty;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * EnableAutoConfigurationBootstrap启动自动装配@EnableAutoConfiguration
  */
 @Configuration
-@EnableHelloWorld
+@EnableMyBeans
 @ConditionalOnSystemProperty(name = "user.name", value = "Administrator")
 public class HelloWorldAutoConfiguration {
 }

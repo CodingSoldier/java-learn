@@ -8,8 +8,8 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Documented
 /**
- * 使用模块装配类，HelloWorldConfiguration.class
+ * 将MyBeansConfiguration导入IOC容器中
  */
-@Import(HelloWorldConfiguration.class)
-public @interface EnableHelloWorld {
+@Import(MyBeansConfiguration.class)
+public @interface EnableMyBeans {
 }
