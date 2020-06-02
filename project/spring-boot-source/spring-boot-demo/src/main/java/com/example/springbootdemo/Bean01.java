@@ -1,10 +1,9 @@
 package com.example.springbootdemo;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnProperty(value = "enable.bean01", havingValue = "true")
+@ConditionalOnSystemAndProperty(name = "enable.bean01", value = "true")
 public class Bean01 {
     private String name;
     public Bean01() {

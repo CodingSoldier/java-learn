@@ -7,19 +7,20 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 import java.util.Map;
 
 public class OnSystemAndPropertyCondition implements Condition {
-
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-
+        // 注解属性
         Map<String, Object> attributes = metadata.getAnnotationAttributes(ConditionalOnSystemAndProperty.class.getName());
         String propertyName = String.valueOf(attributes.get("name"));
-        boolean propertyValue = Boolean.parseBoolean(String.valueOf(attributes.get("value")));
+        String propertyValue = String.valueOf(attributes.get("value"));
 
-        String javaPropertyValue = System.getProperty(propertyName);
+        // 配置文件属性
+        String property = context.getEnvironment().getProperty(propertyName, "");
 
+        // 系统属性
+        String systemUserName = System.getProperty("user.name");
 
-
-        return propertyValue.equals(javaPropertyValue);
+        // ConditionalOnSystemProperty注解属性等于配置文件属性，并且系统用户名是Administrator，则注解条件成立
+        return property.equals(propertyValue) && "Administrator".equals(systemUserName);
     }
-
 }

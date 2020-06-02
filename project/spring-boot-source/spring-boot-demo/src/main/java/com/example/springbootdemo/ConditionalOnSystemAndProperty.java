@@ -11,5 +11,5 @@ import java.lang.annotation.*;
 public @interface ConditionalOnSystemAndProperty {
     String name() default "";
 
-    boolean value() default false;
+    String value() default "";
 }

@@ -21,6 +21,13 @@ systemctl stop shadowsocks-libev
 
 
 
+
+
+
+
+
+
+
 yum install firewalld -y
 systemctl start firewalld
 
