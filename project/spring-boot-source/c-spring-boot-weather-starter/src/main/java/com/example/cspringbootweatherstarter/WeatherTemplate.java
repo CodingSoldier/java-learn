@@ -1,10 +1,10 @@
 package com.example.cspringbootweatherstarter;
 
-public class WeatherService {
+public class WeatherTemplate {
 
-    private WeatherSource weatherSource;
+    private WeatherProperties weatherSource;
 
-    public WeatherService(WeatherSource weatherSource) {
+    public WeatherTemplate(WeatherProperties weatherSource) {
         this.weatherSource = weatherSource;
     }
 

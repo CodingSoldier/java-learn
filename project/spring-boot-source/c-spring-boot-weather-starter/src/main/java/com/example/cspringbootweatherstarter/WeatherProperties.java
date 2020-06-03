@@ -3,7 +3,7 @@ package com.example.cspringbootweatherstarter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "weather")
-public class WeatherSource {
+public class WeatherProperties {
 
     private String type = "type默认";
 

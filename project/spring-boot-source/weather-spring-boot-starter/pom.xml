@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>c-spring-boot-weather-starter</artifactId>
+    <artifactId>weather-spring-boot-starter</artifactId>
     <version>0.0.1</version>
-    <name>c-spring-boot-weather-starter</name>
+    <name>weather-spring-boot-starter</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>

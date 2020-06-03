@@ -1,4 +1,4 @@
-package com.example.cspringbootweatherstarter;
+package com.example.weatherspringbootstarter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -9,28 +9,21 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 /**
-WeatherSource.class 只使用了 @ConfigurationProperties(prefix = "weather") 注解，没使用@Component，不会注入到IOC容器。
- @EnableConfigurationProperties(WeatherSource.class) 就是把带有@ConfigurationProperties的WeatherSource注入IOC
+ * @EnableConfigurationProperties的作用是使WeatherProperties配置类生效
+ * @ConditionalOnProperty 配置了weather.enable=true的时候，本类生效
  */
 @EnableConfigurationProperties(WeatherProperties.class)
 @ConditionalOnProperty(name = "weather.enable", havingValue = "true")
 public class WeatherAutoConfiguration {
-
-    /**
-     * @EnableConfigurationProperties(WeatherSource.class)已经将WeatherSource注入了IOC
-     */
     @Autowired
     private WeatherProperties weatherProperties;
 
     /**
-     * 使用weatherSource创建weatherService，并将weatherService注入IOC
-     * @ConditionalOnMissingBean(WeatherService.class)IOC中没有WeatherService才创建此bean
-     * @return weatherService
+     * @ConditionalOnMissingBean 如果ioc容器中没有WeatherTemplate，则本bean生效
      */
     @Bean
     @ConditionalOnMissingBean(WeatherTemplate.class)
     public WeatherTemplate weatherService(){
         return new WeatherTemplate(weatherProperties);
     }
-
 }

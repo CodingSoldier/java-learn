@@ -1,6 +1,6 @@
 package com.example.bspringboot.l_starter;
 
-import com.example.cspringbootweatherstarter.WeatherService;
+import com.example.weatherspringbootstarter.WeatherTemplate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,12 +13,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class WeatherStarterTest {
 
     @Autowired
-    WeatherService weatherService;
+    WeatherTemplate weatherTemplate;
 
     @Test
     void contextLoads() {
-        System.out.println("########## "+ weatherService.getRate());
-        System.out.println("########## "+ weatherService.getType());
-
+        weatherTemplate.weatherPrint();
     }
 }
