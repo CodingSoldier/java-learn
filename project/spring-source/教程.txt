@@ -1,0 +1,47 @@
+编译spring framework
+spring github
+	https://github.com/spring-projects/spring-framework
+
+Build from Source 编译
+	https://github.com/spring-projects/spring-framework/wiki/Build-from-Source
+
+使用idea编译
+	https://github.com/spring-projects/spring-framework/blob/master/import-into-idea.md	
+
+修改build.gradle，此文件相当于maven的pom.xml
+	buildscript加入：
+		repositories {
+	        maven{ url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+	        maven{ url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'}
+	    }
+
+    repositories {
+    	mavenCentral()
+    	maven { url "https://repo.spring.io/libs-spring-framework-build" }
+    }
+    修改为
+	repositories {
+		maven{ url 'https://maven.aliyun.com/nexus/content/groups/public/'}
+    	maven{ url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'}			
+		mavenCentral()
+		maven { url "https://repo.spring.io/libs-spring-framework-build" }
+	}
+
+spring项目导入IDEA
+	编译spring-oxm。要开代理。D:\spring-framework-5.2.0.RELEASE
+		cd D:\spring-framework-5.2.0.RELEASE
+		gradlew.bat :spring-oxm:compileTestJava
+		会先下载一个gradle包
+	导入项目
+		File -> New -> Project from Existing Sources -> Navigate to directory -> Select build.gradle
+		选择本地的gradle，版本是5.6.2
+		使用open的方式打开 spring-framework-5.2.0.RELEASE
+	排除spring-aspects		
+		右键项目，Load/Unload Modules，选择spring-aspects
+	编译整个项目，如果kotlin报错，升级idea的kotlin，在Languages & Frameworks中
+			
+
+在spring-framework下新增spring-demo
+
+
+
