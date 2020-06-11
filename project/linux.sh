@@ -41,17 +41,17 @@ vim /etc/sysconfig/network-scripts/ifcfg-ens33
 
 网卡信息
 DEVICE=ens33                    网卡设备名
-BOOTPROTO=none                是否自动获取IP（none不指定、static静态ip、dhcp通过dhcp服务器分配）            
+BOOTPROTO=none                  是否自动获取IP（none不指定、static静态ip、dhcp通过dhcp服务器分配）            
 HWADDR=00:XX:XX:XX:XX:XX        MAC地址
-NM__CONTROLLED=yes            是否可以有Network Manager图形管理器工具托管
-ONBOOT=yes                     是否随网络服务启动，ens33生效
-TYPE=Ethernet                    以太网类型
+NM__CONTROLLED=yes              是否可以有Network Manager图形管理器工具托管
+ONBOOT=yes                      是否随网络服务启动，ens33生效
+TYPE=Ethernet                   以太网类型
 UUID=“XXXX”                     唯一识别码
-IPADDR=192.168.0.222             IP地址
+IPADDR=192.168.0.222            IP地址
 NETMASK=255.255.255.0           子网掩码
 GATEWAY=192.268.0.0             网关
-DNS1=202.106.0.20                DNS
-IPV6INIT=no                      ipv6
+DNS1=202.106.0.20               DNS
+IPV6INIT=no                     ipv6
 USERCTL=no                      不允许非root用户控制此网卡
 
 修改主机信息  vim /etc/sysconfig/network
