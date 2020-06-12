@@ -15,6 +15,9 @@
 	print('hello')   使用js打印hello
 	exit    退出
 
+设置账号密码
+db.createUser({ user: 'root', pwd: 'poly2017', roles: [ { role: "userAdminAnyDatabase", db: "admin" } ] });	
+
 use test    使用test数据库
 show collections      展示集合	
 
@@ -330,7 +333,20 @@ db.accounts.find({name: "b33"}).limit(1).count(true);
 skip() 会在 limit() 之前执行
 
 
+文档投影，只返回部分字段。返回name字段
+	db.accounts.find({},{name: 1})
+连 _id 也不返回
+	db.accounts.find({},{name: 1, _id:0})
+不返回name、_id
+	db.accounts.find({},{name: 0, _id:0})
+除了_id，其他字段不能混用包含于不包含
+	db.accounts.find({},{balance:1, name: 0, _id:0})
 
+切割数组，报错了
+	db.accounts.find({},{name: 1, _id:0, contact: {$slide: 1}})
+
+$elemMatch返回数组字段中满足筛选条件的第一个元素
+db.accounts.find({},{_id: 0, name: 1, contact: {$elemMatch: {$gt: "Alabama"}}})
 
 
 
