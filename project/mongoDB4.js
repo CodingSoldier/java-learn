@@ -1,4 +1,4 @@
-﻿安装mongoDB
+安装mongoDB
 	docker pull mongo:4
 	mkdir -p /mymongo/data
 	docker run --restart always --name mymongo -p 27017:27017 -v /mymongo/data:/data/db -d mongo:4
@@ -35,9 +35,8 @@ db.<collection>.insertOne(
 创建一个文档，例子
 db.accounts.insertOne(
 	{
-		_id: "account1",
 		name: "alice11",
-		balance: 100
+		balance: 1001
 	}
 )
 
@@ -266,12 +265,12 @@ _id.type存在，且值不等于savings
 	db.accounts.insert([
 		{
 			name: "jack",
-			balance: 2000,
-			contact: ["1111", "Alabama", "US"]
+			balance: 20010,
+			contact: ["11211", "Alabam2a", "US"]
 		},
 		{
 			name: "karen",
-			balance: 2500,
+			balance: 250220,
 			contact: [["1111", "22222"], "Beijing", "China"]
 		}
 	])
@@ -347,6 +346,411 @@ skip() 会在 limit() 之前执行
 
 $elemMatch返回数组字段中满足筛选条件的第一个元素
 db.accounts.find({},{_id: 0, name: 1, contact: {$elemMatch: {$gt: "Alabama"}}})
+
+更新文档
+db.<collection>.update(<query>, <update>, <options>)
+<query>文档定义了更新操作时筛选文档的条件
+<update>文档提供了更新的内容
+<options>文档声明更新操作的选项
+如果<update>文档不包含任何更新操作符，db.collection.update()将会使用<update>文档直接替换集合中符合<query>文档筛选条件的文档
+db.accounts.find({name: "alice"})
+
+更新操作，_id不会被更新
+	db.accounts.update({name: "alice"}, {name: "alice", balance: 1})
+不建议在update中使用_id
+	db.accounts.update({name: "alice"}, {_id: "account1", name: "alice", balance: 2})
+
+db.accounts.find({balance: {$gt: 2, $lt: 2000}}) 有两条记录
+
+如果使用update文档替换整篇文档时，只有第一篇文档会被更新
+结果只有第一个文档被更新了
+	db.accounts.update({balance: {$gt: 2, $lt: 2000}}, {name: "alice", balance: 100, add: "新增字段"})
+
+更新特定字段
+	文档更新操作符
+		$set 更新、新增字段
+		$unset 删除字段
+		$rename 重命名字段
+		$inc 加
+		$mul 减
+
+db.accounts.find({name: "jack"}).pretty()
+
+$set新增一个字段
+	db.accounts.update({name: "jack"}, 
+	{$set:
+		{
+			balance: 100,
+			info: {
+				dateOpened: new Date("2016-05-18T16:00:00Z"),
+				branch: "branch1"
+			}
+		}
+	})
+
+$set更新字段
+	db.accounts.update({name: "jack"}, 
+		{$set:
+			{
+				"info.dateOpened": new Date("2017-05-18T16:00:00Z")
+			}
+		})
+$set更新数组
+	db.accounts.update({name: "jack"}, 
+		{$set:
+			{
+				"contact.0": "666"
+			}
+		})
+$set更新数组，新增元素，中间下标填充null
+	db.accounts.update({name: "jack"}, 
+		{$set:
+			{
+				"contact.5": "666"
+			}
+		})
+$unset删除数组元素，长度不变，只是元素被设置为null
+	db.accounts.update({name: "jack"}, 
+		{$unset:
+			{
+				"contact.0": ""
+			}
+		})
+$rename重命名字段，如果字段不存在，文档不会被更新
+	db.accounts.update({name: "jack"}, 
+		{$rename:
+			{
+				"notExit": "name"
+			}
+		})
+
+更新数组
+	$addToSet  向数组中添加元素
+	$pop    从数组中移除元素
+	$pull  选择性地移除元素
+	$pullAll   选择性地移除元素
+	$push   添加元素
+
+$addToSet元素在数组中已经存在，不会新增
+	db.accounts.update({name: "jack"}, 
+		{$addToSet:
+			{
+				"contact": "Alabama"
+			}
+		})
+	数组添加元素
+	db.accounts.update({name: "jack"}, 
+		{$addToSet:
+			{
+				"contact": ["Alabama", "dasdfa"]
+			}
+		})	
+	$addToSet和$each组合，数组元素添加到数组
+	db.accounts.update({name: "jack"}, 
+		{$addToSet:
+			{
+				"contact": {$each: ["Alabama", "dasdfa"]}
+			}
+		})
+	删除数组元素
+	db.accounts.update({name: "jack"}, 
+		{
+			$pop: {contact: 1}
+		})
+
+	<options> multi: true 更新多篇文档。mongodb只能保证单个文档修改的原子性，不能保证多个文档更新的原子性
+	db.accounts.update({name: "jack"}, 
+		{
+			$set: {currency: 1}
+		},{
+			multi: true
+		})
+
+删除文档
+	db.<collection>.remove(<query>, <options>)
+		<query>     筛选条件
+		<options>   删除操作的参数
+删除文档，remove跟update默认只修改一篇文档不一样，remove默认会删除满足筛选条件的所有文档
+	db.accounts.remove({balance: 100})
+
+删除集合
+	db.<collection>.drop()
+
+聚合操作
+	db.<collection>.aggregate(<pipeline>, <options>)
+		<pipeline> 定义使用的聚合管道阶段和聚合操作符
+		<options> 操作参数
+聚合表达式
+	$<field>  用$来指示字段路径
+	$<field>.<sub-field> 使用$和.表示内嵌字段路径
+使用$$指示系统变量，$$CURRENT指示当前操作的文档
+
+
+db.accounts.insertMany([
+	{
+		name: {firstName: "alice", lastName: "wong"},
+		balance: 50
+	},{
+		name: {firstName: "bob", lastName: "yang"},
+		balance: 20
+	}
+])
+
+$project对文档重新投影，可以灵活控制文档输出格式
+_id 不输出，balance 输出，$name.firstName重命名为clientName
+	db.accounts.aggregate([{
+		$project: {
+			_id: 0,
+			balance: 1,
+			clientName: "$name.firstName"
+		}
+	}])
+
+$match 筛选，跟CRUD的筛选语法相同
+	db.accounts.aggregate([{
+		$match: {
+			"name.firstName": "alice"
+		}
+	}])
+$or条件
+	db.accounts.aggregate([{
+		$match: {
+			$or: [
+				{"name.firstName": "alice"},
+				{"name.lastName": "yang"},
+			]
+		}
+	}])
+两个聚合阶段一起使用
+	db.accounts.aggregate([{
+		$match: {
+			$or: [
+				{"name.firstName": "alice"},
+				{"name.lastName": "yang"},
+			]
+		}
+	},{
+		$project: {
+			_id: 0
+		}
+	}])
+
+
+
+db.accounts.update({
+	"name.firstName": "alice"
+},{
+	$set: {currency: ["CNY", "USD"]}
+})
+
+db.accounts.update({
+	"name.firstName": "bob"
+},{
+	$set: {currency: "GBP"}
+})
+
+会把数组展开成元素，生成新文档，文档的其他部分不变。查询结果增多
+db.accounts.aggregate([{
+	$unwind: {
+		path: "$currency"
+	}
+}])
+
+排序，balance从小到大，name.lastName从大到小
+db.accounts.aggregate([{
+	$sort: {balance: 1, "name.lastName": -1}
+}])
+
+
+db.forex.insertMany([{
+		ccy: "USD",
+		rate: 6.91,
+		date: new Date(2018-12-21)
+	},{
+		ccy: "GBP",
+		rate: 8.72,
+		date: new Date(2018-08-21)
+	},{
+		ccy: "CNY",
+		rate: 1.0,
+		date: new Date(2018-12-21)
+}])
+
+
+使用$lookup对单一字段值进行查询
+	$lookup: {
+		from: 同一个数据库中的其他集合
+		localField: 管道中用于查询的字段
+		foreignField: from中的字段
+		as: 新插入字段的名字
+	}
+accounts的currency中包含forex.ccy的值，forex的文档会加入到forexData字段
+	db.accounts.aggregate([{
+		$lookup: {
+			from: "forex",
+			localField: "currency",
+			foreignField: "ccy",
+			as: "forexData"
+		}
+	}])
+
+$unwind会将currency没有值的文档过滤掉，在执行$lookup，可以减少文档数
+	db.accounts.aggregate([{
+		$unwind: {
+			path: "$currency"
+		}
+	},{
+		$lookup: {
+			from: "forex",
+			localField: "currency",
+			foreignField: "ccy",
+			as: "forexData"
+		}
+	}])
+
+
+$lookup: {
+	from: 同一个数据库中的其他集合
+	let: 如果pipeline需要原管道文档的字段，使用let对字段进行声明。let本身就是声明变量的意思
+	pipeline: 对查询集合中的文档使用聚合阶段处理
+	as: 新插入字段的名字
+}
+pipeline查询条件和管道文档之间没有直接关联，称为不相关查询，$lookup从3.6版本开始支持不相关查询
+	db.accounts.aggregate([{
+		$lookup: {
+			from: "forex",
+			pipeline: [{
+				$match: {
+					date: new Date(2018-12-21)
+				}
+			}],
+			as: "forexData"
+		}
+	}])
+
+使用let声明bal变量，使用$expr结合$$bal获取系统变量
+	db.accounts.aggregate([{
+		$lookup: {
+			from: "forex",
+			let: {bal: "$balance"},
+			pipeline: [{
+				$match: {
+					$expr: {
+						$and: [
+							{$eq: ["$date", new Date(2018-12-21)]},
+							{$gt: ["$$bal", 20]}
+						]
+					}
+				}
+			}],
+			as: "forexData"
+		}
+	}]).pretty()
+
+聚合
+$group:{
+	_id: 分组字段,
+	<field>: 分组之后再进行其他操作，例如求和，使用聚合操作符重新定义字段
+}
+
+db.transactions.insertMany([{
+	symbol: "600519",
+	qty: 100,
+	price: 567.4,
+	currency: "CNY"
+},{
+	symbol: "AMZN",
+	qty: 1,
+	price: 1377.5,
+	currency: "USD"
+},{
+	symbol: "AAPL",
+	qty: 2,
+	price: 150.7,
+	currency: "USD"
+}])
+
+使用currency分组，
+	db.transactions.aggregate([{
+		$group:{
+			_id: "$currency"
+		}
+	}])
+	输出结果是：
+		{ "_id" : "USD" }
+		{ "_id" : "CNY" }
+
+分组后对qty求和并赋值给totalQty
+$multiply乘法
+count: {$sum: 1}，有一篇文档就加1，分组中文档的数量
+$max分组中最大值
+$min分组中最小值
+	db.transactions.aggregate([{
+		$group: {
+			_id: "$currency",
+			totalQty: { $sum: "$qty"},
+			totalNotional: { $sum: { $multiply: ["$price", "$qty"] } },
+			avgPrice: {$avg: "$price"},
+			count: {$sum: 1},
+			maxNotional: {$max: {$multiply: ["$price", "$qty"]}},
+			minNotional: {$min: {$multiply: ["$price", "$qty"]}}
+		}
+	}])
+
+使用聚合操作符创建数组字段
+	db.transactions.aggregate([{
+		$group: {
+			_id: "$currency",
+			symbols: {$push: "$symbol"}
+		}
+	}])
+
+$out将聚合管道中的文档写入一个新集合
+	db.transactions.aggregate([{
+		$group: {
+			_id: "$currency",
+			symbols: {$push: "$symbol"}
+		}
+	},{
+		$out: "output"
+	}])
+
+	db.output.find()
+
+管道文档写入一个已经存在的文档，会清除掉output原有的文档
+	db.transactions.aggregate([{
+		$group: {
+			_id: "$symbol",
+			totalNotional: { $sum: { $multiply: ["$price", "$qty"] } },
+		}
+	},{
+		$out: "output"
+	}])
+
+	db.output.find()
+
+db.<collection>.aggregate(<pipeline>, <options>)
+	options参数
+		allowDiskUse: <boolean>
+		每个聚合管道阶段使用的内存不能超过100MB。allowDiskUse=true 内存不足时，将数据写入临时文件中，临时文件默认值为/data/db/_tmp
+
+	db.transactions.aggregate([{
+		$group: {
+			_id: "$symbol",
+			symbols: {$push: "$symbol"}
+		}
+	}],{
+		allowDiskUse: true
+	})
+
+mongoDB默认的优化
+	$match尽可能地在$project之前执行，如果$match使用了$project定义的新字段，$match就没法放在$project阶段了
+	$match在$sort之前
+	$skip在$project
+
+
+
+
 
 
 
