@@ -748,8 +748,8 @@ mongoDB默认的优化
 	$match在$sort之前
 	$skip在$project
 
-
-
+mongoDB索引也是使用B-tree
+复合键索引可以对多个字段排序
 
 
 
