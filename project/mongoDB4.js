@@ -750,6 +750,50 @@ mongoDB默认的优化
 
 mongoDB索引也是使用B-tree
 复合键索引可以对多个字段排序
+索引值是文档地址
+
+
+创建索引
+	db.<collection>.createIndex(<keys>, <options>)
+		keys: 创建索引的字段
+
+db.accountsWithIndex.insertMany([{
+	name: "alice", balance: 50, currency: ["GBP", "USD"]
+},{
+	name: "bob", balance: 20, currency: ["AUD", "USD"]
+},{
+	name: "bob", balance: 300, currency: ["CNY"]
+}])
+
+创建索引，1表示索引从小到大排列
+	db.accountsWithIndex.createIndex({name: 1})
+查看已经存在的索引
+	db.accountsWithIndex.getIndexes()
+创建复合索引
+	db.accountsWithIndex.createIndex({name: 1, balance: -1})
+多键索引，给数组字段使用
+	db.accountsWithIndex.createIndex({currency: 1})
+
+查看索引效果
+	db.<collection>.explain().<method(..)>
+		使用explain()可以分析的命令包括aggregate()、count()、distinct()、find()、group()、remove()、update()
+
+
+db.accountsWithIndex.explain().find({balance: 100})
+	查看winningPlan，"stage" : "COLLSCAN" COLLSCAN是Collection scan的缩写，扫描整个集合
+
+db.accountsWithIndex.explain().find({name: "alice"})
+	winningPlan，"stage" : "IXSCAN" Index scan 索引扫描
+	"stage" : "FETCH", 通过索引的值（文档地址）去找文档
+
+db.accountsWithIndex.explain().find({name: "alice"}, {_id:0, name: 1})
+	winningPlan 的 "stage" : "FETCH" 也不见了，只返回name,直接在索引中取数据
+
+
+
+
+
+
 
 
 
