@@ -1,7 +1,7 @@
-安装mongoDB
+装mongoDB
 	docker pull mongo:4
 	mkdir -p /mymongo/data
-	docker run --restart always --name mymongo -p 27017:27017 -v /mymongo/data:/data/db -d mongo:4
+	docker run --restart always --name mymongo -p 27017:27017 -v /mymongo/data:/data/db -d mongo:4.2
 
 安装MongoDB管理界面 Mongo Express
 	docker pull mongo-express
