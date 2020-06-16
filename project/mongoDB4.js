@@ -778,7 +778,6 @@ db.accountsWithIndex.insertMany([{
 	db.<collection>.explain().<method(..)>
 		使用explain()可以分析的命令包括aggregate()、count()、distinct()、find()、group()、remove()、update()
 
-
 db.accountsWithIndex.explain().find({balance: 100})
 	查看winningPlan，"stage" : "COLLSCAN" COLLSCAN是Collection scan的缩写，扫描整个集合
 
@@ -788,6 +787,82 @@ db.accountsWithIndex.explain().find({name: "alice"})
 
 db.accountsWithIndex.explain().find({name: "alice"}, {_id:0, name: 1})
 	winningPlan 的 "stage" : "FETCH" 也不见了，只返回name,直接在索引中取数据
+
+db.accountsWithIndex.explain().find().sort({name: 1, balance: 1})
+	winningPlan 的 "stage" : "SORT" 把所有文档提取出来，然后排序，效率不高
+
+删除索引，没有更新索引的方法，先删除再建立
+	db.accountsWithIndex.dropIndex()
+
+获取索引
+	db.accountsWithIndex.getIndexes()
+通过索引名字删除索引
+	db.accountsWithIndex.dropIndex("name_1")
+
+唯一索引
+	db.accountsWithIndex.createIndex({balance: 1}, {unique: true})
+
+有唯一索引的文档，只有一篇文档可以设置balance为null，后面的文档balance为null，则没法插入
+
+
+索引的稀疏性
+	只将包含索引键字段的文档加入到索引中，即索引键字段值为null
+		db.accountsWithIndex.createIndex({balance: 1}, {sparse: true})
+	如果一个索引既具备唯一性，又具备稀疏性，就可以保存多篇缺失索引键值的文档
+		db.accountsWithIndex.dropIndex("balance_1")
+		db.accountsWithIndex.createIndex({balance: 1}, {unique: true, sparse: true})
+
+可以插入多个缺少balance的文档
+	db.accountsWithIndex.insert({name: "david", lastAccess: new Date()})
+
+索引有效期，设定了生存时间的索引，会自动删除字段值超过生存时间的文档
+生存时间只能设置给单键索引，数组则使用元素最小值
+	db.accountsWithIndex.find()
+
+lastAccess与当前时间比较，时间间隔大于20秒，删除文档。是通过一个后台线程删除
+	db.accountsWithIndex.createIndex({lastAccess: 1}, {expireAfterSeconds: 20})
+
+
+没有固定的数据格式 != 无需设计数据模型
+
+
+树形结构文档，使用parent_id
+	{
+		id: "Document"
+		parent: null
+	}
+	{
+		id: "MongoDB"
+		parent: "Document"
+	}
+也可以这样，children存储子节点id
+	{
+		"id": "Database",
+		"children": ["Relational", "Non-relational"]
+	}
+	{
+		"id": "Relational",
+		"children": ["Document"]
+	}
+还可以把父级全部存储到ancestors中
+	{
+		"id": "MongoDB",
+		"ancestors": ["Relational", "Document"]
+	}
+
+
+复制集（数据复制，多个节点）
+
+
+
+
+
+
+
+
+
+
+
 
 
 
