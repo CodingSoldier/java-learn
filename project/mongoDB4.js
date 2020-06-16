@@ -854,13 +854,77 @@ lastAccess与当前时间比较，时间间隔大于20秒，删除文档。是�
 复制集（数据复制，多个节点）
 	每个节点都会向其他节点发送
 
+主节点负责处理所有写入请求
+主节点和副节点都可以处理读取请求
+副节点从主节点（或者符合条件的副节点）处复制数据
 
+复制集每个节点都会想其他节点发送心跳请求
+每隔2秒发送一次，超过10秒则请求超时（默认）
+复制集中最多可以有50个节点
 
+复制集选举
+	候选节点发起选举，每个节点投票给比自己更同步的节点
+	得到超过半数选票的候选节点会当选主节点
+	复制集最多可以有7个投票节点
 
+初始化的时候同步数据：数据库、集合、索引、文档
+	后面新增的数据，会有写库记录（主节点接收的请求），备节点批量拷贝写库记录，将记录存储在local.oplog.rs中，备节点执行写库记录
+		写库记录可以被重复使用
+		多个线程分批次使用日志记录，比如按主键分类，一个线程执行一个主键分类的记录
 
+创建复制集
+先创建网络
+docker network create mynetwork
+docker network ls
 
+mkdir -p /mymongo/data1
 
+// --replSet myset 指定复制集的名字
+docker run --net mynetwork --name mongo1 -v /mymongo/data1:/data/db -p 27017:27017 -d mongo:4.2 --replSet myset --port 27017
 
+// 第二个复制集， --port 27018修改docker中mongoDB的端口
+docker run --net mynetwork --name mongo2 -v /mymongo/data2:/data/db -p 27018:27018 -d mongo:4.2 --replSet myset --port 27018
+
+docker run --net mynetwork --name mongo3 -v /mymongo/data3:/data/db -p 27019:27019 -d mongo:4.2 --replSet myset --port 27019
+
+复制集初始化
+docker exec -it mongo1 mongo
+
+// myset是复制集的名字，3个节点都在同一个docker网络下，host可以使用容器的名字:端口
+	rs.initiate({
+		_id: "myset",
+		members: [
+			{_id: 0, host: "mongo1:27017"},
+			{_id: 1, host: "mongo2:27018"},
+			{_id: 2, host: "mongo3:27019"}
+		]
+	})
+查看复制集状态
+	rs.status()
+
+分片
+	可以把数据库的数据分成几份，存储在不同的服务器中
+
+分片集群：
+	每个分片存储一部分数据，可以部署为复制集
+	配置服务器，保存集群配置和元数据，可以部署为复制集
+	mongos，这是一个路由，请求到达mongos，mongos先去询问配置服务器，得到数据在哪个分片上，然后再去分片查找数据。
+
+集群中的每个数据库都会选择一个分片作为主分片
+主分片存储所有不需要分片的集合
+创建数据库时，数据最少的分片被选为主分片
+
+分片片键
+	{x: 7, y: "abc", z: true}
+	比方说取x字段作为分片片键，hash(x)之后取模
+
+片键值被用来作为集合中的文档划分为数据段
+片键必须对应一个索引或者索引前缀（单键或者复合键）
+可以使用片键值的哈希值来生成哈希片键	
+
+片键值范围广，必须boolean类型作为片键就不好，可使用符合片键扩大范围
+片键值的分布更平衡
+片键值不要单向的增大/减少（可使用哈希片键） 
 
 
 
