@@ -486,7 +486,7 @@ $addToSet元素在数组中已经存在，不会新增
 使用$$指示系统变量，$$CURRENT指示当前操作的文档
 
 
-db.accounts.insertMany([
+db.accounts1.insertMany([
 	{
 		name: {firstName: "alice", lastName: "wong"},
 		balance: 50
@@ -1035,6 +1035,12 @@ mongoexport 将数据导出为json或者csv格式文件
 
 在docker容器中，执行
 	mongoexport --db test --collection accounts --type=csv --fields name,balance --out /opt/backups/accounts.csv -u root -p poly2017 --authenticationDatabase admin
+导出文档
+mongoexport --db test --collection accounts1 --type=json --fields name.firstName,name.lastName,balance --out /opt/backups/accounts1.json -u root -p poly2017 --authenticationDatabase admin
+导出文档，导出全部字段
+mongoexport --db test --collection accounts --type=json --out /opt/backups/accounts.json
+
+mongoexport --db test --collection accounts --type=json --out /opt/backups/accounts.json --query '{"balance": {"$gte": 100}}'
 
 
 
@@ -1048,4 +1054,7 @@ mongoexport 将数据导出为json或者csv格式文件
 
 
 
+
+
+ 
 
