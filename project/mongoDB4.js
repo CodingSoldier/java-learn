@@ -1,5 +1,5 @@
 装mongoDB
-	docker pull mongo:4
+	docker pull mongo:4.2
 	mkdir -p /mymongo/data
 	docker run --restart always --name mymongo -p 27017:27017 -v /mymongo/data:/data/db -d mongo:4.2
 
@@ -874,18 +874,18 @@ lastAccess与当前时间比较，时间间隔大于20秒，删除文档。是�
 
 创建复制集
 先创建网络
-docker network create mynetwork
+docker network create mongonetwork
 docker network ls
 
 mkdir -p /mymongo/data1
 
 // --replSet myset 指定复制集的名字
-docker run --net mynetwork --name mongo1 -v /mymongo/data1:/data/db -p 27017:27017 -d mongo:4.2 --replSet myset --port 27017
+docker run --net mongonetwork --name mongo1 -v /mymongo/data1:/data/db -p 27017:27017 -d mongo:4.2 --replSet myset --port 27017
 
 // 第二个复制集， --port 27018修改docker中mongoDB的端口
-docker run --net mynetwork --name mongo2 -v /mymongo/data2:/data/db -p 27018:27018 -d mongo:4.2 --replSet myset --port 27018
+docker run --net mongonetwork --name mongo2 -v /mymongo/data2:/data/db -p 27018:27018 -d mongo:4.2 --replSet myset --port 27018
 
-docker run --net mynetwork --name mongo3 -v /mymongo/data3:/data/db -p 27019:27019 -d mongo:4.2 --replSet myset --port 27019
+docker run --net mongonetwork --name mongo3 -v /mymongo/data3:/data/db -p 27019:27019 -d mongo:4.2 --replSet myset --port 27019
 
 复制集初始化
 docker exec -it mongo1 mongo
@@ -894,9 +894,9 @@ docker exec -it mongo1 mongo
 	rs.initiate({
 		_id: "myset",
 		members: [
-			{_id: 0, host: "mongo1:27017"},
-			{_id: 1, host: "mongo2:27018"},
-			{_id: 2, host: "mongo3:27019"}
+			{_id: 0, host: "192.168.3.178:27017"},
+			{_id: 1, host: "192.168.3.178:27018"},
+			{_id: 2, host: "192.168.3.178:27019"}
 		]
 	})
 查看复制集状态
@@ -924,7 +924,117 @@ docker exec -it mongo1 mongo
 
 片键值范围广，必须boolean类型作为片键就不好，可使用符合片键扩大范围
 片键值的分布更平衡
-片键值不要单向的增大/减少（可使用哈希片键） 
+片键值不要单向的增大/减少（可使用哈希片键）
+
+
+配置服务器，可以使用复制集
+	储存各分片数据段列表和数据段范围
+	存储集群的认证和授权配置
+	不同的集群不要共用配置服务器
+
+配置服务器使用复制集
+	如果主节点故障，配置服务器进入只读模式
+	只读模式下，数据段分裂和集群平衡不可执行（数据段分裂可以使数据分布更均匀）
+	整个复制集故障，分片集群不可用
+
+
+mongos分片查询
+	查询请求是分片片键，使用分片片键就知道数据在哪个分片
+	查询请求不是分片片键，mongos通过配置服务器也不知道数据在哪个分片，所以会将请求发送给所有分片
+
+
+启用身份认证
+	docker run --name mymongo -v /mymongo/data:/data/db -d mongo:4.2 --auth
+
+设置账号密码
+	use admin
+	db.createUser({ user: 'root', pwd: 'poly2017', roles: [ { role: "userAdminAnyDatabase", db: "admin" } ] });	
+
+删除docker容器
+	docker stop mymongo && docker rm $_
+
+使用用户名、密码进行身份认证登陆
+	docker exec -it mymongo bash 
+	mongo -u "root" -p "poly2017" --authenticationDatabase "admin";
+
+	最终root只有用户管理的权限，没有数据权限
+
+使用db.auth()进行身份认证，相当于登陆
+在docker容器中，执行
+	进入mongoDB客户端
+		mongo
+	使用admin数据库
+		use admin
+	认证，相当于登陆	
+		db.auth("root", "poly2017")
+
+权限
+权限 = 在哪里 + 做什么
+	{resource: {db: "test", collection: ""}, actions: ["find", "update"]}
+	{resource: {cluster: true}, actions: ["shutdown"]}
+
+角色
+	read      - 读取当前数据库中所有非系统集合
+	readWrite - 读写当前数据库中所有非系统集合
+	dbAdmin   - 管理当前数据库
+	userAdmin - 管理当前数据库中的用户和角色
+
+readAnyDatabase、readWriteAnyDatabase、dbAdminAnyDatabase、userAdminAnyDatabase
+对所有数据库执行操作，只在admin数据库提供
+
+db.createUser({ user: 'root1', pwd: 'poly2017', roles: [ { role: "userAdminAnyDatabase", db: "admin" },{ role: "readWriteAnyDatabase", db: "admin" } ] });
+
+数据库不存在，则创建数据库，否则切换到指定数据库。
+	use app 
+
+非 admin 库，不能拥有 clusterAdmin、readAnyDatabase、readWriteAnyDatabase、userAdminAnyDatabase、dbAdminAnyDatabase 这些角色。
+可授予多个角色
+	db.createUser({
+		user: "root",
+		pwd: "poly2017",
+		roles: [{
+			role: "readWriteAnyDatabase",
+			db: "admin"
+		},{
+			role: "userAdminAnyDatabase",
+			db: "admin"
+		}] 
+	})
+
+授权之后要退出mongo客户端
+	exit
+重新登录客户端
+	mongo
+先使用admin数据库
+	use admin
+在admin数据库认证用户
+	db.auth("user02", "poly2017")
+
+也可以docker容器中直接使用这一句代码
+	mongo -u "root" -p "poly2017" --authenticationDatabase "admin"
+
+
+创建自定义角色，角色只在test数据库accounts集合中有效，roles继承某些角色
+
+	use test;
+	db.createRole({
+		role: "readAccounts",
+		privileges: [{
+			resource: {db: "test", collection: "accounts"},
+			actions: ["find"]
+		}],
+		roles: []
+	})
+
+
+数据处理工具
+	mongoexport
+	mongoimport
+
+mongoexport 将数据导出为json或者csv格式文件
+
+在docker容器中，执行
+	mongoexport --db test --collection accounts --type=csv --fields name,balance --out /opt/backups/accounts.csv -u root -p poly2017 --authenticationDatabase admin
 
 
 
