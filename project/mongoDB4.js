@@ -878,6 +878,8 @@ docker network create mongonetwork
 docker network ls
 
 mkdir -p /mymongo/data1
+mkdir -p /mymongo/data2
+mkdir -p /mymongo/data3
 
 // --replSet myset 指定复制集的名字
 docker run --net mongonetwork --name mongo1 -v /mymongo/data1:/data/db -p 27017:27017 -d mongo:4.2 --replSet myset --port 27017
@@ -894,9 +896,9 @@ docker exec -it mongo1 mongo
 	rs.initiate({
 		_id: "myset",
 		members: [
-			{_id: 0, host: "192.168.3.178:27017"},
-			{_id: 1, host: "192.168.3.178:27018"},
-			{_id: 2, host: "192.168.3.178:27019"}
+			{_id: 0, host: "192.168.4.203:27017"},
+			{_id: 1, host: "192.168.4.203:27018"},
+			{_id: 2, host: "192.168.4.203:27019"}
 		]
 	})
 查看复制集状态
@@ -1035,14 +1037,6 @@ mongoexport 将数据导出为json或者csv格式文件
 
 在docker容器中，执行
 	mongoexport --db test --collection accounts --type=csv --fields name,balance --out /opt/backups/accounts.csv -u root -p poly2017 --authenticationDatabase admin
-
-
-
-
-
-
-
-
 
 
 
