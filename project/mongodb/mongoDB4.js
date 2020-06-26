@@ -1266,7 +1266,215 @@ v: oplog版本
 op: 操作类型
 ns: 命名空间
 o: 操作对应的文档
-o2: 仅对update操作时有，更新操作的变更条件
+o2: 仅对update操作时有，更新操作的变更条件DXC
+
+监控工具
+	bin/mongostat -h 192.168.1.199:28001
+
+
+
+配置文件配置
+# bind_ip=192.168.1.199
+# 开启用户认证
+auth=true
+# 本机登陆不需要认证，mongo localhost:port 方式登陆。在实例创建第一个用户后就失效了
+setParameter=enableLocalhostAuthBypass=1
+
+auth是单节点认证
+keyFile是集群之间的认证
+
+keyFile注意事项
+	内容 base64编码即 [a-zA-Z+/]
+	长度 不超过1000byte
+	权限 chmod 600 keyFile
+
+cd /usr/local/mongodb/
+生成一个高大上的keyFile，.开头是隐藏文件。keyFile权限不能比600大
+openssl rand -base64 102 > .keyFile
+chmod 600 .keyFile
+cat .keyFile
+ll -a
+
+配置文件
+port=28003
+bind_ip=0.0.0.0
+logpath=/usr/local/mongodb/log/28003.log
+dbpath=/usr/local/mongodb/data/28003/
+logappend=true
+pidfilepath=/usr/local/mongodb/data/28003/28003.pid
+fork=true
+oplogSize=2048
+replSet=IMOOC
+
+# 开启用户认证，启动keyFile就默认启动了auth
+# auth=true
+# 本机登陆不需要认证，mongo localhost:port 方式登陆
+setParameter=enableLocalhostAuthBypass=1
+# keyFile路径
+keyFile=/usr/local/mongodb/.keyFile
+
+rs.initiate({
+	_id: "IMOOC",
+	members: [
+		{_id: 0, host: "192.168.1.199:28001"},
+		{_id: 1, host: "192.168.1.199:28002"},
+		{_id: 2, host: "192.168.1.199:28003"}
+	]
+})
+
+use admin	
+db.createUser({ 
+	user: 'root', 
+	pwd: 'poly2017', 
+	roles: [{ role: "root", db: "admin" }] 
+});	
+
+root角色权限最大，有集群权限
+创建用户成功后，setParameter=enableLocalhostAuthBypass=1 就失效了，需要重新使用用户名密码登陆。或者使用db.auth(用户名, 密码) 认证
+
+
+
+######################分片##############################
+分片：将数据拆分，把数据分散到不同的服务器上
+分片的目的：改善单台机器数据的存储及数据吞吐性能，提高在大量数据下随机访问性能。
+
+Share节点：存储数据的节点，单个mongo实例或一个mongo副本集 
+Config server：存储元数据，为mongos服务，将数据路由到shard
+Mongos：接入前端请求，进行对应消息路由
+
+启动参数
+	Shard节点：
+		mongod --shardsvr              shard是单节点
+		mongod --shardsvr --rpelSet    shard是副本集
+	Config server
+		mongod --configsvr   
+	Mongos
+		mongos --configdb <config server>
+
+启动shard节点
+	mkdir -p /opt/data/logs
+	mkdir -p /opt/mdb
+	mongod --shardsvr --logpath=/opt/data/logs/shard.log --logappend --dbpath=/opt/mdb/ --fork --port 27017
+
+启动Config Server
+	mkdir -p /opt/config
+	mongod --configsvr --logpath=/opt/data/logs/config.log --logappend --dbpath=/opt/config --fork --port 27018 --replSet=cfg
+
+	mkdir -p /opt/config27118	
+	mongod --configsvr --logpath=/opt/data/logs/config27118.log --logappend --dbpath=/opt/config27118 --fork --port 27118 --replSet=cfg
+
+	mkdir -p /opt/config27218
+	mongod --configsvr --logpath=/opt/data/logs/config27218.log --logappend --dbpath=/opt/config27218 --fork --port 27218 --replSet=cfg
+
+	mongo localhost:27018/admin
+
+	rs.initiate({
+		_id: "cfg",
+		members: [
+			{_id: 0, host: "localhost:27018"},
+			{_id: 1, host: "localhost:27118"},
+			{_id: 2, host: "localhost:27218"}
+		]
+	})
+
+启动mongos
+	mongos --port 27019 --logappend --logpath=/opt/data/logs/mongos.log --configdb=cfg/localhost:27018,localhost:27118,localhost:27218 --fork
+
+添加分片的过程
+	1、连接到mongos
+	2、add Shards
+	3、Enable Sharding
+	4、对一个集合进行分片
+
+2、add Shards
+	单个数据库实例
+	{
+		addShard: "hostname:port",
+		maxSize: size,
+		name: shard_name
+	}
+	副本集
+	{
+		addShard: "副本集名字/hostname:port",
+		maxSize: size,
+		name: shard_name
+	}
+	如果mongos、shard在同一台机器上，添加分片不能使用localhost，建议使用ip
+
+4、对一个集合进行分片
+	db.runCommand({shardcollection:namespace, key:分片片键})
+	unique:true  启动对shard key的唯一约束，需要加在runCommand里面，才能在全分片中保持唯一
+	shard key 的选择
+
+登陆mongos 
+	mongo localhost:27019
+添加分片实例
+	db.runCommand({addShard:"localhost:27017"})
+
+使用shardtest作为分片数据库
+use shardtest
+for (var i = 280418; i<28041800; i++) {
+	db.shard_collection01.insert({"user_id":i})
+}
+db.shard_collection01.find();
+
+3、Enable Sharding，数据库启动分片
+	use admin
+	db.runCommand({enablesharding: "shardtest"})
+
+对集合分片，shardtest.shard_collection01 shardtest库的shard_collection01集合，
+分片片键是user_id，1表示升序索引
+use shardtest
+db.shard_collection01.ensureIndex({user_id: 1})
+
+use admin
+db.runCommand({"shardcollection": "shardtest.shard_collection01", key:{"user_id": 1}})
+
+
+新增一个shard实例
+	mkdir -p /opt/mdb/27016
+	mongod --shardsvr --logpath=/opt/data/logs/shard27016.log --logappend --dbpath=/opt/mdb/27016 --fork --port 27016
+
+mongos添加新shard实例
+	use admin
+	db.runCommand({addShard:"localhost:27016"})
+
+	use config
+	db.shards.find()
+
+use shardtest
+db.shard_collection01.stats()
+	{
+		"sharded" : true, 表示分片成功
+	}
+
+db.printShardingStatus()
+
+什么是分片片键：集合里面选一个键，用该键的值作为数据拆分的依据
+Chunk：Mongdb分片后，存储数据的单元块，默认大小64MB
+
+数据库拆分：
+	记录每个块中插入多少数据，一旦到达某个阀值，执行检查是否要拆分块，需要则更新config服务器上这个块的元信息
+
+hash分片
+	利用hash索引作为分片的单个键
+	hash分片的片键只能使用一个字段
+	hash片键能保证各个节点分布基本均匀
+
+use shardtest
+db.coll_hash.insert({userid: 11})
+db.coll_hash.insert({userid: 22})
+show tables
+
+use shardtest
+db.coll_hash.ensureIndex({userid: "hashed"})
+use admin
+db.runCommand({"shardcollection": "shardtest.coll_hash", "key":{userid: "hashed"}})
+
+use shardtest
+for (var i = 0; i<1000000; i++) {
+	db.coll_hash.insert({"userid":i})
+}
 
 
 
