@@ -13,7 +13,10 @@ import java.io.IOException;
 
  Spring MVC仅通过DispatcherServlet这一个Servlet进行请求派发
  DispatcherServlet主要功能：
- 	拦截所有请求 @WebServlet("/")
+ 	拦截所有请求
+ 		@WebServlet("/")
+ 		@WebServlet("/*")使用/*会导致死循环，因为/*会匹配到jsp页面。
+		在tomcat生成的web.xml中配置了jsp的servlet-mapping，优先级比 / 高，所以使用 / 不会导致死循环
  	解析请求
  	派发给对应的Controller方法
 
