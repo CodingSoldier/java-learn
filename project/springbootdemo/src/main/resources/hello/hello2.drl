@@ -1,0 +1,11 @@
+package springbootdemo;
+import com.example.springbootdemo.Message;
+
+rule "global-demo"
+    salience -99
+    when
+        $message: Message(target.equals("beggar"))
+    then
+        System.out.println("11111111");
+        System.out.println(temp);
+    end
