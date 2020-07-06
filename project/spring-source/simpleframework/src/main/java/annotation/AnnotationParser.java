@@ -48,6 +48,9 @@ public class AnnotationParser {
 		//parseTypeAnnotation();
 		parseFieldAnnotation();
 		//parseMethodAnnotaition();
+		/**
+		 * 配置 -Dsun.misc.ProxyGenerator.saveGeneratedFiles=true
+		 */
 	}
 
 }
