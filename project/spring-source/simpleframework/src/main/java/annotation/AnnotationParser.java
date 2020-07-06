@@ -49,7 +49,11 @@ public class AnnotationParser {
 		parseFieldAnnotation();
 		//parseMethodAnnotaition();
 		/**
-		 * 配置 -Dsun.misc.ProxyGenerator.saveGeneratedFiles=true
+		  配置 -Dsun.misc.ProxyGenerator.saveGeneratedFiles=true 输出代理类
+		  $Proxy1.class中的super.h.invoke，super.h是 sun.reflect.annotation.AnnotationInvocationHandler 代理类，创建动态代理对象实例，调用invoke()方法实现动态代理
+
+		  -Dsun.misc.ProxyGenerator.saveGeneratedFiles=true -XX:+TraceClassLoading
+
 		 */
 	}
 
