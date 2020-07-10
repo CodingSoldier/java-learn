@@ -1,0 +1,19 @@
+server:
+  port: 10012
+  servlet:
+    context-path: /app3
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      base-path: /
+  server:
+    servlet:
+      context-path: ${server.servlet.context-path}
+    port: ${server.port}
+  endpoint:
+    health:
+      show-details: always
+info: {status: ok-222}
