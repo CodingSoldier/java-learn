@@ -1,6 +1,6 @@
-package com.imooc;
+package com.b;
 
-import com.imooc.a_service.WelcomeService;
+import com.b.a_service.WelcomeService;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 /**

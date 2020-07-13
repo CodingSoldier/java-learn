@@ -1,4 +1,4 @@
-package com.imooc.a_service;
+package com.b.a_service;
 
 /**
  * @author chenpiqian
