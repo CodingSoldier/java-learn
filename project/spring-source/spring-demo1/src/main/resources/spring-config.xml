@@ -16,6 +16,6 @@
     <bean id="userFactory" class="com.imooc.b_ioc_learn.factory.UserFactory"></bean>
     <bean id="user3" factory-bean="userFactory" factory-method="getUser" scope="prototype"></bean>
 
-
+    <bean id="prefixUserFactoryBean" class="com.imooc.b_ioc_learn.factory.PrefixUserFactoryBean"></bean>
 
 </beans>

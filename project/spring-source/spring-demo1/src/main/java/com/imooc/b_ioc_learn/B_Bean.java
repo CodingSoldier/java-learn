@@ -1,5 +1,6 @@
 package com.imooc.b_ioc_learn;
 
+import com.imooc.b_ioc_learn.factory.PrefixUserFactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +43,12 @@ public class B_Bean {
             如果使用bean的名字检索FactoryBean得到的对象是工厂生成的对象
             如果需要用到工厂本身，需要转义
          */
+        PrefixUserFactoryBean prefixUserFactoryBean = (PrefixUserFactoryBean)applicationContext.getBean("&prefixUserFactoryBean");
+        System.out.println("获取FactoryBean实现类本身，需要加&前缀"+prefixUserFactoryBean);
+
+        User user4 = (User)applicationContext.getBean("prefixUserFactoryBean");
+        System.out.println("获取FactoryBean实现类getObject()的返回的bean"+user4);
+
     }
 
     /**
@@ -56,5 +63,17 @@ public class B_Bean {
         lazy-init（@Lazy）是否懒加载：
         首选primary（@Primary）优先注入的类
         factory-bean和factory-method（@Configuration和@Bean）
+     */
+
+    /**
+     ApplicationContext常用容器
+        FileSystemXmlApplicationContext  从文件系统加载配置
+        ClassPathXmlApplcationContext    从classpath加载配置
+        XmlWebApplicationContext         用于web应用程序的容器
+
+        spring-boot的容器
+        AnnotationConfigServletWebServerApplicationContext
+        AnnotationConfigReactiveWebServerApplicationContext
+        AnnotationConfigApplicationContext
      */
 }
