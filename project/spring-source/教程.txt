@@ -44,6 +44,7 @@ Build from Source 编译
 
 在spring-framework下新增spring-demo
 
-
+spring-beans、spring-context有注释，需要替换
+    spring-core待定
 
 
