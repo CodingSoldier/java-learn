@@ -9,10 +9,13 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class WelcomeController implements ApplicationContextAware, BeanNameAware {
+
 	private String myName;
 	private ApplicationContext myContainer;
+
 	@Autowired
 	private WelcomeService welcomeService;
+
 	public void handleRequest(){
 		welcomeService.sayHello("来自Controller的问候");
 		System.out.println("我是谁：" + myName);
