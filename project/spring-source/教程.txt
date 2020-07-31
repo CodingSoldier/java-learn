@@ -47,4 +47,7 @@ Build from Source 编译
 spring-beans、spring-context有注释，需要替换
     spring-core待定
 
+http://tiandingmall.com/member/login/ossLogin
+
+http://scm.zanjiahao.com/member/login/ossLogin
 
