@@ -1,6 +1,6 @@
-package com.learn.e_aop.a_controller;
+package com.learn.e_aop.a_aspect.a_controller;
 
-import com.learn.e_aop.a_service.A_Service;
+import com.learn.e_aop.a_aspect.a_service.A_Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 

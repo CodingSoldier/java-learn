@@ -1,4 +1,4 @@
-package com.learn.e_aop.b_advice;
+package com.learn.e_aop.a_aspect.b_advice;
 
 /**
  * @author chenpiqian

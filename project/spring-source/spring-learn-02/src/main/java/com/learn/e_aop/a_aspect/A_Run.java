@@ -1,6 +1,6 @@
-package com.learn.e_aop;
+package com.learn.e_aop.a_aspect;
 
-import com.learn.e_aop.b_advice.LittleUniverse;
+import com.learn.e_aop.a_aspect.b_advice.LittleUniverse;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;

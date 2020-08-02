@@ -1,7 +1,7 @@
-package com.learn.e_aop;
+package com.learn.e_aop.a_aspect;
 
 
-import com.learn.e_aop.b_advice.LittleUniverse;
+import com.learn.e_aop.a_aspect.b_advice.LittleUniverse;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class A_Aspect {
 
-	@Pointcut("execution(* com.learn.e_aop.a_service..*.*(..))")
+	@Pointcut("execution(* com.learn.e_aop.a_aspect.a_service..*.*(..))")
 	public void embed(){}
 
 	@Before("embed()")
@@ -52,7 +52,7 @@ public class A_Aspect {
 	 	为目标类引入新接口，而不需要目标类做任何实现
 	 	使用目标类在使用的过程中转型成新接口对象，调用接口方法
 	 */
-	@DeclareParents(value = "com.learn.e_aop.a_controller..*",
-			defaultImpl = com.learn.e_aop.b_advice.LittleUniverseImpl.class)
+	@DeclareParents(value = "com.learn.e_aop.a_aspect.a_controller..*",
+			defaultImpl = com.learn.e_aop.a_aspect.b_advice.LittleUniverseImpl.class)
 	public LittleUniverse littleUniverse;
 }
