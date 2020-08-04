@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-app3
+spec:
+  selector:
+    app: app3
+  # 使用NodePort方式暴露一个外部端口供调试使用
+  type: NodePort
+  ports:
+  - name: http
+    port: 10013
+    targetPort: 10013
+    # 外部端口
+    nodePort: 30013
