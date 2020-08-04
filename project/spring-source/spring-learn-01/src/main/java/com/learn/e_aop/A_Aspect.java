@@ -3,14 +3,13 @@ package com.learn.e_aop;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
 public class A_Aspect {
 
-	@Pointcut("execution(* com.learn.e_aop.a_service..*.*(..))")
+	@Pointcut("execution(* com.learn.e_aop.a_aspect.a_service..*.*(..))")
 	public void embed(){}
 
 	@Before("embed()")
