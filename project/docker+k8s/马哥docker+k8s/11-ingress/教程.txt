@@ -1,0 +1,107 @@
+安装ingress控制器 ingress-controller
+	wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.24.1/deploy/mandatory.yaml
+  kubectl apply -f mandatory.yaml
+  kubectl get pod -n ingress-nginx
+
+安装ingress-controller后，也只能在集群访问，云环境需要配置上LBS
+裸机环境添加一个service使用nodeport方式暴露端口
+	wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.24.1/deploy/provider/baremetal/service-nodeport.yaml
+  kubectl apply -f service-nodeport.yaml
+  kubectl get svc -n ingress-nginx
+  访问测试 http://192.168.3.151:30080/ 出现404 not found表明部署成功
+
+service-nodeport.yaml部署的是一个service，最好修改绑定的裸机端口
+  apiVersion: v1
+  kind: Service 
+  metadata:
+    name: ingress-nginx
+    namespace: ingress-nginx
+    labels:
+      app.kubernetes.io/name: ingress-nginx
+      app.kubernetes.io/part-of: ingress-nginx
+  spec:
+    type: NodePort
+    ports:
+      - name: http
+        port: 80
+        targetPort: 80
+        protocol: TCP
+        # 绑定裸机端口
+        nodePort: 30080
+      - name: https
+        port: 443
+        targetPort: 443
+        protocol: TCP
+        # 绑定裸机端口
+        nodePort: 30443
+    selector:
+      app.kubernetes.io/name: ingress-nginx
+      app.kubernetes.io/part-of: ingress-nginx
+
+编写ingress文件
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-my
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: k8s01.com
+    http:
+      paths:
+      - path: /app3
+        backend:
+          serviceName: service-app3
+          servicePort: 10013    
+
+
+
+宿主机hosts文件加上
+192.168.3.151 k8s01.com
+
+宿主机访问
+k8s01.com:30080/app3/test/get
+
+查看nginx配置
+  kubectl get pods -n ingress-nginx
+
+  kubectl exec -n ingress-nginx -it nginx-ingress-controller-5694ccb578-ms8jz -- /bin/sh
+
+  cat nginx.conf
+
+生成私钥
+openssl genrsa -out tls.key 2048
+生成证书
+openssl req -new -x509 -key tls.key -out tls.crt -subj /C=CN/ST=Beijing/L=Beijing/O=DevOps/CN=k8s01.com
+创建secret
+kubectl create secret tls secret-k8s01 --cert=tls.crt --key=tls.key
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-my
+  annotations:
+    # 控制器使用nginx
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    # host不支持IP，必须是域名
+  - host: k8s01.com
+    http:
+      paths:
+        # 以app3开头的请求转给service-app3的10013端口
+      - path: /app3
+        backend:
+          serviceName: service-app3
+          servicePort: 10013
+  tls:
+  - hosts:
+    - k8s01.com
+    secretName: secret-k8s01
+
+
+访问service-nodeport.yaml
+
+service-nodeport.yaml
+
