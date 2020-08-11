@@ -1,0 +1,7 @@
+方法一：
+    运行类的 VM options 填写 -Dfile.encoding=UTF-8
+
+方法二：
+    1、打开File | Settings | Build, Execution, Deployment | Build Tools | Maven | Runner在VM Options中添加-Dfile.encoding=GBK
+    2、VM options 填写 -Dfile.encoding=GBK
+
