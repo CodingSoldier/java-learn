@@ -1,0 +1,37 @@
+server:
+  port: 10001
+  servlet:
+    context-path: /consul-app01
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      base-path: /
+  server:
+    servlet:
+      context-path: ${server.servlet.context-path}
+    port: ${server.port}
+  endpoint:
+    health:
+      show-details: always
+
+custom:
+  consul:
+    host: 192.168.3.180
+
+spring:
+  application:
+    name: consul-app01
+  cloud:
+    consul:
+      enabled: true
+      host: ${custom.consul.host}
+      port: 8500
+      discovery:
+        healthCheckPath: ${server.servlet.context-path}/health
+        healthCheckInterval: 15s
+        instanceId: ${spring.application.name}-${random.value}
+
+

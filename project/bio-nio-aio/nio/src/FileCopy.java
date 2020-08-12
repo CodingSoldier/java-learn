@@ -1,7 +1,4 @@
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
+package src;
 
 /**
  * NIO使用Channel替代了stream
@@ -18,8 +15,8 @@ import java.nio.channels.FileChannel;
 
 public class FileCopy {
 
-    static String source = "E:\\workspace\\java-learn\\project\\bio-nio-aio\\nio\\buffer理解.jpg";
-    static String target = "E:\\workspace\\java-learn\\project\\bio-nio-aio\\nio\\111.jpg";
+    static String source = "D:\\third-code\\java-learn\\project\\bio-nio-aio\\nio\\1、buffer理解.jpg";
+    static String target = "D:\\third-code\\java-learn\\project\\bio-nio-aio\\nio\\111.jpg";
 
 
     public static void main(String[] args) {
@@ -28,6 +25,10 @@ public class FileCopy {
         //    FileInputStream fin = new FileInputStream(source);
         //    FileOutputStream fout = new FileOutputStream(target);
         //){
+        //    /**
+        //     * fin.read()一个字节一个字节地读，返回的是the next byte of data。返回-1表示读完了
+        //     * 详情请查看源码api
+        //     */
         //    int n;
         //    while ((n=fin.read()) != -1){
         //        fout.write(n);
@@ -39,8 +40,8 @@ public class FileCopy {
 
 
         //try (
-        //    BufferedInputStream bin = new BufferedInputStream(new FileInputStream(source));
-        //    BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(target))
+        //        BufferedInputStream bin = new BufferedInputStream(new FileInputStream(source));
+        //        BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(target))
         //){
         //    byte[] buffer = new byte[1024];
         //    int len;
@@ -52,22 +53,32 @@ public class FileCopy {
         //}
 
 
+        ///**
+        // * 常见的Channel.jpg
+        // * Channel（通道），类似于BIO中的Stream（流）
+        // */
         //try (
         //    FileChannel fcin = new FileInputStream(source).getChannel();
         //    FileChannel fcout = new FileOutputStream(target).getChannel()
         //){
         //    ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-        //    int len;
-        //    // 输入流数据写入buffer
-        //    while ((len = fcin.read(byteBuffer)) != -1){
-        //        // buffer写入完成，转读buffer模式
+        //
+        //    /**
+        //     * 输入通道读取系统文件，并写入buffer。
+        //     * 通道读取数据时buffer处于写模式
+        //     */
+        //    while (fcin.read(byteBuffer) != -1){
+        //        // 写入buffer完成，转读buffer模式
         //        byteBuffer.flip();
-        //        // 没读取完，继续循环
+        //        // 若buffer中还有数据没被读取，则继续从buffer中读取数据
         //        while (byteBuffer.hasRemaining()){
-        //            // 输出流从buffer中读取数据
+        //            /**
+        //             * 输出通道写数据到系统文件，数据是从buffer读取的。
+        //             * 通道写数据时，buffer处于读模式
+        //             */
         //            fcout.write(byteBuffer);
         //        }
-        //        // buffer中的数据全部读取完毕，转写模式
+        //        // buffer没残留数据，全部数据被读取完毕，转写模式
         //        byteBuffer.clear();
         //    }
         //} catch (IOException e) {
@@ -75,27 +86,29 @@ public class FileCopy {
         //}
 
 
-        try (
-            FileChannel fcin = new FileInputStream(source).getChannel();
-            FileChannel fcout = new FileOutputStream(target).getChannel();
-        ) {
-            long transize = 0;
-            long size = fcin.size();
-            // transferTo不能保证将缓冲区的数据全部刷新到输出流
-            // 需要通过while比较源文件、目标文件的大小来保证
-            while (transize != size){
-                transize += fcin.transferTo(0, fcin.size(), fcout);
-            }
-        }catch (IOException e){
-            e.printStackTrace();
-        }
 
+
+        //try (
+        //    FileChannel fcin = new FileInputStream(source).getChannel();
+        //    FileChannel fcout = new FileOutputStream(target).getChannel();
+        //) {
+        //    long transize = 0;
+        //    long size = fcin.size()-2048;
+        //    // transferTo不能保证将缓冲区的数据全部刷新到输出流
+        //    // 需要通过while比较源文件、目标文件的大小来保证
+        //    while (transize <= size){
+        //        transize += fcin.transferTo(0, fcin.size(), fcout);
+        //    }
+        //}catch (IOException e){
+        //    e.printStackTrace();
+        //}
 
 
         /**
          * java的BIO底层实现类实际上也用了nio的方式重写
          * 使用带缓冲区的bio效率与bio相差不大
          */
+        //System.out.println(date);
 
     }
 

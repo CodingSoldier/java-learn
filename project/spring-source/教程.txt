@@ -12,10 +12,10 @@ Build from Source 编译
 
 1、修改build.gradle，此文件相当于maven的pom.xml
 	buildscript加入：
-		repositories {
-	        maven{ url 'https://maven.aliyun.com/nexus/content/groups/public/' }
-	        maven{ url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'}
-	    }
+	repositories {
+		maven{ url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+		maven{ url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'}
+	}
 
     repositories {
     	mavenCentral()
@@ -24,7 +24,7 @@ Build from Source 编译
     修改为
 	repositories {
 		maven{ url 'https://maven.aliyun.com/nexus/content/groups/public/'}
-    	maven{ url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'}
+		maven{ url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'}
 		mavenCentral()
 		maven { url "https://repo.spring.io/libs-spring-framework-build" }
 	}
