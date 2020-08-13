@@ -1,3 +1,5 @@
+package src;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -9,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Server {
+
     final String LOCALHOST = "localhost";
     final int DEFAULT_PORT = 8888;
     AsynchronousServerSocketChannel serverChannel;
