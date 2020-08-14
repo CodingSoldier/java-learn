@@ -21,8 +21,8 @@ import java.nio.channels.FileChannel;
 
 public class FileCopy {
 
-    static String source = "D:\\third-code\\java-learn\\project\\bio-nio-aio\\nio\\111.jpg";
-    static String target = "D:\\third-code\\java-learn\\project\\bio-nio-aio\\nio\\222.jpg";
+    static String source = "D:\\third-code\\java-learn\\project\\bio-nio-aio\\03nio\\111.jpg";
+    static String target = "D:\\third-code\\java-learn\\project\\bio-nio-aio\\03nio\\222.jpg";
 
 
     public static void main(String[] args) {
@@ -64,28 +64,28 @@ public class FileCopy {
          * Channel（通道），类似于BIO中的Stream（流）
          */
         try (
-                FileChannel fcin = new FileInputStream(source).getChannel();
-                FileChannel fcout = new FileOutputStream(target).getChannel()
+            FileChannel fcin = new FileInputStream(source).getChannel();
+            FileChannel fcout = new FileOutputStream(target).getChannel()
         ){
-            ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+            ByteBuffer buffer = ByteBuffer.allocate(1024);
 
             /**
              * 输入通道读取系统文件，并写入buffer。
              * 通道读取数据时buffer处于写模式
              */
-            while (fcin.read(byteBuffer) != -1){
+            while (fcin.read(buffer) != -1){
                 // 写入buffer完成，转读buffer模式
-                byteBuffer.flip();
+                buffer.flip();
                 // 若buffer中还有数据没被读取，则继续从buffer中读取数据
-                while (byteBuffer.hasRemaining()){
+                while (buffer.hasRemaining()){
                     /**
                      * 输出通道写数据到系统文件，数据是从buffer读取的。
                      * 通道写数据时，buffer处于读模式
                      */
-                    fcout.write(byteBuffer);
+                    fcout.write(buffer);
                 }
                 // buffer没残留数据，全部数据被读取完毕，转写模式
-                byteBuffer.clear();
+                buffer.clear();
             }
         } catch (IOException e) {
             e.printStackTrace();

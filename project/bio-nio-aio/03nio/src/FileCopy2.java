@@ -1,6 +1,10 @@
 package src;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 /**
  * NIO使用Channel替代了stream
@@ -13,31 +17,40 @@ import java.io.*;
  *
  * channel之间可以进行数据交换
  */
-
-
 public class FileCopy2 {
 
-    static String source = "D:\\third-code\\java-learn\\project\\bio-nio-aio\\nio\\buffer理解.jpg";
-    static String target = "D:\\third-code\\java-learn\\project\\bio-nio-aio\\nio\\111.jpg";
-
+    static String source = "D:\\third-code\\java-learn\\project\\bio-nio-aio\\03nio\\source.jpg";
+    static String target = "D:\\third-code\\java-learn\\project\\bio-nio-aio\\03nio\\target.jpg";
 
     public static void main(String[] args) {
-
         try (
-            FileInputStream fin = new FileInputStream(source);
-            FileOutputStream fout = new FileOutputStream(target);
-            BufferedInputStream bin = new BufferedInputStream(fin);
-            BufferedOutputStream bout = new BufferedOutputStream(fout);
+                FileChannel fcin = new FileInputStream(source).getChannel();
+                FileChannel fcout = new FileOutputStream(target).getChannel()
         ){
-            byte[] buffer = new byte[1024];
-            int len;
-            while ((len = bin.read(buffer)) != -1){
-                bout.write(buffer, 0, len);
+            // 创建buffer
+            ByteBuffer buffer = ByteBuffer.allocate(1024);
+
+            /**
+             * 输入通道读取系统文件，并写入buffer。
+             * 通道读取数据时buffer处于写模式
+             */
+            while (fcin.read(buffer) != -1){
+                // 写入buffer完成，转读buffer模式
+                buffer.flip();
+                // 若buffer中还有数据没被读取，则继续从buffer中读取数据
+                while (buffer.hasRemaining()){
+                    /**
+                     * 输出通道写数据到系统文件，数据是从buffer读取的。
+                     * 通道写数据时，buffer处于读模式
+                     */
+                    fcout.write(buffer);
+                }
+                // buffer没残留数据，全部数据被读取完毕，转写模式
+                buffer.clear();
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 }
