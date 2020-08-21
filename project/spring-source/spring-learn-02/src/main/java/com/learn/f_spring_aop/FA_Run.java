@@ -13,6 +13,10 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @EnableAspectJAutoProxy
 public class FA_Run {
 
+	/**
+	 AbstractAutoProxyCreator#postProcessAfterInitialization(java.lang.Object, java.lang.String)
+	 添加条件断点 beanName.equals("a_ServiceImpl")
+	 */
 	public static void main(String[] args) {
 		ApplicationContext applicationContext = new AnnotationConfigApplicationContext(FA_Run.class);
 		A_Service a_Service = (A_Service)applicationContext.getBean("a_ServiceImpl");

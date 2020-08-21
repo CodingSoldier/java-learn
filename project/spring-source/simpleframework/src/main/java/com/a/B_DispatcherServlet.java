@@ -22,7 +22,8 @@ import java.io.IOException;
 
  */
 @Slf4j
-@WebServlet("/")
+@WebServlet("/XXXX")
+//@WebServlet("/")
 public class B_DispatcherServlet extends HttpServlet {
 
 	@Override
