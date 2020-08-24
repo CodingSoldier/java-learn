@@ -6,13 +6,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 请求的方法的参数名称
+ * GET请求参数注解
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequestParam {
-    //方法参数的名称
+    // 方法参数的名称
     String value() default "";
-    //该参数是否是必须的
+    // 参数是否必须
     boolean required() default true;
 }

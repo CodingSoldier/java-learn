@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestPathInfo {
-    //http的请求方法 GET/POST
+    // 请求方法类型
     private String httpMethod;
-    //http的请求路径
+    // 请求路径
     private String httpPath;
 }

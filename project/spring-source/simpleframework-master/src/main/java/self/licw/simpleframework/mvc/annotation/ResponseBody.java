@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 用于标记自动对返回值进行json处理
+ * 返回json数据
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

@@ -8,13 +8,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 标识controller方法与请求路径和请求方法的关系映射
+ * 请求路径、请求方法与Controller方法的映射
  */
-@Target({ElementType.METHOD,ElementType.TYPE})
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequestMapping {
-    //请求路径
+    // 请求路径
     String value() default "";
-    //请求方法
+
+    // 请求方法
     RequestMethod method() default RequestMethod.GET;
 }

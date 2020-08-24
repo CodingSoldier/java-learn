@@ -9,6 +9,6 @@ import self.licw.simpleframework.mvc.render.ResultRender;
 public class DefaultRequestRender implements ResultRender {
     @Override
     public void render(RequestProcessorChain requestProcessorChain) throws Exception {
-        requestProcessorChain.getResponse().setStatus(requestProcessorChain.getResponseCode());
+
     }
 }

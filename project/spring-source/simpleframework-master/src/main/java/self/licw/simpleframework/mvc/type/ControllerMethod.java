@@ -8,17 +8,16 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * 待执行的controller及其对应的待执行方法的方法实例和参数的映射
- * 也就是一个controllermethod实例对应着一个controller里某个方法的实例（包括类 方法 和参数三者）
+ * 在MVC中描述一个controller方法，包括controller类、方法、方法参数
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ControllerMethod {
-    //Controller类对应的class对象
+    // Controller的class对象
     private Class<?> controllerClass;
-    //执行的controller方法实例
+    // Controller方法实例
     private Method invokeMethod;
-    //执行的方法的参数名称以及对应的参数类型
-    private Map<String,Class<?>> methodParameters;
+    // 方法参数名以及对应的参数类型
+    private Map<String, Class<?>> methodParameters;
 }
