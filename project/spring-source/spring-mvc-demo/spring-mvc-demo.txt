@@ -1,0 +1,17 @@
+1、新建Module，spring-mvc-demo
+2、选择Gradle，java、Web
+
+
+新建idea tomcat配置
+1、配置Tomcat目录
+2、VM opetions 设置 -Dfile.encoding=UTF-8
+3、Deployment 添加war包（不能是散包）。修改Application context的名称spring-mvc-demo
+
+
+Spring MVC核心流程
+    1、建立请求和Controller方法的映射集合
+    2、根据请求查找对应的Controller方法
+    3、请求参数绑定方法形参，执行方法处理请求，渲染视图的流程
+
+
+
