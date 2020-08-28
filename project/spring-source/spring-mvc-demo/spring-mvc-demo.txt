@@ -14,4 +14,57 @@ Spring MVC核心流程
     3、请求参数绑定方法形参，执行方法处理请求，渲染视图的流程
 
 
+启动流程，tomcat最先调用的类方法
+    ContextLoaderListener.contextInitialized()
+        最终进入，此方法会被多次调用
+        AbstractApplicationContext.refresh()
+
+1、建立请求和Controller方法的映射集合
+DispatcherServlet.initStrategies()
+
+DispatcherServlet.initHandlerMappings()
+this.handlerMappings有3个，其中RequestMappingHandlerMapping请求与Controller方法映射
+    AbstractHandlerMethodMapping.initHandlerMethods()
+    初始化
+        AbstractHandlerMethodMapping.detectHandlerMethods()
+        提取其url与controller映射关系
+            RequestMappingHandlerMapping.getMappingForMethod()
+            先使用Controller方法创建RequestMappingInfo，再Controller类创建RequestMappingInfo，两个RequestMappingInfo合并
+        返回Map<Method, T> methods，key是Controller方法，value是RequestMappingInfo
+
+            AbstractHandlerMethodMapping.registerHandlerMethod()
+            将Controller方法注册为AbstractHandlerMethodMapping.mappingRegistry，
+            AbstractHandlerMethodMapping.mappingRegistry.registry是一个HashMap<RequestMappingInfo>，key是RequestMappingInfo，value是AbstractHandlerMethodMapping
+
+
+2、根据请求查找对应的Controller方法
+发请求http://localhost:8080/test/query
+FrameworkServlet.service()
+    AbstractHandlerMapping.getHandler()
+        AbstractHandlerMethodMapping.getHandlerInternal
+            AbstractHandlerMethodMapping.lookupHandlerMethod()
+            找出能处理此请求的HandlerMethod（Controller方法）
+
+        HandlerExecutionChain executionChain = getHandlerExecutionChain(handler, request);
+        根据handler和request获取处理器链HandlerExecutionChain，将拦截器、Controller方法被合并到HandlerExecutionChain实例中
+            AbstractHandlerMapping.getHandlerExecutionChain()
+            添加拦截器
+
+
+3、请求参数绑定方法形参，执行方法处理请求，渲染视图的流程
+DispatcherServlet.doDispatch()
+    HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
+    通过handler获取对应的适配器,adapter负责完成参数解析
+
+    mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+    调用目标Controller中的方法
+        RequestMappingHandlerAdapter.handleInternal()
+            RequestMappingHandlerAdapter.invokeHandlerMethod()
+            调用controller方法
+                ServletInvocableHandlerMethod.invokeAndHandle()
+                    Object returnValue = invokeForRequest(webRequest, mavContainer, providedArgs);
+                    在这里通过反射调用controller中的method方法，获取返回值
+
+
+
 
