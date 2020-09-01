@@ -4,16 +4,14 @@ package com.test.controller;
 import com.test.HeadLine;
 import com.test.Result;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/test")
-public class TestController {
+@RequestMapping("/test1")
+public class Test1Controller {
 
     @RequestMapping(value = "/result/null",method = RequestMethod.GET)
     public void resultNull() {
@@ -25,9 +23,9 @@ public class TestController {
         throw new RuntimeException("抛出异常");
     }
 
-    @RequestMapping(value = "/query",method = RequestMethod.GET)
+    @GetMapping(value = "/query")
     @ResponseBody
-    public Result query() {
+    public Result query(@RequestParam("pageNum")String pageNum, @RequestParam("pageSize")String pageSize) {
         List<HeadLine> headLines = new ArrayList<>();
         HeadLine headLine1 = new HeadLine();
         headLine1.setLineId(1L);

@@ -41,9 +41,14 @@ this.handlerMappings有3个，其中RequestMappingHandlerMapping请求与Control
 发请求http://localhost:8080/test/query
 FrameworkServlet.service()
     AbstractHandlerMapping.getHandler()
-        AbstractHandlerMethodMapping.getHandlerInternal
-            AbstractHandlerMethodMapping.lookupHandlerMethod()
-            找出能处理此请求的HandlerMethod（Controller方法）
+        RequestMappingHandlerMapping.getHandlerInternal
+        返回HandlerMethod，Handler（处理器的意思）是Controller，HandlerMethod是Controller方法
+            AbstractHandlerMethodMapping.getHandlerInternal
+                // 获取请求url
+                String lookupPath = getUrlPathHelper().getLookupPathForRequest(request);
+
+                找出能处理此请求的HandlerMethod（Controller方法）
+                AbstractHandlerMethodMapping.lookupHandlerMethod()
 
         HandlerExecutionChain executionChain = getHandlerExecutionChain(handler, request);
         根据handler和request获取处理器链HandlerExecutionChain，将拦截器、Controller方法被合并到HandlerExecutionChain实例中
@@ -54,17 +59,45 @@ FrameworkServlet.service()
 3、请求参数绑定方法形参，执行方法处理请求，渲染视图的流程
 DispatcherServlet.doDispatch()
     HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
-    通过handler获取对应的适配器,adapter负责完成参数解析
+    通过handler获取对应的适配器。HandlerAdapter是处理器适配器，帮助DispatcherServlet调用处理器
+        AbstractHandlerMethodAdapter.supports()
+        由Adapter自己实现的supports()方法判断是否支持参数解析
 
     mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
     调用目标Controller中的方法
         RequestMappingHandlerAdapter.handleInternal()
             RequestMappingHandlerAdapter.invokeHandlerMethod()
-            调用controller方法
+
+                //设置参数解析器
+                invocableMethod.setHandlerMethodArgumentResolvers(this.argumentResolvers);
+
+                //设置spring mvc请求controller的method返回值处理器
+                invocableMethod.setHandlerMethodReturnValueHandlers(this.returnValueHandlers);
+
                 ServletInvocableHandlerMethod.invokeAndHandle()
-                    Object returnValue = invokeForRequest(webRequest, mavContainer, providedArgs);
                     在这里通过反射调用controller中的method方法，获取返回值
+                    Object returnValue = invokeForRequest(webRequest, mavContainer, providedArgs);
 
+                        获取Controller方法的实际参数值，列表
+                        InvocableHandlerMethod.getMethodArgumentValues()
+                            获取参数解析器
+                            HandlerMethodArgumentResolverComposite.getArgumentResolver
+                                由子类实现supportsParameter()方法，判断参数解析器是否支持解析参数
+                                HandlerMethodArgumentResolver.supportsParameter
+                                    PathVariableMethodArgumentResolver支持@PathVariable解析
+                                    RequestResponseBodyMethodProcessor支持@ResponseBody解析
 
+                            获取每个参数的参数值
+                            AbstractNamedValueMethodArgumentResolver.resolveArgument()
+
+                        使用参数值列表，通过反射调用controller方法
+                        InvocableHandlerMethod.doInvoke(Object... args)
+
+                //在这里通过返回值处理器处理器进行二次处理，
+                // 例如：如果加了方法加了@ReponseBody注解，就把结果序列化json格式再返回
+                this.returnValueHandlers.handleReturnValue(returnValue, getReturnValueType(returnValue), mavContainer, webRequest);
+
+                    @ResponseBody的返回结果使用RequestResponseBodyMethodProcessor处理器
+                    HandlerMethodReturnValueHandler handler = selectHandler(returnValue, returnType);
 
 
