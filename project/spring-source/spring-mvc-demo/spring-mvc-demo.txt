@@ -19,6 +19,26 @@ Spring MVC核心流程
         最终进入，此方法会被多次调用
         AbstractApplicationContext.refresh()
 
+spring-framework认识：
+    映射：HandlerMapping。定义请求和Controller方法之间的映射关系。
+    适配：HandlerAdapter
+    执行：HandlerExecutionChain
+    页面渲染：ViewResolve
+    国际化：LocaleResolver，LocaleContextResolver
+    个性化：ThemeResolver
+    异常解析：HandlerExceptionResolver
+
+处理方法参数解析器： HandlerMethodArgumentRestResolver
+处理方法返回值解析器： HandlerMethodReturnValueHandler
+内容协商处理器：ContentNegotiationManager
+媒体类型：MediaType
+消费媒体类型：@RequestMapping#consumes
+生产媒体类型：@RequestMapping#produces
+HTTP消息转换器：HttpMessageConverter
+REST配置器：WebMvcConfigurer
+
+
+
 1、建立请求和Controller方法的映射集合
 DispatcherServlet.initStrategies()
 
@@ -99,5 +119,19 @@ DispatcherServlet.doDispatch()
 
                     @ResponseBody的返回结果使用RequestResponseBodyMethodProcessor处理器
                     HandlerMethodReturnValueHandler handler = selectHandler(returnValue, returnType);
+
+                返回ModelAndView的情况
+                RequestMappingHandlerAdapter.getModelAndView()
+                    按优先级查找能处理viewName的viewResolver，找到了就返回view
+                    DispatcherServlet.resolveViewName()
+
+                    页面渲染
+                    view.render(mv.getModelInternal(), request, response);
+                        跳转到视图页面
+                        InternalResourceView.renderMergedOutputModel()
+                            rd.forward(request, response);
+
+
+
 
 

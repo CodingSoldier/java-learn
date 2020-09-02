@@ -2,7 +2,6 @@
     DispatcherServlet.initStrategies(ApplicationContext context)
     系统启动的时候不会运行，第一次调用接口的时候才会执行。
 
-
 启动工程
 idea新建configuration ——> Remote
 拷贝  -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
@@ -12,8 +11,3 @@ java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 ee4
 localhost:8080/hello-world
     DeferredResultMethodReturnValueHandler.handleReturnValue()
     由于使用了@ResponseBody注解，返回值由HandlerMethodReturnValueHandler的子类DeferredResultMethodReturnValueHandler来处理
-
-
-
-
-

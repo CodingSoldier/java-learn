@@ -5,8 +5,10 @@ import com.test.HeadLine;
 import com.test.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -47,9 +49,20 @@ public class Test1Controller {
         return result;
     }
 
+    // localhost:8080/test1/form-page?lineName=1111
 	@RequestMapping(value = "/form-page",method = RequestMethod.GET)
-	public String formPage() {
-		return "form-page";
+	public ModelAndView modelView(@RequestParam("lineName") String lineName){
+
+		HashMap<String, Object> model = new HashMap<>();
+		model.put("lineName", lineName);
+		ModelAndView modelAndView = new ModelAndView("form-page", model);
+
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/index",method = RequestMethod.GET)
+	public ModelAndView index(){
+		return new ModelAndView("index");
 	}
 
 }
