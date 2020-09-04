@@ -54,7 +54,9 @@ this.handlerMappings有3个，其中RequestMappingHandlerMapping请求与Control
 
             AbstractHandlerMethodMapping.registerHandlerMethod()
             将Controller方法注册为AbstractHandlerMethodMapping.mappingRegistry，
-            AbstractHandlerMethodMapping.mappingRegistry.registry是一个HashMap<RequestMappingInfo>，key是RequestMappingInfo，value是AbstractHandlerMethodMapping
+            AbstractHandlerMethodMapping.MappingRegistry#registry是一个Map<T, MappingRegistration<T>>，
+            key是RequestMappingInfo，请求信息，包括请求方法和请求url
+            value是AbstracthandlerMethodMapping，包含Controller方法
 
 
 2、根据请求查找对应的Controller方法
