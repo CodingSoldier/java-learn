@@ -7,6 +7,28 @@
 2、VM opetions 设置 -Dfile.encoding=UTF-8
 3、Deployment 添加war包（不能是散包）。修改Application context的名称spring-mvc-demo
 
+修改build.gradle
+1、引入spring-mvc依赖。
+    complie(project(":spring-webmvc"))
+2、引入servlet、jsp
+https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api/4.0.1
+点击Gradle
+    // https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
+    providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+    改为
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+
+    // https://mvnrepository.com/artifact/javax.servlet.jsp/javax.servlet.jsp-api
+    providedCompile group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: '2.3.3'
+    改为
+    compile group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: '2.3.3'
+3、依赖最终如下
+dependencies {
+    complie(project(":spring-webmvc"))
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+    compile group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: '2.3.3'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
 
 Spring MVC核心流程
     1、建立请求和Controller方法的映射集合
@@ -20,9 +42,9 @@ Spring MVC核心流程
         AbstractApplicationContext.refresh()
 
 spring-framework认识：
-    映射：HandlerMapping。定义请求和Controller方法之间的映射关系。
+    映射：HandlerMapping。定义请求和处理程序对象之间的映射关系。
     适配：HandlerAdapter
-    执行：HandlerExecutionChain
+    执行：HandlerExecutionChain  处理程序执行链，由处理程序对象和任何处理程序拦截器组成。
     页面渲染：ViewResolve
     国际化：LocaleResolver，LocaleContextResolver
     个性化：ThemeResolver
@@ -40,10 +62,20 @@ REST配置器：WebMvcConfigurer
 
 
 1、建立请求和Controller方法的映射集合
-DispatcherServlet.initStrategies()
+bean初始化阶段
+AbstractHandlerMethodMapping#processCandidateBean(String beanName){
+    ...省略部分代码
+    
+    // beanType是类Class
+    // isHandler(beanType)，Class上有@Controller或者@RequestMapping返回true
+    if (beanType != null && isHandler(beanType)) {
+        // 提取Controller类的url与方法的关系
+        detectHandlerMethods(beanName);
+    }
+}
 
-DispatcherServlet.initHandlerMappings()
-this.handlerMappings有3个，其中RequestMappingHandlerMapping请求与Controller方法映射
+    AbstractHandlerMethodMapping#detectHandlerMethods()
+
     AbstractHandlerMethodMapping.initHandlerMethods()
     初始化
         AbstractHandlerMethodMapping.detectHandlerMethods()
@@ -58,6 +90,10 @@ this.handlerMappings有3个，其中RequestMappingHandlerMapping请求与Control
             key是RequestMappingInfo，请求信息，包括请求方法和请求url
             value是AbstracthandlerMethodMapping，包含Controller方法
 
+Servlet初始化阶段
+DispatcherServlet.initStrategies()
+    DispatcherServlet.initHandlerMappings()
+    this.handlerMappings有3个，其中RequestMappingHandlerMapping请求与Controller方法映射
 
 2、根据请求查找对应的Controller方法
 发请求http://localhost:8080/test/query
