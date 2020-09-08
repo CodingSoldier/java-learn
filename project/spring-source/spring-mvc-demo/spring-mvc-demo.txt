@@ -106,6 +106,7 @@ DispatcherServlet.doDispatch()
                             HandlerMethodArgumentResolverComposite.getArgumentResolver
                                 由子类实现supportsParameter()方法，判断参数解析器是否支持解析参数
                                 HandlerMethodArgumentResolver.supportsParameter
+                                    RequestParamMethodArgumentResolver支持@RequestParam解析
                                     PathVariableMethodArgumentResolver支持@PathVariable解析
                                     RequestResponseBodyMethodProcessor支持@ResponseBody解析
 

@@ -15,16 +15,6 @@ import java.util.List;
 @RequestMapping("/test1")
 public class Test1Controller {
 
-    @RequestMapping(value = "/result/null",method = RequestMethod.GET)
-    public void resultNull() {
-        System.out.println("resultNull");
-    }
-
-    @RequestMapping(value = "/error",method = RequestMethod.GET)
-    public void error() {
-        throw new RuntimeException("抛出异常");
-    }
-
     @GetMapping(value = "/query")
     @ResponseBody
     public Result query(@RequestParam("pageNum")String pageNum, @RequestParam("pageSize")String pageSize) {
@@ -60,9 +50,6 @@ public class Test1Controller {
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "/index",method = RequestMethod.GET)
-	public ModelAndView index(){
-		return new ModelAndView("index");
-	}
+
 
 }
