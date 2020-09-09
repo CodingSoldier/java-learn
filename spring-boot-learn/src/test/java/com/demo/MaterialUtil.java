@@ -1,15 +1,18 @@
 package com.demo;
 
-import org.apache.commons.lang3.StringUtils;
+import com.demo.common.MyException;
+import com.demo.common.Result;
+
+import java.util.HashMap;
 
 public class MaterialUtil {
 
-    public static final String GANG_YIN = "(钢印)";  //钢印
-
-    public static String getNameGangYin(String name){
-        if (StringUtils.isNotBlank(name) && name.length() > 3 && !"钢印".equals(name.substring(name.length() - 3, name.length()-1)) ){
-            name += "(钢印)";
-        }
-        return  name;
+    public static void main(String[] args) {
+        HashMap map = new HashMap<>();
+        map.put(new Result<>(1, "sfasf", "sdfad"), new MyException("fsadfa"));
+        map.put(new Result<>(2, "22", "sdf22ad"), new MyException("fsa22dfa"));
+        System.out.println(map);
     }
+
+
 }
