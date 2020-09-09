@@ -1,0 +1,39 @@
+安装gralde
+	1、安装jdk
+	2、下载gradle
+	3、配置环境变量 GRADLE_HOME
+		GRADLE_HOME = E:\gradle-5.6.2
+	4、添加 %GRADLE_HOME%\bin;  到path中
+	5、gradle -v  验证是否安装成功
+
+gradle目录：
+	init.d    每一次构建开始时，都会执行此目录下的脚本。可放置公共的初始化脚本
+	lib       gradle本身所依赖的jar包，因为gradle基于jvm，所以也会有依赖包
+	media     一些图标
+
+Groovy与Java比较
+	Groovy完全兼容Java语法
+	分号可选
+	类、方法默认是public的
+	Groovy编译器自动给属性添加getter、setter方法
+	属性可以直接使用点号获取
+	最后一个表达式的值会被作为返回值
+	== 等同于equals()，不会有NullPointException
+	assert语句
+	可选类型定义
+	可选括号
+	闭包
+
+
+idea配置Gradle
+	Settings ——> Gradle ——> Gradle user home 配置为本机gradle home目录
+	新建Gradle项目的时候不要点击应用建议，不然会下载一个gradle安装包，但是需要去配置：Use Gradle from 选择Specified location = gradle home目录
+
+idea新建gradle。
+	new project
+	选择Gradle，Java
+	再次搜索Settings ——> Gradel ——> Gradle project ——> 
+		Use Gradle from 选择Specified location = gradle home目录
+	本项目使用groovy，打开groovy console。idea ——> tools ——> groovy console
+
+
