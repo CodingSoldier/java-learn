@@ -47,9 +47,16 @@ consul members
 
 
 
-以及无效的节点只能去server节点的服务器上删除
+无效的节点可以去server节点的服务器上删除
 	curl -X PUT http://127.0.0.1:8500/v1/agent/service/deregister/pay-service-127.0.0.1
 
+service模式也可以这么删
+Healthy Nodes
+	注册中心名
+	服务头名称
+	服务id
+删除的时候删服务id
+	curl -X PUT http://127.0.0.1:8500/v1/agent/service/deregister/服务id
 
 
 
