@@ -25,6 +25,152 @@ Groovy与Java比较
 	闭包
 
 
+/**
+ * groovy语法
+ */
+/**
+ * Groovy完全兼容Java语法
+ *
+ * 类、方法默认是public的
+ */
+class ProjectVersion{
+    /**
+     * 可以不加分号
+     */
+    private int bigVersion
+    private int littleVersion
+
+    ProjectVersion() {
+    }
+
+    ProjectVersion(int bigVersion, int littleVersion) {
+        this.bigVersion = bigVersion
+        this.littleVersion = littleVersion
+    }
+
+    /**
+     * 最后一个表达式的值会被作为返回值
+     */
+    int getBigVersion(){
+        bigVersion
+    }
+}
+ProjectVersion pv1 = new ProjectVersion(1, 11)
+/**
+ * 通过 . 可以访问属性
+ */
+println pv1.bigVersion
+/**
+ * Groovy编译器自动给属性添加getter、setter方法
+ */
+println pv1.littleVersion
+
+/**
+ * == 等同于equals()，不会有NullPointException
+ */
+ProjectVersion pv2 = null
+println pv1 == pv2
+
+/**
+ * 命名参数
+ * 对于构造函数来说，要有无参构造函数才能这么使用
+ */
+ProjectVersion pv3 =new ProjectVersion(littleVersion: 22, bigVersion: 2)
+println pv3.bigVersion
+println pv3.littleVersion
+
+/**
+ * 可选的类型定义
+ */
+def version = 1
+
+/**
+ * assert语句
+ */
+assert version == 1
+
+/**
+ * 括号可选。
+ */
+println(version)
+println version
+
+/**
+ * 字符串
+ */
+def s1 = '单引号中就纯粹的字符串'
+def s2 = "双引号中通过\$后去变量${version}"
+def s3 = '''三个单引号
+可以
+换行'''
+println s1
+println s2
+println s3
+
+/**
+ *集合api
+ */
+// list。是ArrayList类型
+def l1 = ['ant', 'maven']
+// 往list中添加元素
+l1 << 'gradle'
+println l1.toString()
+println l1.getClass().getName()
+
+//map
+def m1 = ['ant': 2000, 'maven': 2004]
+// map添加元素
+m1.gradle = 2009
+println m1.ant
+println m1.toString()
+println m1.getClass().getName()
+
+/**
+ * 闭包
+ */
+// 包含参数的闭包
+def c1 = {
+    v -> println v
+}
+// 不包含参数的闭包
+def c2 = {
+    println '没有参数的闭包'
+}
+// 定义方法
+def method1(Closure closure){
+    closure('参数')
+}
+def method2(Closure closure){
+    closure()
+}
+// 执行方法，参数是闭包。方法括号可写可不写
+method1 c1
+method2(c2)
+
+/*
+gradle构建脚本默认都有一个Project实例
+
+//apply一个方法，省略了括号
+//plugin: 'java' 这是命名参数的写法。参数名是plugin，参数值是'java'
+apply plugin: 'java'
+
+// 定义变量
+version = '0.1'
+
+// repositories 是一个方法，参数是一个闭包
+repositories {
+    mavenCentral()
+}
+
+// dependencies 也是一个方法，参数是一个带参数的闭包
+// compile 也是一个方法，参数是'commons-codec:commons-codec:1.6'
+dependencies {
+    compile 'commons-codec:commons-codec:1.6'
+}
+
+*/
+
+
 idea配置Gradle
 	Settings ——> Gradle ——> Gradle user home 配置为本机gradle home目录
 	新建Gradle项目的时候不要点击应用建议，不然会下载一个gradle安装包，但是需要去配置：Use Gradle from 选择Specified location = gradle home目录
@@ -35,5 +181,15 @@ idea新建gradle。
 	再次搜索Settings ——> Gradel ——> Gradle project ——> 
 		Use Gradle from 选择Specified location = gradle home目录
 	本项目使用groovy，打开groovy console。idea ——> tools ——> groovy console
+
+
+idea打包gradle
+	Gradle窗口 ——> 找到项目 ——> Tasks ——> build ——> 双击jar。
+	打出来的jar包在build ——> build ——> lib目录下
+	运行jar包： java -classpath project\gradle-learn\gradle-02-java\build\libs\g
+radle-02-java-1.0-SNAPSHOT.jar com.cpq.gradle02java.App
+
+
+
 
 
