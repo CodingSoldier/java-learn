@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author chenpiqian
  * @date: 2020-09-09
  */
-class TokenTest {
+public class TokenTest {
 
     void assertToken(Token token, String value, TokenType type){
         assertEquals(value, token.getValue());
@@ -66,6 +66,23 @@ class TokenTest {
         }
     }
 
+    @Test
+    public void test_makeNumber() throws LexicalException{
+        String[] tests = {
+                "+0 aa",
+                "-0 aa",
+                ".3 cc",
+                ".5555 ddd",
+                "7789.8888 ooo",
+                "-1000.123123*123123"
+        };
+        for (String test : tests) {
+            PeekIterator<Character> it = new PeekIterator<>(test.chars().mapToObj(x -> (char) x));
+            Token token = Token.makeNumber(it);
+            String[] splitValue = test.split("[* ]+");
+            assertToken(token, splitValue[0], test.indexOf('.') != -1 ? TokenType.FLOAT : TokenType.INTEGER);
+        }
+    }
 
 
 }
