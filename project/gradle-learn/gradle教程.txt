@@ -189,7 +189,7 @@ idea打包gradle
 	Gradle窗口 ——> 找到项目 ——> Tasks ——> build ——> 双击jar。
 	打出来的jar包在build ——> build ——> lib目录下
 	运行jar包： java -classpath project\gradle-learn\gradle-02-java\build\libs\g
-radle-02-java-1.0-SNAPSHOT.jar com.cpq.gradle02java.App
+radle-02-java-1.0-SNAPSHOT.jar com.cpq.model.App
 
 构建脚本的概要
 	Gradle构建中的两个基本概念是项目（project）和任务（task），每个构建至少包含一个项目，项目中包含一个或多个任务。
@@ -223,6 +223,23 @@ rootProject.name = 'gradle-02-java'
 	mavenLocal      本地maven仓库
 	mavenCentral    公网公共仓库
 	jcenter         公网公共仓库
+
+
+多模块，查看 gradle-03-multi-project
+    1、新建多模块项目 gradle-03-multi-project
+       新建gradle.properties，配置以下内容。所有模块（包括rootProject）便能使用以下属性配置。可模块的group、version配置
+           group = 'org.example'
+           version = '1.0-SNAPSHOT'
+       配置build.gradle
+       settings.gradle是管理多模块的，里面包含rootProject.name和子模块名
+       rootProject的src可以删除
+    2、新建子模块model，将settings.gradle的内容全部删除。
+       model模块中可以使用logback日志依赖。测试用例中用了logback
+    3、新建子模块service01，配置service01依赖model。详情查看build.gradle、测试用例
+
+发布，查看build.gradle。
+配置好部署插件之后，Gradle窗口多了publishing。
+点击publishToMavenLocal会发布到本地maven仓库
 
 
 

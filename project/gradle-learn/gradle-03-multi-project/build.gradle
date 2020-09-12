@@ -1,16 +1,42 @@
-plugins {
-    id 'java'
+/**
+ * allprojects是对所有project的配置，包括Root Project。
+ * 相当于是把闭包里面的所有配置写在所有项目中
+ */
+allprojects {
+    apply plugin: 'java'
+    sourceCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+    }
+
+    // 部署插件
+    apply plugin: 'maven-publish'
+    publishing {
+        publications {
+            // myPublish方法名可随意定
+            myPublish(MavenPublication){
+                from components.java
+            }
+        }
+        repositories {
+            maven {
+                name "myRepo"
+                // url可填写私服地址
+                url ""
+            }
+        }
+    }
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
+// subprojects是对所有Child Project的配置
+subprojects {
+    // 定义子项目的依赖
+    dependencies {
+        implementation 'ch.qos.logback:logback-classic:1.2.3'
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
 }
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
+
+

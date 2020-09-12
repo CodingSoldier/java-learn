@@ -1,0 +1,4 @@
+// 依赖model模块
+dependencies {
+    compile project(":model")
+}

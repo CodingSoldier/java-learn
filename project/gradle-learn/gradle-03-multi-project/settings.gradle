@@ -1,2 +1,4 @@
 rootProject.name = 'gradle-03-multi-project'
+include 'model'
+include 'service01'
 

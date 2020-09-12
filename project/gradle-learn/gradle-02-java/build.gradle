@@ -12,12 +12,17 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
-//    使用公司私服仓库
+//    使用私服仓库
 //    maven {
 //        url ''
 //    }
-    //使用本地maven仓库
+
+//        maven{ url 'https://maven.aliyun.com/nexus/content/groups/public/'}
+//        maven{ url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'}
+
+//使用本地maven仓库
 //    mavenLocal()
+
     mavenCentral()
 }
 

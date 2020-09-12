@@ -11,7 +11,7 @@ public class App {
         int i=0;
         Scanner scanner = new Scanner(System.in);
         while (++i > 0){
-            logger.info(i + ". 请输入: ");
+            logger.info(i + ". 请输input: ");
             TodoItem todoItem = new TodoItem(scanner.nextLine());
             System.out.println(todoItem);
         }
