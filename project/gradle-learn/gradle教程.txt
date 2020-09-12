@@ -7,6 +7,7 @@
 	5、gradle -v  验证是否安装成功
 
 gradle目录：
+    bin       目录中有两个脚本，gradle.bat是在windows环境启动一个jvm，加载lib库的jar包，启动gradle
 	init.d    每一次构建开始时，都会执行此目录下的脚本。可放置公共的初始化脚本
 	lib       gradle本身所依赖的jar包，因为gradle基于jvm，所以也会有依赖包
 	media     一些图标
@@ -73,7 +74,8 @@ println pv1 == pv2
 
 /**
  * 命名参数
- * 对于构造函数来说，要有无参构造函数才能这么使用
+ * new ProjectVersion(littleVersion: 22, bigVersion: 2)是new ProjectVersion([littleVersion: 22, bigVersion: 2])
+ *所以要有一个无参构造函数
  */
 ProjectVersion pv3 =new ProjectVersion(littleVersion: 22, bigVersion: 2)
 println pv3.bigVersion
@@ -128,6 +130,17 @@ println m1.getClass().getName()
 /**
  * 闭包
  */
+// 闭包也是一个函数，可以执行
+def c01 = {}
+c01()
+
+def c02 = {return "闭包返回值"}
+println c02()
+
+def c03 = {param1 -> return 1 + param1}
+println c03(1)
+
+
 // 包含参数的闭包
 def c1 = {
     v -> println v
@@ -242,8 +255,26 @@ rootProject.name = 'gradle-02-java'
 点击publishToMavenLocal会发布到本地maven仓库
 
 
+wrapper
+    创建demo目录，进入demo目录
+    执行 gradle wrapper 。会生成一个很小的gradle-wrapper.jar的jar包、一个脚本
+    gradle/wrapper可以上传到代码仓库，当别人克隆项目下来后，window环境将执行gradle.bat，判断本地是否有相应的gradle版本，没有则会下载一个。下载目录默认是C:\Users\Administrator\.gradle\wrapper\dists
+
+GradleUserHome
+	默认路径是\Users\Administrator\.gradle
+
+
+插件
+    新建 gradle-04-plugin
+    在gradle-04-plugin下执行 gradle wrapper
+    编写build.gradle
+    在gradle-04-plugin目录下执行gradlew.bat task7、gradlew.bat task6
 
 
 
-
-	
+/**
+ * 解决idea gradle项目中文报错。有中文的gradle模块build.gradle文件中加入以下配置
+ */
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}

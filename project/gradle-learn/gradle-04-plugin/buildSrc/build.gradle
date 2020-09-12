@@ -1,0 +1,17 @@
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+/**
+ * 编译JAVA文件时采用UTF-8
+ * 不然中文会报错
+ */
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+

@@ -1,0 +1,96 @@
+///*
+//第一部分，创建自己的Plugin
+// */
+//group 'org.example'
+//version '1.0-SNAPSHOT'
+//
+//repositories {
+//    mavenCentral()
+//}
+//
+//task first(){
+//    println 'first task'
+//}
+//
+///**
+// * 创建插件只需要实现Plugin接口
+// */
+//class MyPlugin implements Plugin<Project>{
+//    @Override
+//    void apply(Project project) {
+//        (0..<10).each {i ->
+//            project.task('task' + i){
+//                if (i % 2 == 0)
+//                    dependsOn('first')
+//                def capturedI = i
+//                doLast {
+//                    println "Executing task ${capturedI}"
+//                }
+//            }
+//        }
+//    }
+//}
+//
+///*
+//应用插件
+//apply plugin: MyPlugin 是 apply([plugin: MyPlugin]) 的简化
+//apply方法源码参数是Map
+// */
+//apply plugin: MyPlugin
+//
+//// http方式导入plugin没成功
+////apply plugin: 'http://localhost:8080/gradle-script/my-plugin-script.gradle'
+
+
+
+
+
+
+
+///*
+//第二部分，在build.gradle中导入jar包
+//执行build.gradle的jvm进程和运行项目java代码的jvm进程是两个不同的进程，两者之前是隔离的，没有任何联系
+// */
+//// 在build.gradle文件中导入类的快捷键无法使用
+//import org.apache.commons.lang3.StringUtils
+///**
+// * 在buildscrip中配置配置repositories、dependencies即可导入jar包
+// */
+//buildscript {
+//    repositories {
+//        maven{ url 'https://maven.aliyun.com/nexus/content/groups/public/'}
+//        maven{ url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'}
+//        mavenCentral()
+//    }
+//    dependencies {
+//        // 注意是使用classpath
+//        classpath group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+//    }
+//}
+//group 'org.example'
+//version '1.0-SNAPSHOT'
+//
+//apply plugin: 'java'
+//
+//repositories {
+//    maven{ url 'https://maven.aliyun.com/nexus/content/groups/public/'}
+//    maven{ url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'}
+//    mavenCentral()
+//}
+//
+////使用common-lang3的StringUtils
+//if (StringUtils.isNotEmpty('aa')){
+//    println '00'
+//}
+////可以将自己的插件代码打成jar包，再应用插件
+////apply plugin: MyPlugin
+
+
+/**
+ * 第三部分，在buildSrc目录下创建plugin
+ * gradle约定，如果项目中有buildSrc，在项目的build.gradle运行前，先去执行buildSrc，然后把buildSrc打成的jar包导入到buildscript依赖中
+ */
+// 可以直接使用buildSrc目录中的plugin
+apply plugin: MyPlugin
+
+
