@@ -1,0 +1,3 @@
+gradle的bin目录中有两个脚本，gradle.bat是在windows环境启动一个jvm，加载lib库的jar包，启动gradle
+
+
