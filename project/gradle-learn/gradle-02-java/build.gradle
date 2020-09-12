@@ -2,9 +2,9 @@ plugins {
     id 'java'
 }
 
-plugins {
-    id 'war'
-}
+//plugins {
+//    id 'war'
+//}
 
 group 'org.example'
 version '1.0-SNAPSHOT'
@@ -12,9 +12,77 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
+//    使用公司私服仓库
+//    maven {
+//        url ''
+//    }
+    //使用本地maven仓库
+//    mavenLocal()
     mavenCentral()
 }
 
+configurations.all {
+    resolutionStrategy {
+        // 有依赖冲突则构建失败
+        failOnVersionConflict()
+        // 强制指定版本
+        force 'org.slf4j:slf4j-api:1.7.23'
+    }
+}
+
+/**
+ * 远程仓库地址
+ * https://mvnrepository.com/repos  这个仓库经常出现testCompile
+ * https://search.maven.org/
+ */
 dependencies {
+    // 导入依赖，在Source Sets ——> main ——> Dependencies
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+    compile 'org.hibernate:hibernate-core:3.6.3.Final'
+
+//    // 排除依赖，不需要指定版本
+//    compile ('org.hibernate:hibernate-core:3.6.3.Final'){
+//        exclude group: 'org.slf4j', module: 'slf4j-api'
+//    }
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.0'
+    /**
+     * ch.qos.logback:logback-classic:1.2.3
+     * org.hibernate:hibernate-core:3.6.3.Final
+     * org.slf4j:slf4j-api:1.6.0
+     * 这3个依赖都依赖了org.slf4j:slf4j-api。
+     * Tasks ——> help ——> dependencies  可以查看依赖冲突后的替换关系。
+     * 默认使用最新版本。
+     * 即使依赖路径 compile 'org.slf4j:slf4j-api:1.6.0' 最短，依旧会被替换为 org.slf4j:slf4j-api:1.7.25
+     * 并且在idea中还看不到compile 'org.slf4j:slf4j-api:1.6.0'了，只有在hibernate中才看到slf4j-api依赖
+     */
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
+
+/**
+ * task学习，创建目录
+ */
+//// 创建目录
+//def createDir = {
+//    path ->
+//        File dir = new File(path)
+//        if (!dir.exists()){
+//            dir.mkdirs()
+//        }
+//
+//}
+//// 定义任务
+//task makeJavaDir(){
+//    def paths = ['src/main/java', 'src/main/resources', 'src/test/java', 'src/test/resources']
+//    doFirst {
+//        paths.forEach(createDir)
+//    }
+//}
+//// 此任务依赖makeJavaDir
+//task makeTestWebapp(){
+//    dependsOn 'makeJavaDir'
+//    def paths = ['src/test/webapp']
+//    doLast {
+//        paths.forEach(createDir)
+//    }
+//}

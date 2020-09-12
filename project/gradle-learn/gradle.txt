@@ -182,6 +182,8 @@ idea新建gradle。
 		Use Gradle from 选择Specified location = gradle home目录
 	本项目使用groovy，打开groovy console。idea ——> tools ——> groovy console
 
+gradle不要勾选自动导入，不然每次修改build.gradle都会执行build.gradle的任务
+
 
 idea打包gradle
 	Gradle窗口 ——> 找到项目 ——> Tasks ——> build ——> 双击jar。
@@ -189,7 +191,42 @@ idea打包gradle
 	运行jar包： java -classpath project\gradle-learn\gradle-02-java\build\libs\g
 radle-02-java-1.0-SNAPSHOT.jar com.cpq.gradle02java.App
 
+构建脚本的概要
+	Gradle构建中的两个基本概念是项目（project）和任务（task），每个构建至少包含一个项目，项目中包含一个或多个任务。
+	在多任务构建中，一个项目可以依赖于其他项目，类似的，任务可以形成一个依赖关系图来确保他们的执行顺序。
+
+构建脚本
+	一个项目代表一个正在构建的组件（比如一个jar文件），当构建启动后，Gradle会基于build.gradle实例化一个org.gradle.api.Project类，并且能够通过project变量使其隐式可用。也就是说build.gradle中所有的方法、变量都是project实例的方法、变量。在build.gradle中写project.后就会有语法提示
+	通过group、name（在idea中是Artifactid）、version能唯一确定一个组件（jar包）
+	project的重要方法
+		apply        应用一个插件
+		repositories 声明去哪个仓库找依赖包
+		dependency   声明依赖
+		task         声明project有什么任务
+
+任务
+	任务对应org.gradle.api.Task。主要包括任务动作和任务依赖。任务动作定义了一个最小的工作单元。可以定义依赖于其他任务、动作序列和执行条件。
+	dependsOn  依赖于哪些任务
+	doFirst、doLast、<< 两个小于号跟doLast一样，是一个简写方式
+	插件本身自带任务，在idea  Tasks中可以看到项目有哪些任务
+	执行jar任务
+		> Task :compileJava UP-TO-DATE  UP-TO-DATA表示输入输出没有变化，即项目没有改动。会跳过任务
+		> Task :processResources UP-TO-DATE
+		> Task :classes UP-TO-DATE
+		> Task :jar
+
+settings.gradle管理多项目构建。在本例子中只有一行配置
+rootProject.name = 'gradle-02-java'
+只管理一个项目
+
+常用仓库
+	mavenLocal      本地maven仓库
+	mavenCentral    公网公共仓库
+	jcenter         公网公共仓库
 
 
 
 
+
+
+	
