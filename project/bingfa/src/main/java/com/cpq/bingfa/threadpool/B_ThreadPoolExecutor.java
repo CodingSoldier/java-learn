@@ -18,6 +18,11 @@ public class B_ThreadPoolExecutor {
      * 提交任务，任务数小于最小线程数，创建新线程
      * 当workQueue满了之后，线程池才会从最小核心数增加线程到最大线程数
      *
+     * 新增线程的判断顺序
+     *    判断线程是否超过corePoolSize
+     *    corePoolSize满了，判断workQueue
+     *    workQueue满了，判断maxPoolSize
+     *
      * 线程池的线程空闲时是 WAIT状态
      * 当线程池线程数超过corePoolSize，之后线程数减少，最少减为corePoolSize个
      *

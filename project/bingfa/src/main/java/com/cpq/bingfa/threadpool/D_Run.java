@@ -2,6 +2,8 @@ package com.cpq.bingfa.threadpool;
 
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.*;
 
 public class D_Run {
@@ -28,6 +30,17 @@ public class D_Run {
         num = future.get();
         System.out.println(num);
 
+    }
+
+    public static void main(String[] args) throws Exception{
+        SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+        Date date = sdf.parse( "2020-09-21 14:05:28" );
+        System.out.println(date);
+        System.out.println(date.getTime());
+
+        Date date1 = sdf.parse( "2020-09-21 14:12:28 " );
+        System.out.println(date1);
+        System.out.println(date1.getTime());
     }
 
 }
