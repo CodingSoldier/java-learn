@@ -20,8 +20,11 @@ public class A_CustomThreadPoolExecutor {
      *
      * keepAliveTime 线程池中超过maximumPoolSize数目的空闲线程最大存活时间----30+单位TimeUnit
      * TimeUnit keepAliveTime时间单位----TimeUnit.MINUTES
-     * workQueue 阻塞队列----new ArrayBlockingQueue<Runnable>(5)====5容量的阻塞队列
+     * workQueue 阻塞队列----new ArrayBlockingQueue<Runnable>(5)====5容量的阻塞队列，有界队列
+     *      LinkedBlockingQueue无界队列，maximumPoolSize将无效
      * threadFactory 新建线程工厂----new CustomThreadFactory()====定制的线程工厂
+     *      默认使用Executors.defaultThreadFactory()，创建出来的线程都在一个线程组，
+     *      拥有相同的NORM_PRIORITY优先级且都不是守护线程
      * rejectedExecutionHandler 当提交任务数超过maxmumPoolSize+workQueue之和时,
      *                          即当提交第41个任务时(前面线程都没有执行完,此测试方法中用sleep(100)),
      *                                任务会交给RejectedExecutionHandler来处理
