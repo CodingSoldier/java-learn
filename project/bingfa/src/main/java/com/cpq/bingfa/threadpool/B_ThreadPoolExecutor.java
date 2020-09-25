@@ -1,9 +1,6 @@
 package com.cpq.bingfa.threadpool;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @Description
@@ -48,7 +45,7 @@ public class B_ThreadPoolExecutor {
 
     /**
      * 线程池可选择的饱和策略
-     * AbortPolicy 终止策略（默认）
+     * AbortPolicy 终止策略（默认），终止策略会终止线程池
      * DiscardPolicy 抛弃策略
      * DiscardOldestPolicy 抛弃旧任务策略
      * CallerRunsPolicy 调用者运行策略
@@ -107,4 +104,34 @@ public class B_ThreadPoolExecutor {
 
         pool.shutdown();
     }
+}
+
+
+
+
+class ThreadPool{
+
+    static ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 1,
+            1L, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(2));
+
+    public static void main(String[] args) throws Exception{
+
+        for (int i = 0; i < 10; i++) {
+            // 因为拒绝策略而抛出异常，threadPoolExecutor.execute()也会抛异常
+            try {
+                threadPoolExecutor.execute(() -> {
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(10);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                });
+            }catch (Exception e){
+                System.out.println("#######"+e.toString());
+            }
+        }
+
+    }
+
 }

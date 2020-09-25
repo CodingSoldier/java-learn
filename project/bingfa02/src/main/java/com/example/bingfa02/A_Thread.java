@@ -1,4 +1,4 @@
-package com.example.bingfa02.a1_thread;
+package com.example.bingfa02;
 
 import org.junit.jupiter.api.Test;
 
