@@ -120,7 +120,6 @@ class Service1{
 
          在UserContextHolder.holder.set(user);前后打断点，user存储在线程中，而不是在ThreadLocal中
 
-
          */
         UserContextHolder.holder.set(user);
         System.out.println("service1: "+user);
@@ -151,6 +150,35 @@ class ContextHolderTest{
     }
 }
 
+
+/*
+
+static class Entry extends WeakReference<ThreadLocal<?>> {
+    Object value;
+    Entry(ThreadLocal<?> k, Object v) {
+        super(k);
+        value = v;
+    }
+}
+ThreadLocal.ThreadLocalMap.Entry是一个弱引用
+弱引用的特点：如果这个对象只被弱引用关联（有没任何强引用关联），那么这个对象就可以被回收
+但是Entry只有key是弱引用，value还是一个强引用，若value还被其他变量引用着，Entry就不能被GC回收
+
+如果线程运行完后终止了，线程中的ThreadLocal.ThreadLocalMap对象也会被回收，ThreadLocal.ThreadLocalMap.Entry当然也会被回收。
+
+但是如果线程不终止，则会发生内存泄露。比反说，线程是线程池中的线程，则线程会被反复使用
+
+JDK有考虑这个问题，在set、remove、rehash方法中会扫描key为null的Entry，并把对应的value设置为null，这样value对象就可以被回收
+java.lang.ThreadLocal.ThreadLocalMap.resize()
+    if (k == null) {
+        e.value = null; // Help the GC
+    }
+
+避免内存泄露：
+    调用remove方法，就会删除对应的Entry对象，可以避免内存泄露，所以使用完ThreadLocal之后，就要调用remove方法。
+
+
+ */
 
 
 
