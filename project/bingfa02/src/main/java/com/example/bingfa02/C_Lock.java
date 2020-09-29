@@ -602,6 +602,11 @@ class LockUpgradingDowngrading{
     自旋锁一般用于多核服务器，在并发度不是特别高的情况下比阻塞锁效率高。
     自旋锁适用于临界区比较小的情况，如果临界区很大（线程拿到锁后很久才释放），那也是不适合的。
 
+ JVM对锁的优化：
+    自旋锁锁自适应，尝试N次失败后转为阻塞锁，N也可以自适应调节大小。
+    锁消除，虚拟机判断不需要加锁，把锁消除。
+    锁粗化，一系列的加锁解锁是对同一个资源反复加锁，把锁范围加大
+
  */
 class SpinLock{
     private AtomicReference<Thread> sign = new AtomicReference<>();
@@ -616,9 +621,7 @@ class SpinLock{
 
     public void unlock(){
         Thread currentThread = Thread.currentThread();
-        while (!sign.compareAndSet(currentThread, null)){
-            System.out.println("释放锁");
-        }
+        sign.compareAndSet(currentThread, null);
     }
 
     public static void main(String[] args) {
@@ -627,11 +630,16 @@ class SpinLock{
             System.out.println(Thread.currentThread().getName()+"尝试获取锁");
             spinLock.lock();
             try {
-
+                System.out.println(Thread.currentThread().getName() + "获取到自旋锁");
+                TimeUnit.MILLISECONDS.sleep(1);
+            }catch(InterruptedException e){
+                e.printStackTrace();
             }finally {
                 spinLock.unlock();
             }
-        }
+        };
+        new Thread(runnable).start();
+        new Thread(runnable).start();
     }
 }
 
