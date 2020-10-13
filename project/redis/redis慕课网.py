@@ -220,6 +220,8 @@ geopos city:locations tianjing
 geodist city:locations tianjing beijing m
 
 
+redis一定要写持久化策略，要么RDB，要么AOF，如果是 kill -9 或者断电等退出方式，redis不会持久化数据，如果是正常退出会持久化数据
+
 RDB持久化策略
 RDB是一个二进制文件，备份时，先生成临时文件，再替换旧文件
 手动备份 save    会阻塞后面的命令

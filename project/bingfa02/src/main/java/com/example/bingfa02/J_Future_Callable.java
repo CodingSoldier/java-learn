@@ -211,7 +211,9 @@ class FutureTimeout{
  */
 class FutureTask1{
     static ExecutorService service = Executors.newCachedThreadPool();
+
     public static void main(String[] args) {
+        // 创建Callable对象
         Callable callable = () -> {
             System.out.println("子线程正在计算");
             TimeUnit.SECONDS.sleep(1);
@@ -222,12 +224,29 @@ class FutureTask1{
             return sum;
         };
 
+        // 使用Callable创建FutureTask
         FutureTask<Integer> futureTask = new FutureTask<Integer>(callable);
 
+        // 线程池提交FutureTask
         service.submit(futureTask);
+
+        try {
+            System.out.println("FutureTask运行结果"+futureTask.get());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        service.shutdown();
     }
 }
 
+/**
+ Future注意点：
+    使用for循环批量获取future结果的时候，容易发生一部分线程很慢的情况，get方法调用时应使用timeout限制
+    Future的生命周期不能后退，一旦任务完成，Future就永久停留在已完成状态，不能从头开始
+ */
 
 
 
