@@ -2,7 +2,7 @@ JVM如何加载.class文件
 	1、Class Loader加载class文件到内存
 	2、使用在JVM内存模型分配存储空间
 	3、Execution Engine对命令进行解析
-	4、通过Native Interface 融合不同语言，调用本地方法为java所用
+	4、通过Native Interface融合不同语言，调用本地方法为java所用
 
 JVM类装载过程：
     1、通过ClassLoader加载class字节码，生成Class对象
@@ -50,7 +50,6 @@ Java堆（Head）
     静态属性引用的对象
     Native方法中引用的对象
     活跃线程的引用对象
-
 
 
 java异常处理消耗性能的地方

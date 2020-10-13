@@ -4,10 +4,6 @@ import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author chenpiqian
- * @date: 2019-12-10
- */
 public class B_Start_Run {
 
     @Test
@@ -34,18 +30,6 @@ public class B_Start_Run {
 
         TimeUnit.SECONDS.sleep(5);
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

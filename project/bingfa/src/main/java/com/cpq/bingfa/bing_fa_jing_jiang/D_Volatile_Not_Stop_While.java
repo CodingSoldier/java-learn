@@ -73,9 +73,8 @@ static class Consumer{
 
         producer.canceled = true;
         System.out.println("producer.canceled "+producer.canceled);
-        //可以在这里打断点，然后再消费一个数据，生产者线程就能退出了
+        // 可以在这里打断点，然后再消费一个数据，生产者线程就能退出了
     }
-
 
 
 }
