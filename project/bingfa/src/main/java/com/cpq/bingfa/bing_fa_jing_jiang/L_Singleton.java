@@ -1,9 +1,5 @@
 package com.cpq.bingfa.bing_fa_jing_jiang;
 
-/**
- * @author chenpiqian
- * @date: 2019-12-19
- */
 public class L_Singleton {
 }
 
@@ -29,7 +25,10 @@ class SingletonHunger{
  * 懒汉式单例，使用double-check
  * 为什么要用volatile：
  *   1、新建对象不是原子性的，实际上有3个步骤
+ *      分配内存、运行construct方法、内存地址赋值给变量
+ *      这三个步骤可能会重排序为
  *      分配内存、内存地址赋值给变量、运行construct方法
+ *      这样会导致执行到 内存地址赋值给变量，instance变量不为null，但是instance对象还没初始化完成
  *   2、使用volatile能够防止这个3个步骤的指令重排序
  *   3、并且volatile能够保证变量的可见性，防止线程一已经将对象赋值给变量，但是线程二读取变量仍然得到空
  */

@@ -45,7 +45,7 @@ public class H_Wait_Notify {
             synchronized (obj){
                 System.out.println(threadName+" 获取锁");
                 System.out.println(threadName+" 结束");
-                obj.notify();  //如果只有obj.wait()方法而不执行obj.notify()，则WAITING线程将永远WAITING
+                obj.notify();  // 如果只有obj.wait()方法而不执行obj.notify()，则WAITING线程将永远WAITING
             }
         }
     }
@@ -161,7 +161,7 @@ class SleepDontReleaseLock implements Runnable{
             try {
                 /**
                  * 在同步代码块中
-                 * 线程sleep()不会释放锁，sleep()必须接收一个时间参数
+                 * 线程sleep()不会释放锁，sleep()必须接收一个时间参数，执行sleep(long timeout)后，线程处于TIME_WAITING状态
                  * 线程在sleep()时间到了之后，线程继续执行
                  *
                  * sleep()也不会释放LOCK接口同步代码块中的锁
@@ -273,16 +273,16 @@ class JoinPrinciple {
         t.start();
         System.out.println("开始等待子线程运行完毕");
 
-        //t.join();
+        t.join();
 
         /**
          * thread.join()的等价与下面的3行代码，join()方法内部就是调用了wait(0)
          * 当线程执行到同步代码块，由于thread.wait()导致当前线程等待，注意是当前main线程等待，而不是thread等待，可以将锁thread换成obj来理解
          * 并且当t.run()执行完毕，JVM会自动调用t.notify()，让主线程切换为Runnable状态？
          */
-        synchronized (t){
-            t.wait();
-        }
+        //synchronized (t){
+        //    t.wait();
+        //}
 
         ///**
         // * 换成object就不行了，主线程无法切换为Runnable状态

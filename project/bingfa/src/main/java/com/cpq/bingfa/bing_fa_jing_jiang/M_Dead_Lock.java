@@ -4,10 +4,6 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 
-/**
- * @author chenpiqian
- * @date: 2019-12-19
- */
 public class M_Dead_Lock {
 }
 

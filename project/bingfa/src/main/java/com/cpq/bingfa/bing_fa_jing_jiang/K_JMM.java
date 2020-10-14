@@ -57,7 +57,7 @@ class VolatileBoolean{
  * java中的原子操作：
  *     1、java虚拟机规范中除了long、double之外的基本类型（int、byte、boolean、short、char、float）的赋值操作
  *        long、double是64位的，写入的时候分两次写入，一次写32位。但是商用虚拟机已经考虑到这点，long和double的赋值都是原子性的
- *     2、所有应用reference的赋值操作，32位、64位系统都是
+ *     2、所有引用reference的赋值操作，32位、64位系统都是
  *     3、Atomic包中的所有类的原子操作
  */
 
