@@ -87,6 +87,7 @@ static class Consumer{
         System.out.println("消费者停止消费");
 
         pt.interrupt();
+
     }
 
 
