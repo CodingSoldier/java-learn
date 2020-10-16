@@ -7,7 +7,6 @@ import java.lang.management.ThreadMXBean;
 public class M_Dead_Lock {
 }
 
-
 /**
  * 死锁的4个必要条件
  *   1、互斥条件
@@ -19,8 +18,6 @@ public class M_Dead_Lock {
  * 避免死锁的思路：
  *   1、避免相反的获取锁顺序
  */
-
-
 class DeadLock_Test implements Runnable{
 
     int flag = 1;

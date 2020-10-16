@@ -45,7 +45,7 @@ public class B_ThreadPoolExecutor {
 
     /**
      * 线程池可选择的饱和策略
-     * AbortPolicy 终止策略（默认），终止策略会终止线程池
+     * AbortPolicy 终止策略（默认）
      * DiscardPolicy 抛弃策略
      * DiscardOldestPolicy 抛弃旧任务策略
      * CallerRunsPolicy 调用者运行策略
