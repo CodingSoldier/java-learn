@@ -1,4 +1,19 @@
-﻿##########################ssh################################
+﻿开机启动
+脚本赋予开机启动权限
+chmod +x xxx.sh
+
+vim /etc/rc.d/rc.local
+加上脚本
+sh xxx.sh
+可能需要执行
+chmod +x /etc/rc.d/rc.local
+
+后台启动jenkins应用
+nohup $JAVA_HOME/bin/java -jar -Xms512m -Xmx512m -XX:+UseConcMarkSweepGC  /usr/local/software/jenkins/
+jenkins.war --httpPort=8888 > /tmp/jenkins.log 2>&1 &
+
+
+##########################ssh################################
 本地使用xshell
 新建连接——>用户秘钥——>生成——>输入密钥名称——>密码为空——下一步，保存为文件，保存公钥
 

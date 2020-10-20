@@ -1,9 +1,12 @@
 package com.example.bingfa02;
 
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.*;
 
 public class A_Thread {
@@ -196,7 +199,120 @@ class MyPool extends ThreadPoolExecutor{
 
 
 
+final class ThreadUtil {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ThreadUtil.class);
+    private static ThreadPoolExecutor executor = null;
+    private ThreadUtil() {}
 
+    static{
+        initExecutor();
+    }
+
+    /**
+     * 初始化
+     */
+    private static void initExecutor(){
+        // 核心线程数
+        int  corePoolSize = Runtime.getRuntime().availableProcessors();
+        corePoolSize = corePoolSize < 2 ? 2 : corePoolSize;
+
+        // 最大线程数
+        int maximumPoolSize = ioMaximumPoolSize();
+        maximumPoolSize = maximumPoolSize < corePoolSize ? corePoolSize : maximumPoolSize;
+
+        LOGGER.info("初始化线程池 corePoolSize:{} , maximumPoolSize:{}" , corePoolSize , maximumPoolSize);
+
+        ThreadFactory defaultThreadFactory = Executors.defaultThreadFactory();
+
+        executor = new ThreadPoolExecutor(2 , 4 ,
+                10L, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<Runnable>(),
+                defaultThreadFactory,
+                new CustomAbortPolicy());
+    }
+
+
+    /**
+     * I/O密集型应用，最大线程数量
+     */
+    private static int ioMaximumPoolSize() {
+        // CPU期望利用率设置为100%，尽量利用CPU
+        int cpuUsePercent = 1;
+
+        // Java虚拟机可用的CPU核心数量
+        int jvmAvailableProcessors = Runtime.getRuntime().availableProcessors();
+
+        // 假设线程平均等待时间和线程平均工作时间的比值是8
+        int blockTime = 8;
+        int runTime = 1;
+
+        int ioMaxCore = cpuUsePercent * jvmAvailableProcessors * (1 + blockTime/runTime);
+        return ioMaxCore;
+    }
+
+    /**
+     * 自定义线程池饱和策略，模仿AbortPolicy（终止线程策略）
+     *
+     * A handler for rejected tasks that throws a
+     * {@code RejectedExecutionException}.
+     */
+    public static class CustomAbortPolicy implements RejectedExecutionHandler {
+        /**
+         * Creates an {@code AbortPolicy}.
+         */
+        public CustomAbortPolicy() { }
+
+        /**
+         * Always throws RejectedExecutionException.
+         *
+         * @param r the runnable task requested to be executed
+         * @param e the executor attempting to execute this task
+         * @throws RejectedExecutionException always
+         */
+        @Override
+        public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
+
+            // 模仿ThreadPoolExecutor.AbortPolicy的写法，仅是修改了这行代码，并加了个注释
+            String msg = String.format("线程池任务满了，抛出异常。\nTask: %s 。\nRejected from: %s",r.toString(), e.toString());
+            LOGGER.error(msg);
+            // 发送邮件或者发送钉钉消息
+
+            throw new RejectedExecutionException("Task " + r.toString() +
+                    " rejected from " +
+                    e.toString());
+        }
+    }
+
+    /**
+     * 在公共线程池中执行任务
+     *
+     * @param runnable 可运行对象
+     */
+    public static void execute(Runnable runnable) {
+        executor.execute(runnable);
+    }
+
+
+    public static void main(String[] args) throws Exception{
+        Integer a = null;
+        // 创建很多线程，造成内存溢出
+        for (int i = 0; i < 10000000; i++) {
+            execute(() -> {
+                Integer b = a;
+                try {
+                    // 睡眠保持线程不退出
+                    TimeUnit.SECONDS.sleep(60);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                b = new Random().nextInt();
+            });
+        }
+
+    }
+
+
+}
 
 
 

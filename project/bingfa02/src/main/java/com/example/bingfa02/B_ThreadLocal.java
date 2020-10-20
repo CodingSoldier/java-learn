@@ -119,7 +119,6 @@ class Service1{
          在set方法内部调用线程t.threadLocals的set方法，把自己（UserContextHolder.holder）作为一个key，value是user
 
          在UserContextHolder.holder.set(user);前后打断点，user存储在线程中，而不是在ThreadLocal中
-
          */
         UserContextHolder.holder.set(user);
         System.out.println("service1: "+user);
