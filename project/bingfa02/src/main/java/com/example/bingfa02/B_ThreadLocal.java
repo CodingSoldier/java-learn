@@ -160,7 +160,7 @@ static class Entry extends WeakReference<ThreadLocal<?>> {
     }
 }
 ThreadLocal.ThreadLocalMap.Entry是一个弱引用
-弱引用的特点：如果这个对象只被弱引用关联（有没任何强引用关联），那么这个对象就可以被回收
+弱引用的特点：如果这个对象只被弱引用关联（没有任何强引用关联），那么这个对象就可以被回收
 但是Entry只有key是弱引用，value还是一个强引用，若value还被其他变量引用着，Entry就不能被GC回收
 
 如果线程运行完后终止了，线程中的ThreadLocal.ThreadLocalMap对象也会被回收，ThreadLocal.ThreadLocalMap.Entry当然也会被回收。
