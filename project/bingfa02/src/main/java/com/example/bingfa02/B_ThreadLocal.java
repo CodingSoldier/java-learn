@@ -2,10 +2,13 @@ package com.example.bingfa02;
 
 import lombok.Data;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class B_ThreadLocal {
 }
@@ -29,7 +32,9 @@ class ThreadLocalDateFormat{
      * lambda方式初始话初值
      */
     public static ThreadLocal<SimpleDateFormat> dateFormat2 = ThreadLocal
-            .withInitial(() -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+            .withInitial(() -> {
+                return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            });
 
 }
 
@@ -40,45 +45,52 @@ class ThreadLocalTest01{
     static int num = 1000;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(num);
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) {
+        SimpleDateFormat simpleDateFormat = ThreadLocalDateFormat.dateFormat1.get();
 
-        // 多线程使用会有bug，导致打印的时间相同
-        //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        for (int i = 0; i < num; i++) {
-            int temp = i;
-            threadPool.submit(() -> {
-
-                /*
-                使用ThreadLocal每个线程使用自己单独的时间格式对象
-
-                get()方法源码：
-                    public T get() {
-                        Thread t = Thread.currentThread();
-                        ThreadLocalMap map = getMap(t);
-                        if (map != null) {
-                            ThreadLocalMap.Entry e = map.getEntry(this);
-                            if (e != null) {
-                                @SuppressWarnings("unchecked")
-                                T result = (T)e.value;
-                                return result;
-                            }
-                        }
-
-                        get()方法前没执行过ThreadLocal的set()方法，会走到这里
-                        setInitialValue()最终会执行initialValue()方法，并返回值
-                        return setInitialValue();
-                    }
-
-                 */
-                //SimpleDateFormat simpleDateFormat = ThreadLocalDateFormat.dateFormat1.get();
-                SimpleDateFormat simpleDateFormat = ThreadLocalDateFormat.dateFormat2.get();
-
-                String timeStr = simpleDateFormat.format(new Date(1000 * temp));
-                System.out.println(timeStr);
-            });
-        }
+        String timeStr = simpleDateFormat.format(new Date(1000));
+        System.out.println(timeStr);
     }
+
+    //public static void main(String[] args) throws Exception{
+    //
+    //    // 多线程使用会有bug，导致打印的时间相同
+    //    //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    //
+    //    for (int i = 0; i < num; i++) {
+    //        int temp = i;
+    //        threadPool.submit(() -> {
+    //
+    //            /*
+    //            使用ThreadLocal每个线程使用自己单独的时间格式对象
+    //
+    //            get()方法源码：
+    //                public T get() {
+    //                    Thread t = Thread.currentThread();
+    //                    ThreadLocalMap map = getMap(t);
+    //                    if (map != null) {
+    //                        ThreadLocalMap.Entry e = map.getEntry(this);
+    //                        if (e != null) {
+    //                            @SuppressWarnings("unchecked")
+    //                            T result = (T)e.value;
+    //                            return result;
+    //                        }
+    //                    }
+    //
+    //                    get()方法前没执行过ThreadLocal的set()方法，会走到这里
+    //                    setInitialValue()最终会执行initialValue()方法，并返回值
+    //                    return setInitialValue();
+    //                }
+    //
+    //             */
+    //            //SimpleDateFormat simpleDateFormat = ThreadLocalDateFormat.dateFormat1.get();
+    //            SimpleDateFormat simpleDateFormat = ThreadLocalDateFormat.dateFormat2.get();
+    //
+    //            String timeStr = simpleDateFormat.format(new Date(1000 * temp));
+    //            System.out.println(timeStr);
+    //        });
+    //    }
+    //}
 
 }
 
@@ -180,10 +192,90 @@ java.lang.ThreadLocal.ThreadLocalMap.resize()
  */
 
 
+class MyThreadLocal<T>{
+
+    public <T> T get(){
+        MyThreadLocalMap currentThreadLocalMap = getCurrentThreadLocalMap();
+        Object value = currentThreadLocalMap.getValue();
+        return (T)value;
+    }
+
+    public void set(T value){
+        MyThreadLocalMap myThreadLocalMap = new MyThreadLocalMap(this, value);
+        setCurrentThreadLocalMap(myThreadLocalMap);
+    }
+
+    public MyThreadLocalMap getCurrentThreadLocalMap() {
+        Thread currentThread = Thread.currentThread();
+        Class<? extends Thread> clazz = currentThread.getClass();
+        Object val = null;
+        try {
+            Field field = clazz.getDeclaredField("myThreadLocals");
+            val = field.get(currentThread);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return (MyThreadLocalMap)val;
+    }
+
+    public void setCurrentThreadLocalMap(MyThreadLocalMap map) {
+        Thread currentThread = Thread.currentThread();
+        Class<? extends Thread> clazz = currentThread.getClass();
+        try {
+            Field field = clazz.getDeclaredField("myThreadLocals");
+            field.set(currentThread, map);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 
 
+    static class MyThreadLocalMap{
+        private MyThreadLocal<?> myThreadLocal;
+        private Object value;
 
+        public MyThreadLocalMap(MyThreadLocal<?> myThreadLocal, Object value) {
+            this.myThreadLocal = myThreadLocal;
+            this.value = value;
+        }
 
+        public Object getValue(){
+            return value;
+        }
+    }
+
+}
+
+class MyThread extends Thread{
+    public MyThreadLocal.MyThreadLocalMap myThreadLocals = null;
+
+    @Override
+    public void run() {
+        int hashCode = this.hashCode();
+        MyHolder.holder.set(hashCode);
+        try {
+            TimeUnit.MILLISECONDS.sleep(new Random().nextInt(5000)+1000);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Object data = MyHolder.holder.get();
+
+        System.out.println(String.format("hashCode: %s  data: %s  equals: %s", hashCode, data, data.equals(hashCode)));
+    }
+}
+
+class MyHolder{
+    public static MyThreadLocal holder = new MyThreadLocal();
+}
+
+class TestMy{
+    public static void main(String[] args) {
+        for (int i = 0; i < 100; i++) {
+            new MyThread().start();
+        }
+    }
+}
 
 
