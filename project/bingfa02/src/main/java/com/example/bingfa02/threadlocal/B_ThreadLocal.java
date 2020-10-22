@@ -1,5 +1,6 @@
 package com.example.bingfa02.threadlocal;
 
+import com.sun.org.apache.xpath.internal.operations.String;
 import lombok.Data;
 
 import java.util.Random;
@@ -29,9 +30,8 @@ class MyRandomTest{
 
 
 
-/**
- * 同一线程多个方法之间使用共享变量
- */
+
+
 @Data
 class Request{
     private String data;
@@ -47,7 +47,7 @@ class RequestContextHolder {
 class Servlet {
     public void process(String data){
         Request request = new Request(data);
-        // 设置线程局部变量值
+        // 线程局部变量设置值
         RequestContextHolder.holder.set(request);
         System.out.println("Servlet.request: "+request);
         new Controller().process();
@@ -74,15 +74,22 @@ class Service {
 class HolderTest {
     public static void main(String[] args) {
         new Servlet().process("http请求");
+        new ThreadLocal<>().set();
+
+        Object a = new Object();
+        Object b = new Object();
+        new ThreadLocal<>().set(obj1);
+        new ThreadLocal<>().set(obj2);
+
+        new ThreadLocal<>().set(obj1);
+        new ThreadLocal<>().set(obj1);
     }
+
+
+
+
+
 }
-
-
-/*
-主要来讲解
- */
-
-
 
 
 
