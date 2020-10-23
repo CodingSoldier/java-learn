@@ -179,7 +179,7 @@ ThreadLocal.ThreadLocalMap.Entry是一个弱引用
 
 但是如果线程不终止，则会发生内存泄露。比反说，线程是线程池中的线程，则线程会被反复使用
 
-JDK有考虑这个问题，在set、remove、rehash方法中会扫描key为null的Entry，并把对应的value设置为null，这样value对象就可以被回收
+JDK有考虑这个问题，resize()方法中会扫描key为null的Entry，并把对应的value设置为null，这样value对象就可以被回收，set、remove方法调用了resize()
 java.lang.ThreadLocal.ThreadLocalMap.resize()
     if (k == null) {
         e.value = null; // Help the GC

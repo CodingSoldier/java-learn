@@ -1,3 +1,5 @@
+package com.example.bingfa02;
+
 import java.util.HashMap;
 
 /**

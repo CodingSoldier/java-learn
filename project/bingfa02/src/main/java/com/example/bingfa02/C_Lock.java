@@ -21,7 +21,6 @@ synchronized：
     不够灵活：加锁、释放锁的时机单一，每个锁仅有单一的条件（某个对象），可能是不够的。
     无法知道是否成功获取到锁。
 
-
  */
 
 
@@ -212,7 +211,6 @@ class LockInterruptibly implements Runnable{
  乐观锁：
     适合并发写入少，大部分是读取的场景，不加锁能让读取性能大幅度提高
 
-
 */
 
 /**
@@ -300,7 +298,7 @@ ReentrantReadWriteLock源码
             return hasQueuedPredecessors();
         }
 
-        写操作是否阻塞的判断依据是队列中是否有线程
+        读操作是否阻塞的判断依据是队列中是否有线程
         final boolean readerShouldBlock() {
             return hasQueuedPredecessors();
         }

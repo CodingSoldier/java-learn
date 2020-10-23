@@ -4,10 +4,6 @@ import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author chenpiqian
- * @date: 2019-12-13
- */
 public class G_Synchronize {
 
     public static Object obj1 = new Object();
@@ -134,6 +130,8 @@ public class G_Synchronize {
      *     JVM负责跟踪对象被加锁的次数
      *     线程第一次给对象加锁的时候，计数器变为1，相同线程在此对象上再次获得锁时，计数器会递增
      *     当任务离开时，计数器递减，当计数为0时，锁被释放
+     *
+     *     synchronized可重入性原理：每个对象拥有一个锁计数器，JVM负责跟踪对象被加锁的次数，线程第一次给对象加锁的时候，计数器变为1，相同线程在此对象上再次获得锁时，计数器递增。离开同步代码块，计数器递减，当计数为0时，锁被释放。
      */
     @Test
     public void synchronizeKeChongRu() throws Exception{
@@ -262,7 +260,7 @@ public class G_Synchronize {
                 synchronized (lock){
                     try {
                         System.out.println(name + " run");
-                        TimeUnit.SECONDS.sleep(3L);
+                        TimeUnit.SECONDS.sleep(10L);
                     }catch (Exception e){
                         e.printStackTrace();
                     }

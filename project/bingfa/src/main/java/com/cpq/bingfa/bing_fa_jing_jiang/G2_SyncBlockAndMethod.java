@@ -1,4 +1,5 @@
-package com.cpq.bingfa.interview;
+package com.cpq.bingfa.bing_fa_jing_jiang;
+
 
 /**
  Java对象头和Monitor是实现synchronized的基础
@@ -10,22 +11,9 @@ package com.cpq.bingfa.interview;
  偏向锁   锁标志位01 还包含是否偏向锁标志位1
  Class Metadata Address 类型指针指向对象的类元数据，JVM通过这个指针确定该对象是哪个类的数据
  Monitor：每个java对象天生自带一把看不见的锁
- */
-public class E1_SyncBlockAndMethod {
-
-    public void syncsTask(){
-        synchronized (this){
-            System.out.println("同步代码块");
-        }
-    }
-
-    public synchronized void syncTask(){
-        System.out.println("方法同步代码");
-    }
 
 
 
-/**
  字节码层面理解synchronized
 
  public void syncsTask();
@@ -63,28 +51,28 @@ public class E1_SyncBlockAndMethod {
  0      23     0  this   Lcom/example/interview/E1_SyncBlockAndMethod;
  StackMapTable: number_of_entries = 2
  frame_type = 255 full_frame
-    offset_delta = 17
-    locals = [ class com/example/interview/E1_SyncBlockAndMethod, class java/lang/Object ]
-    stack = [ class java/lang/Throwable ]
-    frame_type = 250
-    offset_delta = 4
+ offset_delta = 17
+ locals = [ class com/example/interview/E1_SyncBlockAndMethod, class java/lang/Object ]
+ stack = [ class java/lang/Throwable ]
+ frame_type = 250
+ offset_delta = 4
 
-    public synchronized void syncTask();   //## 同步方法是隐式调用monitorenter、monitorexit，在字节码中没有展示
-    descriptor: ()V
-    flags: ACC_PUBLIC, ACC_SYNCHRONIZED
-    Code:
-    stack=2, locals=1, args_size=1
-            0: getstatic     #2
-            3: ldc           #5
-            5: invokevirtual #4
-            8: return
-    LineNumberTable:
-    line 16: 0
-    line 17: 8
-    LocalVariableTable:
-    Start  Length  Slot  Name   Signature
-            0       9     0  this   Lcom/example/interview/E1_SyncBlockAndMethod;
-*/
+ public synchronized void syncTask();   //## 同步方法是隐式调用monitorenter、monitorexit，在字节码中没有展示
+ descriptor: ()V
+ flags: ACC_PUBLIC, ACC_SYNCHRONIZED
+ Code:
+ stack=2, locals=1, args_size=1
+ 0: getstatic     #2
+ 3: ldc           #5
+ 5: invokevirtual #4
+ 8: return
+ LineNumberTable:
+ line 16: 0
+ line 17: 8
+ LocalVariableTable:
+ Start  Length  Slot  Name   Signature
+ 0       9     0  this   Lcom/example/interview/E1_SyncBlockAndMethod;
+ */
 
 
 /**
@@ -136,4 +124,15 @@ public class E1_SyncBlockAndMethod {
  *
  */
 
+
+public class G2_SyncBlockAndMethod {
+    public void syncsTask(){
+        synchronized (this){
+            System.out.println("同步代码块");
+        }
+    }
+
+    //public synchronized void syncTask(){
+    //    System.out.println("方法同步代码");
+    //}
 }
