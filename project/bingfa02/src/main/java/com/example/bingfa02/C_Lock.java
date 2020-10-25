@@ -32,7 +32,7 @@ class LockMustUnlock {
      * 获取锁。如果锁被其他线程获取，则进行等待。
      * Lock锁不会像synchronized一样在异常时自动释放锁。
      * 最佳实践是在finally中释放锁，以保证发生异常时锁一定被释放。
-     * <p>
+     *
      * lock()方法不能被中断，则会带来很大的隐患。一旦陷入死锁，lock()就会陷入永久等待。
      */
     public static void main(String[] args) {
@@ -46,6 +46,34 @@ class LockMustUnlock {
 }
 
 
+
+
+
+class TryLock{
+    private static Lock lock = new ReentrantLock();
+
+    private static Runnable runnable = () -> {
+        System.out.println(Thread.currentThread().getName()+"运行");
+        // 如果tryLock()返回true，获取到锁，才能执行释放锁操作
+        if (lock.tryLock()){
+            try {
+                System.out.println(Thread.currentThread().getName()+"获取到锁");
+                TimeUnit.SECONDS.sleep(1);
+            }catch(InterruptedException e){
+                e.printStackTrace();
+            }finally {
+                lock.unlock();
+            }
+        }
+        System.out.println(Thread.currentThread().getName()+"结束运行");
+    };
+
+    public static void main(String[] args) {
+        new Thread(runnable).start();
+        new Thread(runnable).start();
+    }
+
+}
 
 
 /**
