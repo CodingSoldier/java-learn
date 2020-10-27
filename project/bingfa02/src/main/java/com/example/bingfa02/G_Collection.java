@@ -102,6 +102,44 @@ class OptionsNotSage implements Runnable{
 }
 
 
+class ConcurrentHashMapDemo{
+    private static ConcurrentHashMap<String, Integer> scores = new ConcurrentHashMap<>();
+
+    private static Runnable runnable = () -> {
+        for (int i = 0; i < 1000; i++) {
+
+            // 线程安全的写法。自旋
+            Integer score, newScore;
+            do {
+                score = scores.get("小明");
+                newScore = score + 1;
+            }while (!scores.replace("小明", score, newScore));
+
+
+            ///**
+            // * 组合操作，线程不安全
+            // * ConcurrentHashMap只是源码内部保证线程安全，使用者要保证自己的代码也是线程安全的
+            // */
+            //Integer score = scores.get("小明");
+            //Integer newScore = score + 1;
+            //scores.put("小明", newScore);
+
+        }
+    };
+
+    public static void main(String[] args) throws Exception{
+        scores.put("小明", 0);
+        Thread t1 = new Thread(runnable);
+        Thread t2 = new Thread(runnable);
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+        System.out.println(scores);
+    }
+
+}
+
 /*
 CopyOnWriteArrayList
     修改列表的时候先把列表拷贝一份，对拷贝进行修改，修改完成后把指针指向修改后的列表

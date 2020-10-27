@@ -3,6 +3,7 @@ package com.example.bingfa02;
 import java.util.HashMap;
 
 /**
+ *
  * @author chenpiqian
  * @date: 2020-09-30
  */
@@ -11,6 +12,7 @@ public class HashMapEndlessMap {
     private static HashMap<Integer, String> map = new HashMap<>(2, 1.5f);
 
     /**
+     必须使用jdk7
       java.util.HashMap#transfer(java.util.HashMap.Entry[], boolean)
             if (rehash) {   此处打一个线程断点，运行本代码就会出现线程2堆内存溢出
 

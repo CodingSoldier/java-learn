@@ -46,7 +46,6 @@ Condition
  * 用法一：一个线程等待多个线程都执行完毕，再继续自己的工作
  */
 class CountDownLatchDemo01{
-
     public static void main(String[] args) throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(5);
         ExecutorService executorService = Executors.newFixedThreadPool(5);
@@ -59,18 +58,23 @@ class CountDownLatchDemo01{
                 }catch (InterruptedException e){
                     e.printStackTrace();
                 }finally{
-                    // 每个线程在finally中执行countDown()，计数器减一
+                    /**
+                     * 每个线程在finally中执行countDown()，latch的计数器减一
+                     */
                     latch.countDown();
                 }
             });
         }
 
         System.out.println("等待5个人检查完毕。。。。");
-        // 当前线程执行await()等待，计数器为0
+
+        /**
+         * 当前线程执行await()等待，直到latch计数器为0，继续执行
+         */
         latch.await();
+
         System.out.println("所有人都完成了工作，进入下一个环节");
     }
-
 }
 
 
