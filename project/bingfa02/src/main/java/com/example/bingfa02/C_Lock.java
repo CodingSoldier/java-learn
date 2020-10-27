@@ -444,12 +444,12 @@ class NonFairLockDemo{
     /**
      * 公平锁
      */
-    private static ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock(true);
+    //private static ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock(true);
 
     /**
      * 非公平锁
      */
-    //private static ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock();
+    private static ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock();
     private static ReentrantReadWriteLock.ReadLock readLock = reentrantReadWriteLock.readLock();
     private static ReentrantReadWriteLock.WriteLock writeLock = reentrantReadWriteLock.writeLock();
 
@@ -478,11 +478,14 @@ class NonFairLockDemo{
     }
 
     public static void main(String[] args) throws Exception {
-        // 一千个抢锁的线程
+        // 抢锁的线程
         Thread thread[] = new Thread[1000];
         for (int i = 0; i < 1000; i++) {
-            //thread[i] = new Thread(() -> write(), "新的写线程" + i);
-            thread[i] = new Thread(() -> write(), "新的读线程" + i);
+            // 写线程抢锁
+            thread[i] = new Thread(() -> write(), "新的写线程" + i);
+
+            // 读线程抢锁
+            //thread[i] = new Thread(() -> read(), "新的读线程" + i);
         }
 
         // 排队的读锁线程
@@ -500,7 +503,7 @@ class NonFairLockDemo{
             threadRead[i].start();
         }
 
-        // 大量抢锁线程启动，在“写线程一”释放锁的瞬间有写锁抢锁。
+        // 大量抢锁线程启动，在“写线程一”释放锁的瞬间有线程抢锁。
         TimeUnit.MILLISECONDS.sleep(10);
         new Thread(() -> {
             for (int i = 0; i < 1000; i++) {
@@ -509,6 +512,9 @@ class NonFairLockDemo{
         }).start();
     }
 }
+
+
+
 
 class Nonfair{
 
@@ -589,6 +595,8 @@ class Nonfair{
     }
 
 }
+
+
 
 
 

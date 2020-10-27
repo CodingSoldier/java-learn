@@ -28,7 +28,7 @@ class AtomicInteger01 implements Runnable{
      * 原子类递增，每次增加10
      */
     private void incrementAtomic(){
-        atomicInteger.getAndAdd(10);
+        atomicInteger.getAndAdd(1);
     }
 
     /**

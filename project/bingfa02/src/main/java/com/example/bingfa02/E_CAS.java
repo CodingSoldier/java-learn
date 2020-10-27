@@ -6,17 +6,17 @@ public class E_CAS {
 
 /**
  CAS：全称 compare and swap。
- CAS有3个操作数，内存值、预期值、修改值。
+ CAS有3个操作数，内存值、预期值、更新值。
  当且仅当预期值与内存值相同，才将内存值改为修改值，否则什么都不做，最后返回现在的内存值
  CPU支持比较替换作为一个原子操作
  */
 
+/**
+ * 使用代码模拟CAS
+ */
 class SimulatedCAS{
     private volatile int value;
 
-    /**
-     * 使用代码模拟CAS
-     */
     public synchronized int compareAndSwap(int expectedValue, int newValue){
         int oldValue = value;
         if (oldValue == expectedValue){
@@ -24,6 +24,8 @@ class SimulatedCAS{
         }
         return oldValue;
     }
+
+
 }
 
 /*
@@ -38,8 +40,7 @@ class SimulatedCAS{
         return var5;
     }
 
-    Unsafe是CAS的核心类。
-    Java无法直接访问底层操作系统，而是通过本地native方法来访问，不过尽管如此，JVM还是开了一个后门，JDK中有一个类Unsafe，此类提供了硬件级别的原子操作
+    Unsafe是Java实现CAS的核心类。Java无法直接访问底层操作系统，而是通过Unsafe的本地native方法来访问，不过尽管如此，JVM还是开了一个后门，JDK中有一个类Unsafe，此类提供了硬件级别的原子操作
     valueOffset表示变量值在内存中的偏移地址，因为Unsafe就是根据内存偏移地址获取数据的原值，这样就能通过unsafe实现CAS了
 
     CAS的问题：
