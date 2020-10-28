@@ -43,37 +43,36 @@ Condition
  */
 
 /**
- * 用法一：一个线程等待多个线程都执行完毕，再继续自己的工作
+ * CountDownLatch用法一：一个线程等待多个线程都执行完毕，再继续自己的工作
+ * 例如嫦娥五号发射前要进行各项检查，检查完毕后发射
  */
 class CountDownLatchDemo01{
     public static void main(String[] args) throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(5);
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
-        for (int i = 0; i < 5; i++) {
-            final int no = i+1;
-            executorService.submit(() -> {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(new Random().nextInt(5000));
-                    System.out.println("No."+no+"执行完毕");
-                }catch (InterruptedException e){
-                    e.printStackTrace();
-                }finally{
-                    /**
-                     * 每个线程在finally中执行countDown()，latch的计数器减一
-                     */
-                    latch.countDown();
-                }
-            });
+        /**
+         * 倒数计数器设置为3
+         */
+        CountDownLatch latch = new CountDownLatch(3);
+
+        System.out.println("嫦娥五号进入发生塔，请各单位开始发射前检查");
+
+        for (int i = 0; i < 3; i++) {
+            new Thread(() -> {
+                System.out.println(Thread.currentThread().getName()+"检查完毕");
+
+                /**
+                 * 执行countDown()方法，latch的计数器减一
+                 */
+                latch.countDown();
+
+            }, "单位"+i).start();
         }
 
-        System.out.println("等待5个人检查完毕。。。。");
-
         /**
-         * 当前线程执行await()等待，直到latch计数器为0，继续执行
+         * 等待各单位检查完毕，即latch计数器减为0
          */
         latch.await();
 
-        System.out.println("所有人都完成了工作，进入下一个环节");
+        System.out.println("发射，飞向月球");
     }
 }
 
@@ -91,21 +90,30 @@ class CountDownLatchDemo01{
     可重用性不同：CountDownLatch在倒数到0并触发门栓打开后就不能再次使用了，除非新建实例。而CyclicBarrier可以重复使用
  */
 
+/**
+ * 运动员起跑的例子
+ * 为了演示CyclicBarrier，可以重复使用的特性，这例子有点特殊之处。
+ * 有10个运动员走上跑道，只要有5个运动员准备完毕，裁判就会扣响发令枪，这5个运动员起跑。
+ * 再有5个运动员准备完毕，裁判还能扣响发令枪，这5个运动员起跑。
+ */
 class CyclicBarrierDemo{
 
     public static void main(String[] args) {
         /**
-         * 有五个线程准备完毕（线程执行cyclicBarrier.await()便是准备完毕），就执行本构造函数的run()方法
+         * 构造一个循环栅栏，类似裁判。
+         * 有5个运动员准备完毕，裁判便会鸣枪
          */
         CyclicBarrier cyclicBarrier = new CyclicBarrier(5, () -> {
-            System.out.println("已经有5个线程都执行了cyclicBarrier.await()，本方法体执行完毕，便会将这5个线程设置为Runnable状态");
+            System.out.println("########裁判扣响发令枪");
         });
 
+        /**
+         * 构造10个运动员
+         */
         for (int i = 0; i < 10; i++) {
-            new Thread(new Task(cyclicBarrier)).start();
+            new Thread(new Task(cyclicBarrier), "运动员"+i).start();
         }
     }
-
 
     static class Task implements Runnable{
         private CyclicBarrier cyclicBarrier;
@@ -117,20 +125,19 @@ class CyclicBarrierDemo{
         @Override
         public void run() {
             try {
-                TimeUnit.SECONDS.sleep(new Random().nextInt(5)+1);
-                System.out.println(Thread.currentThread().getName()+"准备完毕，等待其他线程准备完毕");
-                // 等待其他线程准备完毕
+                TimeUnit.MILLISECONDS.sleep(new Random().nextInt(5000));
+                System.out.println(Thread.currentThread().getName()+"准备完毕");
+                /**
+                 * 等待裁判鸣枪
+                 */
                 cyclicBarrier.await();
 
-                // cyclicBarrier构造函数的run()方法执行完毕，本线程从阻塞状态变为Runnable状态，继续执行下面的代码
-                System.out.println(Thread.currentThread().getName()+"从阻塞状态变为Runnable状态，执行接下来的任务");
+                System.out.println(Thread.currentThread().getName()+"起跑");
             }catch (BrokenBarrierException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-
         }
     }
 }
@@ -161,28 +168,38 @@ class CyclicBarrierDemo{
  并不要求获取许可证的线程释放许可证，A线程获取一个许可证，B线程释放许可证也是可以的
 
  */
+
+/**
+ * 使用Semaphore模拟银行窗口办理业务
+ */
 class SemaphoreDemo{
+    /**
+     * 创建有3个许可证的Semaphore。类似银行有3个窗口
+     */
     static Semaphore semaphore = new Semaphore(3);
 
     public static void main(String[] args) {
-        ExecutorService executorService = Executors.newFixedThreadPool(3);
         for (int i = 0; i < 10; i++) {
-            executorService.submit(() -> {
+            new Thread(() -> {
                 try {
+                    /**
+                     * acquire()获取许可证
+                     */
                     semaphore.acquire();
-                    System.out.println(Thread.currentThread().getName()+"获取许可证");
+
+                    System.out.println(Thread.currentThread().getName()+"去窗口办理业务");
                     TimeUnit.SECONDS.sleep(new Random().nextInt(5)+1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }finally {
+                    /**
+                     * release()释放许可证
+                     */
                     semaphore.release();
-                    System.out.println(Thread.currentThread().getName()+"释放许可证");
+                    System.out.println(Thread.currentThread().getName()+"业务办理完毕，离开");
                 }
-            });
+            }, "排队的人"+i).start();
         }
-
-        executorService.shutdown();
-        while (!executorService.isTerminated()){};
     }
 }
 
@@ -241,7 +258,10 @@ class ConditionDemo1{
  * Condition实现生产者消费者模式
  */
 
-class Condition02{
+/**
+ * Condition实现生产者消费者模式
+ */
+class ConditionDemo {
 
     private int queueSize = 100;
     private PriorityQueue<Integer> queue = new PriorityQueue<>();
@@ -253,21 +273,21 @@ class Condition02{
     private Condition notEmpty = lock.newCondition();
 
     public static void main(String[] args) {
-        Condition02 condition02 = new Condition02();
-        Comsumer comsumer = condition02.new Comsumer();
+        ConditionDemo condition02 = new ConditionDemo();
+        Consumer consumer = condition02.new Consumer();
         Producer producer = condition02.new Producer();
 
         producer.start();
-        comsumer.start();
+        consumer.start();
     }
 
-    class Comsumer extends Thread{
+    class Consumer extends Thread{
         @Override
         public void run() {
-            comsumer();
+            consume();
         }
 
-        private void comsumer(){
+        private void consume(){
             while (true){
                 lock.lock();
                 try {
@@ -290,10 +310,10 @@ class Condition02{
     class Producer extends Thread{
         @Override
         public void run() {
-            producer();
+            produce();
         }
 
-        private void producer(){
+        private void produce(){
             while (true){
                 lock.lock();
                 try {
@@ -313,8 +333,83 @@ class Condition02{
             }
         }
     }
-
 }
+
+
+//class Condition03{
+//
+//    private int queueSize = 100;
+//    private PriorityQueue<Integer> queue = new PriorityQueue<>();
+//    private Lock lock = new ReentrantLock();
+//    /**
+//     * ReentrantLock可以创建多个Condition条件
+//     */
+//    private Condition notFull = lock.newCondition();
+//    private Condition notEmpty = lock.newCondition();
+//
+//    public static void main(String[] args) {
+//        Condition02 condition02 = new Condition02();
+//        Comsumer comsumer = condition02.new Comsumer();
+//        Producer producer = condition02.new Producer();
+//
+//        producer.start();
+//        comsumer.start();
+//    }
+//
+//    class Comsumer extends Thread{
+//        @Override
+//        public void run() {
+//            comsumer();
+//        }
+//
+//        private void comsumer(){
+//            while (true){
+//                lock.lock();
+//                try {
+//                    if (queue.size() ==0){
+//                        System.out.println("队列空，等待生产数据");
+//                        notEmpty.await();
+//                    }
+//                    Integer e = queue.poll();
+//                    System.out.println("消费数据 "+e+" ，唤醒生产者");
+//                    notFull.signalAll();
+//                }catch(InterruptedException e){
+//                    e.printStackTrace();
+//                }finally{
+//                    lock.unlock();
+//                }
+//            }
+//        }
+//    }
+//
+//    class Producer extends Thread{
+//        @Override
+//        public void run() {
+//            producer();
+//        }
+//
+//        private void producer(){
+//            while (true){
+//                lock.lock();
+//                try {
+//                    if (queue.size() == queueSize){
+//                        System.out.println("队列满了，等待消费数据");
+//                        notFull.await();
+//                    }
+//                    int i = new Random().nextInt(100);
+//                    queue.add(i);
+//                    System.out.println("生产数据 "+i+" ，唤醒消费者");
+//                    notEmpty.signalAll();
+//                }catch(InterruptedException e){
+//                    e.printStackTrace();
+//                }finally{
+//                    lock.unlock();
+//                }
+//            }
+//        }
+//    }
+//
+//}
 
 
 
