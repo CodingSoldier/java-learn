@@ -35,7 +35,71 @@ get()方法获取结果有5种情况
 用法1：线程池submit方法返回Future
      执行submit方法时，线程池立刻返回一个空的Future容器，当线程的任务一旦执行完毕，线程池会把结果填入Future中
 
+
+boolean	cancel(boolean mayInterruptIfRunning)   尝试取消此任务的执行。
+V	get()  获取任务返回结果
+V	get(long timeout, TimeUnit unit)  限时获取任务结果
+boolean	isCancelled()  取消任务
+boolean	isDone()   如果任务完成，返回true。
  */
+class Future0{
+
+    public static void main(String[] args) {
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
+
+        // 线程池execute方法执行Runnable任务
+        executorService.execute(new Task());
+
+        // 线程池submit方法执行Runnable任务
+        Future f = executorService.submit(new Task());
+        try {
+            Object data = f.get();
+            // 使用submit(Runnable task);得到的future.get()数据是null
+            System.out.println("submit(Runnable task)得到的future.get()   "+data);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * 线程池submit方法执行Callable任务
+         * 执行submit方法时，线程池立刻返回一个空的Future容器，当线程的任务一旦执行完毕，线程池会把结果填入Future中
+         */
+        Future<Integer> future = executorService.submit(new CallableTask());
+        try {
+            /**
+             * 任务正常完成，get()方法会立刻返回结果。
+             * 任务尚未完成（任务未开始或进行中），get()将阻塞并直到任务完成。
+             */
+            Integer data = future.get();
+            System.out.println("submit(Callable<T> task)得到的future.get()   "+data);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        executorService.shutdown();
+    }
+
+    static class Task implements Runnable{
+        @Override
+        public void run() {
+            System.out.println(Thread.currentThread().getName()+"run()运行");
+        }
+    }
+
+    static class CallableTask implements Callable<Integer>{
+        @Override
+        public Integer call() throws Exception {
+            TimeUnit.SECONDS.sleep(2);
+            return new Random().nextInt(10);
+        }
+    }
+
+}
+
 
 class Future1{
 
@@ -109,14 +173,14 @@ class Future2{
 
 
 /**
- * 演示get方法过程中抛出异常
  * Callable抛出异常时，主线程不会抛异常，直到执行future.get()的时候才会抛异常
+ * 不论call()执行抛出什么异常，最后get()方法抛出的异常类型都是ExecutionException。
  */
-class Future3{
+class Future01{
     public static void main(String[] args) throws Exception {
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         Future<Object> future = executorService.submit(() -> {
-            throw new IllegalArgumentException("在Callable中抛出异常");
+            throw new IllegalArgumentException("在Callable中抛出IllegalArgumentException异常");
         });
 
         TimeUnit.SECONDS.sleep(1);
@@ -140,52 +204,34 @@ class Future3{
 
 
 /**
- 超时演示
-
- cancel方法：取消任务
-    1、如果这个任务还没开始执行，任务会被取消，未来也不会被执行，返回true
-    2、如果任务已完成或已取消，cancel方法会执行失败，返回false
-    3、如果任务已经执行，根据cancel(boolean mayInterruptIfRunning)参数取消任务，true取消，false不取消
-
- cancel(true)适用于：任务能处理interrupt的任务
- cancel(false)适用于：
-    1、不能处理interrupt的任务，或者调用者不确定任务能否处理interrupt
-    2、需要等待已经开始的任务执行完成。
-
+ * 超时与取消任务演示
+ *
+ * cancel方法，取消任务
+ *     1、如果任务还没开始执行，任务会被取消，未来也不会被执行，返回true。
+ *     2、如果任务已完成或已取消，cancel方法会执行失败，返回false。
+ *     3、如果任务正在执行，根据cancel(boolean mayInterruptIfRunning)参数取消任务，true取消，false不取消。
+ * cancel(true)适用于能处理interrupt的任务
+ * cancel(false)适用于。
+ *     1、不能处理interrupt的任务，或者调用者不确定任务能否处理interrupt。
+ *     2、需要等待已经开始的任务执行完成。
  */
-class FutureTimeout{
-    private static final Ad DEFAULT_AD = new Ad("无网络时候的默认广告");
+class Future02{
     private static final ExecutorService exec = Executors.newFixedThreadPool(10);
-
-    static class Ad{
-        String name;
-
-        public Ad(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return "Ad{" +
-                    "name='" + name + '\'' +
-                    '}';
-        }
-    }
 
     public static void main(String[] args) {
         Future<Ad> future = exec.submit(() -> {
-            try {
-                TimeUnit.SECONDS.sleep(3);
-            } catch (InterruptedException e) {
-                System.out.println("线程sleep期间被中断了");
-                return new Ad("线程被中断，返回默认广告");
-            }
+
+            //TimeUnit.MILLISECONDS.sleep(1000);
+
+            // 任务超时演示
+            TimeUnit.MILLISECONDS.sleep(3000);
+
             return new Ad("某程的旅游广告");
         });
 
         Ad ad;
         try {
-            ad = future.get(1, TimeUnit.SECONDS);
+            ad = future.get(2000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             ad = new Ad("发生中断的默认广告");
         } catch (ExecutionException e) {
@@ -200,6 +246,19 @@ class FutureTimeout{
         System.out.println(ad);
 
         exec.shutdown();
+    }
+
+    static class Ad{
+        String name;
+        public Ad(String name) {
+            this.name = name;
+        }
+        @Override
+        public String toString() {
+            return "Ad{" +
+                    "name='" + name + '\'' +
+                    '}';
+        }
     }
 
 }
