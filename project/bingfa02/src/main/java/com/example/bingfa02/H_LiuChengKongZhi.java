@@ -57,6 +57,7 @@ class CountDownLatchDemo01{
 
         for (int i = 0; i < 3; i++) {
             new Thread(() -> {
+
                 System.out.println(Thread.currentThread().getName()+"检查完毕");
 
                 /**
