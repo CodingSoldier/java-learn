@@ -80,59 +80,6 @@ import java.util.concurrent.locks.AbstractQueuedSynchronizer;
  */
 public class I_AQS {
 
-    protected int tryAcquireShared(int acquires) {
-        for (;;) {
-            /**
-             * FairSync的tryAcquireShared(int acquires)多了以下的判断
-             * 如果队列中有排队线程，则返回-1
-             * 有关公平性与非公平性可查看我这篇博客 https://blog.csdn.net/u010606397/article/details/109247667
-             */
-            if (hasQueuedPredecessors())
-                return -1;
-
-            /**
-             * 自旋 + CAS 将state减少acquires个，如果减少成功，即表明当前线程获取到许可证
-             * 返回结果remaining一定是
-             */
-            int available = getState();
-            int remaining = available - acquires;
-            if (remaining < 0 ||
-                    compareAndSetState(available, remaining))
-                return remaining;
-        }
-    }
-
-    //protected boolean tryReleaseShared(int releases) {
-    //    // 自旋
-    //    for (;;) {
-    //        int c = getState();
-    //        // 如果state == 0，直接返回
-    //        if (c == 0)
-    //            return false;
-    //
-    //        // 使用CAS将state值减一，如果state-1==0，最后一次倒数结束，则返回true
-    //        int nextc = c-1;
-    //        if (compareAndSetState(c, nextc))
-    //            return nextc == 0;
-    //    }
-    //}
-
-    //protected int tryAcquireShared(int acquires) {
-    //    // AQS的state为0返回1，不为0返回-1
-    //    return (getState() == 0) ? 1 : -1;
-    //}
-
-    ///**
-    // * CountDownLatch构造函数
-    // * 内部类Sync继承了AbstractQueuedSynchronizer
-    // * 创建Sync对象，复制给CountDownLatch的sync属性
-    // * 倒数计数器值count设置给AbstractQueuedSynchronizer的state属性
-    // */
-    //public CountDownLatch(int count) {
-    //    if (count < 0) throw new IllegalArgumentException("count < 0");
-    //    this.sync = new Sync(count);
-    //}
-
 }
 
 
