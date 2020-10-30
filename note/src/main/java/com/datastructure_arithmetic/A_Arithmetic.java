@@ -51,24 +51,24 @@ public class A_Arithmetic<T> {
     public static void insertSort(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
 
-            //// 前面已经排序的元素多加一个元素之后，将此元素与前面已经排序的元素比较
-            //for (int j = i+1; j >= 1; j--) {
-            //    //新增的最后一个元素比前面的元素小，交换位置
-            //    if (arr[j] < arr[j - 1]) {
-            //        int temp = arr[j];
-            //        arr[j] = arr[j - 1];
-            //        arr[j - 1] = temp;
-            //    } else {
-            //        break;
-            //    }
-            //}
+            // 前面已经排序的元素多加一个元素之后，将此元素与前面已经排序的元素比较
+            for (int j = i; j >= 1; j--) {
+                //新增的最后一个元素比前面的元素小，交换位置
+                if (arr[j] < arr[j - 1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j - 1];
+                    arr[j - 1] = temp;
+                } else {
+                    break;
+                }
+            }
 
             // 上面的代码可以这样优化，减少内层循环次数
-            for (int j = i; j >= 1 && arr[j] < arr[j - 1]; j--) {
-                int temp = arr[j];
-                arr[j] = arr[j - 1];
-                arr[j - 1] = temp;
-            }
+            //for (int j = i; j >= 1 && arr[j] < arr[j - 1]; j--) {
+            //    int temp = arr[j];
+            //    arr[j] = arr[j - 1];
+            //    arr[j - 1] = temp;
+            //}
         }
     }
 
