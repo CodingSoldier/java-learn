@@ -102,8 +102,8 @@ public class A_Arithmetic<T> {
     }
 
     @Test
-    public void test_insertSortNotNew() {
-        int[] arr = generateIntArray(1000, 0, 1000);
+    public void test_insertSortNotNew1() {
+        int[] arr = {5, 2, 4, 3, 6, 1};
         insertSortNotNew(arr);
         for (int i = 0; i < arr.length; i++) {
             System.out.println(arr[i]);
@@ -159,7 +159,7 @@ public class A_Arithmetic<T> {
         // 优化1
         // 当需要排序的数据量很小的时候，使用插入排序提高效率
         // 这种优化适用于很多的高级算法
-        // 插入排序请看这篇博客 https://mp.csdn.net/postedit/102546480
+        // 插入排序请看这篇博客 https://blog.csdn.net/u010606397/article/details/102546480
         if (maxIndex - minIndex <= 15){
             for (int i = minIndex; i<=maxIndex; i++){
                 int e = arr[i];
@@ -227,7 +227,6 @@ public class A_Arithmetic<T> {
             }
         }
     }
-
 
     @Test
     public void test_mergeSort() {
