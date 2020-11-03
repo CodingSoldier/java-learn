@@ -250,45 +250,45 @@ public class A_Arithmetic<T> {
 
 
 
-    //// 快速排序
-    //public void quickSort(int[] arr){
-    //    quickSort(arr, 0, arr.length-1);
-    //}
-    //
-    //// 快速排序私有方法
-    //private void quickSort(int[] arr, int l, int r){
-    //    if (l >= r){
-    //        return;
-    //    }
-    //
-    //    // 分割、排序数组arr
-    //    int p = partition(arr, l, r);
-    //    // 左右两边元素递归，使用相同的方式排序
-    //    quickSort(arr, l, p-1);
-    //    quickSort(arr, p+1, r);
-    //}
-    //
-    //// 分割、排序数组arr，并发返回分割点下标
-    //private int partition(int[] arr, int l, int r){
-    //    int j = l;
-    //
-    //    for (int i = l+1; i<=r; i++){
-    //        // arr[i]小于arr[l]，j++，之后arr[j]、arr[i]再交换位置
-    //        if (arr[i] < arr[l]){
-    //            j++;
-    //            int v = arr[j];
-    //            arr[j] = arr[i];
-    //            arr[i] = v;
-    //        }
-    //    }
-    //
-    //    // 遍历完后，arr[l]、arr[j] 交换位置
-    //    int v = arr[l];
-    //    arr[l] = arr[j];
-    //    arr[j] = v;
-    //
-    //    return j;
-    //}
+    // 快速排序
+    public void quickSort(int[] arr){
+        quickSort(arr, 0, arr.length-1);
+    }
+
+    // 快速排序私有方法
+    private void quickSort(int[] arr, int l, int r){
+        if (l >= r){
+            return;
+        }
+
+        // 分割、排序数组arr
+        int p = partition(arr, l, r);
+        // 左右两边元素递归，使用相同的方式排序
+        quickSort(arr, l, p-1);
+        quickSort(arr, p+1, r);
+    }
+
+    // 分割、排序数组arr，并发返回分割点下标
+    private int partition(int[] arr, int l, int r){
+        int j = l;
+
+        for (int i = l+1; i<=r; i++){
+            // arr[i]小于arr[l]，j++，之后arr[j]、arr[i]再交换位置
+            if (arr[i] < arr[l]){
+                j++;
+                int v = arr[j];
+                arr[j] = arr[i];
+                arr[i] = v;
+            }
+        }
+
+        // 遍历完后，arr[l]、arr[j] 交换位置
+        int v = arr[l];
+        arr[l] = arr[j];
+        arr[j] = v;
+
+        return j;
+    }
 
 
 
