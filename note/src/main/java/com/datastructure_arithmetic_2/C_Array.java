@@ -271,52 +271,134 @@ public class C_Array {
      * 解释: 2 与 7 之和等于目标数 9。因此 index1 = 1, index2 = 2 。
      *
      */
-    class Solution167 {
-        //public int[] twoSum(int[] numbers, int target) {
-        //
-        //}
-    }
+    static class Solution167 {
 
-
-
-
-
-
-    static class KuaiPai{
-        public void quickSort(int[] arr){
-            quickSort(arr, 0, arr.length);
-        }
-
-        public void quickSort(int[] arr, int l, int r){
-            if (l >= r){
-                return;
-            }
-
-            int p = partition(arr, l, r);
-            quickSort(arr, l, p-1);
-            quickSort(arr, p+1, r);
-        }
-
-        public int partition(int[] arr, int l, int r){
-            int j = l;
-            for (int i = l; i <= r; i++) {
-                if (arr[i] < arr[l]){
-                    int temp = arr[i];
-                    arr[]
+        /**
+         * 双重for循环暴力解法
+         */
+        public static int[] twoSum1(int[] numbers, int target) {
+            for (int i = 0; i < numbers.length; i++) {
+                for (int j = i+1; j < numbers.length; j++) {
+                    if (numbers[i] + numbers[j] == target){
+                        int[] r = {i, j};
+                        return r;
+                    }
                 }
-
             }
+            throw new RuntimeException("无符合条件数据");
+        }
 
+        /**
+         * 因为是有序数组，可以使用对撞指针方式，两边的指针往中间靠拢
+         */
+        public static int[] twoSum2(int[] numbers, int target){
+            int r = numbers.length - 1;
+            for (int i = 0; i < numbers.length;) {
+                // 数组头和数组尾元素相加
+                if (numbers[i] + numbers[r] == target){
+                    int [] result = {i+1, r+1};
+                    return result;
+
+                    // 数组头和数组尾元素相加，结果小于target，头指针移动到下一个元素
+                }else if (numbers[i] + numbers[r] < target){
+                    i++;
+
+                    // 数组头和数组尾元素相加，结果大于target，尾指针移动到前一个元素
+                }else {
+                    r--;
+                }
+            }
+            throw new RuntimeException("无符合条件数据");
+        }
+
+        public static void main(String[] args) {
+            //twoSum1()
         }
     }
 
 
+    /**
+     * https://leetcode-cn.com/problems/minimum-size-subarray-sum/
+     *
+     */
+    static class Solution209 {
+
+        /**
+         * 滑动窗口解法
+         */
+        public int minSubArrayLen(int s, int[] nums) {
+            if(s <= 0 || nums == null)
+                throw new IllegalArgumentException("Illigal Arguments");
+
+            int l = 0 , r = -1; // nums[l...r]为我们的滑动窗口
+            int sum = 0;
+            int res = nums.length + 1;
+
+            while(l < nums.length){   // 窗口的左边界在数组范围内,则循环继续
+
+                if(r + 1 < nums.length && sum < s)
+                    sum += nums[++r];
+                else // r已经到头 或者 sum >= s
+                    sum -= nums[l++];
+
+                if(sum >= s)
+                    res = Math.min(res, r - l + 1);
+            }
+
+            if(res == nums.length + 1)
+                return 0;
+            return res;
+        }
 
 
 
 
+    }
 
 
+
+    static class Solution3 {
+
+        /**
+         * https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/
+         * 给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+         *
+         */
+        public int lengthOfLongestSubstring(String s) {
+            int[] freq = new int[256];
+            int l = 0, r = -1;
+            int res = 0;
+            while (r+1<s.length()){
+                if (r+1<s.length() && freq[s.charAt(r+1)]==0){
+                    freq[s.charAt(++r)]++;
+                } else {
+                    freq[s.charAt(l++)]--;
+                }
+                res = Math.max(res, r-l+1);
+            }
+            return res;
+        }
+
+    }
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
