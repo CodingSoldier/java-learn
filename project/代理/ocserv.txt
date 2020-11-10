@@ -1,0 +1,22 @@
+1、先安装基本依赖包，在 linux.sh 中
+
+2、安装ocserv。https://github.com/chendong12/ocserv
+# 获取脚本、执行脚本
+wget https://raw.githubusercontent.com/chendong12/ocserv/master/install_script.sh 
+chmod +x install_script.sh 
+./install_script.sh
+# 服务状态
+service ocserv status
+
+3、添加用户
+sh /root/anyconnect/user_add.sh
+
+4、客户端检查服务端口是否畅通
+telnet ip 4433
+
+5、客户端安装anyconnect-win-4.9.03049.msi或者anyconnect-win-4.7.04056-core-vpn-predeploy-k9.msi
+setting -> Preferences 所有勾选全部去掉
+连接填入 ip:4433
+输入用户名密码
+由于没有证书，报Unstrusted Server Certificate，则点击Connect Anyway
+
