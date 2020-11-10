@@ -1,22 +1,71 @@
-1、先安装基本依赖包，在 linux.sh 中
+#####################手动安装ocserv################################
 
-2、安装ocserv。https://github.com/chendong12/ocserv
-# 获取脚本、执行脚本
-wget https://raw.githubusercontent.com/chendong12/ocserv/master/install_script.sh 
-chmod +x install_script.sh 
-./install_script.sh
-# 服务状态
-service ocserv status
+https://www.8win.net/2018/02/223.html
 
-3、添加用户
-sh /root/anyconnect/user_add.sh
+yum -y install gcc gcc-c++ pcre pcre-devel zlib zlib-devel ruby wget bash-completion zlib.i686 libstdc++.i686 lsof unzip zip finger bind-utils  readline-devel autoconf  man-pages nano vim-enhanced net-tools get curl lftp make telnet.x86_64
 
-4、客户端检查服务端口是否畅通
-telnet ip 4433
+手动安装ocserv
+yum install epel-release -y
+yum install ocserv -y
 
-5、客户端安装anyconnect-win-4.9.03049.msi或者anyconnect-win-4.7.04056-core-vpn-predeploy-k9.msi
+vim /etc/ocserv/ocserv.conf
+取消注释，不同网络，网段也不同
+ipv4-network = 10.12.0.0
+ipv4-netmask = 255.255.255.0
+修改验证方式，默认为PAM，这里修改为本地验证
+auth = "plain[passwd=/etc/ocserv/ocpasswd]"
+
+接管DNS请求，设定DNS地址
+tunnel-all-dns = true
+dns = 8.8.8.8
+dns = 8.8.4.4
+
+#tls-priorities = "SECURE128:+SECURE256:-VERS-ALL:+VERS-TLS1.2"
+
+创建用户
+ocpasswd -c /etc/ocserv/ocpasswd user
+
+配置ipv4转发
+vim /etc/sysctl.conf
+net.ipv4.ip_forward = 1
+# 使配置生效
+sysctl -p
+
+
+# 启动 firewalld
+systemctl start firewalld
+ 
+# 放通端口，注意修改
+firewall-cmd --permanent --zone=public --add-port=443/tcp
+firewall-cmd --permanent --zone=public --add-port=443/udp
+ 
+# 转发配置，注意将 eth0 修改位你的网卡接口
+firewall-cmd --permanent --add-masquerade
+firewall-cmd --permanent --direct --passthrough ipv4 -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+ 
+# 使配置生效
+firewall-cmd --reload
+
+
+systemctl start ocserv
+systemctl status ocserv
+systemctl enable ocserv
+
+
+客户端检查服务端口是否畅通，默认是用443端口
+telnet ip 443
+
+客户端安装anyconnect-win-4.9.03049.msi或者anyconnect-win-4.7.04056-core-vpn-predeploy-k9.msi
 setting -> Preferences 所有勾选全部去掉
-连接填入 ip:4433
+连接填入 ip:443
 输入用户名密码
 由于没有证书，报Unstrusted Server Certificate，则点击Connect Anyway
+
+
+
+
+
+
+
+一键安装ocserv，貌似有病毒。https://github.com/chendong12/ocserv
 
