@@ -1,6 +1,6 @@
 package com.datastructure_arithmetic_2;
 
-public class E_Linked {
+public class    E_Linked {
 
     static public class ListNode {
         public int val;
@@ -108,6 +108,47 @@ public class E_Linked {
             int[] arr = {1, 2, 3, 4};
             ListNode listNode = new ListNode(arr);
             swapPairs(listNode);
+        }
+    }
+
+
+    /**
+     * 5-5 不仅仅是穿针引线 Delete Node in a Linked List
+     * https://leetcode-cn.com/problems/delete-node-in-a-linked-list/
+     */
+    static class Solution237 {
+        public void deleteNode(ListNode node) {
+            node.val = node.next.val;
+            node.next = node.next.next;
+        }
+    }
+
+
+
+
+    /**
+     * 5-6 链表与双指针 Remove Nth Node Form End of List
+     * https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/
+     */
+    static class Solution19 {
+        public ListNode removeNthFromEnd(ListNode head, int n) {
+            ListNode dummyHead = new ListNode(0);
+            dummyHead.next = head;
+
+            ListNode p = dummyHead;
+            ListNode q = dummyHead;
+
+            for (int i = 0; i < n + 1; i++) {
+                q = q.next;
+            }
+
+            while (q != null){
+                p = p.next;
+                q = q.next;
+            }
+
+            p.next = p.next.next;
+            return dummyHead.next;
         }
     }
 
