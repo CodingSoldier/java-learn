@@ -62,8 +62,8 @@ setting -> Preferences 所有勾选全部去掉
 由于没有证书，报Unstrusted Server Certificate，则点击Connect Anyway
 
 
-
-
+客户端记住用户名
+C:\ProgramData\Cisco\Cisco AnyConnect Secure Mobility Client\Profile
 
 
 
