@@ -2,8 +2,7 @@ package com.datastructure_arithmetic_2.test;
 
 
 /**
- * @author chenpiqian
- * @date: 2020-11-11
+ * ListNode类
  */
 public class ListNode {
     public int val;

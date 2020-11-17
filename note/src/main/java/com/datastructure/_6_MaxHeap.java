@@ -44,6 +44,7 @@ public class _6_MaxHeap {
             if(size == data.length)
                 resize(2 * data.length);
 
+            // 此数组要实现二叉堆，插入一个节点，i后面的元素要往后移，而不是替换值
             for(int i = size - 1; i >= index ; i --)
                 data[i + 1] = data[i];
 
