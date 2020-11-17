@@ -2,10 +2,7 @@ package com.datastructure_arithmetic_2;
 
 import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class F_Stack {
 
@@ -99,9 +96,40 @@ public class F_Stack {
      * https://leetcode-cn.com/problems/top-k-frequent-elements/
      */
     static class Solution347 {
-        public int numSquares(int n) {
 
+        public int[] topKFrequent(int[] nums, int k) {
+            HashMap<Integer, Integer> numFreqMap = new HashMap<>();
+            for (int i = 0; i < nums.length; i++) {
+                if (numFreqMap.get(nums[i]) == null){
+                    numFreqMap.put(nums[i], 1);
+                }else {
+                    numFreqMap.put(nums[i], numFreqMap.get(nums[i])+1);
+                }
+            }
+
+            PriorityQueue<Pair<Integer, Integer>> queue =
+                    new PriorityQueue<>((Pair<Integer, Integer> p1, Pair<Integer, Integer> p2) -> p1.getValue() - p2.getValue());
+
+            for (Integer key : numFreqMap.keySet()) {
+                if (queue.size() < k){
+                    queue.add(new Pair<>(key, numFreqMap.get(key)));
+                } else {
+                    if (numFreqMap.get(key) > queue.peek().getValue()){
+                        queue.poll();
+                        queue.add(new Pair<>(key, numFreqMap.get(key)));
+                    }
+                }
+            }
+
+            int[] res = new int[queue.size()];
+            for (int i = 0; i < res.length; i++) {
+                res[i] = queue.poll().getKey();
+            }
+
+            return res;
         }
+
+
     }
 
 
