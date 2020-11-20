@@ -34,6 +34,7 @@ public class H_Traceback_Recursion {
         }
 
         private void findCombinations(String digits, int digitsIndex, String resStr){
+            System.out.println(String.format("findCombinations方法入口，digitsIndex=%s，resStr=%s", digitsIndex, resStr));
             if (digits.length() == digitsIndex){
                 res.add(resStr);
                 return ;
@@ -42,12 +43,13 @@ public class H_Traceback_Recursion {
             char c = digits.charAt(digitsIndex);
             String letterStrs = letterMap[c - '0'];
             for (int i = 0; i < letterStrs.length(); i++) {
+                System.out.println(String.format("递归前，letterStrs=%s，i=%s，resStr=%s", letterStrs, i, resStr));
                 findCombinations(digits, digitsIndex+1, resStr+letterStrs.charAt(i));
             }
         }
 
         public static void main(String[] args) {
-            List<String> list = new Solution17().letterCombinations("23");
+            List<String> list = new Solution17().letterCombinations("234");
             System.out.println(list.toString());
         }
     }
@@ -74,7 +76,7 @@ public class H_Traceback_Recursion {
         }
 
         public void pushPermute(int[] nums, int index, LinkedList<Integer> elemList){
-            System.out.println(String.format("index=%s，elemList=%s", index, elemList));
+            System.out.println(String.format("pushPermute方法入口，index=%s，elemList=%s", index, elemList));
             if (nums.length == elemList.size()){
                 res.add((LinkedList<Integer>)elemList.clone());
                 return;
@@ -83,9 +85,10 @@ public class H_Traceback_Recursion {
             for (int i = 0; i < nums.length; i++) {
                 if (!elemList.contains(nums[i])){
                     elemList.addLast(nums[i]);
-                    System.out.println(String.format("index=%s，i=%s，elemList=%s", index, i, elemList));
+                    System.out.println(String.format("递归前，index=%s，i=%s，elemList=%s", index, i, elemList));
                     pushPermute(nums, index + 1, elemList);
                     elemList.removeLast();
+                    System.out.println(String.format("递归后，index=%s，i=%s，elemList=%s", index, i, elemList));
                 }
             }
         }
