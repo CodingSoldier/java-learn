@@ -1,49 +1,49 @@
-#####################ÊÖ¶¯°²×°ocserv################################
+#####################æ‰‹åŠ¨å®‰è£…ocserv################################
 
 https://www.8win.net/2018/02/223.html
 
 yum -y install gcc gcc-c++ pcre pcre-devel zlib zlib-devel ruby wget bash-completion zlib.i686 libstdc++.i686 lsof unzip zip finger bind-utils  readline-devel autoconf  man-pages nano vim-enhanced net-tools get curl lftp make telnet.x86_64
 
-ÊÖ¶¯°²×°ocserv
+æ‰‹åŠ¨å®‰è£…ocserv
 yum install epel-release -y
 yum install ocserv -y
 
 vim /etc/ocserv/ocserv.conf
-È¡Ïû×¢ÊÍ£¬²»Í¬ÍøÂç£¬Íø¶ÎÒ²²»Í¬
+å–æ¶ˆæ³¨é‡Šï¼Œä¸åŒç½‘ç»œï¼Œç½‘æ®µä¹Ÿä¸åŒ
 ipv4-network = 10.12.0.0
 ipv4-netmask = 255.255.255.0
-ĞŞ¸ÄÑéÖ¤·½Ê½£¬Ä¬ÈÏÎªPAM£¬ÕâÀïĞŞ¸ÄÎª±¾µØÑéÖ¤
+ä¿®æ”¹éªŒè¯æ–¹å¼ï¼Œé»˜è®¤ä¸ºPAMï¼Œè¿™é‡Œä¿®æ”¹ä¸ºæœ¬åœ°éªŒè¯
 auth = "plain[passwd=/etc/ocserv/ocpasswd]"
 
-½Ó¹ÜDNSÇëÇó£¬Éè¶¨DNSµØÖ·
+æ¥ç®¡DNSè¯·æ±‚ï¼Œè®¾å®šDNSåœ°å€
 tunnel-all-dns = true
 dns = 8.8.8.8
 dns = 8.8.4.4
 
 #tls-priorities = "SECURE128:+SECURE256:-VERS-ALL:+VERS-TLS1.2"
 
-´´½¨ÓÃ»§
+åˆ›å»ºç”¨æˆ·
 ocpasswd -c /etc/ocserv/ocpasswd user
 
-ÅäÖÃipv4×ª·¢
+é…ç½®ipv4è½¬å‘
 vim /etc/sysctl.conf
 net.ipv4.ip_forward = 1
-# Ê¹ÅäÖÃÉúĞ§
+# ä½¿é…ç½®ç”Ÿæ•ˆ
 sysctl -p
 
 
-# Æô¶¯ firewalld
+# å¯åŠ¨ firewalld
 systemctl start firewalld
- 
-# ·ÅÍ¨¶Ë¿Ú£¬×¢ÒâĞŞ¸Ä
+
+# æ”¾é€šç«¯å£ï¼Œæ³¨æ„ä¿®æ”¹
 firewall-cmd --permanent --zone=public --add-port=443/tcp
 firewall-cmd --permanent --zone=public --add-port=443/udp
- 
-# ×ª·¢ÅäÖÃ£¬×¢Òâ½« eth0 ĞŞ¸ÄÎ»ÄãµÄÍø¿¨½Ó¿Ú
+
+# è½¬å‘é…ç½®ï¼Œæ³¨æ„å°† eth0 ä¿®æ”¹ä½ä½ çš„ç½‘å¡æ¥å£
 firewall-cmd --permanent --add-masquerade
 firewall-cmd --permanent --direct --passthrough ipv4 -t nat -A POSTROUTING -o eth0 -j MASQUERADE
- 
-# Ê¹ÅäÖÃÉúĞ§
+
+# ä½¿é…ç½®ç”Ÿæ•ˆ
 firewall-cmd --reload
 
 
@@ -52,20 +52,20 @@ systemctl status ocserv
 systemctl enable ocserv
 
 
-¿Í»§¶Ë¼ì²é·şÎñ¶Ë¿ÚÊÇ·ñ³©Í¨£¬Ä¬ÈÏÊÇÓÃ443¶Ë¿Ú
+å®¢æˆ·ç«¯æ£€æŸ¥æœåŠ¡ç«¯å£æ˜¯å¦ç•…é€šï¼Œé»˜è®¤æ˜¯ç”¨443ç«¯å£
 telnet ip 443
 
-¿Í»§¶Ë°²×°anyconnect-win-4.9.03049.msi»òÕßanyconnect-win-4.7.04056-core-vpn-predeploy-k9.msi
-setting -> Preferences ËùÓĞ¹´Ñ¡È«²¿È¥µô
-Á¬½ÓÌîÈë ip:443
-ÊäÈëÓÃ»§ÃûÃÜÂë
-ÓÉÓÚÃ»ÓĞÖ¤Êé£¬±¨Unstrusted Server Certificate£¬Ôòµã»÷Connect Anyway
+å®¢æˆ·ç«¯å®‰è£…anyconnect-win-4.9.03049.msiæˆ–è€…anyconnect-win-4.7.04056-core-vpn-predeploy-k9.msi
+setting -> Preferences æ‰€æœ‰å‹¾é€‰å…¨éƒ¨å»æ‰
+è¿æ¥å¡«å…¥ ip:443
+è¾“å…¥ç”¨æˆ·åå¯†ç 
+ç”±äºæ²¡æœ‰è¯ä¹¦ï¼ŒæŠ¥Unstrusted Server Certificateï¼Œåˆ™ç‚¹å‡»Connect Anyway
 
 
-¿Í»§¶Ë¼Ç×¡ÓÃ»§Ãû
+å®¢æˆ·ç«¯è®°ä½ç”¨æˆ·å
 C:\ProgramData\Cisco\Cisco AnyConnect Secure Mobility Client\Profile
 
 
 
-Ò»¼ü°²×°ocserv£¬Ã²ËÆÓĞ²¡¶¾¡£https://github.com/chendong12/ocserv
+ä¸€é”®å®‰è£…ocservï¼Œè²Œä¼¼æœ‰ç—…æ¯’ã€‚https://github.com/chendong12/ocserv
 
