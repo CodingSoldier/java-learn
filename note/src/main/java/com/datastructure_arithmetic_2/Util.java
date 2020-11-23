@@ -1,8 +1,5 @@
 package com.datastructure_arithmetic_2;
 
-/**
- * Created by liuyubobobo.
- */
 public class Util {
 
     private Util(){}

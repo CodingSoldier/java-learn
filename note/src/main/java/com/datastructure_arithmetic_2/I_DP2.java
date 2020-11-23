@@ -1,5 +1,7 @@
 package com.datastructure_arithmetic_2;
 
+import java.util.Arrays;
+
 public class I_DP2 {
 
     /**
@@ -102,6 +104,35 @@ public class I_DP2 {
     }
 
 
+    /**
+     * 9-8 LIS问题 Longest Increasing Subsequence
+     * https://leetcode-cn.com/problems/longest-increasing-subsequence/
+     */
+    static class Solution {
+        public int lengthOfLIS(int[] nums) {
+            if (nums == null){
+                return 0;
+            }
+
+            int[] memo = new int[nums.length];
+            Arrays.fill(memo, 1);
+
+            for (int i = 1; i < nums.length; i++) {
+                for (int j = 0; j < i; j++) {
+                    if (nums[i] > nums[j]){
+                        memo[i] = Math.max(memo[i], memo[j]+1);
+                    }
+                }
+            }
+
+            int r = 1;
+            for (int i = 0; i < memo.length; i++) {
+                r = Math.max(r, memo[i]);
+            }
+
+            return r;
+        }
+    }
 
 
 }
