@@ -32,6 +32,7 @@ vi /etc/ssh/sshd_config
 	PermitRootLogin yes
 	PermitEmptyPasswords yes
 	PasswordAuthentication yes
+	PubkeyAuthentication yes
 	
 service sshd restart
 

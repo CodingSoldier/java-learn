@@ -20,3 +20,9 @@ systemctl status shadowsocks-libev
 systemctl stop shadowsocks-libev
 
 
+# 放通端口，注意修改
+firewall-cmd --permanent --zone=public --add-port=20000/tcp
+firewall-cmd --permanent --zone=public --add-port=20000/udp
+
+# 使配置生效
+firewall-cmd --reload
