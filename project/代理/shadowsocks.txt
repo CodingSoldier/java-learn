@@ -48,7 +48,9 @@ firewall-cmd --reload
 
 
 
-Shadowsocks客户端配置
+Shadowsocks客户端
+https://github.com/shadowsocks/shadowsocks-windows
+客户端obfs配置
 1、下载 https://github.com/shadowsocks/simple-obfs/releases/download/v0.0.5/obfs-local.zip
 2、解压到shadowsocks的文件夹，obfs-local.exe与Shadowsocks.exe在同一个文件夹
 3、ss客户端
