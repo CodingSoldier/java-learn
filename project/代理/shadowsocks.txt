@@ -1,8 +1,20 @@
-﻿安装依赖
+﻿# 安装simple-obfs。https://github.com/shadowsocks/simple-obfs
+cd /
+yum install gcc autoconf libtool automake make zlib-devel openssl-devel asciidoc xmlto git -y
+
+git clone https://github.com/shadowsocks/simple-obfs.git
+cd simple-obfs
+git submodule update --init --recursive
+./autogen.sh
+./configure && make
+sudo make install
+
+
+# 安装依赖
 yum install epel-release -y
 yum install gcc gettext autoconf libtool automake make pcre-devel asciidoc xmlto c-ares-devel libev-devel libsodium-devel mbedtls-devel wget vim  -y
 
-安装yum源
+# 安装yum源
 cd  /etc/yum.repos.d/
 wget https://copr.fedorainfracloud.org/coprs/librehat/shadowsocks/repo/epel-7/librehat-shadowsocks-epel-7.repo
 
@@ -11,7 +23,14 @@ yum -y install shadowsocks-libev
 vim /etc/shadowsocks-libev/config.json
 
 {
-    修改配置
+    "server":"0.0.0.0",
+    "server_port":xxx,
+    "local_port":1080,
+    "password":"xxx",
+    "timeout":60,
+    "method":"chacha20-ietf-poly1305",
+    "plugin":"obfs-server",
+    "plugin_opts":"obfs=http"
 }
 
 systemctl enable shadowsocks-libev
@@ -21,8 +40,25 @@ systemctl stop shadowsocks-libev
 
 
 # 放通端口，注意修改
-firewall-cmd --permanent --zone=public --add-port=20000/tcp
-firewall-cmd --permanent --zone=public --add-port=20000/udp
+firewall-cmd --permanent --zone=public --add-port=xxx/tcp
+firewall-cmd --permanent --zone=public --add-port=xxx/udp
 
 # 使配置生效
 firewall-cmd --reload
+
+
+
+Shadowsocks客户端配置
+1、下载 https://github.com/shadowsocks/simple-obfs/releases/download/v0.0.5/obfs-local.zip
+2、解压到shadowsocks的文件夹，obfs-local.exe与Shadowsocks.exe在同一个文件夹
+3、ss客户端
+	插件程序：obfs-local
+	插件选项:obfs=http;obfs-host=www.baidu.com   (http混淆时；网址随便写)
+
+
+
+安卓客户端
+https://github.com/shadowsocks/shadowsocks-android  下载 arm-v8
+安卓obfs插件
+https://github.com/shadowsocks/simple-obfs-android
+
