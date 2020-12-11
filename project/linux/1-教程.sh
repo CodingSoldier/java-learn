@@ -82,8 +82,12 @@ home
   root用户拥有所有权限，home目录下没有root目录
 lib
   library的缩写，表示“库”，包含被程序所调用的库文件，例如：.so 结尾的文件
-
-
+media
+  表示“媒体”，可移动外设（USB，光盘）插入电脑时，通过media的子目录来访问外设中的内容
+mnt
+  mount的缩写，表示“挂载”，用于临时挂载一些装置
+opt
+  optional
 
 
 
