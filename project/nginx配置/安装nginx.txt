@@ -1,0 +1,15 @@
+安装nginx  
+
+下载  http://nginx.org/en/download.html
+
+yum -y install gcc pcre-devel zlib-devel openssl openssl-devel
+
+tar -zxvf nginx-1.9.9.tar.gz
+
+cd nginx-1.9.9
+
+./configure --prefix=/usr/local/nginx
+
+make
+make install
+

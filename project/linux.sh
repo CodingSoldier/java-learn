@@ -43,7 +43,7 @@ linux修改密码
 
 
 
-yum -y install lrzsz gcc gcc-c++ pcre pcre-devel zlib zlib-devel ruby wget bash-completion zlib.i686 libstdc++.i686 lsof unzip zip finger bind-utils  readline-devel autoconf  man-pages nano vim-enhanced net-tools get curl lftp make telnet.x86_64
+yum -y install lrzsz gcc gcc-c++ openssl openssl-devel pcre pcre-devel zlib zlib-devel ruby wget bash-completion zlib.i686 libstdc++.i686 lsof unzip zip bind-utils  readline-devel autoconf  man-pages nano vim-enhanced net-tools curl lftp make telnet.x86_64
 
 
 ###############################################linux网络#######################################################
