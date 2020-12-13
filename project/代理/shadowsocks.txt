@@ -6,7 +6,7 @@ git clone https://github.com/shadowsocks/simple-obfs.git
 cd simple-obfs
 git submodule update --init --recursive
 ./autogen.sh
-./configure && make
+./configure --prefix=/usr && make
 sudo make install
 
 
@@ -29,7 +29,7 @@ vim /etc/shadowsocks-libev/config.json
     "password":"xxx",
     "timeout":60,
     "method":"chacha20-ietf-poly1305",
-    "plugin":"obfs-server",
+    "plugin":"/usr/local/bin/obfs-server",
     "plugin_opts":"obfs=http"
 }
 

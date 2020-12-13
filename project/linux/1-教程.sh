@@ -87,23 +87,206 @@ media
 mnt
   mount的缩写，表示“挂载”，用于临时挂载一些装置
 opt
-  optional
+  optional application software package 的缩写，表示“可选的应用软件包”。用于安装多数第三方软件和插件。
+root
+  超级用户root的家目录，一般用户的家目录位于/home目录下，root用户是个例外
+sbin
+  英语system binary的缩写，表示“系统二进制文件”，比bin目录多了一个前缀system，sbin目录包含系统级的重要可执行程序
+srv
+  英语service的缩写，表示“服务”，包含一些网络服务启动之后所需要用到的数据
+tmp
+  temporary的缩写，表示“临时的”
+usr
+  Unix Software Resource的缩写，表示“Unix操作系统软件资源”，类似etc目录，也是历史遗留的命名
+  是最庞大的目录之一，类似window中的C:\Windows和C:\Program Files两个文件的集合
+  usr目录安装了大部分用户要调用的程序
+var
+  variable，表示“动态的、可变的”，通常包含程序的数据，比如log（日志）文件
+
+以上目录列表的形式在类Unix的操作系统里是类似的，苹果的maxOS目录结构也是从根目录/开始的
+
+pwd 是 Print Working Directory 打印当前工作目录 的缩写
+
+which 命令：获取命令的可执行文件的位置，用于显示一个命令对应的可执行程序的位置
+  在Linux中，每一条命令其实对应了一个可执行程序，在终端输入命令，按回车键，就是执行了对应的程序
+  which命令接收一个参数，是你想知道可执行程序在哪里的命令
+  例如：which pwd  显示pwd在/usr/bin/pwd
+
+ls 命令：list的缩写，用于列出文件和目录
+  一般来说
+    蓝色 表示 目录
+    绿色 表示 可执行文件
+    红色 表示 压缩文件
+    浅蓝色 表示 链接文件
+    灰色 表示 其他文件
+ls 命令的参数
+  -a 显示所有文件和目录，包括隐藏文件
+    以点（.）开头的文件是隐藏文件。但是.和..这两个的含义比较特殊
+    .（一个点）表示当前目录，..（两个点）表示上一级目录
+  -A 与-a基本相同，但是不列出.、..这两个文件
+  -l 列出详细信息
+    总用量 92  92表示当前目录第一层级所有文件的总大小，单位是KB
+    drwxr-xr-x.  13 root root   155 11月 17 2019 usr
+      drwxr-xr-x. 文件权限
+      13 链接数目
+      root 文件的所有者名称
+      root 文件所在的群组
+      155 文件大小，单位是byte（字节）
+      11月 17 2019 最近一次的修改时间
+      usr 文件名/目录
+  -h h是humain readable的缩写，表示“适合人类阅读的”
+    ll -h 或者 ls -lh
+  -t time的缩写，按最近一次修改时间排序
+    ll -t
+
+cd 命令，change directory 的缩写，表示“切换目录”
+  cd ~ 与 cd 命令能回到家目录
+
+du 命令，相比于 ls -l 命令，du命令统计的才是真正的文件大小 
+  du 深入遍历每个目录的子目录，统计所有文件的大小
+  disk usage的缩写，表示“磁盘使用/占用”
+  du命令默认只列出目录的大小，加上 -a显示目录、文件大小
+
+cat 命令，concatenate的缩写，表示“连接/串联”
+  可以一次性在终端显示文件的所有内容
+
+less 分页显示文件内容，一页一页地显示内容
+  more 命令与 less 类似，但没有less那么强大
+  空格键：往下翻一个屏幕的内容，与PageDown效果一样
+  回车键：读取下一行，与向下箭头一样
+  d: 往下翻半个屏幕内容
+  b: 往上翻一个屏幕，与PageUp效果一样
+  y: 往上翻一行，与向上箭头一样
+  u: 往上翻半个屏幕内容
+  d: 停止读取文件，终止less命令 
+  =：显示当前在文件中的位置，按 enter 取消
+  h: 显示帮助文档，q退出帮助文档
+  /: 搜索模式，按enter确定，按n跳到下一个，shit+n跳到上一个
+
+head 显示文件开头
+tail 显示文件结尾
+  默认情况下显示文件10行
+  -n 指定显示的行数
+  -f 实时追踪文件的更新
+
+touch 创建一个空白文件
+
+mkdir 创建一个目录，创建一个目录
+  -p: 递归创建目录结构  mkdir -p one/two/three
+
+cp 拷贝文件或目录
+  cp 已经存在的文件 新文件
+  -r或者-R：拷贝目录，r表示recursive（递归），目录中的子目录，文件都会被拷贝
+
+mv 移动文件（目录）/重命名文件（目录）
+
+rm 删除文件目录
+  -i: inform的缩写，表示“通知”，删除每个文件都向用户询问是否删除
+  -f: force的缩写，表示“强制”，强制删除文件
+  -r: 递归删除
+
+ln link的缩写，表示“链接”，用于文件之间创建链接
+  linux有两种连接类型 
+    Physical link：物理链接或者硬链接
+    Symbolic link: 符号链接或者软连接
+  硬链接：
+    使链接的两个文件共享同样的文件内容，就是同样的inode
+    硬链接只能创建指向文件的硬链接，不能创建指向目录的
+    ln 文件 硬链接名
+  软连接：可以指向文件和目录，软链接更常用
+    创建软连接需要加上 -s 参数，s是symbolic（符号）的缩写
+    ln -s 文件 软连接名
+
+sudo Substitute User DO 的缩写，substitute是替换的意思。以root身份运行命令
+Liunx可以创建多个用户，这些用户被划分到不同的群组里面
+root比较特殊，是超级用户
 
 
+sudo su  一直成为root用户，输入当前用户的密码
+su - 切换到root用户，需要输入root用户的密码
+  su - 切换到root的家目录
+  su 切换到之前用户的家目录
+
+useradd testuser  创建用户testuser
+ls /home 查看用户的家目录
+passwd testuser  给已创建的用户testuser设置密码
+usermod --help  修改用户这个命令的相关参数
+userdel testuser  删除用户testuser，不会删除家目录
+  -r 或者 --remove 删除家目录
+
+如果不设置用户群组，默认会创建一个和它用户名一样的群组
+
+groupadd 添加一个新的群组
+  groupadd friend
+  groupadd happy
+  groupadd funny
+
+usermod 是user、modify的缩写，修改用户账号
+  -l:重命名用户
+  -g：修改用户所在群组
+    usermod -g friend testuser
+  -G: 将用户添加到多个群组
+    usermod -G friend,happy,funny testuser
+  使用usermod -g/-G 会将用户原来的群组剔除
+  -aG: a是append的缩写，这样不会剔除原来的群组
+
+groups 查询用户所在的群组
+  groups testuser
+
+groupdel 删除群组
+  groupdel happy
+
+chown change和owner的缩写，改变文件所有者（文件群组不变）
+  chown 用户名 文件名     //改变文件所有者（文件群组不变）
+  chown 用户名:群组名 文件名    //修改文件所有者和群组
+  -R：只能用R，小写的r不起作用。     目录与其子级都会被修改
 
 
+chgrp change和group的缩写，改变文件的群组
+  chgrp 群组名 文件名
+
+ll 命令显示权限
+  第一个字母，d 表示目录，l 表示链接
+  最后一个点表示SELinux的安全标签
+  一共有三组
+      d    rwx     rwx      rwx
+    属性 所有者 群组用户 其他用户
+
+chmod change和mode的缩写，修改文件访问权限
+  linux权限与对应的数字
+    r  4
+    w  2
+    x  1
+    综合来看，744、755、766比较常用
+  使用字母分配权限
+    chmod u+rx 文件名  // 文件所有者增加读、运行权限 
+    chmod g+r 文件名   // 文件群组用户增加读权限
+    chmod g+r o-r 文件名   // 文件群组用户增加读权限，其他用户组移除读权限
+    chmod go-r 文件名   // 文件群组用户、其他用户组移除读权限
+    chmod +x 文件名  // 文件的所有用户增加运行权限
+  -R：递归修改权限
 
 
+Nano文本编辑器
+  linux终端比较著名的文本编辑器有：Nano、Vim、Emacs
+  输入nano ，回车，即可打开nano输入内容
+  打开nano后，底下会显示帮助文档。^表示Ctrl键，后面的字母虽然是大写，但却是对应小写的按键
+  ctrl + g  显示帮助文档
+  ctrl + x  退出帮助文档
+  nano 文件名  // 创建文件并编辑
 
+.bashrc 是Bash这个shell程序的配置文件，可通过此文件配置终端
+  Bash使用最常用的shell程序，CentOS和大部分常见的Linux发行版默认shell是Bash
 
+/etc/profile是非图形界面终端的配置文件
+  profile文件会调用.bashrc文件，profile会在profile本身配置的基础三加上.bashrc的配置
+  使用source命令使改动立即生效
+    source /etc/profile
 
-
-
-
-
-
-
-
+Linux软件包，window中的软件在Linux中叫做软件包
+  rpm是Red Hat Package Manager的缩写，表示“红帽软件包管理器”
+  Debian一族的软件包后缀是.deb为后缀
+  几乎所有的.rpm软件包放在相同的地方，称为软件仓库repository
 
 
 
