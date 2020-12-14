@@ -289,5 +289,121 @@ Linux软件包，window中的软件在Linux中叫做软件包
   几乎所有的.rpm软件包放在相同的地方，称为软件仓库repository
 
 
+软件仓库文件是  /etc/yum.repos.d/CentOS-Base.repo
+CentOS官方的源列表 https://www.centos.org/download/mirrors/
 
+修改CentOS默认yum源为mirrors.aliyun.com
+  1、备份系统自带yum源配置文件/etc/yum.repos.d/CentOS-Base.repo
+    mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+  2、下载ailiyun的yum源配置文件到/etc/yum.repos.d/
+    wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+  3、运行yum makecache生成缓存
+    yum makecache
+  4、这时候再更新系统就会看到以下mirrors.aliyun.com信息。这一步可不执行
+    yum -y update
+
+yum update/upgrade  更新软件包。update删除旧软件包（首选），upgrade不删除旧软件包
+yum search  搜索软件包
+yum install  安装软件包
+yum remove 或者 yum autoremove   删除软件包
+
+rpm -i *.rpm    安装软件包
+rpm -e 包名     卸载软件包
+
+RTFM  阅读那该死的手册
+
+man命令，显示使用手册，是manual的缩写。man命令后接命令、函数
+  mandb  更新手册
+  man ls  查看ls命令手册
+  按 q 退出手册页
+  SYNOPSIS区域中
+    粗体文字表示要原封不动地输入
+    ...省略号表示可以有多个此类内容
+    [OPTION]：中括号[]表示可选的，OPTION表示选项参数
+      选项参数在DESCRIPTION区域中
+    下划线文字表示要用实际内容替换
+
+apropos 命令：查找命令。用法：apropos命令后接一个关键字
+  运行 apropos sound ，列出所有使用手册中有sound这个关键字的命令，左侧是命令的名字，右侧是命令手册中出现关键字的句子
+
+命令 -h/--help  显示帮助文档
+
+whatis 命令，是man的精简版，显示手册的开头部分
+
+locate命令，快速查找。搜索包含关键字的所有文件和目录
+  安装
+    1、yum install mlocate
+    2、updatedb  //更新后台数据库
+    3、locate inittab
+  locate consul_1.4.4  查找包含consul_1.4.4文件名的文件
+  刚创建的文件，locate查找不到
+  locate不会搜索硬盘，而是在文件数据库中查找。Linux每天更新一次文件数据库，可用 updatedb 立即更新数据库
+  03-locate命令原理.jpg 
+
+find 查找命令，遍历硬盘 
+  find 何处 何物 做什么
+  find /var/log -name "syslog"  根据文件名查找，可以使用通配符，"*syslog*"
+  find /var -size +10M    查找大于10M的文件，-10k是查找小于10k的文件
+    G M k  k是小写
+  -type d //只查找目录类型。-type f  //只查找文件类型
+    find / -name boot -type d
+  find /tmp -name "systemd*" -exec chmod 777 {} \;    查找/tmp目录下名称符合systemd*的文件，并修改这些文件的权限为777
+
+grep查找关键字，并显示关键字所在的行
+grep text file   // text代表要搜索的文本，file代表供搜索的文件
+  grep path /etc/profile
+  -i  忽略大小写  grep -i path /etc/profile
+  -n  显示文本所在的行号
+  -E  使用正则表达式，CentOS默认是启用正则表达式的  grep -E ^path /etc/profile
+
+sort 排序命令
+  sort sortfile.txt    //排序sortfile.txt中的内容然后输出到屏幕，不区分大小写
+  -o  将排序后的内容写入新文件
+    sort -o new_file.txt sortfile.txt
+
+wc命令，文件统计。统计单词数、行数、字符数，字节数
+  wc显示3个数字。行数  单词数  字节数
+
+cut命令，剪切文件内容
+
+>  将标准输出重定向到新文件中，如果文件不存在就新建一个文件，如果文件存在则覆盖内容
+>> 标准输出重定向到文件末尾，相当于追加
+黑洞文件 /dev/null，发送到此文件的数据都会被作废
+
+
+
+stdin    从键盘向终端输入数据，也就是标准输入，standard input的缩写，文件描述符为0
+stdout   终端输出信息（不包括错误信息），文件描述符为1
+stderr   终端输出的错误信息，standard error的缩写，标准错误输出独立于标准输出
+         且标准输出和标准错误输出可以分别重定向，标准错误输出的文件描述符为2
+
+cat not-exit-file.txt > my.log
+  > 不会将标准错误输出重定向到my.log，my.log中没有内容
+
+cat not-exit-file.txt > my.log 2> stderr.log
+  标准输出重定向到my.log
+  标准错误输出重定向到stderr.log，2是标准错误输出的文件描述符
+
+2>    标准错误输出重定向 
+2>>   标准错误输出重定向（追加）
+2>&1  标准输出与标准错误输出重定向到同一个文件 
+  cat not-exit-file.txt > my.log 2>&1
+  cat not-exit-file.txt >> my.log 2>&1  //追加
+
+# <   符号用于指定文件的输入
+# <<  将键盘的输入重定向到某个命令的输入
+#   sort -n << END   按END退出
+
+# wc -m << END
+# > How many characters are there in this sentence ?
+# > END
+
+| 管道符号
+
+
+系统监控
+  w命令、uptime命令、tload命令
+   
+
+ps
 
