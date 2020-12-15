@@ -392,6 +392,7 @@ cat not-exit-file.txt > my.log 2> stderr.log
 
 # <   符号用于指定文件的输入
 # <<  将键盘的输入重定向到某个命令的输入
+# << END   接收键盘输入
 #   sort -n << END   按END退出
 
 # wc -m << END
@@ -403,7 +404,137 @@ cat not-exit-file.txt > my.log 2> stderr.log
 
 系统监控
   w命令、uptime命令、tload命令
-   
 
-ps
+ps命令，Process Status（进程状态），ps命令用于显示系统进程
+  -ef  列出所有用户在所有终端的所有进程
+  -H   进程之间有缩进层级
+  -u 用户名   列出用户运行的进程
+  -aux   通过CPU和内存使用来过滤进程，可通过 --sort 参数排序
+    ps -aux --sort -pcpu  按CPU使用率排序
+    ps -aux --sort -pmem  按内存使用率排序
+    ps -aux --sort -pcpu,+pmem | head    将CPU、内存参数合并到一起，并通过管道显示前10个结果
+  -axjf和pstree效果类似，都是以树形结构显示进程
+
+top命令，动态显示进程状态
+  按 q 退出
+  按 u 可以显示指定用户启动的进程
+
+CentOS7 安装系统监控软件 glances iftop htop
+yum install epel* -y
+yum install python-pip python-devel -y
+yum install glances -y
+
+ctrl + c  停止终端正在运行的进程
+终端拷贝粘贴使用 ctrl + shift + c 和 ctrl + shift + v 
+
+kill 结束一个进程，kill后面接PID
+
+killall 结束多个进程，killall命令后接程序名，而不是PID
+
+halt    关闭系统
+reboot  重启系统
+halt 和 reboot 这两个命令都使用了shutdown
+
+
+&符号和nohup命令：后台进程
+
+后台运行一个进程有几种方法
+  1、在运行命令后面加上&符号，例如：find / -name "*log" &
+    但是进程的输出还是会在终端输出，可以配合重定向使用
+      find / -name "*log" > output_find &   但是这样标准错误输出会输出到屏幕
+      find / -name "*log" > output_find 2>&1 &   标准输出、标准错误输出都重定向到一个文件。
+    使用&的后台进程与终端香关联，终端关闭后，后台进程也会被关闭
+  2、使用nohup使进程和终端分离
+    当用户注销（logout）或者网络断开时，终端收到HUP（挂断，hangup的缩写）信号，从而关闭所有子进程。
+    可以使用nohup命令使得进程不受HUP信号影响
+    nohup find / -name "*log" > output_find 2>&1 &
+
+Ctrl + z 转到后台，并暂停运行
+bg background的缩写，表示“后台”。假如命令已经在后台并且暂停着，bg命令会将其状态改为运行
+  如果不加任何参数，bg命令默认作用于最后一个后台进程。也就是刚才被Ctrl+z暂停的进程
+  如果后面加了 %1，%2 则作用于指定标号的进程
+    按下Ctrl+z后出现 [1]+  Stopped top  中括号中的1就是标号
+
+Linux有5种常见的进程状态
+  R 正在运行或者在运行队列中等待
+  S 中断、休眠中
+  D 不可中断，即进程没响应中断信号
+  Z 僵死，进程终止，进程描述符依旧存在
+  T 停止，进程收到SIGSTOP、SIGSTP、SIGTIN、SIGTOU等停止信号后停止运行
+
+jobs命令，显示当前终端的后台进程
+
+tar命令、gzip和bzip2命令的使用
+  1、用tar将多个文件归档为一个总的文件，称为archive
+  2、用gzip或者bzip2将archive压缩为更小的文件
+    04-tar和gzip或bzip2.jpg
+  c：create的缩写，表示“创建”
+  v：verbose的缩写，表示“冗余”，会显示操作细节
+  f：file的缩写，表示“文件”，指定归档文件
+tar -cvf 归档后的文件ming.tar 归档目录
+tar -cvf 归档后的文件ming.tar 文件1、文件2、文件3
+  -rvf：追加文件到tar中
+  -cvf：解压
+
+gzip、bzip2压缩归档，只需要改后缀名
+  .tar.gz   使用gzip压缩后的文件名
+    gzip 01.tar  命令执行后文件名变成了 01.tar.gz
+  .tar.bz2  使用bzip2压缩压缩后的文件名
+
+gunzip、bunzip2命令解压
+
+用tar命令同时完成归档和压缩操作
+  -zcvf  用过gzip压缩归档
+    tar -zcvf test.tar.gz .
+  -zxvf
+    解压gzip文件
+
+  -jcvf  用bzip2压缩归档
+
+
+yum install zip unzip
+
+zip -r test.zip .
+  -r 递归压缩，一定要加，不然压缩的就是空文件夹
+
+
+编译安装的大致步骤
+  下载源代码 解压压缩包 配置 编译 安装
+ 
+安装软件
+  1、使用yum搜索，有软件则用yum安装
+  2、去软件的官网找后缀为 .rpm 安装包，Debian一族的后缀是 .deb
+    yum会自动安装依赖，rpm安装方式要手动安装依赖
+  3、编译源码安装
+
+alien（外星人）可以实现rpm与deb的相互转换，但是不能保证100%顺利安装
+    yum install alien 
+
+编译就是将程序的源代码换成可执行文件的过程
+  README文件一般会说明详细的安装步骤
+
+编译安装 htop
+https://github.com/htop-dev/htop/releases/tag/2.2.0   下载地址
+tar zxvf htop-2.2.0.tar.gz     解压
+cd htop-2.2.0/ 
+cat README   阅读README
+./autogen.sh  按照README提示，先执行./autogen.sh
+  提示缺少依赖autoreconf，安装依赖
+    yum install autoconfig automake libtool
+    autoreconf -h
+./configure --prefix=/XXX/path  按照README提示，执行 --prefix=/XXX/path
+  文档提示默认将安装到 /usr/local 目录，最好在configure这一步修改安装位置
+  ./configure --prefix=/some/path
+  提示You may want to use --disable-unicode or install libncursesw.
+    yum install ncurses-devel -y
+  重新运行 --prefix=/XXX/path 直至没有错误
+make 按照README提示，运行 make
+make install  按照提示，运行 make install
+htop 安装完成，运行htop
+
+
+https://blog.csdn.net/zhaihaifei/article/details/54617516
+05-net-tools与iproute2比较.png
+
+
 
