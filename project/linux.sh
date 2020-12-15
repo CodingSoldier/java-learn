@@ -30,7 +30,7 @@ xshell使用公钥连接即可
 liunx允许账号密码远程登录
 vi /etc/ssh/sshd_config
 	PermitRootLogin yes
-	PermitEmptyPasswords yes
+	# PermitEmptyPasswords yes
 	PasswordAuthentication yes
 	PubkeyAuthentication yes
 	

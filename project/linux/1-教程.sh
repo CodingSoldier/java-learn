@@ -537,4 +537,58 @@ https://blog.csdn.net/zhaihaifei/article/details/54617516
 05-net-tools与iproute2比较.png
 
 
+SSH结合使用非对称加密、对称加密两种方式
+  首先使用非对称加密，安全地传输对称加密的秘钥
+  然后使用堆成加密的秘钥作为加密、解密的手段
+
+OpenSSH是SSH协议的免费开源实现
+OpenSSH分为客户端和服务端
+  客户端 openssh-client
+    yum install openssh-clients
+  服务端 openssh-server
+    yum install openssh-server
+  安装完成后，会开启守护进程sshd
+  手动开启sshd，安装后自动开启了
+    systemctl start sshd
+  停止
+    systemctl stop sshd
+
+服务端安装openssh-server，默认已经安装了
+  yum install openssh-server
+
+Linux客户端安装SSH工具
+  yum install openssh-clients
+
+Linux客户端使用SSH登陆Liunx服务端
+  ssh root@192.168.1.198  使用root用户登录，之后要确认，输入密码
+
+ssh的config文件可以配置SSH，方便批量管理多个SSH连接
+全局的config文件有两个
+  客户端配置  /etc/ssh/ssh_config
+  服务端配置  /etc/ssh/sshd_config
+可使用man命令查看config文件的使用
+  man ssh_config
+  man sshd_config
+
+每个用户的客户端的config配置文件地址，服务端没有
+  ~/.ssh/config  
+
+客户端config文件常用的配置参数，一般修改客户端
+  Host       别名
+  HostName   远程主机名或者IP地址
+  Port       连接到远程主机的端口
+  User       用户名
+
+服务端config文件常用配置参数
+  Port                     sshd服务端口号，默认是22
+  PermitRootLogin          是否允许以root用户身份登录，默认可以
+  PasswordAuthentication   是否允许密码登陆，默认可以
+  PubkeyAuthentication     是否允许公钥验证登陆，默认可以
+  PermitEmptyPasswords     是否允许空密码登陆，默认不可以
+修改config文件后需要重启sshd
+  systemctl restart sshd
+
+
+
+
 
