@@ -580,13 +580,142 @@ ssh的config文件可以配置SSH，方便批量管理多个SSH连接
   User       用户名
 
 服务端config文件常用配置参数
-  Port                     sshd服务端口号，默认是22
-  PermitRootLogin          是否允许以root用户身份登录，默认可以
-  PasswordAuthentication   是否允许密码登陆，默认可以
-  PubkeyAuthentication     是否允许公钥验证登陆，默认可以
+  Port                        sshd服务端口号，默认是22
+PermitRootLogin  yes        是否允许以root用户身份登录，默认可以
+PasswordAuthentication yes  是否允许密码登陆，默认可以
+PubkeyAuthentication yes    是否允许公钥验证登陆，默认可以
   PermitEmptyPasswords     是否允许空密码登陆，默认不可以
 修改config文件后需要重启sshd
   systemctl restart sshd
+
+基于秘钥的验证
+  客户机生成秘钥对（公钥和私钥），把公钥上传到服务器
+
+秘钥登陆步骤
+  1、在客户机生成秘钥对（公钥和私钥）
+    执行 ssh-keygen  //默认使用RSA非对称加密算法。命令会询问秘钥对存放位置，回车使用默认。passphrase也是用默认
+    默认在 ~/.ssh/ 目录下生成私钥id_rsa、公钥id_rsa.pub
+  2、将公钥上传到服务器
+    ssh-copy-id root@192.168.3.180  这句命令等价于 ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.3.180
+      需要输入192.168.3.180 root用户的密码
+      ssh-copy-id命令是把客户机的公钥追加到服务器 ~/.ssh/authorized_keys 文件
+  3、ssh root@192.168.3.180  客户机免密登陆
+
+配置SSH免密登陆后任然想使用密码登陆
+  ssh -o PreferredAuthentications=password -o PubKeyAuthentication=no user@host
+
+
+yum install vim
+运行 vimtutor 命令可以查看教程
+Vim有多种模式：
+  交互模式
+    是Vim的默认模式，每次运行Vim就会进入这个模式
+    此模式不能输入文本
+    可以删除、复制、粘贴、跳转
+  插入模式
+    按 i 键进入插入模式，a、o键也可以
+    按ESC键退出此模式
+  命令模式
+    按 shift + : 键进入。按ESC键也可以进入交互模式
+    也称为底线命令行模式
+    此模式下课运行 退出、保存 等命令
+  可视模式
+    不常用
+
+:x 与 :wq 是一样的效果
+
+交互模式下
+  x 删除一个字符
+  dd 剪切行
+  dw 删除一个单词
+  d0 删除行首到光标处的内容，不包含光标
+  d$ 删除光标处到行末的内容，包含光标
+  yy 复制行
+  p 粘贴，只能配合前面的命令使用，Ctrl+C 复制的内容使用p无效
+  r 替换，按ESC退出
+  u 撤销，如果要撤销4次，按下4，再按u
+  ctrl + r  重做
+  :set nu  设置行号
+  :set nonu  隐藏行号
+  G 跳转指定行，按5加 shift+g 或者 5+gg ,跳转到第5行
+
+  / 进入查找模式，n 下一个，N 上一个
+
+v 进入字符可是模式，按上下键，配合d实现删除
+V 进入行可视模式
+Ctrl + v 块可视模式
+
+vim的全局配置文件在 /etc/vimrc
+在家目录创建一个 .vimrc 的配置文件 cp /etc/vimrc  ~/.vimrc
+vim ~/.vimrc
+  双引号后面的选项是被注释的
+
+默认加入行号
+自定义，显示行号，忽略大小写
+set nu
+set ignorecase
+
+
+安装git
+yum install -y git
+
+执行 git config --global user.email chenpiqian@shenzhenpoly.com 后，git的配置文件在home目录下 .gitconfig
+
+git config --global user.name chenpiqian
+
+
+scp 网间拷贝
+scp 源文件  目标文件
+  源文件、目标文件格式 user@ip:file_name
+  拷贝客户端文件到服务端
+    scp consul.log root@192.168.3.180:/usr/local
+  拷贝服务端文件到本机 /tmp/consul.log
+  scp root@192.168.3.180:/usr/local/consul.log /tmp/consul.log
+
+
+yum install -y bind-utils
+host www.baidu.com 查看域名IP
+
+IP地址与主机名映射 /etc/hosts
+一个IP可以对应多个域名。这个相当于本地DNS列表？远程DNS宕机可用本地DNS？
+::1  这是IPv6的本地地址，前面两个::表示省略了前面的0
+
+
+enp0s3  en表示以太网，p0s3表示PCI接口的物理地址是（0, 3）
+
+netstat 网络统计，net表示网络，stat是statistics的缩写，表示统计
+ 
+netstat 
+  -i  列出电脑所有的网络接口统计信息
+  -uta  u显示UDP，t显示TCP，a显示所有连接状态
+  -lt 列出状态是LISTEN的连接
+
+shell种类
+  sh：Bourne Shell的缩写，可以说是所有Shell的祖先
+  Bash：Bourne Again Shell的缩写，是sh的进阶版，目前大多数Linux发行版默认使用Bash
+
+.bashrc文件就是Bash的配置文件
+一般以rc结尾的多为配置文件
+
+shell脚本第一行是指定使用哪种Shell来运行它
+使用sh运行
+#!/bin/sh
+
+使用bash运行
+#!/bin/bash  
+
+#!被称为Sha-bang，或者Shebang，用于指定脚本要使用的shell
+如果shell脚本不写 #!shell程序路径，则会使用当前用户的shell执行脚本，这可能导致问题
+
+可直接 ./shell文件名 执行shell，./不能少
+
+调试模式运行  bash -x test.sh
+
+
+
+
+
+
 
 
 
