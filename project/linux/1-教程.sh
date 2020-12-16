@@ -713,6 +713,30 @@ shell脚本第一行是指定使用哪种Shell来运行它
 
 
 
+#!/bin/bash
+# bash 定义变量，等号两边不能加空格。有空格bash认为message是一个命令
+message='信息'
+
+# 使用变量要在变量前面加$
+echo $message
+
+# 单引号内全是文本，原样输出
+echo '$message'
+
+# 双引号，会解析美元符号$、反引号`、反斜杠\
+echo "$message"
+
+# 反引号，要求shell执行被反引号括起来的内容
+echo `pwd`
+
+# read：请求输入，将输入赋值给变量
+#read var1
+#echo "$var1"
+
+# read一次读取多个输入，使用空格隔开
+read name1 name2
+echo "$name1  $name2"
+
 
 
 
