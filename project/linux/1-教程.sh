@@ -734,13 +734,110 @@ echo `pwd`
 #echo "$var1"
 
 # read一次读取多个输入，使用空格隔开
-read name1 name2
-echo "$name1  $name2"
+#read name1 name2
+#echo "$name1  $name2"
+
+# read -p参数，提示信息
+# -n 限制输入长度
+# -t 限制输入时间
+# -s 隐藏内容
+#read -p '请输入名字（最长5字符）：' -n 5 -t 5 yn
+# echo -e 启用反斜杠转译
+#echo -e "\n$yn"
+
+# Bash中，所有变量都是字符串。但是可以使用 let 命令
+# 小数运算使用 bc 命令
+let "a=1"
+let "b=2"
+let "c=a+b"
+echo $c
+
+# 运行 env 命令查看本机环境变量，使用 $XXX 获取具体环境变量的值，例如 $PATH
+# 使用 export 定义环境变量
+
+# $# 参数个数，$0 被运行的脚本文件名，$1 第一个参数，$n 第n个参数
+echo "文件名：$0"
+echo "参数1：$1"
+
+# 数组，元素之间用空格。使用${}取值
+array=('v0' 'v1' 'v2')
+echo "${array[2]}"
+
+#给单个数组元素赋值
+array[5]='v5'
+echo "${array[5]}"
+
+# 输出所有数组元素
+echo "${array[*]}"
 
 
+if条件语句基本格式，方括号与“条件”之间有一个空格
+if [ 条件 ]
+then
+  做这个
+fi
+或者
+if [ 条件 ]; then
+  做这个
+fi
+
+在shell中等于判断是使用一个等号 = 表示，也可以使用两个等号表示
+
+if [ 条件 ]
+then
+  做这个
+else
+  做这个  
+fi
+
+if [ 条件1 ]
+then
+  做这个
+elif [ 条件2 ]
+then
+  做这个
+else
+  做这个  
+fi
 
 
+for循环，循环列出当前目录的文件
+#!/bin/bash
+listfile=`ls`
+for file in $listfile
+do
+  echo "File found：$file"
+done
 
+
+Shell定义函数的两种方式
+函数名 () {
+  函数体
+}
+
+function 函数名 {
+
+}
+
+调用函数直接写函数名即可，不需要加括号
+
+函数的定义
+1、函数名后面的圆括号不能加任何参数
+2、函数定义要放到函数调用前
+
+shell函数传递参数，也是使用$符号。类似于函数也是shell脚本
+#!/bin/bash
+print_something () {
+  echo "Hello $1"
+}
+
+print_something abc
+print_something bcd
+
+shell函数能返回函数执行的状态，也用return
+
+Shell变量默认是全局变量，在shell脚本的任何地方都能使用
+定义局部变量使用local关键字
 
 
 
