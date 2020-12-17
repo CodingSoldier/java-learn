@@ -120,7 +120,7 @@ httpd服务使用自签名证书
 		# 填写邮箱
 		xxxx
 		# challenge password 和 company name 不设置，直接回车
-	3、生成自签名证书
+	3、生成自签名证书，没有网可以
 		# 生成证书。x509类型表示自签证书，-days 3650 有效期10年，-in表示输入，-signkey 秘钥，-out输出证书
 		openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
 	# 拷贝私钥到 /etc/pki/tls/private
