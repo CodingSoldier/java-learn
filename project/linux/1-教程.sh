@@ -840,5 +840,55 @@ Shell变量默认是全局变量，在shell脚本的任何地方都能使用
 定义局部变量使用local关键字
 
 
+Linux特殊进程
+  这些进程不与任何终端相关联，无论用户身份如何，都在后台运行，而且这些进程的父进程PID为1的进程
+  PID为1的进程只在系统关闭时才会被销毁
+  这些进程会在后台一直运行
+  守护进程的名字通常会在最后有一个 d，表示daemon。例如：systemd、httpd、smbd
+  systemd是几乎所有最新Linux发行版采用的初始化进程，systemd的PID进程号是1
+
+05-新版本systemd与老版本system V 比较.jpg
+
+yum install -y samba
+
+systemctl list-units --type=service
+
+使用journalctl命令管理日志
+
+journalctl -u smb.service  显示smb服务的日志，u是unit的缩写
+
+安装Apache
+  yum install httpd   // 在Red Hat一族中，Apache程序的名字叫httpd。在Ubuntu系统中叫apache
+  systemctl start httpd
+  systemctl reload httpd  重新加载配置文件
+
+firewall-cmd --list-ports  防火墙开放的端口
+
+SELinux安全子系统
+  SELinux是Security-Enhanced Linux的缩写，表示“安全增强型linux”
+
+SELinux的双重保险
+  域限制：对服务程序的功能进行限制
+  安全上下文：对文件资源的访问限制
+
+SELinux的三种配置模式
+  enforcing    强制启用安全策略模式，将拦截服务的不合法请求
+  permissive   遇到服务越权访问时，只发出警告而不强制拦截
+  disabled     对于越权的行为不警告也不拦截
+
+sestatus 查看SELinux的状态
+
+ll -Zd /var/www/html/      显示安全策略
+
+
+
+
+
+
+
+
+
+
+
 
 

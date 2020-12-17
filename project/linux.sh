@@ -52,21 +52,21 @@ ipconfig         查看ip，负责公网
 ipconfig /all      查看MAC地址，计算机网卡的硬件地址，负责局域网
 netstat –an       查看本机启动端口
 
-修改网卡信息
+修改网卡信息，仅修改网络可以使用 systemctl restart network 重启网络即可生效
 vim /etc/sysconfig/network-scripts/ifcfg-ens33
 
 网卡信息
-DEVICE=ens33                    网卡设备名
+DEVICE=ens33                    网卡设备名，也有一个NAME配置项
 BOOTPROTO=none                  是否自动获取IP（none不指定、static静态ip、dhcp通过dhcp服务器分配）            
 HWADDR=00:XX:XX:XX:XX:XX        MAC地址
 NM__CONTROLLED=yes              是否可以有Network Manager图形管理器工具托管
 ONBOOT=yes                      是否随网络服务启动，ens33生效
 TYPE=Ethernet                   以太网类型
 UUID=“XXXX”                     唯一识别码
-IPADDR=192.168.0.222            IP地址
+IPADDR=192.168.1.222            IP地址
 NETMASK=255.255.255.0           子网掩码
-GATEWAY=192.268.0.0             网关
-DNS1=202.106.0.20               DNS
+GATEWAY=192.168.1.1             网关
+DNS1=114.114.114.114            DNS
 IPV6INIT=no                     ipv6
 USERCTL=no                      不允许非root用户控制此网卡
 
@@ -78,10 +78,121 @@ hostname localhost.localdomain  这样临时修改，永久修改都生效了
 hostname 查询主机名
 主机名对linux来说不重要
 
-修改DNS
+修改DNS，网卡DNS优先于此配置的DNS
 vim /etc/resolv.conf
 search localdomain com      默认域名，即是说ping baidu 会自动帮我们加上一级域名baidu.localdomain、baidu.com
 nameserver 192.168.101.2    DNS
+
+网络管理器的文本用户界面（Network Manager Text User Interface），以图形接麦你控制网络
+使用 nmtui 命令进入图形界面修改，图形界面修改完成后也要 systemctl restart network
+一个网卡可以配置个IP，使用nmtui新增
+IPADDR=192.168.3.179
+NETMASK=255.255.255.0
+GATEWAY=192.168.3.1
+DNS1=192.168.1.20
+PREFIX=24
+IPADDR1=192.168.3.180
+PREFIX1=24
+NETMASK1=255.255.255.0
+IPADDR2=192.168.3.181
+PREFIX2=24
+NETMASK2=255.255.255.0
+
+yum install -y httpd
+yum install -y mod_ssl
+systemctl start httpd
+httpd服务使用自签名证书
+	yum install -y openssl  # openssl的配置文件/etc/pki/tls/openssl.cnf，定义了证书、私钥的默认位置
+	cd /etc/httpd/
+	mkdir pki
+	cd pki
+	1、在客户端生成秘钥
+		# genrsa使用RSA加密方式，-out输出，server.key私钥，2048位
+		openssl genrsa -out server.key 2048 
+	2、使用客户端秘钥与客户端信息生成证书签名请求文件。客户端秘钥作用是加密客户端信息，证书签名请求文件不包含客户端秘钥
+		# 生成证书签名请求，Certificate Signing Request 证书签名请求，CSR
+		openssl req -new -key server.key -out server.csr
+		# 填写Country Name
+		CN
+		# 后面是省、市、公司、部分 随便填
+		# Common Name 可以你的名字或者机器的hostname，填写机器IP
+		192.168.3.179
+		# 填写邮箱
+		xxxx
+		# challenge password 和 company name 不设置，直接回车
+	3、生成自签名证书
+		# 生成证书。x509类型表示自签证书，-days 3650 有效期10年，-in表示输入，-signkey 秘钥，-out输出证书
+		openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
+	# 拷贝私钥到 /etc/pki/tls/private
+	cp server.key /etc/pki/tls/private
+	# 拷贝证书到 /etc/pki/tls/certs
+	cp server.crt /etc/pki/tls/certs
+	# 返回上一级
+	cd ../
+	# 修改Apache ssl配置文件
+	vim conf.d/ssl.conf
+	# 证书位置
+	SSLCertificateFile /etc/pki/tls/certs/server.crt
+	# 私钥位置
+	SSLCertificateKeyFile /etc/pki/tls/private/server.key
+	# 重启httpd服务
+	systemctl restart httpd
+	# 浏览器使用https访问
+	https://192.168.3.179/
+
+一条命令生成证书
+openssl req \
+       -newkey rsa:2048 -nodes -keyout domain.key \
+       -x509 -days 365 -out domain.crt
+
+安装nginx，使用yum安装。
+EPEL的全称叫 Extra Packages for Enterprise Linux 。
+EPEL是由 Fedora 社区打造，为 RHEL 及衍生发行版如 CentOS、Scientific Linux 等提供高质量软件包的项目。
+装上了 EPEL之后，就相当于添加了一个第三方源。
+
+yum install -y epel-release
+yum install -y nginx
+
+rpm -ql nginx  查看nginx的配置文件
+
+# 启动nginx。配置了systemd，可以使用systemctl启动，路径/usr/lib/systemd/system/nginx.service
+systemctl start nginx
+
+有了/usr/sbin/nginx文件，也可以直接使用 nginx 命令启动
+
+nginx日志
+	/var/log/nginx/*.log
+
+配置nginx https
+	查看nginx的配置文件，配置文件的注释中已经有了https的配置
+	less /etc/nginx/nginx.conf
+	# 创建证书目录，私钥目录
+	mkdir /etc/pki/nginx
+	mkdir /etc/pki/nginx/private
+	#拷贝证书和私钥到此目录，/etc/httpd/pki/
+	cp /etc/httpd/pki/server.crt /etc/pki/nginx/server.crt
+	cp /etc/httpd/pki/server.key /etc/pki/nginx/private/server.key
+	放开nginx https的注释
+	# 重启nginx即可
+	systemctl restart nginx
+
+nginx强制走https
+server {
+    listen       80 default_server;
+    listen       [::]:80 default_server;
+
+    省略其他
+
+    # 注释掉80端口转发规则
+    # location / {
+    # }
+
+    # 80端口重定向到443
+    return 301 https://$host$request_uri;
+
+    省略其他
+}
+
 
 
 虚拟机网络配置：
