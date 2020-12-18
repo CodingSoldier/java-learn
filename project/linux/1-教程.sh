@@ -881,11 +881,41 @@ sestatus 查看SELinux的状态
 ll -Zd /var/www/html/      显示安全策略
 
 
+进入救援模式
+  1、启动时按 e 键
+  2、找到linux16**** root=/dev/mapper/centos-root crashkernel=auto
+    改成 root=/dev/mapper/centos-root rw init=/sysroot/bin/sh crashkernel=auto
+  3、按 Ctrl+x 启动，就进入了救援模式
+  4、修改密码
+    # 修改root
+    chroot /sysroot
+    # 禁用SELINUX
+    vi /etc/selinux/config
+      SELINUX=disabled
+    passwd root
+    输入新密码
+    exit
+    reboot
+
+df -h     磁盘概览
+free -h   内存概览
+  free  未使用的内存
+  buff/cache  缓冲与缓存使用的内存
+  available   free加上buff/cache的内存量
+uname -a  打印所有系统信息
+cat /proc/cpuinfo   处理器信息
+fdisk -l  磁盘分区信息
 
 
+/dev device的缩写，表示“设备”，每一个/dev目录的子目录对应一个外设，比如代表光盘驱动器的文件就会出现在这个目录下面
 
+06-dev子目录名与设备的对应关系.png
 
-
+硬盘的磁盘分区命名规则，sda
+  s 表示SATA或者SCSI接口的硬盘
+  d 表示磁盘驱动器
+  a 第三个字母使用26个字母，表示顺序
+  sda表示SATA或者SCSI接口的硬盘
 
 
 
