@@ -349,6 +349,21 @@ find 查找命令，遍历硬盘
     find / -name boot -type d
   find /tmp -name "systemd*" -exec chmod 777 {} \;    查找/tmp目录下名称符合systemd*的文件，并修改这些文件的权限为777
 
+find / -name "XXX*"     全局查找文件，*是通配符
+find / -iname "XXX*"    iname忽略大小写
+
+# 查找包含nginx字符串的文件
+grep "nginx" XXX*     XXX*是文件前缀
+
+grep 星期一  文件      在文件中查找星期一
+
+# sed流编辑器
+# s//将cron_date.txt中的日替换为天，仅在终端中暂时替换结果，不真正替换
+sed 's/日/天/' cron_date.txt
+
+# -i真正替换文件
+sed -i 's/日/天/' cron_date.txt   
+
 grep查找关键字，并显示关键字所在的行
 grep text file   // text代表要搜索的文本，file代表供搜索的文件
   grep path /etc/profile
@@ -839,6 +854,64 @@ shell函数能返回函数执行的状态，也用return
 Shell变量默认是全局变量，在shell脚本的任何地方都能使用
 定义局部变量使用local关键字
 
+################Shell 变量##################
+xxx 变量名   $xxx 变量值
+set 查看系统已经定义的环境变量
+set -u 设定此选项，调用未声明变量时会报错
+unset xxx 删除变量
+env 查看系统环境变量
+
+export 变量名=变量值
+或者
+变量名=变量值
+export 变量名
+
+
+运算
+aa=11
+bb=22
+dd=$(expr $aa + $bb)
+dd的值是aa、bb的和，注意+左右两侧必须有空格
+
+ff=$(($aa + $bb))
+a=$(( ($aa + $bb)/$aa*$bb ))
+
+
+/etc/profile
+/etc/profile.d/*.sh
+/etc/bashrc
+~/.bash_profile
+~/.bashrc
+
+etc下的环境变量，所有用户都能用
+~家目录下的环境变量，只有当前用户可以使用
+
+~/.bash_logout  退出前执行的命令
+~/.bash_history   历史命令，退出登录后追加到文件中
+/etc/issue  本地终端开机后的提示信息
+/etc/motd  本地终端、远程终端登陆后显示信息
+
+grep "/bin/bash" /etc/passwd
+
+cut字符串截取
+root=grep "/bin/bash" /etc/passwd | cut -f 1 -d ":"
+
+printf '%s\t%s\t%s\t\n' 1 2 3 4 5 6
+
+vim student.txt
+ID  Name  Gender  Mark
+1 furong  f 85
+2 fengi f 60
+3 cang  f 70
+
+printf '%s\t%s\t%s\t%s\n' $(cat student.txt)
+
+awk '条件1{动作1}条件2{动作2}'
+awk '{printf $2 "\t" $4 "\n"}' student.txt
+awk '{print $2 "\t" $4}' student.txt
+
+cat student.txt | grep -v Name | awk '$4>=70{print $2}'
+
 
 Linux特殊进程
   这些进程不与任何终端相关联，无论用户身份如何，都在后台运行，而且这些进程的父进程PID为1的进程
@@ -862,7 +935,52 @@ journalctl -u smb.service  显示smb服务的日志，u是unit的缩写
   systemctl start httpd
   systemctl reload httpd  重新加载配置文件
 
+
+yum install -y httpd
+yum install -y mod_ssl
+systemctl start httpd
+httpd服务使用自签名证书
+  yum install -y openssl  # openssl的配置文件/etc/pki/tls/openssl.cnf，定义了证书、私钥的默认位置
+  cd /etc/httpd/
+  mkdir pki
+  cd pki
+  1、在客户端生成秘钥
+    # genrsa使用RSA加密方式，-out输出，server.key私钥，2048位
+    openssl genrsa -out server.key 2048 
+  2、使用客户端秘钥与客户端信息生成证书签名请求文件。客户端秘钥作用是加密客户端信息，证书签名请求文件不包含客户端秘钥
+    # 生成证书签名请求，Certificate Signing Request 证书签名请求，CSR
+    openssl req -new -key server.key -out server.csr
+    # 填写Country Name
+    CN
+    # 后面是省、市、公司、部分 随便填
+    # Common Name 可以你的名字或者机器的hostname，填写机器IP
+    192.168.3.179
+    # 填写邮箱
+    xxxx
+    # challenge password 和 company name 不设置，直接回车
+  3、生成自签名证书，没有网可以
+    # 生成证书。x509类型表示自签证书，-days 3650 有效期10年，-in表示输入，-signkey 秘钥，-out输出证书
+    openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
+  # 拷贝私钥到 /etc/pki/tls/private
+  cp server.key /etc/pki/tls/private
+  # 拷贝证书到 /etc/pki/tls/certs
+  cp server.crt /etc/pki/tls/certs
+  # 返回上一级
+  cd ../
+  # 修改Apache ssl配置文件
+  vim conf.d/ssl.conf
+  # 证书位置
+  SSLCertificateFile /etc/pki/tls/certs/server.crt
+  # 私钥位置
+  SSLCertificateKeyFile /etc/pki/tls/private/server.key
+  # 重启httpd服务
+  systemctl restart httpd
+  # 浏览器使用https访问
+  https://192.168.3.179/
+
+
 firewall-cmd --list-ports  防火墙开放的端口
+
 
 SELinux安全子系统
   SELinux是Security-Enhanced Linux的缩写，表示“安全增强型linux”
@@ -918,7 +1036,324 @@ fdisk -l  磁盘分区信息
   sda表示SATA或者SCSI接口的硬盘
 
 
+mount 用于挂载文件系统，挂载在Linux中的意思其实是把硬件设备与目录关联起来
+  -t 指定文件系统的类型
+  -a 挂载所有在/etc/fstab中定义的文件系统
+
+vim /etc/fstab 新增挂载点
+/dev/sda1 /backup xfs defults 0 0   // 把/dev/sda1硬盘挂载到/backup目录，文件类型是xfs
+
+umount撤销挂载
 
 
 
+VirtualBox添加一块硬盘
+  设置 —> 存储 —> 控制器:SATA —> 添加虚拟硬盘 -> 创建新的虚拟盘，后面保持默认即可
+
+ll /dev/sd*   查看新增的硬盘 /dev/sdb
+
+fdisk 磁盘增删改查
+fdisk -l
+
+fdisk /dev/sdb  管理硬盘
+  m  显示帮助信息
+  p  显示分区信息
+  n  创建分区
+  多次回车
+  结束扇区输入 +2G
+
+  再用p命令，即可看到多了一个分区
+  w 写入并退出
+
+ll /dev/sd
+  多了一个sdb1分区，sdb1是sdb硬盘的一个分区
+
+要格式化分区，同时指定文件系统，才能使用此分区
+
+mkfs 是make file system的缩写，表示制作文件系统，用于格式化、指定文件系统
+
+mkfs.xfs /dev/sdb1    格式化/dev/sdb1，文件系统是xfs
+
+格式化分区后，就可以将分区挂载到目录了
+mkdir /new-fs
+mount /dev/sdb1 /new-fs/  将分区挂载到目录
+df -h  分区被挂载到了/net-fs目录
+/dev/sdb1                2.0G   33M  2.0G    2% /new-fs  
+
+挂载完成后，重启会失效，需要编辑vim /etc/fstab
+vim /etc/fstab
+/dev/sdb1 /new-fs xfs defaults 0 0
+/dev/sdb2 swap   swap defaults 0 0
+
+重启 reboot
+df -h 查看分区还在
+
+增加swap交换分区
+fdisk /dev/sdb
+n
+回车3次
+分区大小设置为 +1G
+p
+w
+有一个警告，****reboot or after you run partprobe(8) or kpartx(8)
+执行 partprobe 命令即可
+
+mkswap /dev/sdb2
+swapon /dev/sdb2
+free -h  增加了swap分区容量
+
+
+
+
+命令后加上 &，程序会在后台运行，但是终端关闭后，此终端下的后台进程也会比关闭
+可以使用 nohup [命令] &  来运行，即关闭终端时，nohup后面的命令进程不接收SINGHUP信号
+
+
+
+需求：查看进程中 和 vim相关的进程，并保留头部文字，以便确认哪个进程号是pid，哪个是ppid
+命令：ps -ef|head -n 1;ps -ef|grep -i vim
+
+
+
+Centos6、Centos7的变化
+   系统                Centos6                     Centos7
+文件系统       ext4                            xfs
+修改主机名     /etc/sysconfig/network          /etc/hostname
+修改时区       /etc/sysconfig/clock            timedatectl set-timezone Asia/TOkyo
+查看ip信息     ifconfig                        ip
+修改DNS地址    /etc/resolv.conf                -
+查看端口状态   netstat                         ss   
+防火墙        iptables                         firewalld
+服务管理      System V init                    systemd
+时间同步服务   ntp                             chrony
+
+Centos7
+  默认支持docker，内核支持OverlayFS、Repo源支持
+  不再支持32位操作系统
+
+Centos6修改时间：cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+Centos7修改时间：timedatectl set-timezone Asia/Shanghai
+        主板时间修改为本地时间  timedatectl set-local-rtc 1
+        主板时间还原   timedatectl set-local-rtc 0
+
+参数补全
+yum install -y bash-completion
+
+使用ss替代了nestat
+查看某种状态下的连接
+ss -luntp state established
+
+统计个数 |wc -l
+
+通过端口查询
+ss -na sport eq :22
+
+
+***************************Systemd变化***************************
+              Centos6         Centto7
+服务管理      service         systemctl
+启动项管理    chkconfig       systemctl
+系统启动级别   init           systemctl
+定时任务       cron           timer
+日志管理       syslog         Systemd-journal
+
+systemd通过文件类型来识别是哪种管理类型
+文件拓展名      作用
+.service      系统服务
+.target       模拟实现运行级别
+.device       定义内核识别设备
+.mount        文件系统挂载点
+.socket       进程间通信用的socket文件
+.timer        定时器
+.snapshot     文件系统快照
+.swap         swap设备
+.automount    自动挂载点
+.path         监视文件或者目录
+.scope        外部线程
+.slice        分层次管理系统进程
+
+
+systemctl -t help   支持的服务类型
+systemctl -h 支持的参数
+
+systemd命令
+
+systemctl 、systemctl list-units      查看激活的单元
+systemctl --failed                    运行失败的单元
+systemctl list-unit-files             所有可用的单元
+systemctl help <单元>                 单元的帮助手册页
+systemctl daemon-reload               重新载入systemd，扫描新的或有变动的单元
+
+
+systemctl start 单元   激活单元
+systemctl stop 单元   停止单元
+systemctl restart 单元   重启单元
+systemctl reload 单元   重启单元
+systemctl status 单元   重载单元
+systemctl is-enabled 单元   检查单元是否配置为启动单元
+systemctl enable 单元   开机激活单元
+systemctl enabled --now 单元   开机启动并立即启动这个单元
+systemctl disable 单元 取消开机自动激活单元
+systemctl mask 单元 禁用一个单元，间接启动也不可能
+systemctl unmask 单元 取消禁用的某个单元
+
+systemctl cat 单元   查看 单元.service 文件
+
+
+自定义service文件
+
+vim imoocc_gen.sh
+
+#!/bin/bash
+
+# 输出当前shell的pid
+echo $$ >> /var/run/imoocc_gen.pid
+
+#循环输出
+while :
+do
+  echo "Hi,imoocc,"$(date) >> /tmp/imoocc.res
+  sleep 1
+done
+
+输出pid
+cat /opt/imoocc_gen.sh 和 ps -ef|grep imoocc_gen 结果一样
+拷贝一份service文件，再改改
+cd /usr/lib/systemd/system
+cp nginx.service imoocc_gen.service
+
+vim imoocc_gen.service
+
+[Unit]
+Description=des
+# after可以去掉
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+# 不产生子进程，使用simple（默认）
+Type=simple
+# 指定pid
+PIDFile=/var/run/imoocc_gen.pid
+# 一定要使用全路径
+ExecStart=/bin/sh /opt/imoocc_gen.sh
+# 停止
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+
+# 先reload再start
+systemctl daemon-reload
+systemctl start imoocc_gen.service
+systemctl status imoocc_gen.service 
+
+定时任务
+/usr/lib/systemd/system/imoocc_gen.timer 
+[Unit]
+Description=timer unit - Print info
+Documentation=http://imoocc.com
+
+[Timer]
+Unit=imoocc_gen.service
+OnCalendar=2019-11-19 18:36:00
+
+[Install]
+WantedBy=multi-user.target
+
+
+查看定时任务
+systemctl list-timers
+
+
+防火墙
+/lib/firewalld/zones
+启动防火墙
+systemctl start firewalld.service 
+查看默认区域
+firewall-cmd --list-all
+查看9个区域
+firewall-cmd --list-all-zones
+设置默认区域
+firewall-cmd --set-default-zone=home
+修改网卡接口区域
+firewall-cmd --zone=home --change-interface=enp0s3
+
+开放端口，阿里云还需要安全组规则
+firewall-cmd --zone=home --add-port=80/tcp
+开发端口后再使配置永久生效
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+移除开放端口
+firewall-cmd --zone=public --remove-port=80/tcp
+
+重载firewall，不会关闭已经建立的连接
+firewall-cmd --reload
+重载firewall，会关闭所有连接
+firewall-cmd --complete-reload
+
+移除端口，使用 firewall-cmd --list-all 不会展示已经移除的端口，需要 firewall-cmd --reload  才会看到
+firewall-cmd --zone=public --remove-port=80/tcp --permanent
+
+查看firewall可用服务文件
+ll /usr/lib/firewalld/services
+
+添加服务白名单
+firewall-cmd --zone=public --add-service=http
+
+执行 firewall-cmd --list-all
+services会多了http services: ssh dhcpv6-client http
+
+# 多区域组合，默认区域是drop
+firewall-cmd --set-default-zone=drop
+# 192.168.3.0/24 trusted区域配置指定网段配置可以访问
+firewall-cmd --zone=trusted --add-source=192.168.3.0/24 --permanent
+firewall-cmd --reload
+
+
+通过公网linux登陆私网linux
+ssh 私网ip
+yes
+输入密码
+
+
+GRE  深圳、杭州都创建有公网ip的ECS
+两个ECS都安装GRE
+查看模块是否安装  lsmod | grep ip_gre
+安装模块    modprobe ip_gre
+
+# 在 172.31.0.252 添加GRE隧道，112.74.22.58 远程公网ip，172.31.0.252是当前机器内网ip
+ip tunnel add tun1 mode gre remote 112.74.22.58 local 172.31.0.252
+# 激活隧道
+ip link set tun1 up
+# 设置互联地址
+ip addr add 192.168.1.1 peer 192.168.1.2 dev tun1
+# 添加路由，10.165.0.0/24 是远程公网ip ECS所在专有网络VPC的交换机
+ip route add 10.165.0.0/24 dev tun1
+
+# 在 10.165.0.8 添加GRE隧道，121.41.65.63 远程公网ip，10.165.0.8是当前机器内网ip
+ip tunnel add tun1 mode gre remote 121.41.65.63 local 10.165.0.8
+# 激活隧道
+ip link set tun1 up
+# 设置互联地址，要反过来
+ip addr add 192.168.1.2 peer 192.168.1.1 dev tun1
+# 添加路由，172.31.0.0/24 是远程公网ip ECS所在专有网络VPC的交换机
+ip route add 172.31.0.0/24 dev tun1
+
+公网121.41.65.63内网172.31.0.252添加安全组，信任网段10.165.0.0/24可入
+公网112.74.22.58内网10.165.0.8添加安全组，信任网段172.31.0.0/24可入
+
+
+
+#####开机启动########
+脚本赋予开机启动权限
+chmod +x xxx.sh
+
+vim /etc/rc.d/rc.local
+加上脚本
+sh xxx.sh
+可能需要执行
+chmod +x /etc/rc.d/rc.local
+
+###########后台启动jenkins应用###########
+nohup $JAVA_HOME/bin/java -jar -Xms512m -Xmx512m -XX:+UseConcMarkSweepGC  /usr/local/software/jenkins/
+jenkins.war --httpPort=8888 > /tmp/jenkins.log 2>&1 &
 
