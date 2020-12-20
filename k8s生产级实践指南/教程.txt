@@ -1,0 +1,140 @@
+Kubernetes - 舵手的意思，logo是一个罗盘。另外一层意思，docker的logo是一条鲸鱼托着集装箱在大海遨游，那么kubernetes就要引领docker的航向
+
+
+01-kubernetes核心概念.jpg
+
+每个POD默认有一个Pause容器，Pause将POD中的容器关联起来，并实现容器的健康检查
+
+ReplicaSet（RS）副本集，管理多个相同的POD实例
+
+Deployment，部署，更新应用，即更新ReplicaSet、POD。滚动更新的时候，不仅新建了POD，还新建了ReplicaSet
+
+Service通过Selector选择POD的标签
+
+02-kubernetes的架构设计.png
+ETCD存储集群信息
+ApiServer对外提供管理k8s集群的http接口
+Scheduler调度器，收集各Worker节点的信息，使用调度策略选择一个Worker创建POD
+ControllerManager集群的控制中心，控制POD、Service
+
+03-认证.jpg
+认证和授权ApiServer
+3种认证方式
+	1、客户端证书认证，使用TLS双向认证。客户端kubectl与ApiServer通信时使用
+	2、BearerToken。客户端kubectl与ApiServer通信时使用
+	3、ServiceAccount，用于集群内部通信使用
+
+04-授权.jpg
+授权使用RBAC
+Resource：资源，POD、Service这些都属于资源
+Verbs：对资源的增删改查
+
+Role属于namespace下，只能拥有namespace下的资源
+如果要拥有多个namespace下的资源，使用ClusterRole
+
+用户与角色通过RoleBinding、ClusterRoleBinding绑定
+
+除了RBAC之外，k8s还添加了准入控制AdmisionControl，就是一条一条的过滤器链
+
+
+###安装k8s####
+要求机器CPU >= 2，Memory >= 2G
+
+kubeadm安装
+准备5台机器，修改网卡信息
+vim /etc/sysconfig/network-scripts/ifcfg-enp0s3
+	BOOTPROTO=static
+	ONBOOT=yes
+	IPADDR=192.168.1.201
+	NETMASK=255.255.255.0
+	GATEWAY=192.168.1.1
+	删除网卡的UUID
+
+设置DNS
+vim /etc/resolv.conf
+nameserver 116.116.116.116
+
+修改hostname
+hostnamectl set-hostname m[123456]
+
+重启
+hostnamectl set-hostname m
+
+Xshell点击 工具 -> 发送键输入到所有会话。命令会在所有终端执行
+
+vi /etc/hosts 追加以下内容
+192.168.1.201 m1
+192.168.1.202 m2
+192.168.1.203 m3
+192.168.1.204 m4
+192.168.1.205 m5
+
+重启
+reboot -h now
+
+一、实践环境准备
+接下参考这片文章，
+https://gitee.com/pa/kubernetes-ha-kubeadm-private/blob/kubernetes-1.14/docs/1-prepare.md
+
+	修改global-config.properties
+		#master虚拟ip，使用本网段的IP
+		MASTER_VIP=192.168.1.188
+
+		#keepalived用到的网卡接口名
+		VIP_IF=enp0s3
+	把克隆kubernetes-ha-kubeadm-private的机器的公钥配置到所有机器，实现免密登陆
+
+宿主机开启ss
+所有linux执行
+export http_proxy=http://192.168.1.104:1080
+export https_proxy=http://192.168.1.104:1080
+wget https://www.google.com.hk/webhp?hl=zh-CN&sourceid=cnhp
+####linux ping不通www.google.com！！！！，但可以使用wget#####
+
+二、搭建高可用集群
+https://gitee.com/pa/kubernetes-ha-kubeadm-private/blob/kubernetes-1.14/docs/2-ha-deploy.md
+
+	# 安装指定版本（这里用的是1.14.0），这一步会失败，改成两步
+	# yum install -y kubeadm-1.14.0-0 kubelet-1.14.0-0 kubectl-1.14.0-0 --disableexcludes=kubernetes
+	
+	yum install -y kubelet-1.14.0-0 kubernetes-cni-0.5.1
+	yum install -y kubeadm-1.14.0-0 kubectl-1.14.0-0 --disableexcludes=kubernetes
+	
+	# 查看日志
+	journalctl -f -u keepalived
+
+	# ssh到第一个主节点，执行kubeadm初始化系统（注意保存最后打印的加入集群的命令）
+	# 执行这一步之前要先配置代理
+	kubeadm init --config=kubeadm-config.yaml --experimental-upload-certs
+
+
+cp target/configs/keepalived-master.conf /etc/keepalived/keepalived.conf
+
+cp target/scripts/check-apiserver.sh /etc/keepalived/
+
+
+#kubernetes版本
+VERSION=v1.14.0
+
+#POD网段
+POD_CIDR=172.22.0.0/16
+
+#master虚拟ip
+MASTER_VIP=192.168.1.188
+
+#keepalived用到的网卡接口名
+VIP_IF=enp0s3
+
+
+
+yum remove -y kubeadm kubelet kubectl
+
+
+
+yum install -y kubeadm-1.14.0 kubelet-1.14.0 kubectl-1.14.0 --disableexcludes=kubernetes
+
+
+
+yum list kubeadmin --showduplicates | sort -r
+
+yum install -y kubeadm-1.14.3 kubelet-1.14.3 kubectl-1.14.2 --disableexcludes=kubernetes

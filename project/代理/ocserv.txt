@@ -1,3 +1,8 @@
+脚本安装
+wget https://gitee.com/lookingdreamer/SPPPOTools/raw/master/centos/vpn/anyconnect/ocserv-auto.sh
+chmod +x ocserv-auto.sh
+./ocserv-auto.sh
+
 #####################手动安装ocserv################################
 
 https://www.8win.net/2018/02/223.html
@@ -71,25 +76,14 @@ C:\ProgramData\Cisco\Cisco AnyConnect Secure Mobility Client\Profile
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+vim /etc/ocserv/ocserv.conf
 # no-route规则
 # 服务器不代理
 no-route = 服务器ip/255.255.255.255
 # 局域网不代理
 no-route = 0.0.0.0/255.0.0.0
 no-route = 127.0.0.0/255.0.0.0
-no-route = 192.168.3.0/255.255.255.0
+no-route = 192.168.1.0/255.255.255.0
 no-route = 192.168.4.0/255.255.255.0
 
 no-route = 1.0.0.0/255.192.0.0
