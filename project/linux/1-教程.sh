@@ -1357,3 +1357,29 @@ chmod +x /etc/rc.d/rc.local
 nohup $JAVA_HOME/bin/java -jar -Xms512m -Xmx512m -XX:+UseConcMarkSweepGC  /usr/local/software/jenkins/
 jenkins.war --httpPort=8888 > /tmp/jenkins.log 2>&1 &
 
+
+宿主机开启ss
+所有linux执行
+export http_proxy=http://192.168.1.104:1080
+export https_proxy=http://192.168.1.104:1080
+wget https://www.google.com.hk/webhp?hl=zh-CN&sourceid=cnhp
+####linux ping不通www.google.com！！但可以使用wget#####
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

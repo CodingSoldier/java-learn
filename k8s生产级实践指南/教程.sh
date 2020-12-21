@@ -63,78 +63,59 @@ hostnamectl set-hostname m
 Xshell点击 工具 -> 发送键输入到所有会话。命令会在所有终端执行
 
 vi /etc/hosts 追加以下内容
-192.168.1.201 m1
-192.168.1.202 m2
-192.168.1.203 m3
-192.168.1.204 m4
-192.168.1.205 m5
+192.168.3.241 m1
+192.168.3.242 m2
+192.168.3.243 m3
+192.168.3.244 m4
+192.168.3.245 m5
 
 重启
 reboot -h now
 
 一、实践环境准备
-接下参考这片文章，
 https://gitee.com/pa/kubernetes-ha-kubeadm-private/blob/kubernetes-1.14/docs/1-prepare.md
+	# 安装指定版本（这里用的是1.14.0），这一步会失败，改成两步
+	# yum install -y kubeadm-1.14.0-0 kubelet-1.14.0-0 kubectl-1.14.0-0 --disableexcludes=kubernetes
+	yum install -y kubelet-1.14.0-0 kubernetes-cni-0.5.1
+	yum install -y kubeadm-1.14.0-0 kubectl-1.14.0-0 --disableexcludes=kubernetes
 
-	修改global-config.properties
-		#master虚拟ip，使用本网段的IP
-		MASTER_VIP=192.168.1.188
-
-		#keepalived用到的网卡接口名
-		VIP_IF=enp0s3
+	# git仓库地址需要修改
+	yum install -y git
+	cd ~ && git clone https://gitee.com/pa/kubernetes-ha-kubeadm-private.git
+	cd kubernetes-ha-kubeadm-private
+	
 	把克隆kubernetes-ha-kubeadm-private的机器的公钥配置到所有机器，实现免密登陆
 
-宿主机开启ss
-所有linux执行
-export http_proxy=http://192.168.1.104:1080
-export https_proxy=http://192.168.1.104:1080
-wget https://www.google.com.hk/webhp?hl=zh-CN&sourceid=cnhp
-####linux ping不通www.google.com！！！！，但可以使用wget#####
 
 二、搭建高可用集群
 https://gitee.com/pa/kubernetes-ha-kubeadm-private/blob/kubernetes-1.14/docs/2-ha-deploy.md
-
-	# 安装指定版本（这里用的是1.14.0），这一步会失败，改成两步
-	# yum install -y kubeadm-1.14.0-0 kubelet-1.14.0-0 kubectl-1.14.0-0 --disableexcludes=kubernetes
-	
-	yum install -y kubelet-1.14.0-0 kubernetes-cni-0.5.1
-	yum install -y kubeadm-1.14.0-0 kubectl-1.14.0-0 --disableexcludes=kubernetes
 	
 	# 查看日志
 	journalctl -f -u keepalived
 
-	# ssh到第一个主节点，执行kubeadm初始化系统（注意保存最后打印的加入集群的命令）
-	# 执行这一步之前要先配置代理
+	# 部署第一个主节点，kubeadm-config.yaml在target中
 	kubeadm init --config=kubeadm-config.yaml --experimental-upload-certs
 
+	# 执行kubeadm初始化系统，等待几分钟，拷贝最终输出结果
+	kubeadm join 192.168.3.188:6443 --token aldiup.apbwlrd1hnlqc0uz \
+    --discovery-token-ca-cert-hash sha256:5285e045ca699b5ce59789e9df71b5a3e81e45e171025cf5acabbb82e6cc6a44 
 
-cp target/configs/keepalived-master.conf /etc/keepalived/keepalived.conf
+    ！！！！！只能做成1主2从
+    ！！！！！最后部署出来DNS还不可用
 
-cp target/scripts/check-apiserver.sh /etc/keepalived/
 
+三、集群可用性测试
+	主节点创建nginx-ds
 
-#kubernetes版本
-VERSION=v1.14.0
+四. 部署dashboard	
 
-#POD网段
-POD_CIDR=172.22.0.0/16
-
-#master虚拟ip
-MASTER_VIP=192.168.1.188
-
-#keepalived用到的网卡接口名
-VIP_IF=enp0s3
+	# 创建服务，使用/root/kubernetes-ha-kubeadm-private/target/addons/dashboard-all.yaml
+	kubectl apply -f /root/kubernetes-ha-kubeadm-private/target/addons/dashboard-all.yaml
 
 
 
-yum remove -y kubeadm kubelet kubectl
 
 
 
-yum install -y kubeadm-1.14.0 kubelet-1.14.0 kubectl-1.14.0 --disableexcludes=kubernetes
 
 
-
-yum list kubeadmin --showduplicates | sort -r
-
-yum install -y kubeadm-1.14.3 kubelet-1.14.3 kubectl-1.14.2 --disableexcludes=kubernetes
