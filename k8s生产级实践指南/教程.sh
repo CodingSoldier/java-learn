@@ -83,6 +83,8 @@ https://gitee.com/pa/kubernetes-ha-kubeadm-private/blob/kubernetes-1.14/docs/1-p
 	yum install -y git
 	cd ~ && git clone https://gitee.com/pa/kubernetes-ha-kubeadm-private.git
 	cd kubernetes-ha-kubeadm-private
+
+	要关闭防火墙
 	
 	把克隆kubernetes-ha-kubeadm-private的机器的公钥配置到所有机器，实现免密登陆
 
@@ -108,9 +110,42 @@ https://gitee.com/pa/kubernetes-ha-kubeadm-private/blob/kubernetes-1.14/docs/2-h
 	主节点创建nginx-ds
 
 四. 部署dashboard	
+	# 创建服务，使用 ./资源/dashboard-all.yaml
+	kubectl apply -f dashboard-all.yaml
 
-	# 创建服务，使用/root/kubernetes-ha-kubeadm-private/target/addons/dashboard-all.yaml
-	kubectl apply -f /root/kubernetes-ha-kubeadm-private/target/addons/dashboard-all.yaml
+	# 全部执行完后，要配置证书和私钥
+	# 查看dashboard在哪个节点上
+	kubectl get pod -n kube-system -o wide
+	# 在dashboard节点上生成证书
+	openssl genrsa -des3 -passout pass:x -out dashboard.pass.key 2048
+	openssl rsa -passin pass:x -in dashboard.pass.key -out dashboard.key
+	openssl req -new -key dashboard.key -out dashboard.csr
+	输入证书subject
+	openssl x509 -req -sha256 -days 365 -in dashboard.csr -signkey dashboard.key -out dashboard.crt
+	# 查看容器docker容器id
+	docker ps | grep dashboard
+	# 找到证书目录
+	docker inspect docker容器id
+	"Source": " /var/lib/kubelet/pods/c1a09a76-7eef-11e9-9162-080027aaa94d/volumes/kubernetes.io~secret/kubernetes-dashboard-certs ",
+	"Destination": "/certs",
+	# 拷贝证书dashboard.crt、dashboard.key 到 "Source" 对应的目录下
+	# 重启容器
+	docker restart docker容器id
+	# 登陆地址
+	https://192.168.1.212:30005/#!/overview?namespace=default
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
