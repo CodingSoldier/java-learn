@@ -135,18 +135,103 @@ https://gitee.com/pa/kubernetes-ha-kubeadm-private/blob/kubernetes-1.14/docs/2-h
 	https://192.168.1.212:30005/#!/overview?namespace=default
 
 
+harbor  https://github.com/goharbor/harbor
+
+https://github.com/goharbor/harbor/blob/release-1.6.0/docs/installation_guide.md
+系统要求：2 CPU，4GB Mem，40GB Disk
+	可新增一块磁盘挂载到/harboarddir目录
+	然后建立软连接。ln -s /harboarddir/data/ /data
+需要安装docker-compose
+	sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+	sudo chmod +x /usr/local/bin/docker-compose
+	docker-compose --version
+安装步骤归结为以下内容
+	1、下载安装程序。
+		# 下载
+		wget https://storage.googleapis.com/harbor-releases/release-1.6.0/harbor-offline-installer-v1.6.0.tgz
+		# 解压
+		tar xvf harbor-offline-installer-v1.6.0.tgz
+		# 进入harbor目录
+		cd harbor/
+	2、配置harbor.cfg
+		vim harbor.cfg
+		# hostname修改为本机ip地址
+		hostname = 192.168.3.248
+		# admin账号的密码
+		harbor_admin_password = Harbor12345
+	3、运行install.sh以安装并启动Harbor。
+		./install.sh
+		完成后直接使用IP访问，账号密码 admin Harbor12345
 
 
+docker登陆harbor
+	1、修改客户端的/etc/docker/daemon.json
+		vim /etc/docker/daemon.json
+		{
+		  "registry-mirrors": ["https://ojmdil2j.mirror.aliyuncs.com"],
+		  "insecure-registries": ["harbor.cfg中的hostname"]
+		}
+
+		systemctl daemon-reload
+		systemctl restart docker
+	2、登陆harbor
+		docker login 192.168.3.248 或者 docker login -u admin -p Harbor12345 192.168.3.248
+		输入账号密码
+	3、推送镜像到harbor。harbor中有示例，点击 项目 -> 点击一个项目 -> 推送镜像
+	# 打标签 docker tag 本地镜像:标签名 harbor服务器IP/harbor项目名/镜像名:标签名
+	docker tag hello-world:latest 192.168.3.248/public-projects/busybox:v1.0
+	# 推送镜像
+	docker push 192.168.3.248/public-projects/busybox:v1.0
+	
+	# 拉取镜像
+	docker pull 192.168.3.248/public-projects/busybox:v1.0
 
 
+06-k8s服务发现.jpg
+集群内部相互访问
+	1.1、DNS+CLusterIP方式，PodA使用服务名访问PodB
+	1.2、PodA访问HeadlessService，HeadlessService返回PodC列表
+集群内部访问外部
+	2.1、外部服务IP+PORT
+	2.2、这种太扯淡
+外部访问集群内部
+	3.1、使用NodePort
+	3.2、hostport
+	3.3、Ingress
+
+nginx-ingress默认监听所有namespace下的ingress资源
 
 
+Jenkins Pipeline script 的右侧下拉选框有示例代码，示例中的代码使用的是“脚本式流水线”，“声明式流水线”比“脚本式流水线”更强大
+本人使用的是“声明式流水线”
 
+通过一个中间文件在两个shell脚本之间传递变量
+echo '123' > val_file
+val=$(cat val_file)
+echo $val
 
+使用sed命令可以替换文本，举例：
+1、service.yaml配置如下
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{name}}
+spec:
+  selector:
+    app: {{name}}
+  # 使用NodePort方式暴露一个外部端口供调试使用
+  type: NodePort
+  ports:
+  - name: http
+    port: {{port}}
+    targetPort: {{port}}
+    # 外部端口
+    nodePort: 30013
 
-
-
-
+2、替换{{name}}、{{port}}
+name="app3"
+port="8080"
+sed -i "s,{{name}},${name},g;s,{{port}},${port},g" service.yaml
 
 
 
