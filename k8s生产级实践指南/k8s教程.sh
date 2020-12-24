@@ -234,6 +234,191 @@ port="8080"
 sed -i "s,{{name}},${name},g;s,{{port}},${port},g" service.yaml
 
 
+Namespace资源共享与隔离
+	资源对象的隔离：Service、Deployments、Pod
+	资源配额的隔离：Cpu、Memory
+
+
+kubectl create namespace dev
+
+kubectl get namespace
+
+不同命名空间下
+	POD的ip可以互通，Service的IP可以互通，service的ip不可ping，要用wget
+	不同命名空间下，访问service需要在service name后面加上namespace，例如：
+		wget service-myapp.dev   //dev是命名空间
+
+07-node上传机器资源给APIServer.jpg
+	集群节点将机器信息上传给ApiServer
+
+
+资源限制
+vim pod-resource.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-resource
+  labels:
+    app: myapp
+    tier: frontend
+spec:
+  containers:
+  - name: myapp
+    image: ikubernetes/stress-ng
+    command: ["/usr/bin/stress-ng", "-m 1", "-c 1", "--metrics-brief"]
+    resources:
+      # 指定最低资源需求，1个cpu分成1000m，128Mi即128M
+      # 如果集群所有机器的CPU、memory总和小于request中的配置，pod会一直处于pending状态
+      # 如果pod有两个副本，集群所有机器资源CPU、memory总和只够运行一个，则一个pod能运行，一个处于pending
+      requests:
+        cpu: "200m"
+        memory: "128Mi"
+      # 资源限制,cpu:1表示最多使用1整个cpu
+      # 如果集群所有机器的CPU、memory总和小于limits的配置，pod依旧可以运行起来
+      limits:
+        cpu: "1"
+        memory: "256Mi"
+
+部署
+kubectl apply -f pod-resource.yaml
+
+资源配置与服务可靠性等级
+Requests == Limits   最可靠，优先级最高
+不设置Requests、Limits，此服务最不可靠，优先级最低，建议设置Requests、Limits
+Limits > Requests   比较可靠
+
+资源限制
+vim limits-test.yaml
+
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: test-limits
+spec:
+  limits:
+  - max:
+      cpu: 4000m
+      memory: 2Gi
+    min:
+      cpu: 100m
+      memory: 100Mi
+    maxLimitRequestRatio:
+      cpu: 3
+      memory: 2
+    type: Pod
+  # Pod是逻辑概念，没有default值
+  #
+  # Container是Pod中的容器，是物理概念，可以有默认值。
+  # 如果pod中的容器没定义默认值，则此空间下的容器将使用默认值
+  - default:
+      cpu: 300m
+      memory: 200Mi
+    defaultRequest:
+      cpu: 200m
+      memory: 100Mi
+    max:
+      cpu: 2000m
+      memory: 1Gi
+    min:
+      cpu: 100m
+      memory: 100Mi
+    maxLimitRequestRatio:
+      cpu: 5
+      memory: 4
+    type: Container
+
+将资源限制应用在test命名空间
+kubectl create -f limits-test.yaml -n test
+kubectl describe limits -n test
+
+在test namespace部署一个未定义资源限制的pod
+kubectl apply -f myapp-pod-service-test.yaml
+查看pod资源限制
+kubectl get pods -n test -o yaml
+
+
+vim compute-resource.yaml
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: resource-quota
+spec:
+  hard:
+  	# pods最多有4个
+    pods: 4
+    requests.cpu: 2000m
+    requests.memory: 4Gi
+    limits.cpu: 4000m
+    limits.memory: 8Gi
+
+
+Pod驱逐策略 - Eviction
+当内存持续1分30秒都小于1.5G，驱逐Pod
+--eviction-soft=memory.available<1.5Gi
+--eviction-soft-grace-period=memory.available=1m30s
+
+--eviction-hard满足条件立即驱逐
+--eviction-hard=memory.available<100Mi,nodefs.available<1Gi,nodefs.inodesFree<5%
+
+磁盘紧缺
+	删除死掉的pod、容器
+	删除没用的镜像
+	按优先级、资源占用情况驱逐pod
+
+内存紧缺
+	驱逐不可靠的pod，内存占用最大的最先被驱逐
+	驱逐基本可靠的pod
+	驱逐可靠的pod
+
+Lable可以贴到Pod、Deployment、Service、Node等资源上
+
+vim web-dev.yaml
+
+#deploy
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # 不同name的Deployment下的containers可以具备相同的名字
+  # 即：修改Deployment的name后，本yaml还可以再次部署，再创建一个container
+  # 没有地方定义pod名称，pod名称前面是Deployment的名称
+  name: web-demo
+  namespace: dev
+spec:
+  selector:
+    matchLabels:
+      # selector的matchLabels键值对必须和template.metadata的labels键值对一样
+      app: web-demo
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: web-demo
+    spec:
+      containers:
+      - name: web-demo
+        image: hub.mooc.com/kubernetes/web:v1
+        ports:
+        - containerPort: 8080
+---
+#service
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-demo
+  namespace: dev
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: web-demo
+  type: ClusterIP
+
+
+
+
 
 
 
