@@ -84,7 +84,7 @@ docker info
 
 
 使用阿里申请的加速器获取docker镜像
-vim  /etc/docker/daemon.json
+vim /etc/docker/daemon.json
 {
   "registry-mirrors": ["https://ojmdil2j.mirror.aliyuncs.com"]
 }

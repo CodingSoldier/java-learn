@@ -129,6 +129,7 @@ https://gitee.com/pa/kubernetes-ha-kubeadm-private/blob/kubernetes-1.14/docs/2-h
 	"Source": " /var/lib/kubelet/pods/c1a09a76-7eef-11e9-9162-080027aaa94d/volumes/kubernetes.io~secret/kubernetes-dashboard-certs ",
 	"Destination": "/certs",
 	# 拷贝证书dashboard.crt、dashboard.key 到 "Source" 对应的目录下
+	# 坑爹的是机器重启后，目录下的证书又没了
 	# 重启容器
 	docker restart docker容器id
 	# 登陆地址

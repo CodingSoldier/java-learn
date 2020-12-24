@@ -1,4 +1,6 @@
-﻿yum -y install lrzsz gcc gcc-c++ openssl openssl-devel pcre pcre-devel zlib zlib-devel ruby wget bash-completion zlib.i686 libstdc++.i686 lsof unzip zip bind-utils  readline-devel autoconf  man-pages nano vim-enhanced net-tools curl lftp make telnet.x86_64
+﻿yum makecache
+
+yum -y install gcc gcc-c++ make vim-enhanced bash-completion net-tools bind-utils wget lrzsz man-pages curl telnet telnet-server
 
 ####################liunx允许账号密码远程登录####################
 vi /etc/ssh/sshd_config
