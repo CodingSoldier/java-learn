@@ -1,0 +1,90 @@
+# deploy
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: myapp
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: containers-myapp
+        image: ikubernetes/myapp:v1
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 500m
+          limits:
+            memory: 512Mi
+            cpu: 1000m
+        lifecycle:
+          preStop:
+            exec:
+              command:
+                - /bin/bash
+                - '-c'
+                - sleep 10            
+        readinessProbe:
+          httpGet:
+            path: /index.html
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
+          timeoutSeconds: 1            
+        livenessProbe:
+          httpGet:
+            path: /index.html
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
+          timeoutSeconds: 1
+
+---
+#Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-myapp
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: myapp
+  type: ClusterIP
+
+---
+# Ingress
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-my
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    # host不支持IP，必须是域名
+  - host: k8s01.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: service-myapp
+          servicePort: 80

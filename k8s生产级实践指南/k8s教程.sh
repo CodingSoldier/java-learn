@@ -430,4 +430,85 @@ kubectl get pods -l app=nginx
 
 
 
+# 就绪探针。
+# docker容器启动成功，并不代表容器中的服务就能处理外部的请求，例如java应用启动需要一定时间
+# Kubernetes提供了readinessProbe来检测pod中的容器是否可以接受外部流量
+readinessProbe:
+  httpGet:
+    # 连接使用的schema，默认HTTP。
+    scheme: HTTP
+    # 访问的容器的端口名字或者端口号。端口号必须介于1和65525之间
+    port: 10013
+    # 访问的HTTP server的path
+    path: /app3/info
+  # 探测成功后，最少连续探测失败多少次才被认定为失败。默认是3。最小值是1。  
+  failureThreshold: 3
+  # 容器启动后第一次执行探测是需要等待多少秒。
+  initialDelaySeconds: 20
+  # 执行探测的频率。默认是10秒，最小1秒。
+  periodSeconds: 10
+  # 探测失败后，最少连续探测成功多少次才被认定为成功。默认是1。对于liveness必须是1。最小值是1。
+  successThreshold: 1
+  # 探测超时时间。默认1秒，最小1秒。
+  timeoutSeconds: 1
+
+#### 如果服务在 initialDelaySeconds + periodSeconds*failureThreshold 时间之后还没有启动，pod会重启，所以要注意控制时间 ####
+
+##### coredns无法启动 #####
+systemctl stop kubelet
+systemctl stop docker
+iptables --flush
+iptables -tnat --flush 
+systemctl start kubelet
+systemctl start docker
+保存iptables规则
+service iptables save
+
+
+部署策略
+	Rolling update  滚动更新
+	Recreate  重新创建。把旧的pod全部停掉后重新创建pod
+	蓝绿部署   保持原有的不动，新增部署一个deployment；就像原来的是蓝色，新增绿色，等待所有绿色启动并测试完，修改service的selector把流量切换到新的pod上去
+	金丝雀部署
+
+修改/etc/hosts，添加本地ip与域名映射
+vim /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 k8s01.com
+
+滚动更新：
+  08-rollingUpdate.yaml
+  kubectl apply -f 08-four-kind-deployment.yaml
+  while true; do curl http://k8s01.com:30080/index.html; sleep 0.1; done
+  修改镜像为 ikubernetes/myapp:v2
+
+重新创建：
+spec:
+  strategy:
+    type: Recreate
+
+滚动更新过程可以暂停
+kubectl rollout pause deploy deployment名称 -n dev
+恢复部署
+kubectl rollout resume deploy deployment名称 -n dev
+回滚
+kubectl rollout undo deploy deployment名称 -n dev
+
+蓝绿部署步骤：
+  1、deployment名字设置为app-v1.0。Pod的设置两个label {app: app, version: v1.0}
+  2、启动deployment
+  3、升级的时候新增一个deployment名字设置为app-v2.0。Pod的设置两个label {app: app, version: v2.0}
+  4、启动新的deployment
+  5、修改service的selector，选择{app: app, version: v2.0}
+
+金丝雀部署步骤：
+  在蓝绿部署的基础上稍加修改。
+  3、新deployment的pod数量设置为1
+  5、service的selector选择{app: app}
+
+
+
+
+
+
+
 

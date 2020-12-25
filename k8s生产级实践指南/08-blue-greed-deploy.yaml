@@ -1,0 +1,62 @@
+# deploy
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-v1
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: myapp
+      version: v1
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: myapp
+        version: v1
+    spec:
+      containers:
+      - name: containers-myapp
+        image: ikubernetes/myapp:v1
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 500m
+          limits:
+            memory: 512Mi
+            cpu: 1000m
+        lifecycle:
+          preStop:
+            exec:
+              command:
+                - /bin/bash
+                - '-c'
+                - sleep 10            
+        readinessProbe:
+          httpGet:
+            path: /index.html
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
+          timeoutSeconds: 1            
+        livenessProbe:
+          httpGet:
+            path: /index.html
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
+          timeoutSeconds: 1
+

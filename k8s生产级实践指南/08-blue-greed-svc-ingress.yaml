@@ -1,0 +1,34 @@
+#service
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-myapp
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: myapp
+    version: v1
+  type: ClusterIP
+
+---
+# ingress
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-my
+  annotations:
+    # 控制器使用nginx
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    # host不支持IP，必须是域名
+  - host: k8s01.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: service-myapp
+          servicePort: 80
