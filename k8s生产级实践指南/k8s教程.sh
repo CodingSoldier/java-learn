@@ -202,6 +202,30 @@ docker登陆harbor
 
 nginx-ingress默认监听所有namespace下的ingress资源
 
+ingress支持多个域名，linux、window都要配置多个hosts映射
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-my
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: weave.k8s01.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ui-weave-scope
+          servicePort: 80
+  - host: web1.k8s01.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: web1
+          servicePort: 80
+
 
 Jenkins Pipeline script 的右侧下拉选框有示例代码，示例中的代码使用的是“脚本式流水线”，“声明式流水线”比“脚本式流水线”更强大
 本人使用的是“声明式流水线”
@@ -504,6 +528,361 @@ kubectl rollout undo deploy deployment名称 -n dev
   在蓝绿部署的基础上稍加修改。
   3、新deployment的pod数量设置为1
   5、service的selector选择{app: app}
+
+Pod
+	Pod是最小调度单位
+	本质是容器的隔离
+	是逻辑概念
+	每个Pod默认有一个Pause容器，第一个启动的容器就是pause容器
+
+hosts文件由pod管理，同一个pod中多个容器的hosts是相同的
+
+
+vim pod-hostname-volume.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+spec:
+  # 自定义pod的ip和hostname
+  hostAliases:
+  - ip: "10.244.2.120"
+    hostnames:
+    - "www.my-nginx.com"
+  containers:
+  - name: nginx
+    image: nginx:1.7.9
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: shared-volume
+      # 容器中的目录
+      mountPath: /shared-web
+  # 定义volume
+  volumes:
+  - name: shared-volume
+    # 宿主机目录
+    hostPath:
+      path: /shared-volume-data
+
+kubectl apply -f pod-hostname-volume.yaml 
+kubectl get pods -o wide
+在pod节点上查看hosts
+docker exec -it cda254640d59 cat /etc/hosts
+
+
+ProjectedVolume 投射数据卷，与普通的volume不一样，不是用来挂载目录的，而是APIServer投射一些文件到pod中
+Secret、ConfigMap、DownwardAPI
+ 
+####### Secret #######
+# 查看secret
+kubectl get secret
+#生成base64
+echo -n user|base64
+echo -n pwd123456|base64
+
+#创建secret文件
+vim secret.yaml
+
+apiVersion: v1
+# Secret类型资源
+kind: Secret
+metadata:
+  name: db-user-pass
+# 浑浊类型，一般都用这种类型  
+type: Opaque
+data:
+  username: dXNlcg==
+  passwd: cHdkMTIzNDU2
+
+# 创建secret，相当于把配置写到了etcd中
+kubectl create -f secret.yaml
+
+创建一个使用secret的Pod
+vim pod-use-secret.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.7.9
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: user-pass
+      # 容器中的目录
+      mountPath: /db-secret
+      readOnly: true
+  # 定义volume，使用projected类型
+  volumes:
+  - name: user-pass
+    projected:
+      sources:
+      # 使用的secret是db-user-pass
+      - secret:
+          name: db-user-pass
+
+部署
+kubectl create -f pod-use-secret.yaml
+kubectl get pods -o wide
+进入容器中查看secret
+docker exec -it c0a35c541874 /bin/sh
+cd db-secret
+db-secret目录下多了两个文件username、passwd，存储内容的是明文user、pwd123456
+cat username
+cat passwd
+
+修改secret会同步到pod中
+vim pod-use-secret.yaml
+echo -n newpwd123456|base64
+vim secret.yaml
+
+kubectl apply -f secret.yaml
+
+容器中的secret也会改变
+
+
+####### ConfigMap #######
+从文件创建configmap
+kubectl create configmap web-game --from-file game.properties
+查看configmap，使用显示的内容作为yaml文件，也可以创建configmap。
+cm是configmap的简写
+kubectl get cm web-game -o yaml
+
+创建一个使用configmap的Pod
+vim pod-use-configmap.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.7.9
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: game
+      mountPath: /etc/config/game
+      readOnly: true
+  # 定义volume使用configmap
+  volumes:
+  - name: game
+    configMap:
+      name: web-game
+
+部署
+kubectl create -f pod-use-configmap.yaml
+进入容器中，/etc/config/game/目录下存在game.properties文件
+容器中的程序可以访问/etc/config/game/game.properties拿到属性值
+
+修改configmap内容，pod中的配置也会修改
+kubectl edit cm web-game
+
+
+####### ConfigMap第二种使用方式 #######
+通过配置文件的形式创建configmap
+vim nginx-configmap.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-configmap
+data:
+  LOG_LEVEL: DEBUG
+
+kubectl create -f nginx-configmap.yaml
+
+vim pod-use-configmap-02.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.7.9
+    ports:
+    - containerPort: 80
+    # 方式1
+    volumeMounts:
+    - name: game
+      mountPath: /etc/config/game
+      readOnly: true
+    # 方式2
+    env:
+      - name: LOG_LEVEL
+        valueFrom:
+          configMapKeyRef:
+            # 指定configmap
+            name: nginx-configmap
+            # configmap中data的key
+            key: LOG_LEVEL      
+  # 方式1，定义volume使用configmap
+  volumes:
+  - name: game
+    configMap:
+      name: web-game
+
+kubectl create -f pod-use-configmap-02.yaml
+
+进入容器中执行
+echo $LOG_LEVEL
+
+
+######## DownwardAPI ########
+vim pod-downwardapi.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-downwardapi
+  labels:
+    app: downwardapi
+    type: webapp
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.7.9
+    ports:
+    - containerPort: 80
+    volumeMounts:
+      - name: podinfo
+        mountPath: /etc/podinfo
+  # 创建一个volume，名字是podinfo
+  # 类型是downwardAPI
+  volumes:
+    - name: podinfo
+      projected:
+        sources:
+        - downwardAPI:
+            items:
+              # path是相对路径，根路径是容器的mountPath，例如：/etc/podinfo/labels
+              # 获取metadata.labels的值
+              - path: "labels"
+                fieldRef:
+                  fieldPath: metadata.labels
+              - path: "name"
+                fieldRef:
+                  fieldPath: metadata.name
+              - path: "namespace"
+                fieldRef:
+                  fieldPath: metadata.namespace 
+              - path: "cpu-request"
+                resourceFieldRef:
+                  containerName: nginx
+                  resource: limits.memory
+
+
+进入容器中，执行 cat /etc/podinfo/labels 得到结果
+
+app="downwardapi"
+type="webapp
+
+
+k8s的日志，默认位置
+stdout、stderr
+/var/lib/docker/containers/container名字/container名字-json.log
+
+08-日志采集方案.jpg
+
+
+
+helm是kubernetes的包管理工具，类似于yum/apt
+helm解决的问题
+	1、把yaml作为一个整体管理
+	2、实现yaml的高效复用
+	3、实现应用级别的版本管理
+
+安装helm v3版本非常简单，下载helm二进制文件，复制到/usr/bin
+
+官方安装页面
+下载
+https://get.helm.sh/helm-v3.4.2-linux-amd64.tar.gz
+解压
+tar zxvf helm-v3.4.2-linux-amd64.tar.gz
+移动到/usr/bin目录
+mv linux-amd64/helm /usr/bin/
+验证是否安装成功
+helm
+
+添加存储库
+helm repo add stable http://mirror.azure.cn/kubernetes/charts
+helm repo add aliyun https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
+helm repo update
+查看配置的存储库
+helm repo list
+helm search repo stable
+删除存储库：
+helm repo remove aliyun
+
+查找 chart
+helm search repo weave
+安装，并将stable/weave-scope，将引用起名为ui
+helm install ui stable/weave-scope
+查看发布状态
+helm list
+查看状态
+helm status ui
+
+通过ingress暴露端口，也可以通过NodePort暴露
+vim ingress-weave.yaml
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-my
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: k8s01.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ui-weave-scope
+          servicePort: 80
+
+http://k8s01.com:30080/
+
+自定义chart
+helm create mychart
+cd mychart/
+cd template
+在template目录下创建deployment.yaml。--dry-run打印api对象而不是创建
+kubectl create deployment web1 --image=nginx --dry-run -o yaml > deployment.yaml
+运行deployment
+kubectl apply -f deployment.yaml
+通过deployment创建service.yaml
+kubectl expose deployment web1 --port=80 --target-port=80 --type=NodePort --dry-run -o yaml > service.yaml
+删除deployment
+kubectl delete -f deployment.yaml
+回到mychart父级目录
+cd ../../
+安装mychart
+helm install web1 mychart/
+查看端口
+kubectl get svc
+升级
+helm upgrade web1 mychart/
+
+
+
+
+
+ServiceMesh 服务网格，解决微服务网络层面的问题
+ServiceMesh的实现项目有两种Linkerd、Istio
+Istio
+https://istio.io/latest/zh/
+每个pod都有一个代理，使用代理接管流量
+
 
 
 
