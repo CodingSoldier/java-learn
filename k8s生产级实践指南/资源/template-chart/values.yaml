@@ -1,0 +1,8 @@
+replicas: 1
+image: nginx
+tag: 1.16
+label: nginx
+servicePort: 80
+targetPort: 80
+serviceType: NodePort
+

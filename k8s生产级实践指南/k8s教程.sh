@@ -792,7 +792,7 @@ stdout、stderr
 
 08-日志采集方案.jpg
 
-
+ 
 
 helm是kubernetes的包管理工具，类似于yum/apt
 helm解决的问题
@@ -872,6 +872,64 @@ helm install web1 mychart/
 kubectl get svc
 升级
 helm upgrade web1 mychart/
+卸载web1
+helm uninstall web1
+
+helm create template-chart
+
+
+
+StatefulSet有状态应用
+	每个pod独立，保持pod启动顺序和唯一性
+	唯一的网络标识符，持久存储
+	有序，比如mysql主从
+
+部署有状态应用需要：
+	无头service
+		无头service的ClusterIP为null
+
+部署一个StatefulSet
+kubectl apply -f statefulset.yaml
+
+StatefulSet部署的pod名称后面会带0、1、2数字标识
+StatefulSet的pod的域名格式是
+	主机名称.service名称.命名空间.svc.cluster.local
+	例如：
+	nginx-statefulset-0.nginx.default.svc.cluster.local
+
+创建StatefulSet应用的yaml文件一般要有3部分
+	无头service
+	StatefulSet
+	pvc
+并且pvc的名称后面也带有0、1、2标识，
+执行 kubectl delete -f statefulw文件.yaml 后，pvc不会被删除，应用重启后数据还在
+
+
+通过ingress控制器、NodePort类型的service访问集群中的应用不需要经过APIServer
+
+
+APIServer用于管理集群
+	例如: kubectl客户端命令会经过APIServer
+
+通过APIServer管理集群需要经过3层
+	1、认证
+	2、授权
+	3、准入控制
+
+k8s使用ssl认证是双向认证
+	1、客户端需要认证服务端证书
+	2、服务端事先签发一个证书给客户端，服务端要验证客户端身份，即证书的中subject
+
+k8s提供rest风格的api接口访问资源，访问资源
+起一个支持http的代理端口
+kubectl proxy --port=8080
+访问接口
+curl http://localhost:8080/api/v1/namespaces
+获取kube-system名称空间下的所有deployment
+curl http://localhost:8080/apis/apps/v1/namespaces/kube-system/deployments
+
+url可以认为是资源对象，请求方法被称为动作，例如:
+	get、post、put、delete
 
 
 
