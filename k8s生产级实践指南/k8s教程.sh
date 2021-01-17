@@ -931,7 +931,178 @@ curl http://localhost:8080/apis/apps/v1/namespaces/kube-system/deployments
 url可以认为是资源对象，请求方法被称为动作，例如:
 	get、post、put、delete
 
+pod对k8s集群做操作（例如dashboard），需要RBAC认证、授权，serviceAccount属于pod操作k8s的账号
 
+kubectl create  serviceaccount -h
+
+输出serviceaccount  yaml文件，kubectl create 都支持这种操作
+kubectl create serviceaccount mysa -o yaml --dry-run
+
+输出pod yaml定义
+kubectl get pods nginx-statefulset-0 -o yaml --export
+
+系统中默认有一个serviceaccount
+kubectl get sa
+
+创建一个admin用户，serviceAccount其实是pod操作k8s的账号
+kubectl create sa admin
+
+kubectl describe sa admin
+	admin中有secret
+
+kubectl get secret
+	多了一个secret
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-sa-demo
+  namespace: default
+  labels:
+    app: myapp
+spec:
+  containers:
+  - name: myapp
+    image: ikubernetes/myapp:v1
+    ports:
+    - name: http
+      containerPort: 80
+  serviceAccountName: admin
+
+k8s有两类账号
+	userAcount用户账号
+	serviceAccount服务账号，pod操作k8s时使用
+
+
+kubectl config view
+
+进入目录
+/etc/kubernetes/pki
+生成一个私钥
+(umask 077; openssl genrsa -out cpq.key 2048)
+使用私钥生成证书签署请求
+openssl req -new -key cpq.key -out cpq.csr -subj "/CN=cpq"
+使用kubernetes的ca.crt、ca.key生成证书
+openssl x509 -req -in cpq.csr -CA ./ca.crt -CAkey ./ca.key -CAcreateserial -out cpq.crt -days 365
+
+配置一个客户端用户
+kubectl config set-credentials cpq --client-certificate=./cpq.crt --client-key=./cpq.key --embed-certs=true
+
+给cpq用户配置集群上下文
+kubectl config set-context cpq@kubernetes --cluster=kubernetes --user=cpq
+切换用户
+kubectl config use-context cpq@kubernetes
+获取pod，提示没有权限
+kubectl get pods
+
+kubectl使用的配置文件默认是用户家目录的/.kube/config
+
+
+创建role yaml文件
+kubectl create role pods-reader --verb=get,list,watch --resource=pods --dry-run -o yaml > role-demo.yaml
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pods-reader
+  namespace: default
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+
+创建role
+kubectl apply -f role-demo.yaml
+
+kubectl get role
+
+创建rolebinding
+kubectl create rolebinding cpq-read-pods --role=pods-reader --user=cpq
+
+
+create rolebinding cpq-read-pods --role=pods-reader --user=cpq --dry-run -o yaml > cpq-read-pods-rb.yaml
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  creationTimestamp: null
+  name: cpq-read-pods
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: pods-reader
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
+  name: cpq
+
+切换用户
+kubectl config use-context cpq@kubernetes
+用户能获取到pods
+kubectl get pods
+没有权限创建名称空间
+kubectl create ns test
+
+kubectl config use-context kubernetes-admin@kubernetes
+
+创建ik8s用户
+useradd ik8s
+passwd ik8s
+	ik8s123456
+cp -rp .kube/ /home/ik8s/
+chown -R ik8s.ik8s /home/ik8s/
+
+切换到ik8s用户并配置为cpq@kubernetes用户
+su - ik8s
+kubectl config use-context cpq@kubernetes
+
+
+创建集群角色
+kubectl create clusterrole cluster-reader --verb=get,list,watch --resource=pods -o yaml --dry-run -o yaml > clusterrole-demo.yaml
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: cluster-reader
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+
+
+查看clusterrole定义
+kubectl explain clusterrole
+查看clusterrole.metadata的定义
+kubectl explain clusterrole.metadata
+
+删除cpq的角色绑定
+kubectl delete -f cpq-read-pods-rb.yaml
+
+cpq绑定集群角色
+kubectl create clusterrolebinding cpq-read-all-pods --clusterrole=cluster-reader --user=cpq --dry-run -o yaml
+
+创建集群角色绑定
+kubectl create clusterrolebinding cpq-read-all-pods --clusterrole=cluster-reader --user=cpq --dry-run -o yaml > cpq-bing-cluster-reader.yaml
+
+kubectl apply -f cpq-bing-cluster-reader.yaml 
+
+使用ik8s用户获取kube-system的pods
+kubectl get pods -n kube-system
+
+如果用rolebinding绑定clusterrole，则用户权限仍然属于名称空间下
+
+可以是通过binding将角色绑定给serviceAccount，pod定义中指定serviceAccount，则pod也有k8s的控制权限了
 
 
 
