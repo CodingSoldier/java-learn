@@ -783,7 +783,7 @@ spec:
 进入容器中，执行 cat /etc/podinfo/labels 得到结果
 
 app="downwardapi"
-type="webapp
+type="webapp"
 
 
 k8s的日志，默认位置
