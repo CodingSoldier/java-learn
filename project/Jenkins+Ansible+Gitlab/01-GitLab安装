@@ -1,0 +1,9 @@
+GitLab安装
+机器最少两核4G内存（1G内存用swap）
+https://ken.io/note/centos7-gitlab-install-tutorial
+
+访问gitlab，账号root，密码cp*23
+http://192.168.56.110/
+
+服务器重启后，gitlab要花很长时间才能启动完成
+
