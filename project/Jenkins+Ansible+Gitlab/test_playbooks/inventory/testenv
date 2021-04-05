@@ -1,0 +1,13 @@
+[testservers]
+192.168.1.150
+
+[testservers:vars]
+server_name=192.168.1.150
+user=root
+output=/root/test.txt
+server_name=192.168.1.150
+port=80
+user=deploy
+worker_processes=4
+max_open_file=65505
+root=/www

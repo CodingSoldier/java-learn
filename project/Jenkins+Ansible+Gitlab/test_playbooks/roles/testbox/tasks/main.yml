@@ -1,0 +1,19 @@
+- name: Print server name and user to remote testbox
+  shell: "echo 'Currently {{user}} is logining {{server_name}} ' > {{output}}"
+- name: create a file
+  file: 'path=/root/foo.txt state=touch mode=0755 owner=foo group=foo'
+- name: copy a file
+  copy: 'remote_src=no src=roles/testbox/files/foo.sh dest=/root/foo.sh mode=0644 force=yes'
+- name: check if foo.sh exists
+  stat: 'path=/root/foo.sh'
+  register: script_stat
+- debug: msg="foo.sh exists"
+  when: script_stat.stat.exists
+- name: run the script
+  command: 'sh /root/foo.sh'
+- name: write the nginx config file
+  template: src=roles/testbox/templates/nginx.conf.j2 dest=/etc/nginx/nginx.conf
+- name: ensure nginx is at the latest version
+  yum: pkg=nginx state=latest
+- name: start nginx service
+  service: name=nginx state=started

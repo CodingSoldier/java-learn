@@ -1,0 +1,5 @@
+- hosts: "testservers"
+  gather_facts: true
+  remote_user: root
+  roles:
+    - testbox
