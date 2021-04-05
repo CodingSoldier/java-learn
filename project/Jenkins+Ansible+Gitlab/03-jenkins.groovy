@@ -248,6 +248,105 @@ Dashboard -> 全局工具配置
 
 
 
+#############Jenkins文档##############
+由于流水线代码（特别是脚本式流水线）是使用类似 Groovy 的语法编写的, 如果你的IDE不能正确的使用语法高亮显示你的 Jenkinsfile，可以尝试在 Jenkinsfile 文件的顶部插入行 #!/usr/bin/env groovy 纠正这个问题。
+
+steps {
+    /* `make check` 在测试失败后返回非零的退出码；
+    * 使用 `true` 允许流水线继续进行
+    */
+    sh 'make check || true' 
+}
+
+
+
+// 在 Groovy 中使用单引号而不是双引号来定义脚本（``sh`` 的隐式参数）。单引号将使 secret 被 shell 作为环境变量展开。双引号可能不太安全，因为这个 secret 是由 Groovy 插入的
+node {
+  withCredentials([string(credentialsId: 'mytoken', variable: 'TOKEN')]) {
+    sh /* 错误！ */ """
+      set +x
+      curl -H 'Token: $TOKEN' https://some.api/
+    """
+    sh /* 正确 */ '''
+      set +x
+      curl -H 'Token: $TOKEN' https://some.api/
+    '''
+  }
+}
+
+
+登陆远程主机
+#!/usr/bin/env groovy
+pipeline {
+    agent any
+    environment {
+        // 用户名与密码类型凭证的使用 https://www.jenkins.io/zh/doc/book/pipeline/jenkinsfile/
+        USERNAME_PWD = credentials('192.168.1.150.username.pwd')
+    }
+    stages {
+        stage('Example stage 1') {
+            steps {
+                script{
+                    // 定义远程服务器信息，需要安装 SSH Pipeline Steps
+                    def remote = [:]
+                    remote.name = "192.168.1.150"
+                    remote.host = "192.168.1.150"
+                    remote.user = USERNAME_PWD_USR
+                    remote.password = USERNAME_PWD_PSW
+                    remote.port = 22
+                    remote.allowAnyHosts = true
+
+                    // 远程服务器执行shell命令
+                    sshCommand remote: remote, command: """
+                        echo 登陆远程主机
+                        ip a
+                    """
+                }
+            }
+        }
+    }
+}
+
+
+登陆远程主机的第二种写法
+#!/usr/bin/env groovy
+pipeline {
+    agent any
+    environment {
+        USERNAME_PWD = credentials('192.168.1.150.username.pwd')
+    }
+    stages {
+        stage('Example stage 1') {
+            steps {
+                script{
+                    // withCredentials方法可通过流水线语法生成器生成
+                    withCredentials([usernamePassword(credentialsId: '192.168.1.150.username.pwd', passwordVariable: 'password', usernameVariable: 'username')]) {
+
+                        // 定义远程服务器信息，需要安装 SSH Pipeline Steps
+                        def remote = [:]
+                        remote.name = "192.168.1.150"
+                        remote.host = "192.168.1.150"
+                        remote.user = username
+                        remote.password = password
+                        remote.port = 22
+                        remote.allowAnyHosts = true
+
+                        // 远程服务器执行shell命令
+                        sshCommand remote: remote, command: """
+                            echo 登陆
+                            ip a
+                        """
+                    }                    
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
 
 
 
