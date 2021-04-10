@@ -144,9 +144,10 @@ steps{
 #####################Jenkins Pipeline Job例子####################
 1、jenkins机器安装git
 	并配置全局user.name、user.email
-		git config --global user.name tfz9011@163.com
-		git config --global user.email tfz9011@163.com
+		git config --global user.name chenpiqian
+		git config --global user.email chenpiqian@megvii.com
 2、jenkins页面添加credentialsId。jenkins页面不配置git也可以
+
 
 1、新建pepiline流水线
 2、流水线 —> 定义，使用Pipeline script，使用如下脚本
@@ -345,12 +346,40 @@ pipeline {
 
 
 
+在pipeline script填写parameter，只有string类型的可用，其他参数没法做到GUI页面覆盖script默认值
+pipeline {
+    agent any
+    parameters {
+        string(defaultValue: params.gitUrl ? params.gitUrl : '请填写项目git ssh地址', description: '项目git ssh地址', name: 'gitUrl', trim: true), 
+        gitParameter(branch:'', branchFilter: 'origin/(.*)', defaultValue: 'master', description: '', name: 'git_branch', quickFilterEnabled: false, selectedValue: 'NONE', sortMode: 'NONE', tagFilter: '*', type: 'PT_BRANCH', useRepository: 'git@git-pd.megvii-inc.com:ebg-bizpf/platform-sbgp/xuanyuan-web-components.git'),
+        gitParameter(branch: '', branchFilter: '.*', defaultValue: '', description: 'tag', name: 'git_tag', quickFilterEnabled: false, selectedValue: 'NONE', sortMode: 'NONE', tagFilter: '*', type: 'PT_TAG', useRepository: 'git@git-pd.megvii-inc.com:ebg-bizpf/platform-sbgp/xuanyuan-web-components.git'),
+        choice(choices: params.projectName ? params.projectName : [], description: '项目名', name: 'projectName')
+    }
+    stages {
+        stage('Example') {
+            steps {
+                echo "参数：${params}"
+                sh 'printenv'
+            }
+        }
+    }
+}
 
 
+##############Jenkins集成GItlab自动构建################
+1、Jenkins安装 Generic Webhook Trigger
+2、打开Jenkins一个流水线Job
+3、勾选 构建触发器 Generic Webhook Trigger
+4、填写一个Token。Generic Webhook Trigger通过Token区分Job
 
-
-
-
+1、打开Gitlab，设置允许本地网络，地址/admin/application_settings/network
+    Outbound requests
+    勾选 Allow requests to the local network from web hooks and services
+2、打开Gitlab项目，Settings -> Webhooks
+    URL 填写 http://JenkinsIP:端口/generic-webhook-trigger/invoke?token=第4步填写的token值
+    Push events 填写 test
+    SSL verification 取消勾选
+3、修改test分支的代码即可触发Jenkins Job
 
 
 
