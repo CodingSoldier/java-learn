@@ -1106,17 +1106,28 @@ kubectl get pods -n kube-system
 
 
 
-ServiceMesh 服务网格，解决微服务网络层面的问题
+ServiceMesh
+  服务网格
+  是概念，不是产品
+  解决网络里面的问题
+
 ServiceMesh的实现项目有两种Linkerd、Istio
+ServiceMesh代表作Istio，官网地址：https://istio.io/latest/zh/
+
 Istio
-https://istio.io/latest/zh/
-每个pod都有一个代理，使用代理接管流量
+  核心是使用代理，一个pod一个代理，使用代理接管pod的进出口网络
+  还有一个控制中心统一管理每个代理
+  图片service mesh.jpg
 
-
-
-
-
-
-
-
+Istio解决的问题
+  故障排查
+    请求是否失败、请求为什么响应慢
+  应用容错性
+    重试机制、没设置timeout、某些节点异常导致响应慢
+  应用升级发布
+    一次性升级，一旦出错影响范围大
+    进行A/B测试，根据用户属性访问不同版本
+    服务版本的依赖关系处理不当导致的不可用
+  系统安全
+    流量限制、HTTP升级HTTPS
 
