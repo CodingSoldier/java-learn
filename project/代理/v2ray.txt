@@ -1,9 +1,6 @@
-﻿http://loonlog.com/2020/10/5/v2ray-server-new/
+﻿https://www.v2fly.org/
 
-https://www.v2ray.com/chapter_00/start.html
-
-systemctl enable v2ray
-systemctl start v2ray
+https://github.com/v2fly/fhs-install-v2ray
 
 
 配置chrome浏览器
@@ -13,9 +10,27 @@ systemctl start v2ray
 	浏览器右上角点击Proxy SwitchyOmega，选择自动切换
 
 
-
-
-
+同时支持v2ray、shadowsocks。服务端配置
+{
+  "inbounds": [{
+    "port": 1xxx, 
+    "protocol": "vmess",
+    "settings": {
+      "clients": [{ "id": "xxxxxx" }]
+    }
+  },{
+    "port": xxx,
+    "protocol": "shadowsocks",
+    "settings": {
+      "method": "xxxxxoly1305",
+      "password": "xxxx"
+    }
+  }],
+  "outbounds": [{
+    "protocol": "freedom",
+    "settings": {}
+  }]
+}
 
 
 
