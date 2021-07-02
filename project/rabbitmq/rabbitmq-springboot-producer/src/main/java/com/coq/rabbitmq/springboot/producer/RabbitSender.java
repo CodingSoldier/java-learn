@@ -34,6 +34,7 @@ public class RabbitSender {
 					+ routingKey + ", replyCode: " + replyCode + ", replyText: " + replyText);
 		}
 	};
+
     //
 	////运行testSender1()测试
 	//public void send(Object message, Map<String, Object> properties) throws Exception{
@@ -58,7 +59,13 @@ public class RabbitSender {
 		String num = ((int)Math.ceil(Math.random()*100000))+"";
 		CorrelationData correlationData = new CorrelationData(num);
         System.out.println("correlationData   "+num);
-		rabbitTemplate.convertAndSend("test-exchange-2", "test-exchange-2.abc", order, correlationData);
+
+        // 如果routingKey与实际理论不符合，可能是交换机已经创建过，修改类型是无法生效的
+		rabbitTemplate.convertAndSend("test-exchange-2", "routing-key-2", order, correlationData);
+
+		//rabbitTemplate.convertAndSend("routing-key-2", order, correlationData);
+
+		//rabbitTemplate.convertAndSend("test-exchange-2", "test-exchange-2.abc", order, correlationData);
 	}
 
 	public void sendDead(MyOrder order) throws Exception{

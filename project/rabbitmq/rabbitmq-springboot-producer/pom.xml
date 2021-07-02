@@ -51,6 +51,19 @@
 			<artifactId>lombok</artifactId>
 			<version>1.18.0</version>
 		</dependency>
+
+		<!--mqtt依赖包-->
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-mqtt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.paho</groupId>
+			<artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

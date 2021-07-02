@@ -184,6 +184,10 @@ dependencies {
 */
 
 
+
+build.gradle的配置(类似于Maven工程中的pom.xml相同)
+
+
 idea配置Gradle
 	Settings ——> Gradle ——> Gradle user home 配置为本机gradle home目录
 	新建Gradle项目的时候不要点击应用建议，不然会下载一个gradle安装包，但是需要去配置：Use Gradle from 选择Specified location = gradle home目录
