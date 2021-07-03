@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 /**
  * @EnableConfigurationProperties的作用是使WeatherProperties配置类生效
- * @ConditionalOnProperty 配置了weather.enable=true的时候，本类生效
+ * @ConditionalOnProperty 配置了weather.enable=true的时候，本类生效，并将WeatherAutoConfiguration加入IOC容器
+ *
+ *
  */
 @EnableConfigurationProperties(WeatherProperties.class)
 @ConditionalOnProperty(name = "weather.enable", havingValue = "true")
