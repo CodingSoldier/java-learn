@@ -62,7 +62,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.43</version>
+            <version>8.0.16</version>
         </dependency>
 
         <!--tx-lcn-->
@@ -162,7 +162,7 @@
                         <groupId>mysql</groupId>
                         <artifactId>mysql-connector-java</artifactId>
                         <!--只有使用5.X版本的mysql驱动才可以生成primary key 方法-->
-                        <version>5.1.44</version>
+                        <version>8.0.16</version>
                     </dependency>
                 </dependencies>
             </plugin>
