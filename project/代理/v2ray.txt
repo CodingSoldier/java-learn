@@ -1,4 +1,4 @@
-﻿https://www.v2fly.org/
+https://www.v2fly.org/
 
 https://github.com/v2fly/fhs-install-v2ray
 
@@ -9,6 +9,8 @@ https://github.com/v2fly/fhs-install-v2ray
 	GFWeb  ——> 代理端口写 服务端  inbounds.port  ——> 点击应用选项
 	浏览器右上角点击Proxy SwitchyOmega，选择自动切换
 
+规则列表设置
+https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt
 
 同时支持v2ray、shadowsocks。服务端配置
 {
@@ -31,6 +33,5 @@ https://github.com/v2fly/fhs-install-v2ray
     "settings": {}
   }]
 }
-
 
 

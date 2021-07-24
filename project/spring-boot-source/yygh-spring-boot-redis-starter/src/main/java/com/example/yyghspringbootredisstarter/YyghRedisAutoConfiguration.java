@@ -8,11 +8,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisTemplate;
 
 /**
- * 当
+ * @Import 的作用：当YyghRedisAutoConfiguration注入IOC容器时，将YyghRedisConfig也注入IOC容器
  */
 @ConditionalOnProperty(name = "spring.redis.yygh-redis.enable", havingValue = "true")
-@Import(YyghRedisConfig.class)
-public class YyghRedisAutoConfiguration {
+@Import({YyghRedisConfig.class})
+public class YyghRedisAutoConfiguration{
 
     @Autowired
     private RedisTemplate redisTemplate;

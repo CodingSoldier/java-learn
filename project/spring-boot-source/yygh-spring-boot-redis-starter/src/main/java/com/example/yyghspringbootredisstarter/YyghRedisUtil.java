@@ -61,11 +61,11 @@ public class YyghRedisUtil<K, V> {
     /**
      * 获取值
      * @param key 键
-     * @param type 返回类型
+     * @param classType 返回类型
      * @param <V>
      * @return
      */
-    public static <V> V get(Object key, Class<V> type){
+    public static <V> V get(Object key, Class<V> classType){
         Object value = valueOps.get(key);
         return (V)value;
     }

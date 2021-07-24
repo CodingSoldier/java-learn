@@ -47,11 +47,11 @@
             <optional>true</optional>
         </dependency>
 
-<dependency>
-    <groupId>com.example</groupId>
-    <artifactId>weather-spring-boot-starter</artifactId>
-    <version>0.0.1</version>
-</dependency>
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>weather-spring-boot-starter</artifactId>
+            <version>0.0.1</version>
+        </dependency>
 
         <!--导入log4j2-->
         <!--<dependency>

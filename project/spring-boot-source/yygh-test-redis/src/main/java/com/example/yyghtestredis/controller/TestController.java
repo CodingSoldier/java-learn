@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -23,7 +20,24 @@ import java.util.concurrent.TimeUnit;
 public class TestController {
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private static RedisTemplate redisTemplate;
+
+    private static UserBean m = new UserBean();
+
+    public void test01(){
+        // 存储在栈空间
+        String aKey = "aaaaaaa";
+
+        // new ArrayList<>() 应用类型存储在堆空间
+        ArrayList<Long> roleIds = new ArrayList<>();
+        UserBean userBean = new UserBean(1L, "小明", roleIds);
+        UserBean userBeanbbb = userBean;
+        /*
+         方法执行完后roleIds、userBean指向的对象无法再被使用，所以roleIds、userBean指向的对象的对象就变成了垃圾，需要回收
+         */
+
+
+    }
 
     @GetMapping("/test")
     public String test(){
