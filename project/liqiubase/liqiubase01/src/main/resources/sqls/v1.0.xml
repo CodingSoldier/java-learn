@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="v1.0" author="cpq">
+        <comment>v1.0版本初始化语句</comment>
+        <sqlFile path="update/v1.0.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="rollback/rollback_v1.0.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+
+</databaseChangeLog>
