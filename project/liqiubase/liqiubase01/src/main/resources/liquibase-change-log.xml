@@ -4,6 +4,38 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
+<!--    &lt;!&ndash;  最开始放changeSet tag 以便回滚  &ndash;&gt;-->
+<!--    <changeSet id="tag-id-before-v1.0" author="cpq">-->
+<!--        <tagDatabase tag="tag-before-v1.0"/>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="v1.0" author="cpq">-->
+<!--        <comment>update_v1.0.sql</comment>-->
+<!--        <sqlFile path="sqls/update/update_v1.0.sql"/>-->
+<!--        <rollback>-->
+<!--            <sqlFile path="sqls/rollback/rollback_v1.0.sql"/>-->
+<!--        </rollback>-->
+<!--    </changeSet>-->
+
+
+<!--    &lt;!&ndash;  最开始放changeSet tag 以便回滚  &ndash;&gt;-->
+<!--    <changeSet id="tag-id-before-v2.0" author="cpq">-->
+<!--        <tagDatabase tag="tag-before-v2.0"/>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="v2.0" author="cpq">-->
+<!--        <comment>update_v1.0.sql</comment>-->
+<!--        <sqlFile path="sqls/update/update_v2.0.sql"/>-->
+<!--        <rollback >-->
+<!--            <sqlFile path="sqls/rollback/rollback_v2.0.sql"/>-->
+<!--        </rollback>-->
+<!--    </changeSet>-->
+
+
     <include file="sqls/v1.0.xml"/>
+
+    <include file="sqls/v2.0.xml"/>
+
+<!--    <include file="sqls/test_sql.sql"/>-->
 
 </databaseChangeLog>

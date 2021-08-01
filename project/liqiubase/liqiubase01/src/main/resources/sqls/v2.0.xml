@@ -4,16 +4,18 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
-    <!--  tag  -->
-    <changeSet id="id-start-v1.0" author="cpq">
-        <tagDatabase tag="tag-start-v1.0"/>
-    </changeSet>
 
-    <changeSet id="v1.0" author="cpq">
+
+<!--    &lt;!&ndash;  tag  &ndash;&gt;-->
+<!--    <changeSet id="id-start-v2.0" author="cpq">-->
+<!--        <tagDatabase tag="tag-start-v2.0"/>-->
+<!--    </changeSet>-->
+
+    <changeSet id="v2.0" author="cpq">
         <comment>update_v1.0.sql</comment>
-        <sqlFile path="sqls/update/update_v1.0.sql"/>
-        <rollback>
-            <sqlFile path="sqls/rollback/rollback_v1.0.sql"/>
+        <sqlFile path="sqls/update/update_v2.0.sql"/>
+        <rollback >
+            <sqlFile path="sqls/rollback/rollback_v2.0.sql"/>
         </rollback>
     </changeSet>
 
