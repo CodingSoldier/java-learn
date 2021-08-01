@@ -42,7 +42,7 @@ public class CodeGenerator {
         dsc.setUrl("jdbc:mysql://10.122.105.117:3307/cpq_liqiubase_01?useUnicode=true&useSSL=false&characterEncoding=utf8");
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("megvii@123");
+        dsc.setPassword("cpq..123");
         autoGenerator.setDataSource(dsc);
 
         // 包配置
