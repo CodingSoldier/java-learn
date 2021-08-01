@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="v1.0" author="cpq">
+        <comment>v1.0版本初始化语句</comment>
+        <sqlFile path="update/v1.0-ddl.sql"/>
+        <rollback>
+            <dropTable tableName="test10"/>
+        </rollback>
+<!--        <rollback>-->
+<!--            <sqlFile path="rollback/rollback_v1.0.sql" relativeToChangelogFile="true"/>-->
+<!--        </rollback>-->
+    </changeSet>
+
+<!--    <changeSet id="v2" author="cpq">-->
+<!--        <comment>v2.0版本初始化语句</comment>-->
+<!--        <sqlFile path="update/v2.0.sql" relativeToChangelogFile="true"/>-->
+<!--        <sqlFile path="update/v2.1.sql" relativeToChangelogFile="true"/>-->
+<!--&lt;!&ndash;        <rollback>&ndash;&gt;-->
+<!--&lt;!&ndash;            <sqlFile path="rollback/rollback_v2.0.sql" relativeToChangelogFile="true"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <sqlFile path="rollback/rollback_v2.1.sql" relativeToChangelogFile="true"/>&ndash;&gt;-->
+<!--&lt;!&ndash;        </rollback>&ndash;&gt;-->
+<!--    </changeSet>-->
+
+
+</databaseChangeLog>
