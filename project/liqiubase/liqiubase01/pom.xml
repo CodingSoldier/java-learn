@@ -51,7 +51,6 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>3.10.3</version>
         </dependency>
 
         <dependency>
@@ -89,6 +88,19 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <configuration>
+                    <propertyFile></propertyFile>
+                    <changeLogFile>liquibase-change-log.xml</changeLogFile>
+                    <driver>com.mysql.jdbc.Driver</driver>
+                    <url>jdbc:mysql://127.0.0.1:3306/test_db?useUnicode=true&amp;useSSL=false&amp;characterEncoding=utf8</url>
+                    <username>root</username>
+                    <password>cpq..123</password>
                 </configuration>
             </plugin>
         </plugins>

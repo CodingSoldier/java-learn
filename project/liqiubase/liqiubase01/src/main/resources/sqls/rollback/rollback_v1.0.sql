@@ -1,2 +1,2 @@
-delete from test10 where id = 2;
-delete from test10 where id = 3;
+DROP TABLE IF EXISTS `test1_1`;
+DROP TABLE IF EXISTS `test1_2`;
