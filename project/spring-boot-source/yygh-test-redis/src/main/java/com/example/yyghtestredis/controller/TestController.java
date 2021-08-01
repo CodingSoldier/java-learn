@@ -30,8 +30,8 @@ public class TestController {
 
         // new ArrayList<>() 应用类型存储在堆空间
         ArrayList<Long> roleIds = new ArrayList<>();
-        UserBean userBean = new UserBean(1L, "小明", roleIds);
-        UserBean userBeanbbb = userBean;
+        // UserBean userBean = new UserBean(1L, "小明", roleIds);
+        // UserBean userBeanbbb = userBean;
         /*
          方法执行完后roleIds、userBean指向的对象无法再被使用，所以roleIds、userBean指向的对象的对象就变成了垃圾，需要回收
          */
@@ -53,8 +53,8 @@ public class TestController {
         ArrayList<Long> roleIds = new ArrayList<>();
         roleIds.add(100L);
         roleIds.add(200L);
-        UserBean userBean = new UserBean(1L, "小明", roleIds);
-        YyghRedisUtil.set(userKey, userBean);
+        // UserBean userBean = new UserBean(1L, "小明", roleIds);
+        // YyghRedisUtil.set(userKey, userBean);
         UserBean user01 = YyghRedisUtil.get(userKey, UserBean.class);
         log.info("user01的值：{}", user01);
 

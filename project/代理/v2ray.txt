@@ -5,7 +5,8 @@ https://github.com/v2fly/fhs-install-v2ray
 
 配置chrome浏览器
 	安装拓展  Proxy SwitchyOmega
-	导入/导出 ——>  在线恢复   https://github.com/FelisCatus/SwitchyOmega/wiki/GFWList.bak  点击恢复
+  AutoProxy https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt  
+	导入/导出 ——>  在线恢复 https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt  点击恢复
 	GFWeb  ——> 代理端口写 服务端  inbounds.port  ——> 点击应用选项
 	浏览器右上角点击Proxy SwitchyOmega，选择自动切换
 

@@ -1,6 +1,6 @@
 ﻿yum makecache
 
-yum -y install gcc gcc-c++ make vim-enhanced bash-completion net-tools bind-utils wget lrzsz man-pages curl telnet telnet-server
+yum -y install gcc gcc-c++ make vim-enhanced bash-completion bind-utils wget curl  man-pages  telnet telnet-server
 
 ####################liunx允许账号密码远程登录####################
 vi /etc/ssh/sshd_config
@@ -54,6 +54,23 @@ DNS1=114.114.114.114            DNS
 IPV6INIT=no                     ipv6
 USERCTL=no                      不允许非root用户控制此网卡
 
+重启网卡
+systemctl restart network
+
+设置主机名
+vim /etc/hostname
+
+禁用swap分区
+vim /etc/selinux/config
+SELINUX=disabled
+
+
+查看防火墙状态：systemctl status firewalld.service
+关闭：systemctl stop firewalld
+开启：systemctl start firewalld
+开机自动关闭：systemctl disable firewalld
+开机自动启动：systemctl enable firewalld
+
 修改主机信息  vim /etc/sysconfig/network
 NETWORKING=yes                 是否利用网络
 HOSTNAME=localhost.localdomain    主机名
@@ -61,6 +78,9 @@ HOSTNAME=localhost.localdomain    主机名
 hostname localhost.localdomain  这样临时修改，永久修改都生效了
 hostname 查询主机名
 主机名对linux来说不重要
+
+
+
 
 修改DNS，网卡DNS优先于此配置的DNS
 vim /etc/resolv.conf
