@@ -176,6 +176,10 @@ SELECT user_id, avg(`system_user_id`) FROM t_user_system_mapper WHERE AVG(`syste
 
 
 
+# 索引失效  https://segmentfault.com/a/1190000021464570
+
+# 使用指定索引  https://jiajunhuang.com/articles/2019_09_25-mysql_use_index.md.html
+
 
 
 
