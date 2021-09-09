@@ -12,6 +12,12 @@ import java.util.Random;
  */
 public class A_Arithmetic<T> {
 
+    public static void swapElem(int[] arr, int index1, int index2){
+        int temp = arr[index1];
+        arr[index1] = arr[index2];
+        arr[index2] = temp;
+    }
+
     // 选择排序
     public static void selectionSort(int arr[]) {
         for (int i = 0; i < arr.length; i++) {
@@ -25,9 +31,11 @@ public class A_Arithmetic<T> {
             }
 
             //未排序元素最小值交换到未排序元素的最前面
-            int iNum = arr[i];
-            arr[i] = arr[minIndex];
-            arr[minIndex] = iNum;
+            swapElem(arr, i, minIndex);
+
+            // int iNum = arr[i];
+            // arr[i] = arr[minIndex];
+            // arr[minIndex] = iNum;
         }
     }
 
@@ -51,24 +59,25 @@ public class A_Arithmetic<T> {
     public static void insertSort(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
 
-            // 前面已经排序的元素多加一个元素之后，将此元素与前面已经排序的元素比较
-            for (int j = i; j >= 1; j--) {
-                //新增的最后一个元素比前面的元素小，交换位置
-                if (arr[j] < arr[j - 1]) {
-                    int temp = arr[j];
-                    arr[j] = arr[j - 1];
-                    arr[j - 1] = temp;
-                } else {
-                    break;
-                }
-            }
+            // // 前面已经排序的元素多加一个元素之后，将此元素与前面已经排序的元素比较
+            // for (int j = i; j >= 1; j--) {
+            //     //新增的最后一个元素比前面的元素小，交换位置
+            //     if (arr[j] < arr[j - 1]) {
+            //         int temp = arr[j];
+            //         arr[j] = arr[j - 1];
+            //         arr[j - 1] = temp;
+            //     } else {
+            //         break;
+            //     }
+            // }
 
             // 上面的代码可以这样优化，减少内层循环次数
-            //for (int j = i; j >= 1 && arr[j] < arr[j - 1]; j--) {
-            //    int temp = arr[j];
-            //    arr[j] = arr[j - 1];
-            //    arr[j - 1] = temp;
-            //}
+            for (int j = i; j >= 1 && arr[j] < arr[j - 1]; j--) {
+                swapElem(arr, j, j-1);
+               // int temp = arr[j];
+               // arr[j] = arr[j - 1];
+               // arr[j - 1] = temp;
+            }
         }
     }
 
@@ -152,25 +161,25 @@ public class A_Arithmetic<T> {
      */
     private void mergeSegment(int[] arr, int minIndex, int maxIndex){
 
-        //if (minIndex >= maxIndex){
-        //    return;
-        //}
+        if (minIndex >= maxIndex){
+           return;
+        }
 
         // 优化1
         // 当需要排序的数据量很小的时候，使用插入排序提高效率
         // 这种优化适用于很多的高级算法
         // 插入排序请看这篇博客 https://blog.csdn.net/u010606397/article/details/102546480
-        if (maxIndex - minIndex <= 15){
-            for (int i = minIndex; i<=maxIndex; i++){
-                int e = arr[i];
-                int j;
-                for (j=i; j-1>=minIndex && arr[j-1] > e; j--){
-                    arr[j] = arr[j-1];
-                }
-                arr[j] = e;
-            }
-            return;
-        }
+        // if (maxIndex - minIndex <= 15){
+        //     for (int i = minIndex; i<=maxIndex; i++){
+        //         int e = arr[i];
+        //         int j;
+        //         for (j=i; j-1>=minIndex && arr[j-1] > e; j--){
+        //             arr[j] = arr[j-1];
+        //         }
+        //         arr[j] = e;
+        //     }
+        //     return;
+        // }
 
         int middleIndex = (minIndex+maxIndex)/2;
         // 数组平分为两段，然后再递归对分段后的数组再分段
@@ -230,8 +239,8 @@ public class A_Arithmetic<T> {
 
     @Test
     public void test_mergeSort() {
-        int[] arr1 = generateIntArray(100000, 0, 100000);
-
+        // int[] arr1 = generateIntArray(100000, 0, 100000);
+        int[] arr1 = {5, 2, 4, 3, 6, 1};
         mergeSort(arr1);
 
         for (int i=0; i<arr1.length; i++){
@@ -477,15 +486,59 @@ public class A_Arithmetic<T> {
         return arr;
     }
 
+
+
+
+
+
+    public static void quitSort1(int[] arr){
+        if (arr == null || arr.length==0){
+            return;
+        }
+
+        quitSort1(arr, 0, arr.length -1);
+    }
+
+    public static void quitSort1(int[] arr, int l, int r){
+        if (l>=r){
+            return;
+        }
+
+        int p = partition(arr, l, r);
+
+        quitSort1(arr, l, p-1);
+        quitSort1(arr, p+1, r);
+
+    }
+
+    public static int partition(int[] arr, int l, int r){
+        int random = l+new Random().nextInt(r-l+1);
+        swapElem(arr, l, random);
+        int j=l;
+
+        for (int i=l; i<=r; i++){
+            if (arr[i]<arr[l]){
+                j++;
+                swapElem(arr, i, j);
+            }
+        }
+        swapElem(arr, l, j);
+        return j;
+    }
+
     @Test
     public void test_quickSort() {
 
         // 数组中存在大量重复值的情况
-        int[] arr1 = generateIntArray(100000, 0, 100000);
+        // int[] arr1 = generateIntArray(100000, 0, 100000);
 
-        // 快速排序
-        Long t1 = new Date().getTime();
-        quickSort(arr1);
+        // // 快速排序
+        // Long t1 = new Date().getTime();
+        // quickSort(arr1);
+
+        int[] arr1 = {2,4,6,1,7,8,3,9,10};
+
+        quitSort1(arr1);
 
         for (int i=0; i<arr1.length; i++){
             System.out.println(arr1[i]);
