@@ -21,9 +21,6 @@ public class TestController {
         return dbUrl;
     }
 
-
-
-
     @GetMapping("/01")
     public String test1() throws Exception{
         TimeUnit.SECONDS.sleep(10);

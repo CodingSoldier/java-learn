@@ -1,6 +1,6 @@
 #yml代码提示需要添加YAML/Ansible support插件
 server:
-   port: ${server.port}
+  port: 8081
 
 logging:
   file: log/spring-boot-learn.log
@@ -13,10 +13,10 @@ spring:
   application:
     name: spring-boot-learn
   profiles:
-    active: {spring.profiles.active}
+    active: dev
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: ${spring.datasource.url}
-    username: ${spring.datasource.username}
-    password: ${spring.datasource.password}
+    url: jdbc:mysql://localhost:3306/shiro?useUnicode=true&useSSL=false&characterEncoding=utf8
+    username: root
+    password: cpq..123

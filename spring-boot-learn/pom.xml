@@ -41,11 +41,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
+<!--         https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <version>1.18.20</version>
+            <scope>provided</scope>
         </dependency>
+
 
         <dependency>
             <groupId>mysql</groupId>
@@ -129,58 +132,58 @@
 
     </dependencies>
 
-    <!--配置环境的profile-->
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <properties>
-                <!--使用${environment}获取值-->
-                <environment>dev</environment>
-            </properties>
-        </profile>
-        <profile>
-            <id>test</id>
-            <properties>
-                <environment>test</environment>
-            </properties>
-        </profile>
-        <profile>
-            <id>prod</id>
-            <properties>
-                <environment>prod</environment>
-            </properties>
-        </profile>
-    </profiles>
+<!--    &lt;!&ndash;配置环境的profile&ndash;&gt;-->
+<!--    <profiles>-->
+<!--        <profile>-->
+<!--            <id>dev</id>-->
+<!--            <properties>-->
+<!--                &lt;!&ndash;使用${environment}获取值&ndash;&gt;-->
+<!--                <environment>dev</environment>-->
+<!--            </properties>-->
+<!--        </profile>-->
+<!--        <profile>-->
+<!--            <id>test</id>-->
+<!--            <properties>-->
+<!--                <environment>test</environment>-->
+<!--            </properties>-->
+<!--        </profile>-->
+<!--        <profile>-->
+<!--            <id>prod</id>-->
+<!--            <properties>-->
+<!--                <environment>prod</environment>-->
+<!--            </properties>-->
+<!--        </profile>-->
+<!--    </profiles>-->
 
     <build>
-        <finalName>spring-boot-lean-${environment}</finalName>
+<!--        <finalName>spring-boot-lean-${environment}</finalName>-->
 
         <resources>
-            <!--&lt;!&ndash;mapper.xml打包&ndash;&gt;-->
-            <!--<resource>-->
-                <!--<directory>src/main/java</directory>-->
-                <!--<includes>-->
-                    <!--<include>**/*.xml</include>-->
-                <!--</includes>-->
-                <!--<filtering>false</filtering>-->
-            <!--</resource>-->
-
-            <!--排除环境配置文件-->
+            <!--mapper.xml打包-->
             <resource>
-                <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>application-*.yml</exclude>
-                </excludes>
-            </resource>
-
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <!-- 打包时包含的文件 -->
+                <directory>src/main/java</directory>
                 <includes>
-                    <include>application-${environment}.yml</include>
+                    <include>**/*.xml</include>
                 </includes>
+                <filtering>false</filtering>
             </resource>
+
+<!--            &lt;!&ndash;排除环境配置文件&ndash;&gt;-->
+<!--            <resource>-->
+<!--                <directory>src/main/resources</directory>-->
+<!--                <excludes>-->
+<!--                    <exclude>application-*.yml</exclude>-->
+<!--                </excludes>-->
+<!--            </resource>-->
+
+<!--            <resource>-->
+<!--                <directory>src/main/resources</directory>-->
+<!--                <filtering>true</filtering>-->
+<!--                &lt;!&ndash; 打包时包含的文件 &ndash;&gt;-->
+<!--                <includes>-->
+<!--                    <include>application-${environment}.yml</include>-->
+<!--                </includes>-->
+<!--            </resource>-->
         </resources>
 
 
