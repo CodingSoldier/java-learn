@@ -1,6 +1,7 @@
 package com.demo;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -16,8 +17,11 @@ public class SpringbootApplication {
 
     public static ConfigurableApplicationContext context;
 
+
+
     public static void main(String[] args) {
         context = SpringApplication.run(SpringbootApplication.class, args);
+
     }
 
     //@Bean

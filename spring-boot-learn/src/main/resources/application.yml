@@ -20,3 +20,7 @@ spring:
     url: jdbc:mysql://localhost:3306/shiro?useUnicode=true&useSSL=false&characterEncoding=utf8
     username: root
     password: cpq..123
+
+
+test:
+  val: aaa
