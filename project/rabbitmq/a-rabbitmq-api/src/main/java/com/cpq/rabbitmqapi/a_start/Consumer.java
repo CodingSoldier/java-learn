@@ -31,7 +31,7 @@ public class Consumer {
         //6 设置Channel
         channel.basicConsume(queueName, true, queueingConsumer);
 
-        while(true){
+        while (true) {
             //7 获取消息
             QueueingConsumer.Delivery delivery = queueingConsumer.nextDelivery();
             String msg = new String(delivery.getBody());

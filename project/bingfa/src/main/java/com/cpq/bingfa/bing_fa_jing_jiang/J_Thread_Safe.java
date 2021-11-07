@@ -19,12 +19,12 @@ public class J_Thread_Safe {
 class UnfinishedObj {
     private final int x, y;
 
-    public UnfinishedObj(int x, int y){
+    public UnfinishedObj(int x, int y) {
         this.x = x;
         TestUnfinishedObj.instance = this;
         try {
             TimeUnit.SECONDS.sleep(2);
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         this.y = y;
@@ -41,15 +41,16 @@ class UnfinishedObj {
 
 class TestUnfinishedObj {
     static UnfinishedObj instance;
-    public static void main(String[] args) throws Exception{
+
+    public static void main(String[] args) throws Exception {
         new Thread(() -> {
-            instance = new UnfinishedObj(1,2);
+            instance = new UnfinishedObj(1, 2);
         }).start();
 
         TimeUnit.SECONDS.sleep(1);
-        System.out.println("未初始化完成的实例"+ instance);
+        System.out.println("未初始化完成的实例" + instance);
         TimeUnit.SECONDS.sleep(2);
-        System.out.println("已经初始化完成的实例"+ instance);
+        System.out.println("已经初始化完成的实例" + instance);
     }
 }
 

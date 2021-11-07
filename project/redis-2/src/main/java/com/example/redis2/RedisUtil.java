@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 import java.time.Duration;
 
 @Component
-public class RedisUtil{
+public class RedisUtil {
 
     private static RedisTemplate staticRedisTemplate;
     private static ValueOperations valueOperations;
@@ -19,16 +19,16 @@ public class RedisUtil{
 
 
     @PostConstruct
-    public void init(){
+    public void init() {
         staticRedisTemplate = redisTemplate;
         valueOperations = redisTemplate.opsForValue();
     }
 
-    public static Boolean setIfAbsent(String key, Object value, Duration duration){
+    public static Boolean setIfAbsent(String key, Object value, Duration duration) {
         return valueOperations.setIfAbsent(key, value, duration);
     }
 
-    public static Boolean setIfAbsent(String key, Object value){
+    public static Boolean setIfAbsent(String key, Object value) {
         return valueOperations.setIfAbsent(key, value);
     }
 

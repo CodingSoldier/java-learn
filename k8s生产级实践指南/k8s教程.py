@@ -1133,4 +1133,22 @@ Istio解决的问题
 
 
 
+k8s-14版本安装metrics-server
+1、wget https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.5.0/components.yaml
+2、修改k8s.gcr.io/metrics-server/metrics-server:v0.5.0 为 registry.cn-hangzhou.aliyuncs.com/google_containers/metrics-server:v0.5.0
+3、containers添加配置
+        - --authorization-always-allow-paths=/livez,/readyz
+        - --kubelet-insecure-tls
+
+如果遇到镜像问题，可以把镜像改为阿里云镜像。阿里云的镜像在google_containers下面。
+也可以登陆阿里云后，在 容器镜像服务/镜像搜索 找到镜像
+例如
+k8s.gcr.io/metrics-server/metrics-server:v0.5.0
+改为
+registry.cn-hangzhou.aliyuncs.com/google_containers/metrics-server:v0.5.0
+
+也可以将 k8s.gcr.io/hpa-example 修改为 mirrorgooglecontainers/hpa-example
+
+如果pod状态是 0/1 , running未ready的状态
+可使用命令查看状态 kubectl describe pod  pod名字
 

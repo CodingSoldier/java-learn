@@ -17,27 +17,27 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserCtrl {
 
     @GetMapping("/list")
-    public Result list(){
+    public Result list() {
         return Result.success("/user/list");
     }
 
     @GetMapping("/view")
-    public Result view(){
+    public Result view() {
         return Result.success("/user/view");
     }
 
     @GetMapping("/add")
-    public Result add(){
+    public Result add() {
         return Result.success("/user/add");
     }
 
     @GetMapping("/edit")
-    public Result edit(){
+    public Result edit() {
         return Result.success("/user/edit");
     }
 
     @GetMapping("/delete")
-    public Result delete(){
+    public Result delete() {
         return Result.success("/user/delete");
     }
 

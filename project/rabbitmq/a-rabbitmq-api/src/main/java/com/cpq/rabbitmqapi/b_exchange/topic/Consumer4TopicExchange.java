@@ -8,43 +8,43 @@ import com.rabbitmq.client.QueueingConsumer.Delivery;
 
 public class Consumer4TopicExchange {
 
-	public static void main(String[] args) throws Exception {
-		
-		
-        ConnectionFactory connectionFactory = new ConnectionFactory() ;
+    public static void main(String[] args) throws Exception {
+
+
+        ConnectionFactory connectionFactory = new ConnectionFactory();
 
         connectionFactory.setHost("192.168.40.129");
         connectionFactory.setPort(5672);
-		connectionFactory.setVirtualHost("/");
-		
+        connectionFactory.setVirtualHost("/");
+
         connectionFactory.setAutomaticRecoveryEnabled(true);
         connectionFactory.setNetworkRecoveryInterval(3000);
         Connection connection = connectionFactory.newConnection();
-        
-        Channel channel = connection.createChannel();  
 
-		String exchangeName = "test_topic_exchange";
-		String exchangeType = "topic";  //通配符模式
-		String queueName = "test_topic_queue";
-		//String routingKey = "user.#"; //匹配0个或多个词，生产者交换机的routingKey可为：user、user.update、user.delete.abc
-		String routingKey = "user.*"; //匹配一个词，生产者交换机的routingKey可为：user.update
+        Channel channel = connection.createChannel();
 
-		channel.exchangeDeclare(exchangeName, exchangeType, true, false, false, null);
+        String exchangeName = "test_topic_exchange";
+        String exchangeType = "topic";  //通配符模式
+        String queueName = "test_topic_queue";
+        //String routingKey = "user.#"; //匹配0个或多个词，生产者交换机的routingKey可为：user、user.update、user.delete.abc
+        String routingKey = "user.*"; //匹配一个词，生产者交换机的routingKey可为：user.update
 
-		channel.queueDeclare(queueName, false, false, false, null);
+        channel.exchangeDeclare(exchangeName, exchangeType, true, false, false, null);
 
-		channel.queueBind(queueName, exchangeName, routingKey);
-		
+        channel.queueDeclare(queueName, false, false, false, null);
+
+        channel.queueBind(queueName, exchangeName, routingKey);
+
 
         QueueingConsumer consumer = new QueueingConsumer(channel);
 
-        channel.basicConsume(queueName, true, consumer);  
+        channel.basicConsume(queueName, true, consumer);
 
-        while(true){  
+        while (true) {
 
-            Delivery delivery = consumer.nextDelivery();  
-            String msg = new String(delivery.getBody());    
-            System.out.println("收到消息：" + msg);  
-        } 
-	}
+            Delivery delivery = consumer.nextDelivery();
+            String msg = new String(delivery.getBody());
+            System.out.println("收到消息：" + msg);
+        }
+    }
 }

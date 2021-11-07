@@ -33,20 +33,20 @@ Condition
 
 
 /**
- CountDownLatch
-    倒数门栓
-    流程：倒数结束前一直处于等待状态，知道倒计时结束了，此线程才继续工作
-
- CountDownLatch(int count)： 只有一个构造函数，参数count为需要倒数的数值
- await()：调用await()方法的线程会被挂起，此线程会等待直到count值为0才继续执行
- countDown(): 将count值减一，直到为0时，等待的线程才会被唤起
+ * CountDownLatch
+ * 倒数门栓
+ * 流程：倒数结束前一直处于等待状态，知道倒计时结束了，此线程才继续工作
+ * <p>
+ * CountDownLatch(int count)： 只有一个构造函数，参数count为需要倒数的数值
+ * await()：调用await()方法的线程会被挂起，此线程会等待直到count值为0才继续执行
+ * countDown(): 将count值减一，直到为0时，等待的线程才会被唤起
  */
 
 /**
  * CountDownLatch用法一：一个线程等待多个线程都执行完毕，再继续自己的工作
  * 例如嫦娥五号发射前要进行各项检查，检查完毕后发射
  */
-class CountDownLatchDemo01{
+class CountDownLatchDemo01 {
     public static void main(String[] args) throws InterruptedException {
         /**
          * 倒数计数器设置为3
@@ -58,14 +58,14 @@ class CountDownLatchDemo01{
         for (int i = 0; i < 3; i++) {
             new Thread(() -> {
 
-                System.out.println(Thread.currentThread().getName()+"检查完毕");
+                System.out.println(Thread.currentThread().getName() + "检查完毕");
 
                 /**
                  * 执行countDown()方法，latch的计数器减一
                  */
                 latch.countDown();
 
-            }, "单位"+i).start();
+            }, "单位" + i).start();
         }
 
         /**
@@ -78,7 +78,6 @@ class CountDownLatchDemo01{
 }
 
 
-
 /**
  CyclicBarrier循环栅栏
  CyclicBarrier循环栅栏和CountDownLatch很类似，都能阻塞一组线程
@@ -87,8 +86,8 @@ class CountDownLatchDemo01{
  举例：咱们3个人明天中午在学校碰面，都到齐后，一起讨论下个学期的计划
 
  CyclicBarrier和CountDownLatch的区别
-    作用不同：CyclicBarrier是要等待固定数量的线程都到达了栅栏位置才能继续执行，而CountDownLatch只需要等待数字到0。也就是说CountDownLatch用于事件，而CyclicBarrier用于线程
-    可重用性不同：CountDownLatch在倒数到0并触发门栓打开后就不能再次使用了，除非新建实例。而CyclicBarrier可以重复使用
+ 作用不同：CyclicBarrier是要等待固定数量的线程都到达了栅栏位置才能继续执行，而CountDownLatch只需要等待数字到0。也就是说CountDownLatch用于事件，而CyclicBarrier用于线程
+ 可重用性不同：CountDownLatch在倒数到0并触发门栓打开后就不能再次使用了，除非新建实例。而CyclicBarrier可以重复使用
  */
 
 /**
@@ -97,7 +96,7 @@ class CountDownLatchDemo01{
  * 有10个运动员走上跑道，只要有5个运动员准备完毕，裁判就会扣响发令枪，这5个运动员起跑。
  * 再有5个运动员准备完毕，裁判还能扣响发令枪，这5个运动员起跑。
  */
-class CyclicBarrierDemo{
+class CyclicBarrierDemo {
 
     public static void main(String[] args) {
         /**
@@ -112,11 +111,11 @@ class CyclicBarrierDemo{
          * 构造10个运动员
          */
         for (int i = 0; i < 10; i++) {
-            new Thread(new Task(cyclicBarrier), "运动员"+i).start();
+            new Thread(new Task(cyclicBarrier), "运动员" + i).start();
         }
     }
 
-    static class Task implements Runnable{
+    static class Task implements Runnable {
         private CyclicBarrier cyclicBarrier;
 
         public Task(CyclicBarrier cyclicBarrier) {
@@ -127,14 +126,14 @@ class CyclicBarrierDemo{
         public void run() {
             try {
                 TimeUnit.MILLISECONDS.sleep(new Random().nextInt(5000));
-                System.out.println(Thread.currentThread().getName()+"准备完毕");
+                System.out.println(Thread.currentThread().getName() + "准备完毕");
                 /**
                  * 等待裁判鸣枪
                  */
                 cyclicBarrier.await();
 
-                System.out.println(Thread.currentThread().getName()+"起跑");
-            }catch (BrokenBarrierException e) {
+                System.out.println(Thread.currentThread().getName() + "起跑");
+            } catch (BrokenBarrierException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -146,25 +145,25 @@ class CyclicBarrierDemo{
 
 /**
  Semaphore信号量
-    可用来限制或者管理数量资源的使用情况
+ 可用来限制或者管理数量资源的使用情况
 
  信号量的作用是维护一个“许可证”的计数，线程可以“获取”许可证，那信号量剩余的许可证就减一，线程也可以“释放”一个许可证，那信号量剩余的许可证就加一，当信号量所拥有的许可证数量为0，那么下一个还想要获取许可证的线程就需要等待，直到有另外的线程释放了许可证
 
  信号量使用流程：
-    1、初始化Semaphore并指定许可证数量
-    2、在需要被限制的代码前加上acquire()或者acquireUninterruptibly()方法
-    3、在任务执行结束后，调用release()来释放许可证
+ 1、初始化Semaphore并指定许可证数量
+ 2、在需要被限制的代码前加上acquire()或者acquireUninterruptibly()方法
+ 3、在任务执行结束后，调用release()来释放许可证
 
  重要方法介绍
-    new Semaphore(int permits, boolean fair)，可设置是否使用公平策略，如果传入true，那么Semaphore会把之前等待的线程放到FIFO的队列里，以便当有了新的许可证可以分发给之前等了很长时间的线程。
-    tryAcquire()，看看线程有没有空闲的许可证，如果有就获取。如果没有，线程可以不必进入阻塞，可以去做其他事，过一会儿再来查看许可证的空闲情况。
-    tryAcquire(timeout)，和tryAcquire()一样，但是多了一个超时时间，比如“在3秒内获取不到许可证，我就去做别的事”
-    acquire()，获取许可证，获取不到就阻塞，可以被中断
-    acquireUninterruptibly()，和acquire()一样，但是不能响应中断
-    release()，归还许可证
+ new Semaphore(int permits, boolean fair)，可设置是否使用公平策略，如果传入true，那么Semaphore会把之前等待的线程放到FIFO的队列里，以便当有了新的许可证可以分发给之前等了很长时间的线程。
+ tryAcquire()，看看线程有没有空闲的许可证，如果有就获取。如果没有，线程可以不必进入阻塞，可以去做其他事，过一会儿再来查看许可证的空闲情况。
+ tryAcquire(timeout)，和tryAcquire()一样，但是多了一个超时时间，比如“在3秒内获取不到许可证，我就去做别的事”
+ acquire()，获取许可证，获取不到就阻塞，可以被中断
+ acquireUninterruptibly()，和acquire()一样，但是不能响应中断
+ release()，归还许可证
 
-    acquire(int n)，一次可以拿多个许可证
-    release(int n),一次释放多个许可证。如无特殊需求，获取和释放的数量要一致
+ acquire(int n)，一次可以拿多个许可证
+ release(int n),一次释放多个许可证。如无特殊需求，获取和释放的数量要一致
 
  并不要求获取许可证的线程释放许可证，A线程获取一个许可证，B线程释放许可证也是可以的
 
@@ -173,7 +172,7 @@ class CyclicBarrierDemo{
 /**
  * 使用Semaphore模拟银行窗口办理业务
  */
-class SemaphoreDemo{
+class SemaphoreDemo {
     /**
      * 创建有3个许可证的Semaphore。类似银行有3个窗口
      */
@@ -188,18 +187,18 @@ class SemaphoreDemo{
                      */
                     semaphore.acquire();
 
-                    System.out.println(Thread.currentThread().getName()+"去窗口办理业务");
-                    TimeUnit.SECONDS.sleep(new Random().nextInt(5)+1);
+                    System.out.println(Thread.currentThread().getName() + "去窗口办理业务");
+                    TimeUnit.SECONDS.sleep(new Random().nextInt(5) + 1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }finally {
+                } finally {
                     /**
                      * release()释放许可证
                      */
                     semaphore.release();
-                    System.out.println(Thread.currentThread().getName()+"业务办理完毕，离开");
+                    System.out.println(Thread.currentThread().getName() + "业务办理完毕，离开");
                 }
-            }, "排队的人"+i).start();
+            }, "排队的人" + i).start();
         }
     }
 }
@@ -207,8 +206,8 @@ class SemaphoreDemo{
 
 /**
  Condition的作用
-    当线程1需要等待某个条件的时候，它就去执行condition.await()方法，一旦执行了await()方法，线程就会进入阻塞状态
-    然后通常会有另外一个线程，假设是线程2，去执行对应的条件。直到这个条件达成的时候，线程2就会去执行condition.signal()方法，这是JVM就会从被阻塞的线程中找，找到那些等待该condition的线程，线程1收到可执行信号的时候，它的线程状态就会变成Runnable可执行状态。
+ 当线程1需要等待某个条件的时候，它就去执行condition.await()方法，一旦执行了await()方法，线程就会进入阻塞状态
+ 然后通常会有另外一个线程，假设是线程2，去执行对应的条件。直到这个条件达成的时候，线程2就会去执行condition.signal()方法，这是JVM就会从被阻塞的线程中找，找到那些等待该condition的线程，线程1收到可执行信号的时候，它的线程状态就会变成Runnable可执行状态。
 
  signalAll()会唤起所有正在等待的线程
  signal()是公平的，只会唤起那个等待时间最长的线程
@@ -217,7 +216,7 @@ class SemaphoreDemo{
 /**
  * condition基本用法
  */
-class ConditionDemo1{
+class ConditionDemo1 {
     private static ReentrantLock lock = new ReentrantLock();
     private static Condition condition = lock.newCondition();
 
@@ -225,12 +224,12 @@ class ConditionDemo1{
         new Thread(() -> {
             lock.lock();
             try {
-                System.out.println(Thread.currentThread().getName()+"条件不满足，等待");
+                System.out.println(Thread.currentThread().getName() + "条件不满足，等待");
                 condition.await();
-                System.out.println(Thread.currentThread().getName()+"条件满足了，继续执行");
-            }catch(InterruptedException e){
+                System.out.println(Thread.currentThread().getName() + "条件满足了，继续执行");
+            } catch (InterruptedException e) {
                 e.printStackTrace();
-            }finally{
+            } finally {
                 lock.unlock();
             }
         }).start();
@@ -240,9 +239,9 @@ class ConditionDemo1{
         new Thread(() -> {
             lock.lock();
             try {
-                System.out.println(Thread.currentThread().getName()+"准备完成，唤醒其他线程");
+                System.out.println(Thread.currentThread().getName() + "准备完成，唤醒其他线程");
                 condition.signal();
-            }finally{
+            } finally {
                 lock.unlock();
             }
         }).start();
@@ -282,53 +281,53 @@ class ConditionDemo {
         consumer.start();
     }
 
-    class Consumer extends Thread{
+    class Consumer extends Thread {
         @Override
         public void run() {
             consume();
         }
 
-        private void consume(){
-            while (true){
+        private void consume() {
+            while (true) {
                 lock.lock();
                 try {
-                    if (queue.size() ==0){
+                    if (queue.size() == 0) {
                         System.out.println("队列空，等待生产数据");
                         notEmpty.await();
                     }
                     Integer e = queue.poll();
-                    System.out.println("消费数据 "+e+" ，唤醒生产者");
+                    System.out.println("消费数据 " + e + " ，唤醒生产者");
                     notFull.signalAll();
-                }catch(InterruptedException e){
+                } catch (InterruptedException e) {
                     e.printStackTrace();
-                }finally{
+                } finally {
                     lock.unlock();
                 }
             }
         }
     }
 
-    class Producer extends Thread{
+    class Producer extends Thread {
         @Override
         public void run() {
             produce();
         }
 
-        private void produce(){
-            while (true){
+        private void produce() {
+            while (true) {
                 lock.lock();
                 try {
-                    if (queue.size() == queueSize){
+                    if (queue.size() == queueSize) {
                         System.out.println("队列满了，等待消费数据");
                         notFull.await();
                     }
                     int i = new Random().nextInt(100);
                     queue.add(i);
-                    System.out.println("生产数据 "+i+" ，唤醒消费者");
+                    System.out.println("生产数据 " + i + " ，唤醒消费者");
                     notEmpty.signalAll();
-                }catch(InterruptedException e){
+                } catch (InterruptedException e) {
                     e.printStackTrace();
-                }finally{
+                } finally {
                     lock.unlock();
                 }
             }

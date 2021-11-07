@@ -90,7 +90,7 @@ public class ShiroConfiguration {
 
 
     @Bean
-    protected SessionStorageEvaluator sessionStorageEvaluator(){
+    protected SessionStorageEvaluator sessionStorageEvaluator() {
         DefaultWebSessionStorageEvaluator sessionStorageEvaluator = new DefaultWebSessionStorageEvaluator();
         sessionStorageEvaluator.setSessionStorageEnabled(false);
         return sessionStorageEvaluator;
@@ -120,7 +120,6 @@ public class ShiroConfiguration {
     public CredentialMatcher credentialMatcher() {
         return new CredentialMatcher();
     }
-
 
 
     //@Bean

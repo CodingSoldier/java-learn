@@ -8,13 +8,13 @@ public class H_Wait_Notify {
 
     public static Object obj = new Object();
 
-    static class Thread0 extends Thread{
+    static class Thread0 extends Thread {
         @Override
         public void run() {
             String threadName = Thread.currentThread().getName();
-            synchronized (obj){
+            synchronized (obj) {
                 try {
-                    System.out.println(threadName+" 获取锁，并wait()");
+                    System.out.println(threadName + " 获取锁，并wait()");
                     /**
                      * wait()方法会释放锁，并让线程处于WAITING状态
                      * 线程被唤醒后继续执行后面的代码
@@ -30,7 +30,7 @@ public class H_Wait_Notify {
                      */
                     //TimeUnit.SECONDS.sleep(11);
 
-                }catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
@@ -38,19 +38,19 @@ public class H_Wait_Notify {
         }
     }
 
-    static class Thread1 extends Thread{
+    static class Thread1 extends Thread {
         @Override
         public void run() {
             String threadName = Thread.currentThread().getName();
-            synchronized (obj){
-                System.out.println(threadName+" 获取锁");
-                System.out.println(threadName+" 结束");
+            synchronized (obj) {
+                System.out.println(threadName + " 获取锁");
+                System.out.println(threadName + " 结束");
                 obj.notify();  // 如果只有obj.wait()方法而不执行obj.notify()，则WAITING线程将永远WAITING
             }
         }
     }
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         Thread thread0 = new Thread0();
         Thread thread1 = new Thread1();
         thread0.start();
@@ -68,7 +68,7 @@ public class H_Wait_Notify {
  * 生产资源、消费资源的操作是属于共享资源这个对象的方法，即：put()、take()是属于共享资源的方法
  * 生产者、消费者是执行任务，即task，所以都继承Runnable接口，在run()方法中调用 共享资源.put()、共享资源.take()
  */
-class DateStorage{
+class DateStorage {
 
     private LinkedList<Date> storage;
     private int maxSize = 10;
@@ -77,35 +77,35 @@ class DateStorage{
         this.storage = new LinkedList<Date>();
     }
 
-    public synchronized void put(){
+    public synchronized void put() {
         // 存储满了，生产线程等待
-        while (storage.size() == maxSize){
+        while (storage.size() == maxSize) {
             try {
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        System.out.println("生产商品，"+storage.add(new Date())+"。当前商品个数"+storage.size());
+        System.out.println("生产商品，" + storage.add(new Date()) + "。当前商品个数" + storage.size());
         // 唤醒其他线程
         notify();
     }
 
-    public synchronized void take(){
-        while (storage.size() == 0){
+    public synchronized void take() {
+        while (storage.size() == 0) {
             try {
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        System.out.println("消费商品，"+storage.poll()+"。当前商品个数"+storage.size());
+        System.out.println("消费商品，" + storage.poll() + "。当前商品个数" + storage.size());
         // 唤醒其他线程
         notify();
     }
 }
 
-class DateProducer implements Runnable{
+class DateProducer implements Runnable {
 
     private DateStorage storage;
 
@@ -115,13 +115,13 @@ class DateProducer implements Runnable{
 
     @Override
     public void run() {
-        for (int i=0; i<100; i++){
+        for (int i = 0; i < 100; i++) {
             storage.put();
         }
     }
 }
 
-class DateConsumer implements Runnable{
+class DateConsumer implements Runnable {
 
     private DateStorage storage;
 
@@ -131,13 +131,13 @@ class DateConsumer implements Runnable{
 
     @Override
     public void run() {
-        for (int i=0; i<100; i++){
+        for (int i = 0; i < 100; i++) {
             storage.take();
         }
     }
 }
 
-class DatePS{
+class DatePS {
     public static void main(String[] args) {
         DateStorage dateStorage = new DateStorage();
         DateProducer dateProducer = new DateProducer(dateStorage);
@@ -151,13 +151,13 @@ class DatePS{
 }
 
 
-class SleepDontReleaseLock implements Runnable{
+class SleepDontReleaseLock implements Runnable {
 
     @Override
     public void run() {
-        synchronized (this){
+        synchronized (this) {
             String name = Thread.currentThread().getName();
-            System.out.println(name+"线程，同步代码块开始");
+            System.out.println(name + "线程，同步代码块开始");
             try {
                 /**
                  * 在同步代码块中
@@ -186,7 +186,7 @@ class SleepDontReleaseLock implements Runnable{
 /**
  * join
  */
-class JoinInterrupt{
+class JoinInterrupt {
 
     public static void main(String[] args) {
         Thread mainThread = Thread.currentThread();
@@ -199,12 +199,12 @@ class JoinInterrupt{
                      * 主线程发生中断，主线程从WAITING状态变成RUNNABLE，主线程继续运行，
                      * 主线程结束，子线程不会结束，子线程继续运行它的run方法
                      */
-                    System.out.println("主线程状态 "+mainThread.getState());
+                    System.out.println("主线程状态 " + mainThread.getState());
                     TimeUnit.SECONDS.sleep(5);
                     mainThread.interrupt();
                     TimeUnit.SECONDS.sleep(10);
                     System.out.println("主线程执行完毕后，子线程继续执行，子线程执行完毕");
-                }catch (InterruptedException e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
@@ -223,7 +223,7 @@ class JoinInterrupt{
 
 }
 
-class MainSub{
+class MainSub {
 
     public static void main(String[] args) {
         Thread mainThread = Thread.currentThread();
@@ -234,14 +234,14 @@ class MainSub{
                     /**
                      * 主线程执行完毕，直线还在sleep，JVM还不会退出，依旧等待子线程执行结束
                      */
-                    System.out.println("主线程状态 "+mainThread.getState());
+                    System.out.println("主线程状态 " + mainThread.getState());
                     TimeUnit.SECONDS.sleep(5);
 
                     //mainThread.interrupt();
                     //TimeUnit.SECONDS.sleep(10);
 
                     System.out.println("主线程执行完毕后，子线程继续执行，子线程执行完毕");
-                }catch (InterruptedException e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }

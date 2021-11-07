@@ -5,21 +5,21 @@ public class E_CAS {
 
 
 /**
- CAS：全称 compare and swap。
- CAS有3个操作数，内存值、预期值、更新值。
- 当且仅当预期值与内存值相同，才将内存值改为修改值，否则什么都不做，最后返回现在的内存值
- CPU支持比较替换作为一个原子操作
+ * CAS：全称 compare and swap。
+ * CAS有3个操作数，内存值、预期值、更新值。
+ * 当且仅当预期值与内存值相同，才将内存值改为修改值，否则什么都不做，最后返回现在的内存值
+ * CPU支持比较替换作为一个原子操作
  */
 
 /**
  * 使用代码模拟CAS
  */
-class SimulatedCAS{
+class SimulatedCAS {
     private volatile int value;
 
-    public synchronized int compareAndSwap(int expectedValue, int newValue){
+    public synchronized int compareAndSwap(int expectedValue, int newValue) {
         int oldValue = value;
-        if (oldValue == expectedValue){
+        if (oldValue == expectedValue) {
             value = newValue;
         }
         return oldValue;

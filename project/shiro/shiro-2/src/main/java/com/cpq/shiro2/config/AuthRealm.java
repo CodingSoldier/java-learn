@@ -25,7 +25,7 @@ public class AuthRealm extends AuthorizingRealm {
      * 通过用户名查找用户
      * authenticationToken.getPrincipal() 是用户名
      * authenticationToken.getCredentials() 是密码
-     *
+     * <p>
      * SimpleAuthenticationInfo(Object principal, Object credentials, String realmName)中的principal可以是一个类对象
      * AuthenticatingRealm.getAuthenticationInfo有判断会有
      * AuthenticationInfo info = this.getCachedAuthenticationInfo(token);
@@ -49,7 +49,7 @@ public class AuthRealm extends AuthorizingRealm {
         List<String> roleNameList = new ArrayList<>();
         Set<Role> roleSet = userVo.getRoles();
         if (CollectionUtils.isNotEmpty(roleSet)) {
-            for(Role role : roleSet) {
+            for (Role role : roleSet) {
                 roleNameList.add(role.getRname());
                 Set<Permission> permissionSet = role.getPermissions();
                 if (CollectionUtils.isNotEmpty(permissionSet)) {
@@ -64,7 +64,6 @@ public class AuthRealm extends AuthorizingRealm {
         info.addRoles(roleNameList);
         return info;
     }
-
 
 
     //@Override

@@ -28,7 +28,7 @@ public class A_AQS {
     }
 
     @Test
-    public void test1(){
+    public void test1() {
         /**
          * AQS 抽象同步队列 AbstractQueuedSynchronizer
          * 看A_AQS.jpg

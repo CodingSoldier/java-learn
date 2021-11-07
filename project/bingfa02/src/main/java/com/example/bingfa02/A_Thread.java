@@ -15,7 +15,7 @@ public class A_Thread {
      */
 }
 
-class ThreadPoolTest{
+class ThreadPoolTest {
 
     public static void main(String[] args) {
         /*
@@ -28,11 +28,11 @@ class ThreadPoolTest{
              3、使用无界队列new LinkedBlockingQueue<Runnable>()，有可能会有OOM异常
          */
         ExecutorService executorService = Executors.newFixedThreadPool(2);
-        for (int i=0; i<1000; i++){
+        for (int i = 0; i < 1000; i++) {
             executorService.execute(() -> {
                 try {
                     TimeUnit.MILLISECONDS.sleep(100);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 System.out.println(Thread.currentThread().getName());
@@ -66,7 +66,7 @@ class ThreadPoolTest{
     }
 
     @Test
-    public void test01() throws Exception{
+    public void test01() throws Exception {
         /*
         创建定时的线程池
          */
@@ -80,7 +80,7 @@ class ThreadPoolTest{
         /*
         scheduleAtFixedRate ，是以上一个任务开始的时间计时，period时间过去后，检测上一个任务是否执行完毕，如果上一个任务执行完毕，则当前任务立即执行，如果上一个任务没有执行完毕，则需要等上一个任务执行完毕后立即执行。
          */
-        threadPool.scheduleAtFixedRate(()->{
+        threadPool.scheduleAtFixedRate(() -> {
             System.out.println(Thread.currentThread().getName());
         }, 1, 3, TimeUnit.SECONDS);
 
@@ -102,18 +102,18 @@ class ThreadPoolTest{
      */
 
     @Test
-    public void t2(){
+    public void t2() {
         /*
         Runtime.getRuntime().availableProcessors()
             返回Java虚拟机可用的处理器数量（永远不小于一个）。
             在虚拟机的特定调用期间，此值可能会更改。 因此，对可用处理器数量敏感的应用程序应该偶尔轮询此属性并适当地调整其资源使用情况。
          */
-        System.out.println("JVM虚拟机可用处理器数量，"+Runtime.getRuntime().availableProcessors());
+        System.out.println("JVM虚拟机可用处理器数量，" + Runtime.getRuntime().availableProcessors());
     }
 
 }
 
-class ShutdownThreadPool{
+class ShutdownThreadPool {
 
     public static void main(String[] args) throws Exception {
         ArrayList<Object> list = new ArrayList<>();
@@ -124,7 +124,7 @@ class ShutdownThreadPool{
                 for (int j = 0; j < 10000000; j++) {
                     try {
                         list.set(1, j);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                     }
                 }
 
@@ -177,7 +177,7 @@ class ShutdownThreadPool{
 }
 
 
-class MyPool extends ThreadPoolExecutor{
+class MyPool extends ThreadPoolExecutor {
 
     public MyPool(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
@@ -185,6 +185,7 @@ class MyPool extends ThreadPoolExecutor{
 
     /**
      * 线程池还有一些钩子方法
+     *
      * @param t
      * @param r
      */
@@ -195,36 +196,34 @@ class MyPool extends ThreadPoolExecutor{
 }
 
 
-
-
-
-
 final class ThreadUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(ThreadUtil.class);
     private static ThreadPoolExecutor executor = null;
-    private ThreadUtil() {}
 
-    static{
+    private ThreadUtil() {
+    }
+
+    static {
         initExecutor();
     }
 
     /**
      * 初始化
      */
-    private static void initExecutor(){
+    private static void initExecutor() {
         // 核心线程数
-        int  corePoolSize = Runtime.getRuntime().availableProcessors();
+        int corePoolSize = Runtime.getRuntime().availableProcessors();
         corePoolSize = corePoolSize < 2 ? 2 : corePoolSize;
 
         // 最大线程数
         int maximumPoolSize = ioMaximumPoolSize();
         maximumPoolSize = maximumPoolSize < corePoolSize ? corePoolSize : maximumPoolSize;
 
-        LOGGER.info("初始化线程池 corePoolSize:{} , maximumPoolSize:{}" , corePoolSize , maximumPoolSize);
+        LOGGER.info("初始化线程池 corePoolSize:{} , maximumPoolSize:{}", corePoolSize, maximumPoolSize);
 
         ThreadFactory defaultThreadFactory = Executors.defaultThreadFactory();
 
-        executor = new ThreadPoolExecutor(2 , 4 ,
+        executor = new ThreadPoolExecutor(2, 4,
                 10L, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<Runnable>(),
                 defaultThreadFactory,
@@ -246,13 +245,13 @@ final class ThreadUtil {
         int blockTime = 8;
         int runTime = 1;
 
-        int ioMaxCore = cpuUsePercent * jvmAvailableProcessors * (1 + blockTime/runTime);
+        int ioMaxCore = cpuUsePercent * jvmAvailableProcessors * (1 + blockTime / runTime);
         return ioMaxCore;
     }
 
     /**
      * 自定义线程池饱和策略，模仿AbortPolicy（终止线程策略）
-     *
+     * <p>
      * A handler for rejected tasks that throws a
      * {@code RejectedExecutionException}.
      */
@@ -260,7 +259,8 @@ final class ThreadUtil {
         /**
          * Creates an {@code AbortPolicy}.
          */
-        public CustomAbortPolicy() { }
+        public CustomAbortPolicy() {
+        }
 
         /**
          * Always throws RejectedExecutionException.
@@ -273,7 +273,7 @@ final class ThreadUtil {
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
 
             // 模仿ThreadPoolExecutor.AbortPolicy的写法，仅是修改了这行代码，并加了个注释
-            String msg = String.format("线程池任务满了，抛出异常。\nTask: %s 。\nRejected from: %s",r.toString(), e.toString());
+            String msg = String.format("线程池任务满了，抛出异常。\nTask: %s 。\nRejected from: %s", r.toString(), e.toString());
             LOGGER.error(msg);
             // 发送邮件或者发送钉钉消息
 
@@ -293,7 +293,7 @@ final class ThreadUtil {
     }
 
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         Integer a = null;
         // 创建很多线程，造成内存溢出
         for (int i = 0; i < 10000000; i++) {

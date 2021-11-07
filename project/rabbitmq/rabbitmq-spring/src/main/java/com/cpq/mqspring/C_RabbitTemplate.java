@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class C_RabbitTemplate {
 
     @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory){
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         return rabbitTemplate;
     }

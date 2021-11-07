@@ -17,19 +17,21 @@ public class RedisConfig {
         RedisTemplate template = new RedisTemplate();
         template.setConnectionFactory(redisConnectionFactory);
 
-        //key使用StringRedisSerializer
-        StringRedisSerializer strSerializer = new StringRedisSerializer();
-        template.setKeySerializer(strSerializer);
-        template.setHashKeySerializer(strSerializer);
-
-        template.setValueSerializer(strSerializer);
-
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         ObjectMapper om = new ObjectMapper();
         //om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         //om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         jackson2JsonRedisSerializer.setObjectMapper(om);
         //value使用Jackson2JsonRedisSerializer
+
+        //key使用StringRedisSerializer
+        StringRedisSerializer strSerializer = new StringRedisSerializer();
+        template.setKeySerializer(strSerializer);
+
+
+        template.setValueSerializer(jackson2JsonRedisSerializer);
+
+        template.setHashKeySerializer(jackson2JsonRedisSerializer);
         template.setHashValueSerializer(jackson2JsonRedisSerializer);
 
         return template;

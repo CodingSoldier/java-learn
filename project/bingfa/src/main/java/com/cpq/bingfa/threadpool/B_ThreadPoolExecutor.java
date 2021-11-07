@@ -1,7 +1,5 @@
 package com.cpq.bingfa.threadpool;
 
-import java.util.concurrent.*;
-
 /**
  * @Description
  * @Author chenpiqian
@@ -49,10 +47,10 @@ public class B_ThreadPoolExecutor {
      * DiscardPolicy 抛弃策略
      * DiscardOldestPolicy 抛弃旧任务策略
      * CallerRunsPolicy 调用者运行策略
-     *
+     * <p>
      * new ThreadPoolExecutor.DiscardPolicy()
      * 20个任务只有7个运行，其他任务被抛弃，但是没抛异常
-     *
+     * <p>
      * AbortPolicy 发生终止策略时，是运行pool.execute()的线程抛出异常RejectedExecutionException
      * 线程池不会因抛出RejectedExecutionException而不可用，后面通过另一个线程调用pool.execute()还是能运行成功的
      */
@@ -66,7 +64,6 @@ public class B_ThreadPoolExecutor {
     //            new ArrayBlockingQueue<Runnable>(2),
     //            new ThreadPoolExecutor.DiscardPolicy());
     //}
-
     public void init() {
         pool = new ThreadPoolExecutor(
                 3,
@@ -81,13 +78,13 @@ public class B_ThreadPoolExecutor {
     }
 
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
 
         B_ThreadPoolExecutor exec = new B_ThreadPoolExecutor();
         exec.init();
 
         ExecutorService pool = exec.getCustomThreadPoolExecutor();
-        for(int i=1; i<20; i++) {
+        for (int i = 1; i < 20; i++) {
             System.out.println("提交第" + i + "个任务!");
             pool.execute(new Runnable() {
                 @Override
@@ -107,15 +104,13 @@ public class B_ThreadPoolExecutor {
 }
 
 
-
-
-class ThreadPool{
+class ThreadPool {
 
     static ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 1,
             1L, TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(2));
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
 
         for (int i = 0; i < 10; i++) {
             // 因为拒绝策略而抛出异常，threadPoolExecutor.execute()也会抛异常
@@ -123,12 +118,12 @@ class ThreadPool{
                 threadPoolExecutor.execute(() -> {
                     try {
                         TimeUnit.MILLISECONDS.sleep(10);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
-            }catch (Exception e){
-                System.out.println("#######"+e.toString());
+            } catch (Exception e) {
+                System.out.println("#######" + e.toString());
             }
         }
 

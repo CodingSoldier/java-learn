@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 public class Test4_CustomRealm {
 
     @Test
-    public void testCustomRealm(){
+    public void testCustomRealm() {
 
         CustomRealm customRealm = new CustomRealm();
         // 配置CustomRealm使用md5加密
@@ -33,7 +33,7 @@ public class Test4_CustomRealm {
 
         subject.login(token);
 
-        System.out.println("是否已认证："+subject.isAuthenticated());
+        System.out.println("是否已认证：" + subject.isAuthenticated());
 
         subject.checkRoles(CustomRealm.ROLE_ADMIN);
         // 自定义Realm不需要手动开启权限校验

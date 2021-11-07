@@ -6,7 +6,7 @@ import com.cpq.shiro2.user.entity.UserVo;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author cpq

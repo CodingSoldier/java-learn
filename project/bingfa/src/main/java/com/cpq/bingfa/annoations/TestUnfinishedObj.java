@@ -8,14 +8,15 @@ import java.util.concurrent.TimeUnit;
  */
 public class TestUnfinishedObj {
     static UnfinishedObj instance;
-    public static void main(String[] args) throws Exception{
+
+    public static void main(String[] args) throws Exception {
         new Thread(() -> {
-            instance = new UnfinishedObj(1,2);
+            instance = new UnfinishedObj(1, 2);
         }).start();
 
         TimeUnit.SECONDS.sleep(1);
-        System.out.println("未初始化完成的实例"+ instance);
+        System.out.println("未初始化完成的实例" + instance);
         TimeUnit.SECONDS.sleep(2);
-        System.out.println("已经初始化完成的实例"+ instance);
+        System.out.println("已经初始化完成的实例" + instance);
     }
 }

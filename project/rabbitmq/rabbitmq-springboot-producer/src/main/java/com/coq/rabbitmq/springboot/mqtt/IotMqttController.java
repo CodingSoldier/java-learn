@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * https://zhuanlan.zhihu.com/p/359455682
  * https://github.com/chengxy-nds/Springboot-Notebook/tree/master/springboot-mqtt-messagepush
- *
+ * <p>
  * MQTT使用
  */
 @Controller
@@ -28,9 +28,9 @@ public class IotMqttController {
 
 
     @GetMapping("/send")
-    public String send(@RequestParam("msg")String msg) {
+    public String send(@RequestParam("msg") String msg) {
         mqttGateway.sendMessage2Mqtt(msg);
-        System.out.println("发送信息："+msg);
+        System.out.println("发送信息：" + msg);
         return msg;
     }
 

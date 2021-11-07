@@ -46,8 +46,8 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 return this.onLoginSuccess(token, subject, request, response);
             } catch (AuthenticationException e) {
                 Result result = Result.fail("用户认证异常");
-                if (e.getCause() instanceof CustomException){
-                    CustomException customException = (CustomException)e.getCause();
+                if (e.getCause() instanceof CustomException) {
+                    CustomException customException = (CustomException) e.getCause();
                     result = Result.fail(customException.getCode(), customException.getMessage());
                 }
                 WebUtil.sendResponse(response, result);
@@ -83,39 +83,38 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      * 返回true，继续处理请求
      * 返回false，不继续处理请求，结束过滤器链
      * BasicHttpAuthenticationFilter源码中也是在onAccessDenied()方法内调用executeLogin
-     *
+     * <p>
      * 调用链源码
      * org.apache.shiro.web.filter.AccessControlFilter#onPreHandle(){
-     *     this.isAccessAllowed(request, response, mappedValue) || this.onAccessDenied(request, response, mappedValue);
+     * this.isAccessAllowed(request, response, mappedValue) || this.onAccessDenied(request, response, mappedValue);
      * }
      * isAccessAllowed()：如果当前用户通过了身份验证，则返回true。
      * 由于工程禁用了session，这导致isAccessAllowed()永远返回false，那么this.onAccessDenied()本方法永远被调用，相当与是每次请求，我们都执行了一次登录操作。
-     *
+     * <p>
      * 若不禁用session，session中会存储用户标识（在本例中就是请求头Authorization的值）和 用户的认证状态
      * 将com.example.shirojwt.ShiroConfig#securityManager()中禁用session的代码注释掉，则此时的session存储为true
      * debug源码，在下面的代码中打断点
      * org.apache.shiro.web.filter.authc.AuthenticationFilter#isAccessAllowed()
-     *    获取当前的subject，可以将subject理解为用户
+     * 获取当前的subject，可以将subject理解为用户
      * org.apache.shiro.web.mgt.DefaultWebSubjectFactory#createSubject()
      * 主要代码如下：
-     *    PrincipalCollection principals = wsc.resolvePrincipals();
-     *        principals = (PrincipalCollection)session.getAttribute(PRINCIPALS_SESSION_KEY);
-     *           即principals存储在session中了
-     *    boolean authenticated = wsc.resolveAuthenticated();
-     *        Boolean sessionAuthc = (Boolean)session.getAttribute(AUTHENTICATED_SESSION_KEY);
-     *           同样的authenticated（是否已经认证也存储在session中）
+     * PrincipalCollection principals = wsc.resolvePrincipals();
+     * principals = (PrincipalCollection)session.getAttribute(PRINCIPALS_SESSION_KEY);
+     * 即principals存储在session中了
+     * boolean authenticated = wsc.resolveAuthenticated();
+     * Boolean sessionAuthc = (Boolean)session.getAttribute(AUTHENTICATED_SESSION_KEY);
+     * 同样的authenticated（是否已经认证也存储在session中）
      * 最后通过session中的属性创建subject
      * new WebDelegatingSubject(principals, authenticated, host, session, sessionEnabled, request, response, securityManager);
-     *
      */
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         boolean r;
         String authorization = getAuthzHeader(request);
-        if (StringUtils.isEmpty(authorization)){
-            WebUtil.sendResponse(response, Result.fail(Constant.CODE_TOKEN_ERROR,"无token"));
+        if (StringUtils.isEmpty(authorization)) {
+            WebUtil.sendResponse(response, Result.fail(Constant.CODE_TOKEN_ERROR, "无token"));
             r = false;
-        }else {
+        } else {
             r = executeLogin(request, response);
         }
         return r;

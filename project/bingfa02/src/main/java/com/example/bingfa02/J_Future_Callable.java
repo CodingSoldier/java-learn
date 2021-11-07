@@ -42,7 +42,7 @@ V	get(long timeout, TimeUnit unit)  限时获取任务结果
 boolean	isCancelled()  取消任务
 boolean	isDone()   如果任务完成，返回true。
  */
-class Future0{
+class Future0 {
 
     public static void main(String[] args) {
         ExecutorService executorService = Executors.newFixedThreadPool(3);
@@ -55,7 +55,7 @@ class Future0{
         try {
             Object data = f.get();
             // 使用submit(Runnable task);得到的future.get()数据是null
-            System.out.println("submit(Runnable task)得到的future.get()   "+data);
+            System.out.println("submit(Runnable task)得到的future.get()   " + data);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -73,7 +73,7 @@ class Future0{
              * 任务尚未完成（任务未开始或进行中），get()将阻塞并直到任务完成。
              */
             Integer data = future.get();
-            System.out.println("submit(Callable<T> task)得到的future.get()   "+data);
+            System.out.println("submit(Callable<T> task)得到的future.get()   " + data);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -83,14 +83,14 @@ class Future0{
         executorService.shutdown();
     }
 
-    static class Task implements Runnable{
+    static class Task implements Runnable {
         @Override
         public void run() {
-            System.out.println(Thread.currentThread().getName()+"run()运行");
+            System.out.println(Thread.currentThread().getName() + "run()运行");
         }
     }
 
-    static class CallableTask implements Callable<Integer>{
+    static class CallableTask implements Callable<Integer> {
         @Override
         public Integer call() throws Exception {
             TimeUnit.SECONDS.sleep(2);
@@ -101,7 +101,7 @@ class Future0{
 }
 
 
-class Future1{
+class Future1 {
 
     public static void main(String[] args) {
         ExecutorService executorService = Executors.newFixedThreadPool(3);
@@ -123,7 +123,7 @@ class Future1{
         executorService.shutdown();
     }
 
-    static class CallableTask implements Callable<Integer>{
+    static class CallableTask implements Callable<Integer> {
         @Override
         public Integer call() throws Exception {
             TimeUnit.SECONDS.sleep(2);
@@ -137,7 +137,7 @@ class Future1{
 /**
  * 批量提交任务，使用List接收返回结果
  */
-class Future2{
+class Future2 {
     public static void main(String[] args) throws Exception {
         ExecutorService executorService = Executors.newFixedThreadPool(10);
 
@@ -176,7 +176,7 @@ class Future2{
  * Callable抛出异常时，主线程不会抛异常，直到执行future.get()的时候才会抛异常
  * 不论call()执行抛出什么异常，最后get()方法抛出的异常类型都是ExecutionException。
  */
-class Future01{
+class Future01 {
     public static void main(String[] args) throws Exception {
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         Future<Object> future = executorService.submit(() -> {
@@ -185,7 +185,7 @@ class Future01{
 
         TimeUnit.SECONDS.sleep(1);
 
-        System.out.println("任务是否全部运行完毕。"+future.isDone());
+        System.out.println("任务是否全部运行完毕。" + future.isDone());
 
         try {
             Object o = future.get();
@@ -205,17 +205,17 @@ class Future01{
 
 /**
  * 超时与取消任务演示
- *
+ * <p>
  * cancel方法，取消任务
- *     1、如果任务还没开始执行，任务会被取消，未来也不会被执行，返回true。
- *     2、如果任务已完成或已取消，cancel方法会执行失败，返回false。
- *     3、如果任务正在执行，根据cancel(boolean mayInterruptIfRunning)参数取消任务，true取消，false不取消。
+ * 1、如果任务还没开始执行，任务会被取消，未来也不会被执行，返回true。
+ * 2、如果任务已完成或已取消，cancel方法会执行失败，返回false。
+ * 3、如果任务正在执行，根据cancel(boolean mayInterruptIfRunning)参数取消任务，true取消，false不取消。
  * cancel(true)适用于能处理interrupt的任务
  * cancel(false)适用于。
- *     1、不能处理interrupt的任务，或者调用者不确定任务能否处理interrupt。
- *     2、需要等待已经开始的任务执行完成。
+ * 1、不能处理interrupt的任务，或者调用者不确定任务能否处理interrupt。
+ * 2、需要等待已经开始的任务执行完成。
  */
-class Future02{
+class Future02 {
     private static final ExecutorService exec = Executors.newFixedThreadPool(10);
 
     public static void main(String[] args) {
@@ -240,7 +240,7 @@ class Future02{
             ad = new Ad("超时的默认广告");
             System.out.println("超时，执行取消任务");
             boolean cancel = future.cancel(true);
-            System.out.println("cancel的结果："+cancel);
+            System.out.println("cancel的结果：" + cancel);
         }
 
         System.out.println(ad);
@@ -248,11 +248,13 @@ class Future02{
         exec.shutdown();
     }
 
-    static class Ad{
+    static class Ad {
         String name;
+
         public Ad(String name) {
             this.name = name;
         }
+
         @Override
         public String toString() {
             return "Ad{" +
@@ -265,10 +267,9 @@ class Future02{
 
 
 /**
- FutureTask是一种包装器，它同时实现了Callable、Runnable接口，可以把Callable转化为Future和Runnable。查看J02 FutureTask.jpg
-
+ * FutureTask是一种包装器，它同时实现了Callable、Runnable接口，可以把Callable转化为Future和Runnable。查看J02 FutureTask.jpg
  */
-class FutureTask1{
+class FutureTask1 {
     static ExecutorService service = Executors.newCachedThreadPool();
 
     public static void main(String[] args) {
@@ -290,7 +291,7 @@ class FutureTask1{
         service.submit(futureTask);
 
         try {
-            System.out.println("FutureTask运行结果"+futureTask.get());
+            System.out.println("FutureTask运行结果" + futureTask.get());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -302,9 +303,9 @@ class FutureTask1{
 }
 
 /**
- Future注意点：
-    使用for循环批量获取future结果的时候，容易发生一部分线程很慢的情况，get方法调用时应使用timeout限制
-    Future的生命周期不能后退，一旦任务完成，Future就永久停留在已完成状态，不能从头开始
+ * Future注意点：
+ * 使用for循环批量获取future结果的时候，容易发生一部分线程很慢的情况，get方法调用时应使用timeout限制
+ * Future的生命周期不能后退，一旦任务完成，Future就永久停留在已完成状态，不能从头开始
  */
 
 

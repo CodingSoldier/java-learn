@@ -2,76 +2,79 @@ package com.cpq.bingfa.bing_fa_jing_jiang;
 
 
 /**
- Java对象头和Monitor是实现synchronized的基础
- java对象头：
- Mark Word 默认存储对象的hashCode、分代年龄、锁类型、锁标志位等信息
- 无锁状态 锁标志位01
- 轻量级锁 锁标志位00
- 重量级锁 锁标志位10
- 偏向锁   锁标志位01 还包含是否偏向锁标志位1
- Class Metadata Address 类型指针指向对象的类元数据，JVM通过这个指针确定该对象是哪个类的数据
- Monitor：每个java对象天生自带一把看不见的锁
-
-
-
- 字节码层面理解synchronized
-
- public void syncsTask();
- descriptor: ()V
- flags: ACC_PUBLIC
- Code:
- stack=2, locals=3, args_size=1
- 0: aload_0
- 1: dup
- 2: astore_1
- 3: monitorenter          //## monitorenter指令进入同步代码块，锁计数器加1
- 4: getstatic     #2
- 7: ldc           #3
- 9: invokevirtual #4
- 12: aload_1
- 13: monitorexit         //## monitorexit指令退出同步代码块，锁计数器减1
- 14: goto          22
- 17: astore_2
- 18: aload_1
- 19: monitorexit        //## 一个monitorenter对应两个monitorexit是因为最后这个monitorexit用于发生异常时释放锁
- 20: aload_2
- 21: athrow
- 22: return
- Exception table:
- from    to  target type
- 4    14    17   any
- 17    20    17   any
- LineNumberTable:
- line 10: 0
- line 11: 4
- line 12: 12
- line 13: 22
- LocalVariableTable:
- Start  Length  Slot  Name   Signature
- 0      23     0  this   Lcom/example/interview/E1_SyncBlockAndMethod;
- StackMapTable: number_of_entries = 2
- frame_type = 255 full_frame
- offset_delta = 17
- locals = [ class com/example/interview/E1_SyncBlockAndMethod, class java/lang/Object ]
- stack = [ class java/lang/Throwable ]
- frame_type = 250
- offset_delta = 4
-
- public synchronized void syncTask();   //## 同步方法是隐式调用monitorenter、monitorexit，在字节码中没有展示
- descriptor: ()V
- flags: ACC_PUBLIC, ACC_SYNCHRONIZED
- Code:
- stack=2, locals=1, args_size=1
- 0: getstatic     #2
- 3: ldc           #5
- 5: invokevirtual #4
- 8: return
- LineNumberTable:
- line 16: 0
- line 17: 8
- LocalVariableTable:
- Start  Length  Slot  Name   Signature
- 0       9     0  this   Lcom/example/interview/E1_SyncBlockAndMethod;
+ * Java对象头和Monitor是实现synchronized的基础
+ * java对象头：
+ * Mark Word 默认存储对象的hashCode、分代年龄、锁类型、锁标志位等信息
+ * 无锁状态 锁标志位01
+ * 轻量级锁 锁标志位00
+ * 重量级锁 锁标志位10
+ * 偏向锁   锁标志位01 还包含是否偏向锁标志位1
+ * Class Metadata Address 类型指针指向对象的类元数据，JVM通过这个指针确定该对象是哪个类的数据
+ * Monitor：每个java对象天生自带一把看不见的锁
+ * <p>
+ * <p>
+ * <p>
+ * 字节码层面理解synchronized
+ * <p>
+ * public void syncsTask();
+ * descriptor: ()V
+ * flags: ACC_PUBLIC
+ * Code:
+ * stack=2, locals=3, args_size=1
+ * 0: aload_0
+ * 1: dup
+ * 2: astore_1
+ * 3: monitorenter          //## monitorenter指令进入同步代码块，锁计数器加1
+ * 4: getstatic     #2
+ * 7: ldc           #3
+ * 9: invokevirtual #4
+ * 12: aload_1
+ * 13: monitorexit         //## monitorexit指令退出同步代码块，锁计数器减1
+ * 14: goto          22
+ * 17: astore_2
+ * 18: aload_1
+ * 19: monitorexit        //## 一个monitorenter对应两个monitorexit是因为最后这个monitorexit用于发生异常时释放锁
+ * 20: aload_2
+ * 21: athrow
+ * 22: return
+ * Exception table:
+ * from    to  target type
+ * 4    14    17   any
+ * 17    20    17   any
+ * LineNumberTable:
+ * line 10: 0
+ * line 11: 4
+ * line 12: 12
+ * line 13: 22
+ * LocalVariableTable:
+ * Start  Length  Slot  Name   Signature
+ * 0      23     0  this   Lcom/example/interview/E1_SyncBlockAndMethod;
+ * StackMapTable: number_of_entries = 2
+ * frame_type = 255 full_frame
+ * offset_delta = 17
+ * locals = [ class com/example/interview/E1_SyncBlockAndMethod, class java/lang/Object ]
+ * stack = [ class java/lang/Throwable ]
+ * frame_type = 250
+ * offset_delta = 4
+ * <p>
+ * public synchronized void syncTask();   //## 同步方法是隐式调用monitorenter、monitorexit，在字节码中没有展示
+ * descriptor: ()V
+ * flags: ACC_PUBLIC, ACC_SYNCHRONIZED
+ * Code:
+ * stack=2, locals=1, args_size=1
+ * 0: getstatic     #2
+ * 3: ldc           #5
+ * 5: invokevirtual #4
+ * 8: return
+ * LineNumberTable:
+ * line 16: 0
+ * line 17: 8
+ * LocalVariableTable:
+ * Start  Length  Slot  Name   Signature
+ * 0       9     0  this   Lcom/example/interview/E1_SyncBlockAndMethod;
+ * <p>
+ * 从互斥锁的设计上来看，当一个线程试图操作一个有其他线程持有的对象锁临界资源时，将会处于阻塞状态
+ * 但当一个线程再次请求自己持有对象锁的临界资源时，这种情况属于重入
  */
 
 
@@ -126,8 +129,8 @@ package com.cpq.bingfa.bing_fa_jing_jiang;
 
 
 public class G2_SyncBlockAndMethod {
-    public void syncsTask(){
-        synchronized (this){
+    public void syncsTask() {
+        synchronized (this) {
             System.out.println("同步代码块");
         }
     }

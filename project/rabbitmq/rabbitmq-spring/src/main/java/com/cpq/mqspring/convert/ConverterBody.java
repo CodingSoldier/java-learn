@@ -2,21 +2,21 @@ package com.cpq.mqspring.convert;
 
 public class ConverterBody {
 
-	private byte[] body;
-	
-	public ConverterBody() {
-	}
+    private byte[] body;
 
-	public ConverterBody(byte[] body) {
-		this.body = body;
-	}
+    public ConverterBody() {
+    }
 
-	public byte[] getBody() {
-		return body;
-	}
+    public ConverterBody(byte[] body) {
+        this.body = body;
+    }
 
-	public void setBody(byte[] body) {
-		this.body = body;
-	}
-	
+    public byte[] getBody() {
+        return body;
+    }
+
+    public void setBody(byte[] body) {
+        this.body = body;
+    }
+
 }

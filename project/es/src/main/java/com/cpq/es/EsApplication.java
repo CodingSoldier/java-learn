@@ -21,7 +21,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,7 @@ public class EsApplication {
 
     //增加
     @PostMapping("/add/book/novel")
-    public ResponseEntity add1(@RequestBody Map<String, String> map) throws Exception{
+    public ResponseEntity add1(@RequestBody Map<String, String> map) throws Exception {
         XContentBuilder content = XContentFactory.jsonBuilder()
                 .startObject()
                 .field("title", map.get("title"))
@@ -61,7 +60,7 @@ public class EsApplication {
 
     //指定id新增、id存在则为更新
     @PostMapping("/add/book/novel/id")
-    public ResponseEntity addid(@RequestBody Map<String, String> map) throws Exception{
+    public ResponseEntity addid(@RequestBody Map<String, String> map) throws Exception {
         XContentBuilder content = XContentFactory.jsonBuilder()
                 .startObject()
                 .field("title", map.get("title"))
@@ -78,23 +77,23 @@ public class EsApplication {
 
     //更新
     @PostMapping("/update/book/novel")
-    public ResponseEntity update(@RequestBody Map<String, String> map) throws Exception{
+    public ResponseEntity update(@RequestBody Map<String, String> map) throws Exception {
         String title = map.get("title");
         String author = map.get("author");
         String wordCount = map.get("wordCount");
         String publishDate = map.get("publishDate");
 
         XContentBuilder builder = XContentFactory.jsonBuilder().startObject();
-        if (!StringUtils.isEmpty(title)){
+        if (!StringUtils.isEmpty(title)) {
             builder.field("title", title);
         }
-        if (!StringUtils.isEmpty(author)){
+        if (!StringUtils.isEmpty(author)) {
             builder.field("author", author);
         }
-        if (!StringUtils.isEmpty(wordCount)){
+        if (!StringUtils.isEmpty(wordCount)) {
             builder.field("word_count", wordCount);
         }
-        if (!StringUtils.isEmpty(publishDate)){
+        if (!StringUtils.isEmpty(publishDate)) {
             builder.field("publish_date", publishDate);
         }
         builder.endObject();
@@ -109,7 +108,7 @@ public class EsApplication {
 
     //通过id删除
     @PostMapping("/delete/book/novel")
-    public ResponseEntity delete1(@RequestBody Map<String, String> map) throws Exception{
+    public ResponseEntity delete1(@RequestBody Map<String, String> map) throws Exception {
 
         DeleteResponse result = client.prepareDelete("book", "novel", map.get("id")).get();
 
@@ -119,7 +118,7 @@ public class EsApplication {
 
     //复合查询
     @PostMapping("/query/book/novel")
-    public ResponseEntity query(@RequestBody Map<String, String> map) throws Exception{
+    public ResponseEntity query(@RequestBody Map<String, String> map) throws Exception {
         String title = map.get("title");
         String author = map.get("author");
         String gtWordCount = map.get("gtWordCount");
@@ -127,15 +126,15 @@ public class EsApplication {
         String publishDate = map.get("publishDate");
 
         BoolQueryBuilder booleanQuery = QueryBuilders.boolQuery();
-        if (!StringUtils.isEmpty(title)){
+        if (!StringUtils.isEmpty(title)) {
             booleanQuery.must(QueryBuilders.matchQuery("title", title));
         }
-        if (!StringUtils.isEmpty(author)){
+        if (!StringUtils.isEmpty(author)) {
             booleanQuery.must(QueryBuilders.matchQuery("author", author));
         }
 
         RangeQueryBuilder rangeQuery = QueryBuilders.rangeQuery("word_count").from(gtWordCount);
-        if (!StringUtils.isEmpty(ltWordCount)){
+        if (!StringUtils.isEmpty(ltWordCount)) {
             rangeQuery.to(ltWordCount);
         }
 
@@ -149,8 +148,8 @@ public class EsApplication {
         System.out.println(builder);
 
         SearchResponse response = builder.get();
-        List<Map<String ,Object>> result = new ArrayList();
-        for (SearchHit hit :response.getHits()){
+        List<Map<String, Object>> result = new ArrayList();
+        for (SearchHit hit : response.getHits()) {
             result.add(hit.getSourceAsMap());
         }
         return new ResponseEntity(result, HttpStatus.OK);

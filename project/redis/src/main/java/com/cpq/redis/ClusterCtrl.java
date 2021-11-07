@@ -22,7 +22,7 @@ public class ClusterCtrl {
     RedisTemplate redisTemplate;
 
     @GetMapping("/get")
-    public Object test001(){
+    public Object test001() {
         Object value = "";
         try {
             String key = "two:" + new Date().getTime();
@@ -30,7 +30,7 @@ public class ClusterCtrl {
             TimeUnit.MILLISECONDS.sleep(100L);
             System.out.println(redisTemplate.opsForValue().get(key));
             value = redisTemplate.opsForValue().get(key);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             value = "异常";
         }

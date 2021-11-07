@@ -10,7 +10,7 @@ public class A_ClassLoader {
     /**
      * 自定义ClassLoader类加载器，加载class文件
      */
-    static class MyClassLoader extends ClassLoader{
+    static class MyClassLoader extends ClassLoader {
 
         private String path;
         private String classLoaderName;
@@ -22,6 +22,7 @@ public class A_ClassLoader {
 
         /**
          * 查找指定二进制名称的类，遵循加载类的委托模型
+         *
          * @param name 二进制类的名称
          */
         @Override
@@ -34,7 +35,7 @@ public class A_ClassLoader {
             return defineClass(name, b, 0, b.length);
         }
 
-        private byte[] loadClassByte(String name){
+        private byte[] loadClassByte(String name) {
             String classFile = path + name + ".class";
             InputStream in = null;
             ByteArrayOutputStream out = null;
@@ -42,16 +43,16 @@ public class A_ClassLoader {
                 in = new FileInputStream(new File(classFile));
                 out = new ByteArrayOutputStream();
                 int i = 0;
-                while ((i = in.read()) != -1){
+                while ((i = in.read()) != -1) {
                     out.write(i);
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
-            }finally{
+            } finally {
                 try {
                     out.close();
                     in.close();
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -59,8 +60,8 @@ public class A_ClassLoader {
         }
     }
 
-    static class TestClassLoader{
-        public static void main(String[] args) throws Exception{
+    static class TestClassLoader {
+        public static void main(String[] args) throws Exception {
 
             // 创建自定义类加载器，自定义类加载器需要指定类加载路径
             MyClassLoader m = new MyClassLoader("D:\\third-code\\java-learn\\project\\bf\\src\\main\\java\\com\\cpq\\bf\\interview\\", "myClassLoader");

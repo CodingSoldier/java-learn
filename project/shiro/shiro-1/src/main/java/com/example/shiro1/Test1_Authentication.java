@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 public class Test1_Authentication {
 
     @Test
-    public void test1(){
+    public void test1() {
 
         SimpleAccountRealm sar = new SimpleAccountRealm();
         sar.addAccount("username01", "pwd01");
@@ -23,12 +23,12 @@ public class Test1_Authentication {
 
         SecurityUtils.setSecurityManager(dsm);
         Subject subject = SecurityUtils.getSubject();
-        System.out.println("subject未登陆，principals是null: "+subject.getPrincipals());
+        System.out.println("subject未登陆，principals是null: " + subject.getPrincipals());
 
         UsernamePasswordToken token = new UsernamePasswordToken("username01", "pwd01");
 
         subject.login(token);
-        System.out.println("subject登陆成功后，principals是UsernamePasswordToken中的第一个参数: "+subject.getPrincipals());
+        System.out.println("subject登陆成功后，principals是UsernamePasswordToken中的第一个参数: " + subject.getPrincipals());
 
     }
 
@@ -37,7 +37,7 @@ public class Test1_Authentication {
      * https://waylau.gitbooks.io/apache-shiro-1-2-x-reference/content/
      */
     @Test
-    public void testAuthentication(){
+    public void testAuthentication() {
 
         SimpleAccountRealm sar = new SimpleAccountRealm();
         sar.addAccount("username01", "pwd01");
@@ -64,12 +64,12 @@ public class Test1_Authentication {
          */
         subject.login(token);
 
-        System.out.println("是否已经认证："+subject.isAuthenticated());
+        System.out.println("是否已经认证：" + subject.isAuthenticated());
 
         // 退出后，认证失败
         subject.logout();
 
-        System.out.println("是否已经认证："+subject.isAuthenticated());
+        System.out.println("是否已经认证：" + subject.isAuthenticated());
     }
 
 
@@ -77,7 +77,7 @@ public class Test1_Authentication {
      * 检查角色
      */
     @Test
-    public void testRoles(){
+    public void testRoles() {
 
         SimpleAccountRealm sar = new SimpleAccountRealm();
         //sar.addAccount("username01", "pwd01", "admin", "user1");
@@ -104,9 +104,6 @@ public class Test1_Authentication {
         subject.checkRoles("admin");
         //subject.checkRoles("admin", "user");
     }
-
-
-
 
 
 }

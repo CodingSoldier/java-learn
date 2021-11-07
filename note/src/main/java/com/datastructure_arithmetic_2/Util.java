@@ -15,7 +15,6 @@ public class Util {
     }
 
     public static Integer[] generateOrderedArray(int n) {
-
         assert n > 0;
 
         Integer[] arr = new Integer[n];
@@ -25,5 +24,18 @@ public class Util {
         return arr;
     }
 
+    public static void main(String[] args) {
+        // Integer i1 = 1595008451;
+        // String s = Integer.toBinaryString(i1);
+        // System.out.println(s);
+        //
+        // int i2 = i1 >>> 1;
+        // String s2 = Integer.toBinaryString(i2);
+        // System.out.println(s2);
+
+        int i2 = 1<<5;
+        String s2 = Integer.toBinaryString(i2);
+        System.out.println(s2);
+    }
 
 }

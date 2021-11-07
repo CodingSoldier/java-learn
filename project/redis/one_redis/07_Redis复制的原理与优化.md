@@ -28,10 +28,8 @@ slaveof ${masterIP} ${masterPort}
 
 |               配置项                |                   含义                    |
 | :---------------------------------: | :---------------------------------------: |
-| salveof ${masterIP}  {masterPort} |    设置当前节点作为其他节点的slave节点    |
+| salveof ${masterIP} {masterPort} |    设置当前节点作为其他节点的slave节点    |
 |         slave-read-only yes         | 设置当前slave节点是只读的，不会执行写操作 |
-
-
 
 ### 3.取消主从的方式
 
@@ -45,10 +43,6 @@ salveof no one
 ### 4.查看当前节点是否主从
 
 - info replication
-
-
-
-
 
 # run_id与偏移量
 
@@ -73,15 +67,11 @@ run_id:345dda992e5064bc80e01f96ea90f729b722b2ea
 - 从节点每秒上报自身的复制偏移量给主节点，因此主节点也会保存从节点的复制偏移量
 - 从节点在接收到主节点发送的命令后，也会累加记录自身的偏移量。统计在info replication中的slave_repl_offset指标中
 
-
-
-
-
 # 全量复制
 
 ## 一、全量复制流程
 
-### 1.slave -> master : psync  ?  -1
+### 1.slave -> master : psync ? -1
 
 - ? 代表当前slave节点不知道master节点的runid
 - -1代表当前slave节点的偏移量为-1
@@ -100,7 +90,7 @@ run_id:345dda992e5064bc80e01f96ea90f729b722b2ea
 
 - master节点通过bgsave命令进行RDB操作
 
-###5.master -> slave : send RDB
+### 5.master -> slave : send RDB
 
 - master将bgsave完的RDB结果发送给slave节点
 
@@ -131,10 +121,6 @@ run_id:345dda992e5064bc80e01f96ea90f729b722b2ea
 
 在redis4.0中，优化了psync，简称psync2，实现了即使redis实例重启的情况下也能实现部分同步
 
-
-
-
-
 # 部分复制
 
 ## 一、部分复制流程
@@ -147,7 +133,7 @@ run_id:345dda992e5064bc80e01f96ea90f729b722b2ea
 
 - slave重新建立与master节点的连接
 
-### 3.slave -> master : psync runId offset 
+### 3.slave -> master : psync runId offset
 
 - slave节点发送master节点的runId以及自身的offset
 
@@ -161,10 +147,6 @@ run_id:345dda992e5064bc80e01f96ea90f729b722b2ea
 
 - 发送部分数据给slave节点让slave节点完成部分复制
 
-
-
-
-
 # 故障处理
 
 ## 一、slave宕机故障
@@ -175,14 +157,10 @@ run_id:345dda992e5064bc80e01f96ea90f729b722b2ea
 
 - redis将无法执行写请求，只有slave节点能执行读请求，影响了系统的可用性
 - 方法1：
-  - 随机找一个节点，执行slaveof no one，使其成为master节点
-  - 然后对其他slave节点执行slaveof newMatserIp newMasterPort
+    - 随机找一个节点，执行slaveof no one，使其成为master节点
+    - 然后对其他slave节点执行slaveof newMatserIp newMasterPort
 - 方法2：
-  - 马上重启master节点，它将会重新成为master
-
-
-
-
+    - 马上重启master节点，它将会重新成为master
 
 # 开发与运维中的问题
 
@@ -192,37 +170,37 @@ run_id:345dda992e5064bc80e01f96ea90f729b722b2ea
 
 - 可能遇到的问题
 
-  - 复制数据延迟
+    - 复制数据延迟
 
-    - 当写操作从master同步到slave的时候，会有很短的延迟
-    - 当网络原因或者slave阻塞时，会有比较长的延迟
-    - 在这种情况下，可以通过配置一个事务中的读写都在主库得已实现
-    - 可以通过偏移量对这类问题进行监控
-  - 读到过期数据（在v3.2中已经解决）
+        - 当写操作从master同步到slave的时候，会有很短的延迟
+        - 当网络原因或者slave阻塞时，会有比较长的延迟
+        - 在这种情况下，可以通过配置一个事务中的读写都在主库得已实现
+        - 可以通过偏移量对这类问题进行监控
+    - 读到过期数据（在v3.2中已经解决）
 
-    - 删除过期数据的策略1：操作key的时候校验该key是否过期，如果已经过期，则删除
-    - 删除过期数据的策略2：redis内部有一个定时任务定时检查key有没有过期，如果采样的速度比不上过期数据的产生速度，会导致很多过期数据没有被删除。
-    - 在redis集群中，有一个约定，slave节点只能读取数据，而不能操作数据
-  - 从节点故障
+        - 删除过期数据的策略1：操作key的时候校验该key是否过期，如果已经过期，则删除
+        - 删除过期数据的策略2：redis内部有一个定时任务定时检查key有没有过期，如果采样的速度比不上过期数据的产生速度，会导致很多过期数据没有被删除。
+        - 在redis集群中，有一个约定，slave节点只能读取数据，而不能操作数据
+    - 从节点故障
 
 ## 二、配置不一致
 
 - maxmemory不一致：可能会丢失数据
-  - 例如master配置为4G，从节点配置为2G。
+    - 例如master配置为4G，从节点配置为2G。
 
 - 数据结构优化参数（例如hash-max-ziplist-entries)：导致内存不一致
 
 ## 三、规避全量复制
 
 - 第一次全量复制
-  - 第一次不可避免
-  - 小主节点，低峰处理（夜间）
+    - 第一次不可避免
+    - 小主节点，低峰处理（夜间）
 - 节点运行ID不匹配
-  - 主节点重启（运行ID变化）
-  - 可以使用故障转移进行处理，例如哨兵或集群。
+    - 主节点重启（运行ID变化）
+    - 可以使用故障转移进行处理，例如哨兵或集群。
 - 复制积压缓冲区不足
-  - 如果offset在缓冲区之内，则可以完成部分复制，否则需要全量复制
-  - 可以增大复制缓冲区的大小：rel_backlog_size，默认1M，可以提升为10MB
+    - 如果offset在缓冲区之内，则可以完成部分复制，否则需要全量复制
+    - 可以增大复制缓冲区的大小：rel_backlog_size，默认1M，可以提升为10MB
 
 ## 四、规避复制风暴
 

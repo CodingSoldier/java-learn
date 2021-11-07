@@ -23,7 +23,7 @@ class ScheduledConfig {
      */
     //@Scheduled(cron="0 */1 * * * ?")
     @Scheduled(cron = "0 0 1 * * ?")
-    public void clearJwtRealmCache(){
+    public void clearJwtRealmCache() {
 
         Cache<Object, AuthenticationInfo> authen = jwtRealm.getAuthenticationCache();
         Cache<Object, AuthorizationInfo> author = jwtRealm.getAuthorizationCache();

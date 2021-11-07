@@ -30,7 +30,7 @@ class LockMustUnlock {
      * 获取锁。如果锁被其他线程获取，则进行等待。
      * Lock锁不会像synchronized一样在异常时自动释放锁。
      * 最佳实践是在finally中释放锁，以保证发生异常时锁一定被释放。
-     *
+     * <p>
      * lock()方法不能被中断，则会带来很大的隐患。一旦陷入死锁，lock()就会陷入永久等待。
      */
     public static void main(String[] args) {
@@ -42,11 +42,6 @@ class LockMustUnlock {
         }
     }
 }
-
-
-
-
-
 
 
 /**
@@ -67,7 +62,7 @@ class TryLockTimeOut implements Runnable {
         TryLockTimeOut r1 = new TryLockTimeOut();
         TryLockTimeOut r2 = new TryLockTimeOut();
         r1.flag = 1;
-        r2.flag =0;
+        r2.flag = 0;
         new Thread(r1).start();
         new Thread(r2).start();
 
@@ -149,31 +144,30 @@ class TryLockTimeOut implements Runnable {
 }
 
 
-
-class LockInterruptiblyDemo{
+class LockInterruptiblyDemo {
     private static Lock lock = new ReentrantLock();
 
     private static Runnable runnable = () -> {
-        System.out.println(Thread.currentThread().getName()+"运行");
+        System.out.println(Thread.currentThread().getName() + "运行");
         try {
             /**
              * 线程等待锁期间可以响应中断
              */
             lock.lockInterruptibly();
             try {
-                System.out.println(Thread.currentThread().getName()+"获取到锁");
-                while (true){
+                System.out.println(Thread.currentThread().getName() + "获取到锁");
+                while (true) {
                 }
             } finally {
                 lock.unlock();
             }
         } catch (InterruptedException e) {
-            System.out.println(Thread.currentThread().getName()+"等待锁期间被中断");
+            System.out.println(Thread.currentThread().getName() + "等待锁期间被中断");
             e.printStackTrace();
         }
     };
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         Thread thread1 = new Thread(runnable);
         Thread thread2 = new Thread(runnable);
         thread1.start();
@@ -210,21 +204,21 @@ class LockInterruptiblyDemo{
 /**
  * 可重入锁：线程持有锁期间，该线程可以反复获取锁
  */
-class ReentrantLockRecursion{
+class ReentrantLockRecursion {
     private static ReentrantLock lock = new ReentrantLock();
 
-    private static void accessResource(){
+    private static void accessResource() {
         lock.lock();
         try {
             /**
              * getHoldCount()当前线程持锁次数
              */
-            if (lock.getHoldCount() < 5){
+            if (lock.getHoldCount() < 5) {
                 System.out.println("递归前重入次数：" + lock.getHoldCount());
                 accessResource();
                 System.out.println("递归后重入次数：" + lock.getHoldCount());
             }
-        }finally {
+        } finally {
             lock.unlock();
         }
     }
@@ -233,8 +227,6 @@ class ReentrantLockRecursion{
         accessResource();
     }
 }
-
-
 
 
 /*
@@ -250,7 +242,7 @@ class ReentrantLockRecursion{
     当有线程执行tryLock()的时候，一旦有线程释放了锁，那么这个正在tryLock的线程就能获取到锁，即使在他之前已经有其他正在等待的队列。
 
  */
-class FairLock{
+class FairLock {
     public static void main(String[] args) {
         // 非公平锁，默认
         ReentrantLock reentrantLock = new ReentrantLock(false);
@@ -263,85 +255,82 @@ class FairLock{
 
 
 /**
-排他锁：又称为独占锁、独享说。拿到锁的线程可以读写数据、没拿到锁的线程不能读写数据。
-共享锁：又称为读锁，获得共享锁之后，可以查看但无法修改、删除数据。其他线程此时也可以获取到共享锁，可以查看数据，但是无法修改、删除数据。
-
-读写锁规则：
-    1、多个线程只申请读锁，可以申请到。
-    2、一个线程持有读锁，其他线程申请写锁，申请锁的线程会阻塞，直到读锁被释放。
-    3、一个线程持有写锁，其他线程申请读锁、写锁，申请锁的线程会阻塞，直到写锁释放。
-    总结：读锁可被多个线程同时拥有，写锁只能被一个线程同时拥有；读锁、写锁互斥不能同时出现。
-
-公平锁不允许插队。非公平锁有两种策略
-
-非公平锁读写锁插队策略
-    线程1、线程2正在读取；线程3要写入，拿不到写锁，线程3进入等待队列；此时线程4要获取读锁，线程4能获取到读锁。
-           这种策略效率高，但是容易造成写锁等待时间长，造成写线程饥饿。
-公平锁
-    不允许插队，避免饥饿。ReentrantReadWriteLock默认使用这种策略。
-
-非公平锁插队策略：
-    写锁可以随时插队
-    读锁仅在等待队列头结点不是获取写锁线程的时候可以插队
-
-ReentrantReadWriteLock源码
- 公平锁：
-    static final class FairSync extends Sync {
-        private static final long serialVersionUID = -2274990926593161451L;
-
-        写操作是否阻塞的判断依据是队列中是否有线程
-        final boolean writerShouldBlock() {
-            return hasQueuedPredecessors();
-        }
-
-        读操作是否阻塞的判断依据是队列中是否有线程
-        final boolean readerShouldBlock() {
-            return hasQueuedPredecessors();
-        }
-    }
-
- 非公平锁
-     static final class NonfairSync extends Sync {
-         private static final long serialVersionUID = -8159625535654395037L;
-
-        不需要等待，可以插队
-         final boolean writerShouldBlock() {
-            return false; // writers can always barge
-         }
-
-         读锁判断队列中的头节点是否是排他锁
-         final boolean readerShouldBlock() {
-            return apparentlyFirstQueuedIsExclusive();
-         }
-     }
-
-读锁调用栈
- ReentrantReadWriteLock.Sync#tryAcquireShared(int)
-    readerShouldBlock()  在获取读锁之前检查是否应该排队
-
-
-
+ * 排他锁：又称为独占锁、独享说。拿到锁的线程可以读写数据、没拿到锁的线程不能读写数据。
+ * 共享锁：又称为读锁，获得共享锁之后，可以查看但无法修改、删除数据。其他线程此时也可以获取到共享锁，可以查看数据，但是无法修改、删除数据。
+ * <p>
+ * 读写锁规则：
+ * 1、多个线程只申请读锁，可以申请到。
+ * 2、一个线程持有读锁，其他线程申请写锁，申请锁的线程会阻塞，直到读锁被释放。
+ * 3、一个线程持有写锁，其他线程申请读锁、写锁，申请锁的线程会阻塞，直到写锁释放。
+ * 总结：读锁可被多个线程同时拥有，写锁只能被一个线程同时拥有；读锁、写锁互斥不能同时出现。
+ * <p>
+ * 公平锁不允许插队。非公平锁有两种策略
+ * <p>
+ * 非公平锁读写锁插队策略
+ * 线程1、线程2正在读取；线程3要写入，拿不到写锁，线程3进入等待队列；此时线程4要获取读锁，线程4能获取到读锁。
+ * 这种策略效率高，但是容易造成写锁等待时间长，造成写线程饥饿。
+ * 公平锁
+ * 不允许插队，避免饥饿。ReentrantReadWriteLock默认使用这种策略。
+ * <p>
+ * 非公平锁插队策略：
+ * 写锁可以随时插队
+ * 读锁仅在等待队列头结点不是获取写锁线程的时候可以插队
+ * <p>
+ * ReentrantReadWriteLock源码
+ * 公平锁：
+ * static final class FairSync extends Sync {
+ * private static final long serialVersionUID = -2274990926593161451L;
+ * <p>
+ * 写操作是否阻塞的判断依据是队列中是否有线程
+ * final boolean writerShouldBlock() {
+ * return hasQueuedPredecessors();
+ * }
+ * <p>
+ * 读操作是否阻塞的判断依据是队列中是否有线程
+ * final boolean readerShouldBlock() {
+ * return hasQueuedPredecessors();
+ * }
+ * }
+ * <p>
+ * 非公平锁
+ * static final class NonfairSync extends Sync {
+ * private static final long serialVersionUID = -8159625535654395037L;
+ * <p>
+ * 不需要等待，可以插队
+ * final boolean writerShouldBlock() {
+ * return false; // writers can always barge
+ * }
+ * <p>
+ * 读锁判断队列中的头节点是否是排他锁
+ * final boolean readerShouldBlock() {
+ * return apparentlyFirstQueuedIsExclusive();
+ * }
+ * }
+ * <p>
+ * 读锁调用栈
+ * ReentrantReadWriteLock.Sync#tryAcquireShared(int)
+ * readerShouldBlock()  在获取读锁之前检查是否应该排队
  */
 
 
-class ReadWriteLock01{
+class ReadWriteLock01 {
 
     private static ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock(true);
 
-     // 非公平读写锁，默认
+    // 非公平读写锁，默认
     // private static ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock();
     private static ReentrantReadWriteLock.ReadLock readLock = reentrantReadWriteLock.readLock();
     private static ReentrantReadWriteLock.WriteLock writeLock = reentrantReadWriteLock.writeLock();
 
-    private static void read(){
+    private static void read() {
         readLock.lock();
         try {
-            System.out.println(Thread.currentThread().getName()+"得到读锁");
+            System.out.println(Thread.currentThread().getName() + "得到读锁");
             TimeUnit.MILLISECONDS.sleep(new Random().nextInt(1000) + 3000);
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
-        }finally{
-            System.out.println(Thread.currentThread().getName()+"释放读锁");
+        } finally {
+            System.out.println(Thread.currentThread().getName() + "释放读锁");
 
             /**
              * unlock()要放在finally第一句，保证锁能释放
@@ -355,22 +344,21 @@ class ReadWriteLock01{
         }
     }
 
-    private static void write(){
+    private static void write() {
         writeLock.lock();
         try {
-            System.out.println(Thread.currentThread().getName()+"得到写锁");
+            System.out.println(Thread.currentThread().getName() + "得到写锁");
             TimeUnit.MILLISECONDS.sleep(new Random().nextInt(1000) + 3000);
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-        finally {
-            System.out.println(Thread.currentThread().getName()+"释放写锁");
+        } finally {
+            System.out.println(Thread.currentThread().getName() + "释放写锁");
 
             writeLock.unlock();
         }
     }
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         new Thread(() -> read(), "线程1").start();
         new Thread(() -> read(), "线程2").start();
         TimeUnit.MILLISECONDS.sleep(100);
@@ -382,43 +370,39 @@ class ReadWriteLock01{
 }
 
 
-
-
-
-class ReadWriteLock02{
+class ReadWriteLock02 {
 
     private static ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock(false);
     private static ReentrantReadWriteLock.ReadLock readLock = reentrantReadWriteLock.readLock();
     private static ReentrantReadWriteLock.WriteLock writeLock = reentrantReadWriteLock.writeLock();
 
-    private static void read(){
+    private static void read() {
         readLock.lock();
         try {
-            System.out.println(Thread.currentThread().getName()+"得到读锁");
+            System.out.println(Thread.currentThread().getName() + "得到读锁");
             TimeUnit.SECONDS.sleep(5);
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
-        }finally{
-            System.out.println(Thread.currentThread().getName()+"释放读锁");
+        } finally {
+            System.out.println(Thread.currentThread().getName() + "释放读锁");
             readLock.unlock();
         }
     }
 
-    private static void write(){
+    private static void write() {
         writeLock.lock();
         try {
-            System.out.println(Thread.currentThread().getName()+"得到写锁");
+            System.out.println(Thread.currentThread().getName() + "得到写锁");
             TimeUnit.SECONDS.sleep(1);
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-        finally {
-            System.out.println(Thread.currentThread().getName()+"释放写锁");
+        } finally {
+            System.out.println(Thread.currentThread().getName() + "释放写锁");
             writeLock.unlock();
         }
     }
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         /**
          * 非公平锁
          *      线程1持有读锁
@@ -437,10 +421,7 @@ class ReadWriteLock02{
 }
 
 
-
-
-
-class NonFairLockDemo{
+class NonFairLockDemo {
     /**
      * 公平锁
      */
@@ -453,26 +434,26 @@ class NonFairLockDemo{
     private static ReentrantReadWriteLock.ReadLock readLock = reentrantReadWriteLock.readLock();
     private static ReentrantReadWriteLock.WriteLock writeLock = reentrantReadWriteLock.writeLock();
 
-    private static void read(){
+    private static void read() {
         readLock.lock();
         try {
-            System.out.println(Thread.currentThread().getName()+"得到读锁");
+            System.out.println(Thread.currentThread().getName() + "得到读锁");
             TimeUnit.MILLISECONDS.sleep(10);
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             readLock.unlock();
         }
     }
 
-    private static void write(){
+    private static void write() {
         writeLock.lock();
         try {
-            System.out.println(Thread.currentThread().getName()+"得到写锁");
+            System.out.println(Thread.currentThread().getName() + "得到写锁");
             TimeUnit.MILLISECONDS.sleep(30);
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             writeLock.unlock();
         }
     }
@@ -514,11 +495,9 @@ class NonFairLockDemo{
 }
 
 
+class Nonfair {
 
-
-class Nonfair{
-
-     //private static ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock(true);
+    //private static ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock(true);
 
     // 非公平锁演示，读锁插队演示
     private static ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock(false);
@@ -526,34 +505,34 @@ class Nonfair{
     private static ReentrantReadWriteLock.ReadLock readLock = reentrantReadWriteLock.readLock();
     private static ReentrantReadWriteLock.WriteLock writeLock = reentrantReadWriteLock.writeLock();
 
-    private static void read(){
-        System.out.println(Thread.currentThread().getName()+"开始尝试获取读锁");
+    private static void read() {
+        System.out.println(Thread.currentThread().getName() + "开始尝试获取读锁");
         readLock.lock();
         try {
-            System.out.println(Thread.currentThread().getName()+"获取到读锁");
+            System.out.println(Thread.currentThread().getName() + "获取到读锁");
             try {
                 TimeUnit.MILLISECONDS.sleep(10);
-            }catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }finally{
-            System.out.println(Thread.currentThread().getName()+"释放读锁");
+        } finally {
+            System.out.println(Thread.currentThread().getName() + "释放读锁");
             readLock.unlock();
         }
     }
 
-    private static void write(){
-        System.out.println(Thread.currentThread().getName()+"开始尝试获取写锁");
+    private static void write() {
+        System.out.println(Thread.currentThread().getName() + "开始尝试获取写锁");
         writeLock.lock();
         try {
-            System.out.println(Thread.currentThread().getName()+"获取到写锁");
+            System.out.println(Thread.currentThread().getName() + "获取到写锁");
             try {
                 TimeUnit.MILLISECONDS.sleep(20);
-            }catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }finally{
-            System.out.println(Thread.currentThread().getName()+"释放写锁");
+        } finally {
+            System.out.println(Thread.currentThread().getName() + "释放写锁");
             writeLock.unlock();
         }
     }
@@ -577,10 +556,10 @@ class Nonfair{
          非公平锁，打印 开始尝试获取读锁 的线程与 获取到读锁 的线程顺序不一样，
          有些子线打印了 开始尝试获取读锁 后马上打印 获取到读锁
          输出流程如下：
-            线程1获取写锁
-            其他线程以及子线程开始尝试获取读锁，并排队
-            线程1释放写锁
-            会出现子线程开始获取读锁后，马上能获取到读锁，此线程插队了。比那些已经排队的读线程更早拿到读锁
+         线程1获取写锁
+         其他线程以及子线程开始尝试获取读锁，并排队
+         线程1释放写锁
+         会出现子线程开始获取读锁后，马上能获取到读锁，此线程插队了。比那些已经排队的读线程更早拿到读锁
 
          */
         new Thread(() -> {
@@ -597,52 +576,48 @@ class Nonfair{
 }
 
 
-
-
-
-
 /**
- 锁可以降级
-    同步代码中，当写入操作完成，还有读取操作，此时可以将锁降级为读锁。
- 锁不支持升级
-    升级会造成死锁，若A、B线程同时持有读锁，又同时想升级写锁，则A、B都希望对方释放读锁，造成死锁。
+ * 锁可以降级
+ * 同步代码中，当写入操作完成，还有读取操作，此时可以将锁降级为读锁。
+ * 锁不支持升级
+ * 升级会造成死锁，若A、B线程同时持有读锁，又同时想升级写锁，则A、B都希望对方释放读锁，造成死锁。
  */
-class LockUpgradingDowngrading{
+class LockUpgradingDowngrading {
     private static ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock();
     private static ReentrantReadWriteLock.ReadLock readLock = reentrantReadWriteLock.readLock();
     private static ReentrantReadWriteLock.WriteLock writeLock = reentrantReadWriteLock.writeLock();
 
-    private static void writeDowngrading(){
+    private static void writeDowngrading() {
         writeLock.lock();
         try {
-            System.out.println(Thread.currentThread().getName()+"获取到写锁");
+            System.out.println(Thread.currentThread().getName() + "获取到写锁");
             TimeUnit.SECONDS.sleep(1);
 
-            System.out.println(Thread.currentThread().getName()+"尝试获取读锁，锁可以降级");
+            System.out.println(Thread.currentThread().getName() + "尝试获取读锁，锁可以降级");
             readLock.lock();
-            System.out.println(Thread.currentThread().getName()+"锁降级成功");
+            System.out.println(Thread.currentThread().getName() + "锁降级成功");
             readLock.unlock();
-        }catch(InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             writeLock.unlock();
         }
     }
 
-    private static void readLockUpgrading(){
+    private static void readLockUpgrading() {
         readLock.lock();
         try {
-            System.out.println(Thread.currentThread().getName()+"获取到读锁");
+            System.out.println(Thread.currentThread().getName() + "获取到读锁");
             TimeUnit.SECONDS.sleep(1);
 
-            System.out.println(Thread.currentThread().getName()+"尝试获取写锁。但是锁无法升级，线程阻塞");
+            System.out.println(Thread.currentThread().getName() + "尝试获取写锁。但是锁无法升级，线程阻塞");
             writeLock.lock();
-            System.out.println(Thread.currentThread().getName()+"锁升级成功，此代码不会执行");
+            System.out.println(Thread.currentThread().getName() + "锁升级成功，此代码不会执行");
             writeLock.unlock();
 
-        }catch(InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             readLock.unlock();
         }
     }
@@ -659,45 +634,44 @@ class LockUpgradingDowngrading{
 
 
 /**
- atmoic包下的类基本上都是自旋锁的实现
- AtomicInteger自旋锁的实现原理是CAS
- AtomicInteger中调用unsafe进行自增操作的源码中
-    有一个do-while循环，循环是自旋操作。如果修改过程中遇到其他线程竞争导致没修改成功，就继续循环，直到修改成功。
-
- public final int incrementAndGet() {
-    return unsafe.getAndAddInt(this, valueOffset, 1) + 1;
- }
-
- public final int getAndAddInt(Object var1, long var2, int var4) {
-     int var5;
-     do {
-        var5 = this.getIntVolatile(var1, var2);
-     } while(!this.compareAndSwapInt(var1, var2, var5, var5 + var4));
-     return var5;
- }
-
- 自旋锁使用场景：
-    自旋锁一般用于多核服务器，在并发度不是特别高的情况下比阻塞锁效率高。
-    自旋锁适用于临界区比较小的情况，如果临界区很大（线程拿到锁后很久才释放），那也是不适合的。
-
- JVM对锁的优化：
-    自旋锁锁自适应，尝试N次失败后转为阻塞锁，N也可以自适应调节大小。
-    锁消除，虚拟机判断不需要加锁，把锁消除。
-    锁粗化，一系列的加锁解锁是对同一个资源反复加锁，把锁范围加大
-
+ * atmoic包下的类基本上都是自旋锁的实现
+ * AtomicInteger自旋锁的实现原理是CAS
+ * AtomicInteger中调用unsafe进行自增操作的源码中
+ * 有一个do-while循环，循环是自旋操作。如果修改过程中遇到其他线程竞争导致没修改成功，就继续循环，直到修改成功。
+ * <p>
+ * public final int incrementAndGet() {
+ * return unsafe.getAndAddInt(this, valueOffset, 1) + 1;
+ * }
+ * <p>
+ * public final int getAndAddInt(Object var1, long var2, int var4) {
+ * int var5;
+ * do {
+ * var5 = this.getIntVolatile(var1, var2);
+ * } while(!this.compareAndSwapInt(var1, var2, var5, var5 + var4));
+ * return var5;
+ * }
+ * <p>
+ * 自旋锁使用场景：
+ * 自旋锁一般用于多核服务器，在并发度不是特别高的情况下比阻塞锁效率高。
+ * 自旋锁适用于临界区比较小的情况，如果临界区很大（线程拿到锁后很久才释放），那也是不适合的。
+ * <p>
+ * JVM对锁的优化：
+ * 自旋锁锁自适应，尝试N次失败后转为阻塞锁，N也可以自适应调节大小。
+ * 锁消除，虚拟机判断不需要加锁，把锁消除。
+ * 锁粗化，一系列的加锁解锁是对同一个资源反复加锁，把锁范围加大
  */
-class SpinLock{
+class SpinLock {
     private AtomicReference<Thread> sign = new AtomicReference<>();
 
-    public void lock(){
+    public void lock() {
         Thread currentThread = Thread.currentThread();
         // 在一个原子操作内比较旧值是否为null，如果是则设置新值为currentThread
-        while (!sign.compareAndSet(null, currentThread)){
-            System.out.println(currentThread.getName()+"  compareAndSet失败，自旋，再次尝试");
+        while (!sign.compareAndSet(null, currentThread)) {
+            System.out.println(currentThread.getName() + "  compareAndSet失败，自旋，再次尝试");
         }
     }
 
-    public void unlock(){
+    public void unlock() {
         Thread currentThread = Thread.currentThread();
         sign.compareAndSet(currentThread, null);
     }
@@ -705,14 +679,14 @@ class SpinLock{
     public static void main(String[] args) {
         SpinLock spinLock = new SpinLock();
         Runnable runnable = () -> {
-            System.out.println(Thread.currentThread().getName()+"尝试获取锁");
+            System.out.println(Thread.currentThread().getName() + "尝试获取锁");
             spinLock.lock();
             try {
                 System.out.println(Thread.currentThread().getName() + "获取到自旋锁");
                 TimeUnit.MILLISECONDS.sleep(1);
-            }catch(InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
-            }finally {
+            } finally {
                 spinLock.unlock();
             }
         };

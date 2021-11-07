@@ -3,14 +3,14 @@
 ### 1.keys pattern
 
 - 含义：查找所有符合给定模式（pattern）的key
-  - keys *	            遍历所有key
-  - keys he[h-l]*     遍历以he开头，第三个字符为h-l之间的所有key
-  - keys ph?             ?代表一个字符
+    - keys * 遍历所有key
+    - keys he[h-l]*     遍历以he开头，第三个字符为h-l之间的所有key
+    - keys ph? ?代表一个字符
 - 注意：keys命令一般不在生产环境中使用
-  - 生产环境的key比较多，keys这个命令是一个O(n)的命令
-  - 由于Redis是单线程的，这个命令的操作会阻塞其他操作
-  - 可以在从节点上执行keys命令
-  - 使用SCAN命令代替keys命令
+    - 生产环境的key比较多，keys这个命令是一个O(n)的命令
+    - 由于Redis是单线程的，这个命令的操作会阻塞其他操作
+    - 可以在从节点上执行keys命令
+    - 使用SCAN命令代替keys命令
 
 ### 2.dbsize
 
@@ -31,8 +31,8 @@
 ### 6. ttl key
 
 - 含义：以秒为单位，返回给定key的剩余生存时间（TTL , time to live)
-  - 不存在key返回-2
-  - 无过期时间的key返回-1
+    - 不存在key返回-2
+    - 无过期时间的key返回-1
 
 ### 7.persist key
 
@@ -41,11 +41,7 @@
 ### 8.type key
 
 - 含义：返回key所存储的值的类型
-  - 不存在的key返回none
-
-
-
-
+    - 不存在的key返回none
 
 # String数据类型
 
@@ -89,7 +85,7 @@
 
 - 含义：与⑦相同，只有当key不存在时才设置key的值
 
-###9.setex key second value
+### 9.setex key second value
 
 - 含义：设置指定key的值，同时设置该key的过期时间，单位为秒
 
@@ -122,9 +118,9 @@
 ### 3.strlen key
 
 - 含义：返回key所存储的字符串值的长度
-  - 当key不存在时，返回0
-  - 一个中文占2个字节
-  - 时间复杂度为O(1)，strlen在redis内部不需要查询整个字符串来得到长度
+    - 当key不存在时，返回0
+    - 一个中文占2个字节
+    - 时间复杂度为O(1)，strlen在redis内部不需要查询整个字符串来得到长度
 
 ### 4.incrbyfloat key increment
 
@@ -137,11 +133,7 @@
 ### 6.setrange key offset value
 
 - 含义：用value擦书覆盖指定key所存储的字符串值，从偏移量offset开始，索引从0开始
-  - key = content的时候，执行setrange key 1 haha 之后，key=chahant
-
-
-
-
+    - key = content的时候，执行setrange key 1 haha 之后，key=chahant
 
 # Hash数据类型
 
@@ -202,18 +194,14 @@
 
 - 含义：为哈希表中指定field的值加上一个浮点数增量
 
-
-
-
-
 # List数据类型
 
 ## List-结构
 
 - 列表：有序、可以有重复元素
 - 索引相关知识
-  - 索引从左往右，从0开始逐个增大      0      1      2      3      4      5
-  - 索引从右往左，从-1开始逐个减小    -6     -5     -4    -3      -2    -1     
+    - 索引从左往右，从0开始逐个增大 0 1 2 3 4 5
+    - 索引从右往左，从-1开始逐个减小 -6 -5 -4 -3 -2 -1
 
 ## List-常用命令
 
@@ -240,9 +228,9 @@
 ### 6.lrem key count value
 
 - 含义：根据count值，从列表中删除值为value的项，时间复杂度为O(n)
-  - count > 0 时，从左往右遍历，删除最多count个与value相等的值
-  - count < 0 时，从右往左遍历，删除最多Math.abs(count)个与value相等的值
-  - count = 0 时，删除所有与value相等的值
+    - count > 0 时，从左往右遍历，删除最多count个与value相等的值
+    - count < 0 时，从右往左遍历，删除最多Math.abs(count)个与value相等的值
+    - count = 0 时，删除所有与value相等的值
 
 ### 7.ltrim key start end
 
@@ -264,21 +252,17 @@
 
 - 含义：设置列表指定索引的值为newValue，时间复杂度为O(n)
 - 注意：
-  - 必须存在这个值才能设置成功，否则会报错
+    - 必须存在这个值才能设置成功，否则会报错
 
 ### 12.blpop key timeout
 
 - 含义：移除并获取列表左边第一个元素，如果列表没有元素会阻塞直到等待超时或可弹出元素为止
-  - timeout单位为秒，timeout=0时不阻塞
+    - timeout单位为秒，timeout=0时不阻塞
 
 ### 13.brpop key timeout
 
 - 含义：移除并获取列表右边第一个元素，如果列表没有元素会阻塞直到等待超时或可弹出元素为止
-  - timeout单位为秒，timeout=0时不阻塞
-
-
-
-
+    - timeout单位为秒，timeout=0时不阻塞
 
 # Set数据类型
 
@@ -343,10 +327,6 @@
 
 - 含义：计算给定所有集合的并集，并存入destKey
 
-
-
-
-
 # ZSet数据类型
 
 ## ZSet-结构
@@ -354,8 +334,8 @@
 - 有序集合：有序、不能包含重复元素
 - 每个节点包含：score和value两个属性，根据score进行排序
 - 索引相关知识
-  - 索引从左往右，从0开始逐个增大      0      1      2      3      4      5
-  - 索引从右往左，从-1开始逐个减小    -6     -5     -4    -3      -2    -1    
+    - 索引从左往右，从0开始逐个增大 0 1 2 3 4 5
+    - 索引从右往左，从-1开始逐个减小 -6 -5 -4 -3 -2 -1
 
 ## ZSet-常用命令
 
@@ -382,17 +362,17 @@
 ### 6.zrange key start end [withscores]
 
 - 含义：通过索引返回有序集合中指定区间的成员信息
-  - withscores 参数，加上代表一并将score数据返回
+    - withscores 参数，加上代表一并将score数据返回
 - 时间复杂度：O(log(n) + m) , n=有序集合中的元素个数，m=返回的总个数
 
-###7.zrangebyscore key min max \[withscores]\[limit]
+### 7.zrangebyscore key min max \[withscores]\[limit]
 
 - 含义：通过score返回有序集合中指定分数区间的成员信息
-  - withscores 参数，加上代表一并将score数据返回
-  - limit参数，加上代表限制返回多少条数据
+    - withscores 参数，加上代表一并将score数据返回
+    - limit参数，加上代表限制返回多少条数据
 - 时间复杂度：O(log(n) + m) , n=有序集合中的元素个数，m=返回的总个数
 
-###8.zscore key min max
+### 8.zscore key min max
 
 - 含义：返回有序集合中指定分数范围内的元素个数
 - 时间复杂度：O(log(n) + m) , n=有序集合中的元素个数，m=指定分数范围内的元素个数
@@ -406,10 +386,6 @@
 
 - 含义：删除有序集合中给定索引区间的所有成员
 - 时间复杂度：O(log(n) + m) , n=有序集合中的元素个数，m=指定索引范围内的元素个数
-
-
-
-
 
 # String VS Hash
 

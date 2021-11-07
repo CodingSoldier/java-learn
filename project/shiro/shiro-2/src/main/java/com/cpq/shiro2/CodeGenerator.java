@@ -14,7 +14,6 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 public class CodeGenerator {
 
 
-
     static final String TABLE_NAME = "permission";
     static final String MODULE_NAME = "permission";
     static final String AUTHOR = "cpq";

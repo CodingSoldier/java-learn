@@ -18,7 +18,7 @@ ConcurrentSkipListMap:  是一个Map，使用跳表的数据结构进行快速�
  */
 
 
-class Map01{
+class Map01 {
 
     public static void main(String[] args) {
         /**
@@ -46,19 +46,18 @@ class Map01{
 
 
 /**
- Java7中的ConcurrentHashMap最外层是多个segment，每个segment的底层数据结构与HashMap类似，任然是数组，数组元素是一个链表
- 每个segment独立使用ReentrantLock，每个segment之间互不影响，提高了并发效率
- ConcurrentHashMap默认有16个segment，所以最多可以同时支持16个线程并发写（操作分别分布在不同的segment上）。这个默认值可以在初始化的时候设置为其他值，但是一旦初始化之后就不可以扩容
-
- java8的ConcurrentHashMap取消了segment，使用了HashMap的结构，并且使用了CAS + synchronized
-
+ * Java7中的ConcurrentHashMap最外层是多个segment，每个segment的底层数据结构与HashMap类似，任然是数组，数组元素是一个链表
+ * 每个segment独立使用ReentrantLock，每个segment之间互不影响，提高了并发效率
+ * ConcurrentHashMap默认有16个segment，所以最多可以同时支持16个线程并发写（操作分别分布在不同的segment上）。这个默认值可以在初始化的时候设置为其他值，但是一旦初始化之后就不可以扩容
+ * <p>
+ * java8的ConcurrentHashMap取消了segment，使用了HashMap的结构，并且使用了CAS + synchronized
  */
 
 
 /**
  * ConcurrentHashMap组合操作不保证线程安全
  */
-class OptionsNotSage implements Runnable{
+class OptionsNotSage implements Runnable {
 
     private static ConcurrentHashMap<String, Integer> scores = new ConcurrentHashMap<>();
 
@@ -88,7 +87,7 @@ class OptionsNotSage implements Runnable{
         }
     }
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         scores.put("小明", 0);
         Thread t1 = new Thread(new OptionsNotSage());
         Thread t2 = new Thread(new OptionsNotSage());
@@ -102,7 +101,7 @@ class OptionsNotSage implements Runnable{
 }
 
 
-class ConcurrentHashMapDemo{
+class ConcurrentHashMapDemo {
     private static ConcurrentHashMap<String, Integer> scores = new ConcurrentHashMap<>();
 
     private static Runnable runnable = () -> {
@@ -113,7 +112,7 @@ class ConcurrentHashMapDemo{
             do {
                 score = scores.get("小明");
                 newScore = score + 1;
-            }while (!scores.replace("小明", score, newScore));
+            } while (!scores.replace("小明", score, newScore));
 
 
             ///**
@@ -127,7 +126,7 @@ class ConcurrentHashMapDemo{
         }
     };
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         scores.put("小明", 0);
         Thread t1 = new Thread(runnable);
         Thread t2 = new Thread(runnable);
@@ -172,7 +171,7 @@ public boolean add(E e) {
 }
  */
 
-class CopyOnWriteArrayListDemo1{
+class CopyOnWriteArrayListDemo1 {
 
     public static void main(String[] args) {
         // ArrayList不能再遍历的时候修改列表
@@ -190,16 +189,16 @@ class CopyOnWriteArrayListDemo1{
          * CopyOnWriteArrayList可以在遍历的时候修改列表
          * 但是有个问题，即便是在同一个线程中，遍历的时候修改列表，遍历得到的元素还是旧列表的元素，修改不会影响遍历
          */
-        while (iterator.hasNext()){
-            System.out.println("list是 "+list);
+        while (iterator.hasNext()) {
+            System.out.println("list是 " + list);
             String next = iterator.next();
-            System.out.println("next元素是 "+next);
+            System.out.println("next元素是 " + next);
 
-            if (next.equals("2")){
+            if (next.equals("2")) {
                 System.out.println("删除5");
                 list.remove("5");
             }
-            if (next.equals("3")){
+            if (next.equals("3")) {
                 System.out.println("添加新元素new");
                 list.add("new");
             }
@@ -213,8 +212,9 @@ class CopyOnWriteArrayListDemo1{
  * 阻塞队列生产者消费者
  */
 // 生产者
-class Interviewer implements Runnable{
+class Interviewer implements Runnable {
     BlockingQueue<String> queue;
+
     public Interviewer(BlockingQueue<String> queue) {
         this.queue = queue;
     }
@@ -226,21 +226,23 @@ class Interviewer implements Runnable{
             String candidate = "Candidate" + i;
             try {
                 queue.put(candidate);
-                System.out.println(candidate+"准备好了");
-            }catch (InterruptedException e){
+                System.out.println(candidate + "准备好了");
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
         try {
             queue.put("stop");
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 }
+
 // 消费者
-class Consumer implements Runnable{
+class Consumer implements Runnable {
     BlockingQueue<String> queue;
+
     public Consumer(BlockingQueue<String> queue) {
         this.queue = queue;
     }
@@ -254,18 +256,18 @@ class Consumer implements Runnable{
         }
         String candidate;
         try {
-            while (!"stop".equals((candidate = queue.take()))){
-                System.out.println(candidate+"面试中");
+            while (!"stop".equals((candidate = queue.take()))) {
+                System.out.println(candidate + "面试中");
                 TimeUnit.SECONDS.sleep(1);
             }
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         System.out.println("面试全部结束");
     }
 }
 
-class ArrayBlockingQueueDemo{
+class ArrayBlockingQueueDemo {
     public static void main(String[] args) {
         ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(3);
         Interviewer interviewer = new Interviewer(queue);

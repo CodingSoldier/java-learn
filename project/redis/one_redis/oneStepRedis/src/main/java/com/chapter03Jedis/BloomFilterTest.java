@@ -17,20 +17,20 @@ import java.nio.charset.Charset;
 
 public class BloomFilterTest {
 
-	@Test
-	public void testGuava() {
-		Funnel<Integer> funnel = Funnels.integerFunnel();
-		int size = 1000000;
-		double errorChance = 0.001;		//错误率
-		BloomFilter<Integer> filter = BloomFilter.create(funnel , size , errorChance);
-		for(int i = 0 ; i < size ; i++) {
-			filter.put(i);
-		}
+    @Test
+    public void testGuava() {
+        Funnel<Integer> funnel = Funnels.integerFunnel();
+        int size = 1000000;
+        double errorChance = 0.001;        //错误率
+        BloomFilter<Integer> filter = BloomFilter.create(funnel, size, errorChance);
+        for (int i = 0; i < size; i++) {
+            filter.put(i);
+        }
 
-		for(int i = 0 ; i < size ; i++ ) {
-			if( !filter.mightContain(i) ) {
-				System.out.println("发现不存在的数据 : " + i);
-			}
-		}
-	}
+        for (int i = 0; i < size; i++) {
+            if (!filter.mightContain(i)) {
+                System.out.println("发现不存在的数据 : " + i);
+            }
+        }
+    }
 }

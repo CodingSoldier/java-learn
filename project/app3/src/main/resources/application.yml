@@ -19,4 +19,4 @@ management:
 
 # 定义一个端点，用于健康检查。
 # url：localhost:10013/app3/info
-info: {status: ok}
+info: { status: ok }

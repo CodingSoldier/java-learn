@@ -4,10 +4,6 @@
 - 节点&机器等运维成本
 - 监控报警比较低级
 
-
-
-
-
 # CacheCloud的主要功能
 
 - 一键开启Redis（单点、Sentinel、Cluster）

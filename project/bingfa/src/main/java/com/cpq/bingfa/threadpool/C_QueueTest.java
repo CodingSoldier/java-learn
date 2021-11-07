@@ -12,12 +12,12 @@ public class C_QueueTest {
     @Test
     public void arrayBlockingQueue() throws InterruptedException {
         ArrayBlockingQueue<Integer> abq = new ArrayBlockingQueue(10);
-        for (int i=0; i<20; i++){
+        for (int i = 0; i < 20; i++) {
             /**
              * 向abq中添加元素到达10个后，再次添加元素，线程阻塞了
              */
             abq.put(i);
-            System.out.println("向队列添加值："+i);
+            System.out.println("向队列添加值：" + i);
         }
     }
 
@@ -29,12 +29,12 @@ public class C_QueueTest {
     public void linkedBlockingQueue() throws InterruptedException {
         //LinkedBlockingQueue<Integer> lbq = new LinkedBlockingQueue(10);
         LinkedBlockingQueue<Integer> lbq = new LinkedBlockingQueue();
-        for (int i=0; i<20; i++){
+        for (int i = 0; i < 20; i++) {
             /**
              * 向abq中添加元素到达10个后，再次添加元素，线程阻塞了
              */
             lbq.put(i);
-            System.out.println("向队列添加值："+i);
+            System.out.println("向队列添加值：" + i);
         }
     }
 
@@ -67,7 +67,7 @@ public class C_QueueTest {
         new Thread(() -> {
             try {
                 sq.put(1);
-                System.out.println("生产成功"+1);
+                System.out.println("生产成功" + 1);
 
 
                 sq.put(2);
@@ -76,7 +76,7 @@ public class C_QueueTest {
                  * 调用的是 UNSAFE.park(false, 0L);
                  * take方法也一样，当SynchronousQueue没有数据，执行take方法，线程会阻塞，直到队列中添加了元素
                  */
-                System.out.println("生产成功"+2);
+                System.out.println("生产成功" + 2);
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -85,7 +85,7 @@ public class C_QueueTest {
         new Thread(() -> {
             try {
                 Integer i = sq.take();
-                System.out.println("消费成功"+i);
+                System.out.println("消费成功" + i);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

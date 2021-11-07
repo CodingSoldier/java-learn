@@ -19,10 +19,6 @@
 public Jedis(String host , int port , int connectionTimeout , int soTimeout)
 ```
 
-
-
-
-
 # Jedis连接池
 
 ## 执行流程
@@ -41,10 +37,6 @@ JedisPool jedisPool = new JedisPool(config , "127.0.0.1" , 6379);
 Jedis jedis = jedisPool.getResource();
 jedis.close();
 ```
-
-
-
-
 
 # Jedis直连 VS Jedis连接池
 

@@ -12,11 +12,17 @@ public class RabbitSender {
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
-	//回调函数: confirm确认，消息能路由到queue，走这里
+	/**
+	 * rabbitmq 整个消息投递的路径为：
+	 * producer->rabbitmq broker cluster->exchange->queue->consumer
+	 *
+	 * message 从 producer 到 rabbitmq broker cluster 则会返回一个 confirmCallback
+	 * message 从 exchange->queue 投递失败则会返回一个 returnCallback 。
+	 */
 	final RabbitTemplate.ConfirmCallback confirmCallback= new RabbitTemplate.ConfirmCallback(){
 		@Override
 		public void confirm(CorrelationData correlationData, boolean ack, String cause){
-			System.out.println("ConfirmCallback##correlationData  "+correlationData.toString());
+			System.out.println("ConfirmCallback##correlationData "+correlationData.toString());
 			System.out.println("ConfirmCallback##ack " +ack);
 			System.out.println("ConfirmCallback##cause " +cause);
 			if (!ack){
@@ -25,8 +31,8 @@ public class RabbitSender {
 		}
 	};
 
-	//回调函数: return返回
-	//有交换机且有routingKey，但是routingKey路由不到队列
+	// 回调函数: return返回
+	// 有交换机且有routingKey，但是routingKey路由不到队列
 	final RabbitTemplate.ReturnCallback returnCallback = new RabbitTemplate.ReturnCallback() {
 		@Override
 		public void returnedMessage(org.springframework.amqp.core.Message message, int replyCode, String replyText, String exchange, String routingKey) {

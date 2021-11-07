@@ -14,14 +14,14 @@ public class RoleAnyFilter extends AuthorizationFilter {
     @Override
     protected boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse, Object o) throws Exception {
         Subject subject = getSubject(servletRequest, servletResponse);
-        String[] roles = (String[])o;
-        if (roles == null || roles.length == 0){
+        String[] roles = (String[]) o;
+        if (roles == null || roles.length == 0) {
             return true;
         }
-        for (String role:roles){
-           if (subject.hasRole(role)){
-               return true;
-           }
+        for (String role : roles) {
+            if (subject.hasRole(role)) {
+                return true;
+            }
         }
         return false;
     }

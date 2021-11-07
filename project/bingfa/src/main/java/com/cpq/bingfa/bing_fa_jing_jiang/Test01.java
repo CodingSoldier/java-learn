@@ -13,7 +13,7 @@ public class Test01 {
 }
 
 
-class DeadLockDemo implements Runnable{
+class DeadLockDemo implements Runnable {
 
     int flag = 1;
     static Object lock1 = new Object();
@@ -22,7 +22,7 @@ class DeadLockDemo implements Runnable{
     @Override
     public void run() {
         try {
-            System.out.println(Thread.currentThread().getName()+"线程运行");
+            System.out.println(Thread.currentThread().getName() + "线程运行");
             if (flag == 1) {
                 synchronized (lock1) {
                     Thread.sleep(500);
@@ -30,7 +30,7 @@ class DeadLockDemo implements Runnable{
                         System.out.println("线程1成功拿到两把锁");
                     }
                 }
-            }else if (flag == 0) {
+            } else if (flag == 0) {
                 synchronized (lock2) {
                     Thread.sleep(500);
                     synchronized (lock1) {
@@ -38,16 +38,16 @@ class DeadLockDemo implements Runnable{
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         DeadLockDemo dl1 = new DeadLockDemo();
         DeadLockDemo dl2 = new DeadLockDemo();
-        dl1.flag=1;
-        dl1.flag=0;
+        dl1.flag = 1;
+        dl1.flag = 0;
         Thread t1 = new Thread(dl1);
         Thread t2 = new Thread(dl2);
         t1.start();
@@ -61,10 +61,10 @@ class DeadLockDemo implements Runnable{
          */
         ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
         long[] dlt = threadMXBean.findDeadlockedThreads();
-        if (dlt != null){
-            for (int i=0; i<dlt.length; i++){
+        if (dlt != null) {
+            for (int i = 0; i < dlt.length; i++) {
                 ThreadInfo threadInfo = threadMXBean.getThreadInfo(dlt[i]);
-                System.out.println("发现死锁 "+threadInfo.getThreadName());
+                System.out.println("发现死锁 " + threadInfo.getThreadName());
             }
         }
     }

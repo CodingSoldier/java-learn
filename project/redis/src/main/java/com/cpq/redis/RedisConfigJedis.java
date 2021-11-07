@@ -19,25 +19,23 @@ import java.time.Duration;
 import java.util.List;
 
 /**
- JedisClusterConfig 配置
+ * JedisClusterConfig 配置
  */
 @Configuration
-public class RedisConfigJedis{
+public class RedisConfigJedis {
 
     /**
-
-     ## cluster集群模式，使用jedis客户端能故障迁移。而且jedis版本必须是2.XX版本
-     spring.redis.timeout=2000
-     spring.redis.jedis.pool.max-active=8
-     spring.redis.jedis.pool.max-idle=8
-     spring.redis.jedis.pool.min-idle=0
-     spring.redis.jedis.pool.max-wait=1000
-
-     spring.redis.cluster.nodes=192.168.4.176:7000, 192.168.4.176:7001, 192.168.4.176:7002, 192.168.4.176:7003, 192.168.4.176:7004, 192.168.4.176:7005
-     ## 重定向次数
-     spring.redis.cluster.max-redirects=5
-
-      */
+     * ## cluster集群模式，使用jedis客户端能故障迁移。而且jedis版本必须是2.XX版本
+     * spring.redis.timeout=2000
+     * spring.redis.jedis.pool.max-active=8
+     * spring.redis.jedis.pool.max-idle=8
+     * spring.redis.jedis.pool.min-idle=0
+     * spring.redis.jedis.pool.max-wait=1000
+     * <p>
+     * spring.redis.cluster.nodes=192.168.4.176:7000, 192.168.4.176:7001, 192.168.4.176:7002, 192.168.4.176:7003, 192.168.4.176:7004, 192.168.4.176:7005
+     * ## 重定向次数
+     * spring.redis.cluster.max-redirects=5
+     */
 
     @Value("${spring.redis.timeout}")
     private Integer redisTimeout;
@@ -67,7 +65,7 @@ public class RedisConfigJedis{
         // 集群redis
         RedisClusterConfiguration redisConfig = new RedisClusterConfiguration();
         redisConfig.setMaxRedirects(clusterMaxRedirects);
-        for (String ipPort :clusterNodes){
+        for (String ipPort : clusterNodes) {
             String[] ipPortArr = ipPort.split(":");
             redisConfig.clusterNode(ipPortArr[0], Integer.parseInt(ipPortArr[1]));
         }

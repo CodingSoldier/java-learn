@@ -13,15 +13,15 @@ import java.util.concurrent.TimeUnit;
 public class B_ThreadLocal {
 }
 
-class ThreadLocalDateFormat{
+class ThreadLocalDateFormat {
 
     /**
      * ThreadLocal设置初始值。
      * 每次执行dateFormatLocal.get()都会执行ThreadLocal#initialValue()得到一个刚创建的SimpleDateFormat对象
-     *
+     * <p>
      * 这类似一种延迟加载的功能，在调用方法的时候才创建对象、返回对象
      */
-    public static ThreadLocal<SimpleDateFormat> dateFormat1 = new ThreadLocal(){
+    public static ThreadLocal<SimpleDateFormat> dateFormat1 = new ThreadLocal() {
         @Override
         protected SimpleDateFormat initialValue() {
             return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -41,7 +41,7 @@ class ThreadLocalDateFormat{
 /**
  * 利用ThreadLocal给每个线程分配自己的dateFormatter对象，保证线程安全
  */
-class ThreadLocalTest01{
+class ThreadLocalTest01 {
     static int num = 1000;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(num);
 
@@ -99,7 +99,7 @@ class ThreadLocalTest01{
  * 同一线程多个方法之间使用共享变量
  */
 @Data
-class User{
+class User {
 
     private String name;
 
@@ -107,11 +107,13 @@ class User{
         this.name = name;
     }
 }
-class UserContextHolder{
+
+class UserContextHolder {
     public static ThreadLocal<User> holder = new ThreadLocal<>();
 }
-class Service1{
-    public void process(String name){
+
+class Service1 {
+    public void process(String name) {
         User user = new User(name);
         // 设置线程变量
         /*
@@ -133,29 +135,31 @@ class Service1{
          在UserContextHolder.holder.set(user);前后打断点，user存储在线程中，而不是在ThreadLocal中
          */
         UserContextHolder.holder.set(user);
-        System.out.println("service1: "+user);
+        System.out.println("service1: " + user);
         new Service2().process();
     }
 }
-class Service2{
-    public void process(){
+
+class Service2 {
+    public void process() {
         // 获取线程变量
         User user = UserContextHolder.holder.get();
-        System.out.println("service2: "+user);
+        System.out.println("service2: " + user);
         new Service3().process();
     }
 }
-class Service3{
-    public void process(){
+
+class Service3 {
+    public void process() {
         User user = UserContextHolder.holder.get();
-        System.out.println("service3: "+user);
+        System.out.println("service3: " + user);
 
         // 最后要移除线程变量，房子UserContextHolder.holder过大发生一个长时间GC
         UserContextHolder.holder.remove();
     }
 }
 
-class ContextHolderTest{
+class ContextHolderTest {
     public static void main(String[] args) {
         new Service1().process("名字");
     }
@@ -192,15 +196,15 @@ java.lang.ThreadLocal.ThreadLocalMap.resize()
  */
 
 
-class MyThreadLocal<T>{
+class MyThreadLocal<T> {
 
-    public <T> T get(){
+    public <T> T get() {
         MyThreadLocalMap currentThreadLocalMap = getCurrentThreadLocalMap();
         Object value = currentThreadLocalMap.getValue();
-        return (T)value;
+        return (T) value;
     }
 
-    public void set(T value){
+    public void set(T value) {
         MyThreadLocalMap myThreadLocalMap = new MyThreadLocalMap(this, value);
         setCurrentThreadLocalMap(myThreadLocalMap);
     }
@@ -212,11 +216,11 @@ class MyThreadLocal<T>{
         try {
             Field field = clazz.getDeclaredField("myThreadLocals");
             val = field.get(currentThread);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return (MyThreadLocalMap)val;
+        return (MyThreadLocalMap) val;
     }
 
     public void setCurrentThreadLocalMap(MyThreadLocalMap map) {
@@ -225,14 +229,13 @@ class MyThreadLocal<T>{
         try {
             Field field = clazz.getDeclaredField("myThreadLocals");
             field.set(currentThread, map);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-
-    static class MyThreadLocalMap{
+    static class MyThreadLocalMap {
         private MyThreadLocal<?> myThreadLocal;
         private Object value;
 
@@ -241,14 +244,14 @@ class MyThreadLocal<T>{
             this.value = value;
         }
 
-        public Object getValue(){
+        public Object getValue() {
             return value;
         }
     }
 
 }
 
-class MyThread extends Thread{
+class MyThread extends Thread {
     public MyThreadLocal.MyThreadLocalMap myThreadLocals = null;
 
     @Override
@@ -256,8 +259,8 @@ class MyThread extends Thread{
         int hashCode = this.hashCode();
         MyHolder.holder.set(hashCode);
         try {
-            TimeUnit.MILLISECONDS.sleep(new Random().nextInt(5000)+1000);
-        }catch (Exception e){
+            TimeUnit.MILLISECONDS.sleep(new Random().nextInt(5000) + 1000);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Object data = MyHolder.holder.get();
@@ -266,11 +269,11 @@ class MyThread extends Thread{
     }
 }
 
-class MyHolder{
+class MyHolder {
     public static MyThreadLocal holder = new MyThreadLocal();
 }
 
-class TestMy{
+class TestMy {
     public static void main(String[] args) {
         for (int i = 0; i < 100; i++) {
             new MyThread().start();

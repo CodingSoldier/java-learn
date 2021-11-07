@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestOtherCtrl {
 
     @GetMapping("/other")
-    public Result other(){
+    public Result other() {
         return Result.success("other");
     }
 

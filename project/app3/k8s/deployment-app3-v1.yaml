@@ -33,7 +33,7 @@ spec:
             # 在容器被终止前睡眠一段时间，以便kube-proxy更新service的endpoint
             preStop:
               exec:
-                command: ["/bin/bash", "-c", "sleep 35"]
+                command: [ "/bin/bash", "-c", "sleep 35" ]
           # 就绪探针。
           # docker容器启动成功，并不代表容器中的服务就能处理外部的请求，例如java应用启动需要一定时间
           # Kubernetes提供了readinessProbe来检测pod中的容器是否可以接受外部流量

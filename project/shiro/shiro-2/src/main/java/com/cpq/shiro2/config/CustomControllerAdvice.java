@@ -21,7 +21,7 @@ public class CustomControllerAdvice {
         Map map = new HashMap();
         map.put("code", 0);
         map.put("msg", ex.getMessage());
-        LOGGER.error("Exception",ex);
+        LOGGER.error("Exception", ex);
         return map;
     }
 

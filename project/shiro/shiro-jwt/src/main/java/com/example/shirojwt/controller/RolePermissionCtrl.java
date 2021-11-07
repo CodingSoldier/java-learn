@@ -30,7 +30,7 @@ public class RolePermissionCtrl {
 
 
     @GetMapping("/edit")
-    public Result edit(){
+    public Result edit() {
 
         /**
          * 模拟修改角色与权限，将权限rolePermisssionEdit赋值给角色cudrRole，

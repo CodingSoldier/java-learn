@@ -18,14 +18,14 @@ public class Test01 {
     RedisTemplate redisTemplate;
 
     @Test
-    public void test001(){
-        while (true){
+    public void test001() {
+        while (true) {
             try {
                 String key = "test:" + new Date().getTime();
                 redisTemplate.opsForValue().set(key, new Date().getTime());
                 TimeUnit.MILLISECONDS.sleep(100L);
                 System.out.println(redisTemplate.opsForValue().get(key));
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

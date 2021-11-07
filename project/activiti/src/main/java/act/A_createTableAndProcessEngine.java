@@ -34,9 +34,11 @@ public class A_createTableAndProcessEngine {
     }
 
 
-    /**使用配置文件创建工作流需要的23张表 和 流程引擎配置对象ProcessEngineConfiguration，并直接获取流程引擎ProcessEngine*/
+    /**
+     * 使用配置文件创建工作流需要的23张表 和 流程引擎配置对象ProcessEngineConfiguration，并直接获取流程引擎ProcessEngine
+     */
     @Test
-    public void createTable_2(){
+    public void createTable_2() {
 //		ProcessEngineConfiguration processEngineConfiguration = ProcessEngineConfiguration.createProcessEngineConfigurationFromResource("activiti.cfg.xml");
 //		//工作流的核心对象，ProcessEnginee对象
 //		ProcessEngine processEngine = processEngineConfiguration.buildProcessEngine();

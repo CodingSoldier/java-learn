@@ -6,7 +6,7 @@ public class I_Catch_Thread_Exception {
      * 线程未捕获异常处理器接口 Thread.UncaughtExceptionHandler
      * 此接口会在线程由于未捕获异常而突然终止时被调用
      */
-    public static class CustomUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler{
+    public static class CustomUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
 
         private String name;
 
@@ -16,7 +16,7 @@ public class I_Catch_Thread_Exception {
 
         @Override
         public void uncaughtException(Thread t, Throwable e) {
-            System.out.println(t.getName()+" 发生异常，终止了");
+            System.out.println(t.getName() + " 发生异常，终止了");
             e.printStackTrace();
         }
     }

@@ -37,9 +37,10 @@ class StackConfinement implements Runnable {
         }
 
         executorService.shutdown();
-        while (!executorService.isTerminated()){}
+        while (!executorService.isTerminated()) {
+        }
 
-        System.out.println("同一对象的属性被多个线程修改，不安全："+r1.index);
+        System.out.println("同一对象的属性被多个线程修改，不安全：" + r1.index);
     }
 }
 
@@ -47,11 +48,11 @@ class StackConfinement implements Runnable {
 /**
  * 面试题
  */
-class FinalString{
+class FinalString {
     public static void main(String[] args) {
         String a = "悟空2";
         String b = "悟空2";
-        String c = "悟空"+"2";
+        String c = "悟空" + "2";
         // 字符串字面量存储在常量池中
         System.out.println(a == b);
         // c是字面量+字面量，在编译期就能确定，所以也是存储在常量池中
@@ -63,12 +64,12 @@ class FinalString{
 
         String e = "悟空";
         // f是变量+字面量，在运行期才创建，在堆内存中创建
-        String f = e+"2";
+        String f = e + "2";
         System.out.println(a == f);
 
         // final修饰的String是一个常量。编译器执行g+2实际上不是变量+字面量，而是用"悟空"替换g，变成了字面量+字面量
         final String g = "悟空";
-        String h = g+"2";
+        String h = g + "2";
         System.out.println(a == h);
     }
 }

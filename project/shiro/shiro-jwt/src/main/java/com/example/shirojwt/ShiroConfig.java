@@ -30,12 +30,12 @@ public class ShiroConfig {
 
     // 创建jwtRealm
     @Bean
-    public JwtRealm jwtRealm(){
+    public JwtRealm jwtRealm() {
         return new JwtRealm(userService);
     }
 
     @Bean
-    public DefaultWebSecurityManager securityManager(@Qualifier("jwtRealm") JwtRealm jwtRealm){
+    public DefaultWebSecurityManager securityManager(@Qualifier("jwtRealm") JwtRealm jwtRealm) {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         // 设置realm
         manager.setRealm(jwtRealm);
@@ -54,7 +54,7 @@ public class ShiroConfig {
     }
 
     @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(@Qualifier("securityManager") DefaultWebSecurityManager securityManager){
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(@Qualifier("securityManager") DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
 
         factoryBean.setSecurityManager(securityManager);
@@ -80,10 +80,10 @@ public class ShiroConfig {
          * 由于禁用了session存储，shiro不会存储用户的认证状态，所以在接口授权之前要先认证用户，不然CustomPermissionsAuthorizationFilter不知道用户是谁
          * 实际项目中可以将这些接口权限规则放到数据库中去
          */
-        definitionMap.put("/user/add", "jwt, customPerms["+userService.getUserAdd().getName()+"]");
-        definitionMap.put("/user/delete", "jwt, customPerms["+userService.getUserDelete().getName()+"]");
-        definitionMap.put("/user/edit", "jwt, customPerms["+userService.getUserEdit().getName()+"]");
-        definitionMap.put("/user/view", "jwt, customPerms["+userService.getUserView().getName()+"]");
+        definitionMap.put("/user/add", "jwt, customPerms[" + userService.getUserAdd().getName() + "]");
+        definitionMap.put("/user/delete", "jwt, customPerms[" + userService.getUserDelete().getName() + "]");
+        definitionMap.put("/user/edit", "jwt, customPerms[" + userService.getUserEdit().getName() + "]");
+        definitionMap.put("/user/view", "jwt, customPerms[" + userService.getUserView().getName() + "]");
 
         // 前面的规则都没匹配到，最后添加一条规则，所有的接口都要经过com.example.shirojwt.filter.JwtFilter这个过滤器验证
         definitionMap.put("/**", "jwt");

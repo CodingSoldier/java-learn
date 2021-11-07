@@ -12,7 +12,7 @@ import java.util.Map;
 @Data
 public class Result<T> implements Serializable {
 
-    private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
     private int status;
     private String message;
@@ -27,23 +27,23 @@ public class Result<T> implements Serializable {
         this.data = data;
     }
 
-    public static <T> Result<T> success(T data){
+    public static <T> Result<T> success(T data) {
         return new Result(Constant.CODE_SUCCESS, "成功", data);
     }
 
-    public static Result fail(){
+    public static Result fail() {
         return new Result(Constant.CODE_FAIL, "失败", null);
     }
 
-    public static Result fail(String message){
+    public static Result fail(String message) {
         return new Result(Constant.CODE_FAIL, message, null);
     }
 
-    public static Result fail(int status, String message){
+    public static Result fail(int status, String message) {
         return new Result(status, message, null);
     }
 
-    public static Map<String, String> failMap(String message){
+    public static Map<String, String> failMap(String message) {
         Map<String, String> map = new HashMap<>();
         map.put("status", Constant.CODE_FAIL.toString());
         map.put("message", message);

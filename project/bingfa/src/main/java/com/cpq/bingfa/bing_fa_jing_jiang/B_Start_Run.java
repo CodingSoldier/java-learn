@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 public class B_Start_Run {
 
     @Test
-    public void startrun() throws Exception{
+    public void startrun() throws Exception {
         Runnable runnable = () -> {
             System.out.println("运行了");
             System.out.println(Thread.currentThread().getState());
@@ -33,16 +33,16 @@ public class B_Start_Run {
     }
 
     public static void main(String[] args) throws Exception {
-        Thread thread = new Thread(()-> {
-            while (true){
-                System.out.println("Thread.yield()前"+Thread.currentThread().getState());
+        Thread thread = new Thread(() -> {
+            while (true) {
+                System.out.println("Thread.yield()前" + Thread.currentThread().getState());
                 Thread.yield();
-                System.out.println("Thread.yield()后"+Thread.currentThread().getState());
+                System.out.println("Thread.yield()后" + Thread.currentThread().getState());
             }
         });
         thread.start();
         Thread.sleep(2000);
-        System.out.println("最后"+thread.getState());
+        System.out.println("最后" + thread.getState());
     }
 
 }

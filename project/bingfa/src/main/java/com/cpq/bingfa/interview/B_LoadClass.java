@@ -6,7 +6,7 @@ package com.cpq.bingfa.interview;
  */
 public class B_LoadClass {
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         ClassLoader c = com.cpq.bingfa.interview.AA_Wali.class.getClassLoader();
         /**
          * loadClass()方法只是加载类文件，不会初始化类

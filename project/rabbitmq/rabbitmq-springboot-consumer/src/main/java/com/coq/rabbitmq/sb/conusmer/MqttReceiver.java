@@ -33,11 +33,11 @@ public class MqttReceiver {
     @RabbitHandler
     public void onOrderMessage(@Payload byte[] msgByte,
                                Channel channel,
-                               @Headers Map<Object, Object> headers) throws Exception{
+                               @Headers Map<Object, Object> headers) throws Exception {
 
-        System.out.println("消费端："+new String(msgByte));
+        System.out.println("消费端：" + new String(msgByte));
         //Long deliveryTag = (Long)headers.get(AmqpHeaders.DELIVERY_TAG);
-        System.out.println("headers  "+headers.toString());
+        System.out.println("headers  " + headers.toString());
 
         // 签收信息
         //channel.basicAck(deliveryTag, false);

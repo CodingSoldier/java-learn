@@ -46,7 +46,7 @@ public class CustomRealm extends AuthorizingRealm {
         String salt = "salt123";
         String password = new Md5Hash(PWD, salt).toString();
 
-        if (StringUtils.isEmpty(password)){
+        if (StringUtils.isEmpty(password)) {
             return null;
         }
 

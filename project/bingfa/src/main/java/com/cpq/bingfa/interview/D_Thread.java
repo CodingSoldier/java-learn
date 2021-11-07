@@ -2,13 +2,13 @@ package com.cpq.bingfa.interview;
 
 public class D_Thread {
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         final Object lock = new Object();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 System.out.println("AAAAAAAA 准备获取锁");
-                synchronized (lock){
+                synchronized (lock) {
                     try {
                         System.out.println("AAAAAAAA 获取到锁，sleep20ms");
                         /**
@@ -22,7 +22,7 @@ public class D_Thread {
                          */
                         lock.wait(10);
                         System.out.println("AAAAAAAA 结束");
-                    } catch (InterruptedException e){
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
@@ -35,12 +35,12 @@ public class D_Thread {
             @Override
             public void run() {
                 System.out.println("BBBBBB 准备获取锁");
-                synchronized (lock){
+                synchronized (lock) {
                     try {
                         System.out.println("BBBBBB 获取到锁，sleep2000ms");
                         Thread.sleep(2000);
                         System.out.println("BBBBBB 结束");
-                    } catch (InterruptedException e){
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }

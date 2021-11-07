@@ -18,12 +18,13 @@ public class JWTUtil {
 
     /**
      * 生成签名
+     *
      * @param username 用户名
      * @param secret   用户密码，使用Algorithm.HMAC256(secret)作为签发token的秘钥。若签发token时都使用同一个秘钥，会存在秘钥泄露的风险。
      */
     public static String sign(String username, String secret) {
         try {
-            Date date = new Date(System.currentTimeMillis()+ Constant.EXPIRE_TIME);
+            Date date = new Date(System.currentTimeMillis() + Constant.EXPIRE_TIME);
             Algorithm algorithm = Algorithm.HMAC256(secret);
             // 附带username信息
             return JWT.create()
@@ -38,9 +39,10 @@ public class JWTUtil {
 
     /**
      * 校验token
-     * @param token token
+     *
+     * @param token    token
      * @param username 用户名
-     * @param secret 用户密码
+     * @param secret   用户密码
      */
     public static boolean verify(String token, String username, String secret) {
         try {
@@ -74,16 +76,16 @@ public class JWTUtil {
     }
 
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         /**
          *      * admin  admin-pwd
          *      * cudrOtherUser  cudrOtherUser-pwd
          *      * viewUser  viewUser-pwd
          */
-        Date date = new Date(System.currentTimeMillis()+ 1000*60);
+        Date date = new Date(System.currentTimeMillis() + 1000 * 60);
         Algorithm algorithm = Algorithm.HMAC256(new Md5Hash("viewUser-pwd").toString());
         // 附带username信息
-        String token =  JWT.create()
+        String token = JWT.create()
                 .withClaim("username", "viewUser")
                 .withExpiresAt(date)
                 .sign(algorithm);

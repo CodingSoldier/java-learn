@@ -104,7 +104,7 @@ public class C_Stop_Thread {
     // 停止生产标识
     public static volatile boolean stopProduce = false;
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         // 资源队列，用于公共存储资源
         LinkedBlockingQueue lbq = new LinkedBlockingQueue(3);
 
@@ -113,8 +113,8 @@ public class C_Stop_Thread {
             public void run() {
                 int i = 0;
                 try {
-                    while (i<Integer.MAX_VALUE && !stopProduce){
-                        System.out.println("生产 "+i);
+                    while (i < Integer.MAX_VALUE && !stopProduce) {
+                        System.out.println("生产 " + i);
                         /**
                          * 当LinkedBlockingQueue队列满了，put方法会将线程设置为WAIT状态
                          * 若没有消费者消费LinkedBlockingQueue中的资源，线程会一直在这里等待，没法运行while判断
@@ -122,7 +122,7 @@ public class C_Stop_Thread {
                         lbq.put(i);
                         i++;
                     }
-                }catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
@@ -133,11 +133,11 @@ public class C_Stop_Thread {
             @Override
             public void run() {
                 try {
-                    while (new Random().nextInt(100)>5){
+                    while (new Random().nextInt(100) > 5) {
                         // 消费资源
-                        System.out.println("消费 "+lbq.take());
+                        System.out.println("消费 " + lbq.take());
                     }
-                }catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
@@ -147,24 +147,23 @@ public class C_Stop_Thread {
         TimeUnit.MILLISECONDS.sleep(10);
 
         // 设置停止生产标识为true，但是t0没有停止，还处于WAIT状态
-        stopProduce =true;
+        stopProduce = true;
 
         // 消费一个LinkedBlockingQueue的资源后，t0从WAIT状态变为RUNNABLE，执行while判断后退出循环，线程结束
         //lbq.take();
     }
 
 
-
     /**
      * java只能通过interrupt来通知线程停止线程，至于是否中断线程，由线程本身自己决定
      * 调用interrupt()仅仅是将线程的中断标记位设置为true，并不是中断线程的意思
-     *
+     * <p>
      * 线程停止：
-     *    1、run方法运行完了
-     *    2、run方法中抛出异常
+     * 1、run方法运行完了
+     * 2、run方法中抛出异常
      */
     @Test
-    public void interrupt() throws Exception{
+    public void interrupt() throws Exception {
 
         //Thread thread = new Thread(new Runnable() {
         //    @Override
@@ -192,8 +191,8 @@ public class C_Stop_Thread {
                 Integer num = 0;
                 // 当线程发出中断信号，则跳出while循环，run方法马上运行结束，线程也就停止了
                 while (!Thread.currentThread().isInterrupted()
-                        && num < Integer.MAX_VALUE){
-                    if (num % 100 == 0){
+                        && num < Integer.MAX_VALUE) {
+                    if (num % 100 == 0) {
                         System.out.println("当前数字 " + num);
                         System.out.println("当前数字长度 " + num.toString().length());
                     }
@@ -205,8 +204,6 @@ public class C_Stop_Thread {
         // @Test线程睡眠一会儿，然后调用thread.interrupt()，thread线程暂停了
         TimeUnit.SECONDS.sleep(1L);
         thread.interrupt();
-
-
 
 
         //Thread thread = new Thread(new Runnable() {
@@ -237,8 +234,6 @@ public class C_Stop_Thread {
         //TimeUnit.SECONDS.sleep(1L);
         //// 设置线程thread中断标记位为true
         //thread.interrupt();
-
-
 
 
         //Thread thread = new Thread(new Runnable() {
@@ -287,22 +282,9 @@ public class C_Stop_Thread {
          */
 
 
-
         // 防止@Test线程退出
         TimeUnit.SECONDS.sleep(60L);
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

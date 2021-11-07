@@ -32,7 +32,7 @@ public class E_MessageListenerAdapter {
     Queue queue_pdf;
 
     @Bean
-    public SimpleMessageListenerContainer messageContainer(ConnectionFactory connectionFactory){
+    public SimpleMessageListenerContainer messageContainer(ConnectionFactory connectionFactory) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
         container.addQueues(queue001, queue002, queue003, queue_image, queue_pdf);
         container.setConcurrentConsumers(1);

@@ -7,15 +7,11 @@
 ### 2.简洁性
 
 - 保证语义的情况下，控制key的长度，当key较多时，内存占用也不容忽视
-  - 例如 user:{uid}:friends:messages:{mid} 可以简化为 u:{uid}:fri:mes:{mid}
+    - 例如 user:{uid}:friends:messages:{mid} 可以简化为 u:{uid}:fri:mes:{mid}
 
 ### 3.不要包含特殊字符
 
 - 反例：包含空格、换行、单双引号以及其他转义字符
-
-
-
-
 
 # Value设计
 
@@ -29,108 +25,89 @@
 
 - 网络阻塞
 - Redis阻塞
-  - 会形成慢查询阻塞其他命令
+    - 会形成慢查询阻塞其他命令
 - 集群节点数据不均衡
 - 频繁序列化：应用服务器CPU消耗
-  - Redis客户端本身不负责序列化
-  - 应用频繁序列化和反序列化bigkey：本地缓存或Redis缓存
-
-
-
-
+    - Redis客户端本身不负责序列化
+    - 应用频繁序列化和反序列化bigkey：本地缓存或Redis缓存
 
 # 发现bigkey的方法
 
 - 使用应用的监控异常对其发现
-  - JedisConnectionException：Read timed out
-  - Could not get a resource from the pool
-- 在从节点上执行  redis-cli --bigkeys
+    - JedisConnectionException：Read timed out
+    - Could not get a resource from the pool
+- 在从节点上执行 redis-cli --bigkeys
 - scan + debug object key
 - 主动报警：网络流量监控、客户端监控
 - 内核热点key问题优化
-
-
-
-
 
 # bigkey的删除
 
 - 直接通过del删除bigKey会非常慢，对redis发生阻塞
 - 小心bigkey的隐性删除（不会存在在主节点的慢查询中，但是会发生在从节点中）
-  - 过期
-  - rename等
+    - 过期
+    - rename等
 - 可以使用redis4.0的lazy delete (unlink命令)
-  - redis会将unlink后的数据进行后台删除，不会阻塞前台的命令线程
+    - redis会将unlink后的数据进行后台删除，不会阻塞前台的命令线程
 - bigkey的预防
-  - 优化数据结构：例如二级拆分，例如按天/按小时存入
-  - 存在bigkey的节点进行物理隔离或者万兆网卡：不是治本方案
-  - 命令优化：例如hgetall -> hmget 、 hscan
-  - 报警和定期优化
-
-
-
-
+    - 优化数据结构：例如二级拆分，例如按天/按小时存入
+    - 存在bigkey的节点进行物理隔离或者万兆网卡：不是治本方案
+    - 命令优化：例如hgetall -> hmget 、 hscan
+    - 报警和定期优化
 
 # 选择合理的数据结构
 
 - 例如存储实体类型时候
 
-  - 反例
+    - 反例
 
-    ~~~shell
-    set user:1:name tom;
-    set user:1:age 19;
-    set user:1:favor football;
-    ~~~
+      ~~~shell
+      set user:1:name tom;
+      set user:1:age 19;
+      set user:1:favor football;
+      ~~~
 
-  - 正例
+    - 正例
 
-    ~~~shell
-    hmset user:1 name tom age 19 favor football;
-    ~~~
+      ~~~shell
+      hmset user:1 name tom age 19 favor football;
+      ~~~
 
-  - 缘由
+    - 缘由
 
-    - 避免出现数据松散
-    - 小hash会采用ziplist，得到节省内存的效果
+        - 避免出现数据松散
+        - 小hash会采用ziplist，得到节省内存的效果
 
 - 需求 100万数据的（picId -> userId)
 
-  - 方案1：全string：set picId userId
+    - 方案1：全string：set picId userId
 
-  - 方案2：一个hash：hset allPics picId userId
+    - 方案2：一个hash：hset allPics picId userId
 
-  - 方案3：若干个小hash：hset picId/100 picId%100 userId
+    - 方案3：若干个小hash：hset picId/100 picId%100 userId
 
-  - 三个方案的比较
+    - 三个方案的比较
 
-    |      方案      |   优点   |                           缺点                            |
-    | :------------: | :------: | :-------------------------------------------------------: |
-    | 方案1-全string | 编码简单 |               浪费内存<br/>全量获取比较复杂               |
-    |  方案2-全hash  |   暂无   |                    浪费内存<br/>bigKey                    |
-    | 方案3-分段hash | 节省内存 | 编程复杂<br/>hash无法设置ttl超时问题<br/>性能问题-ziplist |
-
-
-
+      |      方案      |   优点   |                           缺点                            |
+          | :------------: | :------: | :-------------------------------------------------------: |
+      | 方案1-全string | 编码简单 |               浪费内存<br/>全量获取比较复杂               |
+      |  方案2-全hash  |   暂无   |                    浪费内存<br/>bigKey                    |
+      | 方案3-分段hash | 节省内存 | 编程复杂<br/>hash无法设置ttl超时问题<br/>性能问题-ziplist |
 
 # 键值生命周期的管理
 
 - 周期数据需要设置过期时间，object idletime可以找垃圾的key-value
 - 过期时间不宜集中，容易出现缓存穿透和雪崩等问题
 
-
-
-
-
 # 命令优化技巧
 
 ### 1.O(n)以上命令需要关注n的数量
 
-​	例如：hgetall、lrange、smembers、zrange、sinter等并非不能使用，但是需要明确n的值。有遍历的需求可以使用hscan、sscan、zscan。
+​ 例如：hgetall、lrange、smembers、zrange、sinter等并非不能使用，但是需要明确n的值。有遍历的需求可以使用hscan、sscan、zscan。
 
 ### 2.禁用命令
 
-​	禁止线上使用keys、flushall、flushdb等，通过redis的config rename机制禁调命令，或者使用scan的方式渐进式处理。
+​ 禁止线上使用keys、flushall、flushdb等，通过redis的config rename机制禁调命令，或者使用scan的方式渐进式处理。
 
 ### 3.合理使用select
 
@@ -145,21 +122,17 @@
 
 ### 5.Redis集群版本在使用Lua上有特殊要求
 
-​	所有的key，必须在一个slot之上，否则直接返回ERROR
+​ 所有的key，必须在一个slot之上，否则直接返回ERROR
 
 ### 6.必要情况下使用monitor命令时，要注意不要长时间使用
 
-​	任何客户端中，发起任何命令都会发生送monitor客户端。但是在大QPS环境下对性能造成影响
-
-
-
-
+​ 任何客户端中，发起任何命令都会发生送monitor客户端。但是在大QPS环境下对性能造成影响
 
 # Java客户端优化
 
 ### 1.避免多个应用使用一个Redis实例
 
-​	不相干的业务拆分，公共数据做服务化
+​ 不相干的业务拆分，公共数据做服务化
 
 ### 2.使用连接池，标准使用方式
 
@@ -176,10 +149,6 @@ try {
     }
 }
 ~~~
-
-
-
-
 
 # 连接池参数优化
 
@@ -203,7 +172,7 @@ try {
 - 含义：当资源池用尽时，调用者是否要等待，只有当设为true时，下面的maxWaitMillis才会生效
 - 使用建议：建议使用默认值
 
-###5.maxWaitMillis：-1（永不超时）
+### 5.maxWaitMillis：-1（永不超时）
 
 - 含义：当资源池连接用尽时，调用者的最大等待时间（单位：毫秒）
 - 使用建议：不建议使用默认值
@@ -247,18 +216,19 @@ try {
 
 - maxTotal的配置方式
 
-  - maxIdle接近maxTotal即可
+    - maxIdle接近maxTotal即可
 
-  - 考虑因素
+    - 考虑因素
 
-    - 业务希望Redis并发量，并发量越大maxTotal越大
-    - 客户端执行命令时间，命令时间越小maxTotal越小
-    - Redis资源：例如 应用个数 * maxTotal 不能超过Redis最大连接数
-    - 资源开销：虽然希望控制空闲连接，但是不希望因为连接池的频繁释放创建连接造成不必的开销
+        - 业务希望Redis并发量，并发量越大maxTotal越大
+        - 客户端执行命令时间，命令时间越小maxTotal越小
+        - Redis资源：例如 应用个数 * maxTotal 不能超过Redis最大连接数
+        - 资源开销：虽然希望控制空闲连接，但是不希望因为连接池的频繁释放创建连接造成不必的开销
 
-  - 案例计算
+    - 案例计算
 
-    ​	一次命令时间（borrow|return resource + Jedis执行命令（含网络时间））的平均耗时是1ms，一个连接的QPS大约是1000。如果业务期望的QPS是50000。那么理论的maxTotal=50，可适当伸缩。
+      ​ 一次命令时间（borrow|return resource +
+      Jedis执行命令（含网络时间））的平均耗时是1ms，一个连接的QPS大约是1000。如果业务期望的QPS是50000。那么理论的maxTotal=50，可适当伸缩。
 
 
 

@@ -24,7 +24,7 @@ public class CustomSessionManage extends DefaultWebSessionManager {
     protected SessionDAO sessionDAO;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         super.setSessionDAO(this.sessionDAO);
     }
 

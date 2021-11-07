@@ -4,7 +4,6 @@ import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.connection.ChannelListener;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -30,7 +29,7 @@ public class D_SimpleMessageListenerContainer {
     Queue queue_pdf;
 
     @Bean
-    public SimpleMessageListenerContainer messageContainer(ConnectionFactory connectionFactory){
+    public SimpleMessageListenerContainer messageContainer(ConnectionFactory connectionFactory) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
         container.addQueues(queue001, queue002, queue003, queue_image, queue_pdf);
         container.setConcurrentConsumers(1);
@@ -49,7 +48,7 @@ public class D_SimpleMessageListenerContainer {
             @Override
             public void onMessage(Message message, Channel channel) throws Exception {
                 String msg = new String(message.getBody());
-                System.err.println("消费者  "+msg);
+                System.err.println("消费者  " + msg);
             }
         });
         return container;

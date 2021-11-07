@@ -19,7 +19,7 @@ public class C_Test {
     RabbitTemplate rabbitTemplate;
 
     @Test
-    public void testSendMessage() throws Exception{
+    public void testSendMessage() throws Exception {
         MessageProperties messageProperties = new MessageProperties();
         messageProperties.getHeaders().put("desc", "信息描述。。。");
         messageProperties.getHeaders().put("type", "自定义消息类型。。。");
@@ -29,7 +29,7 @@ public class C_Test {
         rabbitTemplate.convertAndSend("topic001", "spring.amqp", message, new MessagePostProcessor() {
             @Override
             public Message postProcessMessage(Message message) throws AmqpException {
-                System.out.println("原消息："+message.toString());
+                System.out.println("原消息：" + message.toString());
                 message.getMessageProperties().getHeaders().put("desc", "改变desc");
                 message.getMessageProperties().getHeaders().put("attr", "新增attr");
                 return message;

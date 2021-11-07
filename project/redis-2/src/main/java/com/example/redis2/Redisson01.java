@@ -18,6 +18,7 @@ class Redisson01 {
 
     @Test
     void test3() {
+        // new RedisCallback<>()
         redisTemplate.executePipelined(new SessionCallback() {
             @Override
             public Object execute(RedisOperations redisOperations) throws DataAccessException {

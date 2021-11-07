@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class Test2_IniRealm {
 
     @Test
-    public void testIniRealm(){
+    public void testIniRealm() {
 
         /**
          * resources目录下新建user.ini文件
@@ -31,17 +31,17 @@ public class Test2_IniRealm {
 
         // 认证通过
         UsernamePasswordToken token = new UsernamePasswordToken("username01", "pwd01");
-         //认证失败，抛出异常
+        //认证失败，抛出异常
         //UsernamePasswordToken token = new UsernamePasswordToken("username012", "pwd01");
 
         subject.login(token);
-        System.out.println("是否已经认证："+subject.isAuthenticated());
+        System.out.println("是否已经认证：" + subject.isAuthenticated());
 
     }
 
 
     @Test
-    public void testIniRealmRole(){
+    public void testIniRealmRole() {
 
         /**
          * resources目录下新建user.ini文件

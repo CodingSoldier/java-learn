@@ -1,6 +1,5 @@
 package com.cpq.bingfa.threadpool;
 
-import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -14,21 +13,20 @@ public class A_CustomThreadPoolExecutor {
 
     /**
      * 线程池初始化方法
-     *
+     * <p>
      * corePoolSize 核心线程池大小----1
      * maximumPoolSize 最大线程池大小----3
-     *
+     * <p>
      * keepAliveTime 线程池中超过maximumPoolSize数目的空闲线程最大存活时间----30+单位TimeUnit
      * TimeUnit keepAliveTime时间单位----TimeUnit.MINUTES
      * workQueue 阻塞队列----new ArrayBlockingQueue<Runnable>(5)====5容量的阻塞队列，有界队列
-     *      LinkedBlockingQueue无界队列，maximumPoolSize将无效
+     * LinkedBlockingQueue无界队列，maximumPoolSize将无效
      * threadFactory 新建线程工厂----new CustomThreadFactory()====定制的线程工厂
-     *      默认使用Executors.defaultThreadFactory()，创建出来的线程都在一个线程组，
-     *      拥有相同的NORM_PRIORITY优先级且都不是守护线程
+     * 默认使用Executors.defaultThreadFactory()，创建出来的线程都在一个线程组，
+     * 拥有相同的NORM_PRIORITY优先级且都不是守护线程
      * rejectedExecutionHandler 当提交任务数超过maxmumPoolSize+workQueue之和时,
-     *                          即当提交第41个任务时(前面线程都没有执行完,此测试方法中用sleep(100)),
-     *                                任务会交给RejectedExecutionHandler来处理
-     *
+     * 即当提交第41个任务时(前面线程都没有执行完,此测试方法中用sleep(100)),
+     * 任务会交给RejectedExecutionHandler来处理
      */
     public void init() {
 
@@ -43,7 +41,7 @@ public class A_CustomThreadPoolExecutor {
     }
 
     public void destory() {
-        if(pool != null) {
+        if (pool != null) {
             pool.shutdownNow();
         }
     }
@@ -82,16 +80,15 @@ public class A_CustomThreadPoolExecutor {
     }
 
 
-
     // 测试构造的线程池
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
 
         A_CustomThreadPoolExecutor exec = new A_CustomThreadPoolExecutor();
         // 1.初始化
         exec.init();
 
         ExecutorService pool = exec.getCustomThreadPoolExecutor();
-        for(int i=1; i<3; i++) {
+        for (int i = 1; i < 3; i++) {
             System.out.println("提交第" + i + "个任务!");
             pool.execute(new Runnable() {
                 @Override
