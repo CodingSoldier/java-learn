@@ -182,14 +182,3 @@ SELECT user_id, avg(`system_user_id`) FROM t_user_system_mapper WHERE AVG(`syste
 
 
 
-
-
-
-
-
-
-
-
-
-
-
