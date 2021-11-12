@@ -1,2 +1,2 @@
 git设置代理
-git config --global http.https://github.com.proxy socks5://127.0.0.1:12421
+git config --global http.https://github.com.proxy socks5://127.0.0.1:socks5的端口
