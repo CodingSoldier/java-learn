@@ -163,4 +163,10 @@ https://github.com/apache/dubbo-spring-boot-project/blob/master/README_CN.md
 暴露服务，在service类上使用 @com.alibaba.dubbo.config.annotation.Service 注解
 远程调用，使用 @Reference 注解
 
+#架构设计
+https://dubbo.apache.org/zh/docs/v2.7/dev/design/
+
+
+BeanDefinitionParser   // spring的bean解析接口
+    DubboBeanDefinitionParser   // dubbo实现标签解析
 
