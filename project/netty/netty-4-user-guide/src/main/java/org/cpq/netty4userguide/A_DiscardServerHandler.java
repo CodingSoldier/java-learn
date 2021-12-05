@@ -1,4 +1,4 @@
-package org.cpq;
+package org.cpq.netty4userguide;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

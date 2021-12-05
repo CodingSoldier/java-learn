@@ -1,4 +1,4 @@
-package org.cpq;
+package org.cpq.netty4userguide.c_time;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
@@ -6,21 +6,23 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
-public class B_TimeServerHandler extends ChannelInboundHandlerAdapter {
+/**
+ * https://waylau.com/netty-4-user-guide/Getting-Started/Writing-a-Time-Server.html
+ */
+public class TimeServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
-    public void channelActive(final ChannelHandlerContext ctx) { // (1)
-        final ByteBuf time = ctx.alloc().buffer(4); // (2)
+    public void channelActive(final ChannelHandlerContext ctx){
+        ByteBuf time = ctx.alloc().buffer(4);
         time.writeInt((int) (System.currentTimeMillis() / 1000L + 2208988800L));
-
-        final ChannelFuture f = ctx.writeAndFlush(time); // (3)
+         // 出站操作返回ChannelFuture
+        final ChannelFuture f = ctx.writeAndFlush(time);
         f.addListener(new ChannelFutureListener() {
             @Override
-            public void operationComplete(ChannelFuture future) {
-                assert f == future;
+            public void operationComplete(ChannelFuture future) throws Exception {
                 ctx.close();
             }
-        }); // (4)
+        });
     }
 
     @Override
@@ -28,5 +30,4 @@ public class B_TimeServerHandler extends ChannelInboundHandlerAdapter {
         cause.printStackTrace();
         ctx.close();
     }
-
 }
