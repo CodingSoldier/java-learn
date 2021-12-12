@@ -1,6 +1,6 @@
 package com.coq.rabbitmq.sc01;
 
-import com.coq.rabbitmq.sc01.conusmer.RabbitReceiver;
+import com.coq.rabbitmq.sc01.conusmer.ReceiverSpecific;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +14,12 @@ import java.util.HashMap;
 public class ApplicationTests {
 
     @Autowired
-    RabbitReceiver rabbitReceiver;
+    ReceiverSpecific receiverSpecific;
 
     @Test
     public void contextLoads() throws Exception {
 
-        rabbitReceiver.onOrderMessage("{\"id\": 12345, \"name\": \"中文名\"}", null, new HashMap<>());
+        receiverSpecific.onOrderMessage("{\"id\": 12345, \"name\": \"中文名\"}", null, new HashMap<>());
 
 
     }

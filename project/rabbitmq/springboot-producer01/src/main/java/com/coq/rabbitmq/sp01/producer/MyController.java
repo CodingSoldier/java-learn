@@ -20,6 +20,8 @@ public class MyController {
 
     @Autowired
     SenderSpecific senderSpecific;
+    @Autowired
+    SenderRetry senderRetry;
 
     @GetMapping("/send")
     public String loginSend(@RequestParam("id") Long id) throws Exception{
@@ -28,11 +30,18 @@ public class MyController {
         return "OK";
     }
 
-    @GetMapping("/sendDead")
-    public String sendDead(@RequestParam("id") Long id) throws Exception{
+    @GetMapping("/retry")
+    public String senderRetry(@RequestParam("id") Long id) throws Exception{
         Order01 order = new Order01(id, "第"+id+"个订单");
-        senderSpecific.sendDead(order);
+        senderRetry.sendOrder(order);
         return "OK";
     }
+
+    // @GetMapping("/sendDead")
+    // public String sendDead(@RequestParam("id") Long id) throws Exception{
+    //     Order01 order = new Order01(id, "第"+id+"个订单");
+    //     senderSpecific.sendDead(order);
+    //     return "OK";
+    // }
 
 }

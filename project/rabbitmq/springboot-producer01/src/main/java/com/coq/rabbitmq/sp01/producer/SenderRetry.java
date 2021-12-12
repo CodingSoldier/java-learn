@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SenderSpecific {
+public class SenderRetry {
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
@@ -42,6 +42,10 @@ public class SenderSpecific {
 		}
 	};
 
+	/**
+	 * 运行ApplicationTests#testSender2()
+	 * commonproducer-springboot-consumer项目的RabbitReceiver#onOrderMessage()收到消息
+	 */
 	public void sendOrder(Order01 order) throws Exception{
 		rabbitTemplate.setConfirmCallback(confirmCallback);
 		rabbitTemplate.setReturnCallback(returnCallback);
@@ -50,10 +54,20 @@ public class SenderSpecific {
         System.out.println("correlationData   "+num);
 		ObjectMapper objectMapper = new ObjectMapper();
 		String orderStr = objectMapper.writeValueAsString(order);
-		rabbitTemplate.convertAndSend("specific-listener-exchange", "specific-listener-key", orderStr, correlationData);
+		rabbitTemplate.convertAndSend("exchange-retry", "retry-key", orderStr, correlationData);
 
 	}
 
+	public void sendDead(Order01 order) throws Exception{
+		rabbitTemplate.setConfirmCallback(confirmCallback);
+		rabbitTemplate.setReturnCallback(returnCallback);
+		String num = ((int)Math.ceil(Math.random()*100000))+"";
+		CorrelationData correlationData = new CorrelationData(num);
+        System.out.println("correlationData   "+num);
+		ObjectMapper objectMapper = new ObjectMapper();
+		String orderStr = objectMapper.writeValueAsString(order);
+		rabbitTemplate.convertAndSend("direct-dead-exchange", "direct-dead", orderStr, correlationData);
+	}
 
 }
 
