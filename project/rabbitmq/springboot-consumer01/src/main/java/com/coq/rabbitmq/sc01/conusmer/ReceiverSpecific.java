@@ -25,7 +25,7 @@ public class ReceiverSpecific {
 	3、点击发送
      */
    @RabbitListener(bindings = @QueueBinding(
-           value = @Queue(value = "specific-listener-queue-cpq-test",
+           value = @Queue(value = "specific-listener-queue",
                    // exclusive = "true",
                    durable = "false",
                    autoDelete = "true"
@@ -49,7 +49,6 @@ public class ReceiverSpecific {
 
        // 签收信息
        channel.basicAck(deliveryTag, false);
-
    }
 
 }

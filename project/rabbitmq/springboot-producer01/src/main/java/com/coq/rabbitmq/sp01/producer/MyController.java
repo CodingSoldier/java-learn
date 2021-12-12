@@ -21,7 +21,7 @@ public class MyController {
     @Autowired
     SenderSpecific senderSpecific;
     @Autowired
-    SenderRetry senderRetry;
+    SenderAck senderAck;
 
     @GetMapping("/send")
     public String loginSend(@RequestParam("id") Long id) throws Exception{
@@ -30,18 +30,22 @@ public class MyController {
         return "OK";
     }
 
-    @GetMapping("/retry")
+
+    @GetMapping("/ack")
     public String senderRetry(@RequestParam("id") Long id) throws Exception{
         Order01 order = new Order01(id, "第"+id+"个订单");
-        senderRetry.sendOrder(order);
+        senderAck.sendOrder(order);
         return "OK";
     }
 
-    // @GetMapping("/sendDead")
-    // public String sendDead(@RequestParam("id") Long id) throws Exception{
+
+    // @GetMapping("/ack/callback")
+    // public String sendOrderCallback(@RequestParam("id") Long id) throws Exception{
     //     Order01 order = new Order01(id, "第"+id+"个订单");
-    //     senderSpecific.sendDead(order);
+    //     senderAck.sendOrderCallback(order);
     //     return "OK";
     // }
+
+
 
 }
