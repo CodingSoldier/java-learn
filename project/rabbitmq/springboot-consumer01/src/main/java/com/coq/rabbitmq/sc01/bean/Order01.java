@@ -36,7 +36,7 @@ public class Order01 implements Serializable {
 
     @Override
     public String toString() {
-        return "MyOrder{" +
+        return "Order01{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 '}';

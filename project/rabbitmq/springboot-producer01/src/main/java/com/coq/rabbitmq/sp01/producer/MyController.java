@@ -22,6 +22,8 @@ public class MyController {
     SenderSpecific senderSpecific;
     @Autowired
     SenderAck senderAck;
+    @Autowired
+    SenderReturnQueueTimes senderReturnQueueTimes;
 
     @GetMapping("/send")
     public String loginSend(@RequestParam("id") Long id) throws Exception{
@@ -30,11 +32,17 @@ public class MyController {
         return "OK";
     }
 
-
     @GetMapping("/ack")
     public String senderRetry(@RequestParam("id") Long id) throws Exception{
         Order01 order = new Order01(id, "第"+id+"个订单");
         senderAck.sendOrder(order);
+        return "OK";
+    }
+
+    @GetMapping("/returnQueueTimes")
+    public String SenderReturnQueueTimes(@RequestParam("id") Long id) throws Exception{
+        Order01 order = new Order01(id, "第"+id+"个订单");
+        senderReturnQueueTimes.sendOrder(order);
         return "OK";
     }
 

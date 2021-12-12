@@ -1,12 +1,14 @@
 package com.coq.rabbitmq.sc01.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.listener.RabbitListenerErrorHandler;
 import org.springframework.amqp.rabbit.listener.exception.ListenerExecutionFailedException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@Slf4j
 @Configuration
 public class RabbitMqConfig {
 
@@ -23,6 +25,7 @@ public class RabbitMqConfig {
                 String playloadStr = objectMapper.writeValueAsString(payload);
                 System.out.println("customListenerErrorHandler，playloadStr: " + playloadStr);
 
+                log.error("", exception);
                 /**
                  * 需要抛出异常，在ack=auto的场景下，不抛出异常，不会重试
                  */

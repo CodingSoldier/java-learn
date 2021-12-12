@@ -1,6 +1,7 @@
 package com.coq.rabbitmq.sp01.producer;
 
 import com.coq.rabbitmq.sp01.bean.Order01;
+import com.coq.rabbitmq.sp01.config.RabbitmqConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.support.CorrelationData;
@@ -33,8 +34,14 @@ public class SenderAck {
 
 		/**
 		 * 不设置setConfirmCallback、setReturnCallback，信息发送错误，也没有任何报错
+		 * correlationData 在 ConfirmCallback 接口中作为参数返回
 		 */
-		rabbitTemplate.convertAndSend("exchange-ack", "key-ack", orderStr, correlationData);
+		// rabbitTemplate.convertAndSend("exchange-ack", "key-ack", orderStr, correlationData);
+
+		/**
+		 * 加入MessagePostProcessor，在对MessageProperties增强
+		 */
+		rabbitTemplate.convertAndSend("exchange-ack", "key-ack", orderStr, RabbitmqConfig.createMessagePostProcess(), correlationData);
 	}
 
 	// public void sendOrderCallback(Order01 order) throws Exception{
