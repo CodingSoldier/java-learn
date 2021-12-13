@@ -13,9 +13,6 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.stereotype.Component;
 
-import static com.coq.rabbitmq.sc01.config.RabbitmqConstant.DEAD_EXCHANGE;
-import static com.coq.rabbitmq.sc01.config.RabbitmqConstant.DEAD_KEY;
-
 @Slf4j
 @Component
 public class ReceiverAck {
@@ -34,6 +31,7 @@ public class ReceiverAck {
         #重试间隔时间（单位毫秒）
         spring.rabbitmq.listener.simple.retry.initial-interval=20000
         #重试次数超过上面的设置之后是否丢弃（false不丢弃时需要写相应代码将该消息加入死信队列）
+        #如果没加死信队列，即使设置为false，重试到达最大次数后也会被丢弃
         spring.rabbitmq.listener.simple.default-requeue-rejected=false
 
         # 死信队列
@@ -63,11 +61,11 @@ public class ReceiverAck {
         bindings = @QueueBinding(
             value = @Queue(value = "queue-ack",
                 durable = "true",
-                autoDelete = "false",
-                arguments = {
-                   @Argument(name = "x-dead-letter-exchange", value = DEAD_EXCHANGE),
-                   @Argument(name = "x-dead-letter-routing-key", value = DEAD_KEY)
-                }
+                autoDelete = "false"
+                // arguments = {
+                //    @Argument(name = "x-dead-letter-exchange", value = DEAD_EXCHANGE),
+                //    @Argument(name = "x-dead-letter-routing-key", value = DEAD_KEY)
+                // }
                 ),
             exchange = @Exchange(value = "exchange-ack",
                 durable = "true",
@@ -143,17 +141,17 @@ public class ReceiverAck {
 
         */
 
-       if (order01.getId() > 100){
-           // 签收
-           channel.basicAck(deliveryTag, false);
-       }else {
-           // acknowledge-mode=manual
-           // 重回队列，会一直重试，retry.max-attempts无效
-           channel.basicNack(deliveryTag, false, true);
+       // if (order01.getId() > 100){
+       //     // 签收
+       //     channel.basicAck(deliveryTag, false);
+       // }else {
+       //     // acknowledge-mode=manual
+       //     // 重回队列，会一直重试，retry.max-attempts无效
+       //     channel.basicNack(deliveryTag, false, true);
 
            // acknowledge-mode=auto 抛异常导致的重试，重试期间阻塞消费端消费其他消息
-           // throw new RuntimeException("抛异常");
-       }
+           throw new RuntimeException("抛异常");
+       // }
 
    }
 
