@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitmqConfig {
+public class MyRabbitmqConfig {
 
     // @Bean(name = "rabbitTemplate")
     // RabbitTemplate rabbitTemplate(){

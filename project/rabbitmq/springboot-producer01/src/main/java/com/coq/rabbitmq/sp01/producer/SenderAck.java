@@ -1,7 +1,7 @@
 package com.coq.rabbitmq.sp01.producer;
 
 import com.coq.rabbitmq.sp01.bean.Order01;
-import com.coq.rabbitmq.sp01.config.RabbitmqConfig;
+import com.coq.rabbitmq.sp01.config.MyRabbitmqConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.support.CorrelationData;
@@ -41,7 +41,8 @@ public class SenderAck {
 		/**
 		 * 加入MessagePostProcessor，在对MessageProperties增强
 		 */
-		rabbitTemplate.convertAndSend("exchange-ack", "key-ack", orderStr, RabbitmqConfig.createMessagePostProcess(), correlationData);
+		rabbitTemplate.convertAndSend("exchange-ack", "key-ack", orderStr, MyRabbitmqConfig.createMessagePostProcess(), correlationData);
+
 	}
 
 	// public void sendOrderCallback(Order01 order) throws Exception{
