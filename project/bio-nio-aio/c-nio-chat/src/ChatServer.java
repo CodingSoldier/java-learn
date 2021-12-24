@@ -1,5 +1,3 @@
-package src;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -36,7 +34,32 @@ public class ChatServer {
 
             //轮询处理事件//select()返回触发的事件个数
             while (true) {
+                System.out.println("### selector.select() begin ###");
+
+                /**
+                 * selector.select();  如果没有监听到事件，会阻塞；监听到事件则会继续运行
+                 * jdk nio空轮询 导致CPU使用率100%是因为：
+                 *  selector 只关心 OP_READ、OP_WRITE、OP_CONNECT、OP_ACCEPT 事件
+                 *  操作系统还有其他事件，JDK nio 不处理，例如当发生
+                 *      EPOLLERR  表示对应的文件描述符发生错误
+                 *      EPOLLHUP  表示对应的文件描述符被挂断；
+                 *  会导致selector被唤醒
+                 *      selector.select(); 不阻塞
+                 *      但是
+                 *      Set<SelectionKey> selectionKeys = selector.selectedKeys();
+                 *      返回结果确实空Set，导致外层的while循环里面的代码没有阻塞，一直运行
+                 *
+                 * netty的解决方案是判断while中的执行时间，执行时间小于固定值的“while循环次数”连续超过512次，
+                 * 就重建Selector，把SelectionKey重新注册到Selector，注册事件代码
+                 *      server.register(selector, SelectionKey.OP_ACCEPT);
+                 * 由于不感兴趣的事件EPOLLERR、EPOLLHUP不会注册到Selector
+                 * 发生异常的连接就不会注册到Selector
+                 * selector.select(); 就正常了
+                 */
                 selector.select();
+
+                System.out.println("### selector.select() end ###");
+
                 //得到触发的事件key
                 Set<SelectionKey> selectionKeys = selector.selectedKeys();
                 for (SelectionKey key : selectionKeys) {
@@ -116,6 +139,11 @@ public class ChatServer {
 
     }
 
+    /**
+     * 找不到主类的解决办法
+     * project compiler out 填写 D:\mycode\java-learn\out
+     * @param args
+     */
     public static void main(String[] args) {
         ChatServer chatServer = new ChatServer();
         chatServer.star();
