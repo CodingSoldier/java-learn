@@ -167,7 +167,8 @@ update tableName set xxx=xxx
 select * from tableName
 
 
-在RC隔离级别下，是每个快照读都会生成并获取最新的ReadVIew，在RR隔离级别下，这是在同一个事务的第一个快照读才会创建Read View，之后的快照读获取的是同一个Read View
+在RC隔离级别下，是每个快照读都会生成并获取最新的ReadVIew，
+在RR隔离级别下，这是在同一个事务的第一个快照读才会创建Read View，之后的快照读获取的是同一个Read View
 
 
 索引下推
@@ -180,6 +181,9 @@ select * from tb_user where name like '张%' and age <= 10;
 索引下推：查询所有满足名称以‘张’开头的索引，然后筛选出年龄小于等于10的索引，最后再回表查询全行数据。
 使用索引下推能减少回表查询的数据量
 
-通过修改系统变量 optimizer_switch 的 index_condition_pushdown 来控制
+通过修改系统变量  的 index_condition_pushdown 来控制
+通过修改系统变量  的 index_condition_pushdown 来控制
 关闭索引下推
 set optimizer_switch='index_condition_pushdown=off'
+exchange
+springboexSpecific listenerchangeot-producer01consumer01
