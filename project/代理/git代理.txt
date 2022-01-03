@@ -1,0 +1,7 @@
+git全局设置代理
+
+git config --global http.https://github.com.proxy socks5://127.0.0.1:54728
+
+git项目设置代理
+git config http.https://github.com.proxy socks5://127.0.0.1:54728
+
