@@ -12,6 +12,8 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/test")
 public class TestController {
 
+
+
     @Value("${spring.datasource.url}")
     String dbUrl;
 
