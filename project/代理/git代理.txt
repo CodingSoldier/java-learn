@@ -1,7 +1,8 @@
-git全局设置代理
 
-git config --global http.https://github.com.proxy socks5://127.0.0.1:54728
+# 使用http方式代理
+git config --global http.proxy "http://127.0.0.1:1604"
+git config --global https.proxy "http://127.0.0.1:1604"
 
-git项目设置代理
-git config http.https://github.com.proxy socks5://127.0.0.1:54728
+# clone
+git clone https://ghp_E4ItokenFeLKC@github.com/CodingSoldier/micro-service.git
 
