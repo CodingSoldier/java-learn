@@ -145,7 +145,7 @@
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <version>8.0.8-dmr</version>
+      <version>8.0.28</version>
     </dependency>
     <dependency>
       <groupId>com.mchange</groupId>
@@ -218,7 +218,7 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <!--只有使用5.X版本的mysql驱动才可以生成primary key 方法-->
-            <version>5.1.44</version>
+            <version>8.0.28</version>
           </dependency>
         </dependencies>
       </plugin>
