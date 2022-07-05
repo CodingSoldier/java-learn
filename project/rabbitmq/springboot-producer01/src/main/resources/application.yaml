@@ -1,0 +1,21 @@
+server:
+  port: 9090
+
+# mq都是用本地
+spring:
+  rabbitmq:
+    host: mqserverin.vanrui.com
+    port: 5672
+    username: chenpq05
+    password: chenpq05
+    publisher-confirms: true
+    virtual-host: /
+## mq都是用本地
+#spring:
+#  rabbitmq:
+#    host: 172.16.84.29
+#    port: 5672
+#    username: admin
+#    password: 123456
+#    publisher-confirms: true
+#    virtual-host: ryx

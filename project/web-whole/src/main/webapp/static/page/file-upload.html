@@ -56,7 +56,7 @@ docBase:指定Web应用的文件路径，可以给定绝对路径，也可以给
     <h2>formdata上传表单，多文件</h2>
     <form name="form2" id="form2" enctype="multipart/form-data">
         <input type="text" name="name"/>
-        <input type="file" name="picFile" multiple>
+        <input type="file" name="files" multiple>
     </form>
     <button id="form1-submit2">提交formdata</button>
 </div>
@@ -67,9 +67,9 @@ docBase:指定Web应用的文件路径，可以给定绝对路径，也可以给
     <!--<button class="down1">下载文件</button>-->
 </div>
 
-<script src="/static/libs/jquery-2.0.3.js"></script>
-<script src="/static/libs/jQuery-File-Upload/js/vendor/jquery.ui.widget.js"></script>
-<script src="/static/libs/jQuery-File-Upload/js/jquery.fileupload.js"></script>
+<script src="../libs/jquery-2.0.3.js"></script>
+<script src="../libs/jQuery-File-Upload/js/vendor/jquery.ui.widget.js"></script>
+<script src="../libs/jQuery-File-Upload/js/jquery.fileupload.js"></script>
 
 <script>
 //文件上传
@@ -107,9 +107,10 @@ $("#form1-submit").off("click").on("click", function(){
 //formData上传表单，多个文件上传
 $("#form1-submit2").off("click").on("click", function(){
     $.ajax({
-        url: "/fileUpDown/formData2",
+        url: "http://10.1.250.78:11001/single/open/api/images/multi/import",
         type: "post",
         contentType: false,
+        "x-token": "1edeefcf9465444894a52acf0073dfe3",
         processData: false,
         data: new FormData($("#form2").get(0))
     }).done(function(r){

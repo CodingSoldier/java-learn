@@ -99,7 +99,7 @@ ADD hello /       # 把hello添加到根目录
 CMD ["/hello"]    # 运行根目录下的hello
 
 创建image，后面的 . 表示在当前目录找Dockerfile
-docker build -t xiaopeng163/hello-world .
+docker build -t vanruiedge/easygo-edge .
 
 运行容器
 docker run xiaopeng163/hello-world
