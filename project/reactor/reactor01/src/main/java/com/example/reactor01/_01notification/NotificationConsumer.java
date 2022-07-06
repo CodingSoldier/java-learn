@@ -1,4 +1,4 @@
-package com.example.reactor01;
+package com.example.reactor01._01notification;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
