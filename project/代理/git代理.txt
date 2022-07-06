@@ -3,6 +3,7 @@
 git config --global http.proxy "http://127.0.0.1:1604"
 git config --global https.proxy "http://127.0.0.1:1604"
 
-# clone
-git clone https://ghp_E4ItokenFeLKC@github.com/CodingSoldier/micro-service.git
+git clone https://ghp_E4ItokenyK1a8FeS71TFLKC@github.com/CodingSoldier/micro-service.git
+
+
 
