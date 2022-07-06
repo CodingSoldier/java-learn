@@ -1152,3 +1152,5 @@ registry.cn-hangzhou.aliyuncs.com/google_containers/metrics-server:v0.5.0
 如果pod状态是 0/1 , running未ready的状态
 可使用命令查看状态 kubectl describe pod  pod名字
 
+
+

@@ -9,16 +9,17 @@
 访问地址  http://localhost:8080/static/page/index.html
 主页
 
-<script src="/static/libs/jquery-2.0.3.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+
 <script>
     function myAjax(params) {
         return $.ajax(params);
     }
     myAjax({
-        url:"/test_html_to_sql/test1?id=10",
+        url:"/open/api/login/verification/code",
         type: "get",
         success: function (r) {
-            console.log(r)
+            console.log("获取到后端数据："+r)
         }
     })
 </script>

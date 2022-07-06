@@ -34,7 +34,9 @@ public class MyRabbitmqConfig {
         final RabbitTemplate.ConfirmCallback confirmCallback= new RabbitTemplate.ConfirmCallback(){
             @Override
             public void confirm(CorrelationData correlationData, boolean ack, String cause){
-                System.out.println("ConfirmCallback##correlationData "+correlationData.toString());
+                if (correlationData != null) {
+                    System.out.println("ConfirmCallback##correlationData "+correlationData.toString());
+                }
                 System.out.println("ConfirmCallback##ack " +ack);
                 System.out.println("ConfirmCallback##cause " +cause);
                 if (!ack){
