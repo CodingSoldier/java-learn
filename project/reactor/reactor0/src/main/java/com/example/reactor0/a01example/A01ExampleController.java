@@ -1,19 +1,16 @@
-package com.example.reactor0._02;
+package com.example.reactor0.a01example;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.concurrent.TimeUnit;
 
-@Controller
-public class ExampleController {
+@RestController
+public class A01ExampleController {
 
     @RequestMapping("hello/{who}")
-    @ResponseBody
     public Mono<String> hello(@PathVariable String who) {
         return Mono.just(who)
                 .map(e -> "hello " + who);
@@ -21,7 +18,6 @@ public class ExampleController {
 
 
     @RequestMapping("data/{who}")
-    @ResponseBody
     public Mono<ResponseEntity<Sir>> hello11(@PathVariable String who) {
         Sir sir = new Sir();
         sir.setFirstName(who);
@@ -37,6 +33,15 @@ public class ExampleController {
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity
                         .status(404).body(null));
+    }
+
+    @GetMapping("sir/list")
+    public Flux<Sir> getAllEmployees() {
+        Sir sir = new Sir();
+        sir.setFirstName("11111");
+        Sir sir2 = new Sir();
+        sir2.setFirstName("2222");
+        return Flux.just(sir, sir2);
     }
 
 }
