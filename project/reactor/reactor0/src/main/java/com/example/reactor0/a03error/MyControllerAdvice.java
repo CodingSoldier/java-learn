@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import reactor.core.publisher.Mono;
 
 /**
  * WebFlux也可以使用@RestControllerAdvice
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class MyControllerAdvice {
 
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity errorHandler(Exception e) {
+    protected Mono<ResponseEntity> errorHandler(Exception e) {
         log.error("全局异常MyControllerAdvice", e);
-        return ResponseEntity.badRequest().body("全局异常MyControllerAdvice："+e.getMessage());
+        Mono<ResponseEntity> r = Mono.just(ResponseEntity.badRequest().body("全局异常MyControllerAdvice：" + e.getMessage()));
+        // return ResponseEntity.badRequest().body("全局异常MyControllerAdvice："+e.getMessage());
+        return r;
     }
 
 }
