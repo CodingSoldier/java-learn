@@ -67,7 +67,7 @@
     <dependency>
       <groupId>commons-fileupload</groupId>
       <artifactId>commons-fileupload</artifactId>
-      <version>1.3</version>
+      <version>1.3.3</version>
       <exclusions>
         <exclusion>
           <!--与项目中引入的commons-io2.6冲突，排除commons-fileupload自身依赖的commons-io，保留高版本的2.6-->
