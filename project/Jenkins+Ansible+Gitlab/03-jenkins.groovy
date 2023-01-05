@@ -5,6 +5,11 @@ DJENKINS_HOME=/usr/local/software/jenkins/jenkins_home
 nohup $JAVA_HOME/bin/java -DJENKINS_HOME=$DJENKINS_HOME -jar -Xms512m -Xmx512m -XX:+UseConcMarkSweepGC  /usr/local/software/jenkins/jenkins.war --httpPort=8888 > /tmp/jenkins.log 2>&1 &
 
 
+jenkins开机启动
+ll /etc/rc.d/init.d/jenkins.sh
+
+nohup java -DJENKINS_HOME=/var/lib/jenkins -jar /usr/lib/jenkins/jenkins.war --logfile=/var/log/jenkins/jenkins.log --webroot=/var/cache/jenkins/war --httpPort=8080 --debug=5 >/dev/null 2>&1 &
+
 #################安装jenkins#################
 官方地址：https://pkg.jenkins.io/redhat-stable/
 关闭防火墙、selinux
