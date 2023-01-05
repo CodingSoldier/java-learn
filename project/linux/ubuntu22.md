@@ -19,7 +19,7 @@ network:
     enp0s3:
       # 禁用dhcp
       dhcp4: false
-      # 静态IP地址
+      # 静态IP地址，/24 表示网络号为24为，若使用子网掩码表示，则子网掩码是255.255.255.0
       addresses:
         - 10.0.2.200/24
       routes:
@@ -34,7 +34,7 @@ network:
       addresses:
         - 192.168.56.10/24
       routes:
-        # 双网关并不能使用default，会导致网关冲突
+        # 双网卡只能有一个网关配置为default
         - to: 192.168.56.0/24
           via: 192.168.56.1
       nameservers:
@@ -44,6 +44,8 @@ network:
 执行 netplan apply 命令可以让配置直接生效。virtualbox需要重启才生效
 
 ## 允许root使用ssh登录
+默认root密码是随机的，即每次开机都有一个新的root密码。输入 sudo passwd 修改密码
+允许root 使用 ssh 登录
 sudo vim /etc/ssh/sshd_config
 #PermitRootLogin prohibit-password
 改为
@@ -59,6 +61,7 @@ vim /etc/hostname
 cd /etc/apt/
 cp sources.list sources.list_bak
 vim sources.list
+ggdG
 输入如下内容
 deb http://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse
 deb-src http://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse

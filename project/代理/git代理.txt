@@ -1,7 +1,7 @@
 
 # 以下使用http代理
-git config http.proxy http://127.0.0.1:14785
-git config https.proxy https://127.0.0.1:14785
+git config http.proxy http://127.0.0.1:1643
+git config https.proxy https://127.0.0.1:1643
 
 # 以下使用socks5代理
 
