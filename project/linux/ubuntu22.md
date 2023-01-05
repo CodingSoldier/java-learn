@@ -45,7 +45,7 @@ network:
 
 ## 允许root使用ssh登录
 sudo vim /etc/ssh/sshd_config
-#PermitRootLogin prohibit-password 
+#PermitRootLogin prohibit-password
 改为
 PermitRootLogin yes
 
@@ -78,6 +78,8 @@ apt update
 apt upgrade
 
 
-## 安装常用软件
-sudo apt -y install g++ vim iputils-ping telnet
+## 安装常用软件，manpages-dev包含gcc,g++,和make
+sudo apt -y install manpages-dev vim iputils-ping telnet
+
+
 
