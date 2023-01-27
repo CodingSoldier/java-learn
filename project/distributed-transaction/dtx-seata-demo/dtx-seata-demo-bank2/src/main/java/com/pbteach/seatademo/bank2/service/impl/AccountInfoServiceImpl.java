@@ -23,7 +23,7 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     @Transactional
     @Override
     public void updateAccountBalance(String accountNo, Double amount) {
-        log.info("bank2 service begin,XID：{}",RootContext.getXID());
+        log.info("#########服务2开始, amount={}, XID：{}", amount, RootContext.getXID());
         //李四增加金额
         accountInfoDao.updateAccountBalance(accountNo,amount);
         if(amount==3){

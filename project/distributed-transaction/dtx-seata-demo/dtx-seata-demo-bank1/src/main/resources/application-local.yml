@@ -40,12 +40,12 @@ logging:
       pbteach: debug
     root: INFO
     io:
-      seata: INFO
+      seata: debug
     org:
       springframework:
         cloud:
           alibaba:
             seata:
-              web: INFO
+              web: debug
 
 
