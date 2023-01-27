@@ -8,11 +8,13 @@ git config https.proxy https://127.0.0.1:1643
 git config http.proxy socks5://127.0.0.1:14784
 git config https.proxy socks5://127.0.0.1:14784
 
-# 取消代理
+# 取消全局代理
 git config --global --unset http.proxy
 git config --global --unset https.proxy
 
+# 取消代理
+git config --unset http.proxy
+git config --unset https.proxy
 
-git clone https://ghp_E4ItokenyK1a8FeS71TFLKC@github.com/CodingSoldier/micro-service.git
 
 
