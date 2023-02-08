@@ -25,7 +25,7 @@ public class RabbitMqConfig {
                 String playloadStr = objectMapper.writeValueAsString(payload);
                 System.out.println("customListenerErrorHandler，playloadStr: " + playloadStr);
 
-                log.error("", exception);
+                exception.printStackTrace();
                 /**
                  * 需要抛出异常，在ack=auto的场景下，不抛出异常，不会重试
                  */

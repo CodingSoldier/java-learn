@@ -20,16 +20,16 @@ public class Bank2Controller {
     AccountInfoService accountInfoService;
 
     @RequestMapping("/transfer")
-    public Boolean transfer(@RequestParam("amount") Double amount) {
-        log.info("超时模拟");
-        try {
+    public Boolean transfer(@RequestParam("msg") String msg, @RequestParam("amount") Double amount) {
+        // log.info("超时模拟");
+        // try {
+        //
+        //     TimeUnit.SECONDS.sleep(10L);
+        // }catch (Exception e){
+        //     e.printStackTrace();
+        // }
 
-            TimeUnit.SECONDS.sleep(10L);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        this.accountInfoService.updateAccountBalance("2", amount);
+        this.accountInfoService.updateAccountBalance(msg, amount);
         return true;
     }
 

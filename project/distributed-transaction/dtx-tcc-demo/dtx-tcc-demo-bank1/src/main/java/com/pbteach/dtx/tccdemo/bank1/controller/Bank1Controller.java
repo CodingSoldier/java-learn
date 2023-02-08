@@ -16,8 +16,8 @@ public class Bank1Controller {
     AccountInfoService accountInfoService;
 
     @RequestMapping("/transfer")
-    public Boolean transfer(@RequestParam("amount") Double amount) {
-        this.accountInfoService.updateAccountBalance("1", amount);
+    public Boolean transfer(@RequestParam("msg") String msg, @RequestParam("amount") Double amount) {
+        this.accountInfoService.updateAccountBalance(msg, amount);
         return true;
     }
 
