@@ -1,13 +1,11 @@
 package com.pbteach.dtx.tccdemo.bank2.controller;
 
-import com.pbteach.dtx.tccdemo.bank2.service.AccountInfoService;
+import com.pbteach.dtx.tccdemo.bank2.service.Bank2Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Administrator
@@ -17,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class Bank2Controller {
     @Autowired
-    AccountInfoService accountInfoService;
+    Bank2Service accountInfoService;
 
     @RequestMapping("/transfer")
     public Boolean transfer(@RequestParam("msg") String msg, @RequestParam("amount") Double amount) {

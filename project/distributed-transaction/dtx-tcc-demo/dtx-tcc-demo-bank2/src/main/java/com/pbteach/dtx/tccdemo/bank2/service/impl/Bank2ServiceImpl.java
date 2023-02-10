@@ -2,7 +2,7 @@ package com.pbteach.dtx.tccdemo.bank2.service.impl;
 
 import com.pbteach.dtx.tccdemo.bank2.dao.AccountInfoDao;
 import com.pbteach.dtx.tccdemo.bank2.dao.HmilyLogDao;
-import com.pbteach.dtx.tccdemo.bank2.service.AccountInfoService;
+import com.pbteach.dtx.tccdemo.bank2.service.Bank2Service;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.dromara.hmily.annotation.Hmily;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  **/
 @Service
 @Slf4j
-public class AccountInfoServiceImplBak implements AccountInfoService {
+public class Bank2ServiceImpl implements Bank2Service {
 
     @Autowired
     AccountInfoDao accountInfoDao;
@@ -34,6 +34,7 @@ public class AccountInfoServiceImplBak implements AccountInfoService {
 
     @Transactional(rollbackFor = Exception.class)
     public void confirm(String msg, Double amount) {
+        // 全局事务id
         String transId = HmilyTransactionContextLocal.getInstance().get().getTransId();
         log.info("bank2 confirm 开始执行，transId:{}",transId);
 
@@ -45,7 +46,7 @@ public class AccountInfoServiceImplBak implements AccountInfoService {
 
         // bank2加钱
         accountInfoDao.addAccountBalance("2", amount);
-
+        // 添加confirm日志
         hmilyLogDao.addConfirm(transId);
 
         // bank2 confirm，抛出异常，会重试
@@ -54,9 +55,9 @@ public class AccountInfoServiceImplBak implements AccountInfoService {
         }
     }
 
-
     public void cancel(String msg, Double amount) {
         String transId = HmilyTransactionContextLocal.getInstance().get().getTransId();
         log.info("bank2 cancel 开始执行，transId:{}",transId);
     }
+
 }

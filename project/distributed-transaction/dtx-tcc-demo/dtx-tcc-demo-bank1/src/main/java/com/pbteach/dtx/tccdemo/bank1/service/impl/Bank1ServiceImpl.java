@@ -2,7 +2,7 @@ package com.pbteach.dtx.tccdemo.bank1.service.impl;
 
 import com.pbteach.dtx.tccdemo.bank1.dao.AccountInfoDao;
 import com.pbteach.dtx.tccdemo.bank1.dao.HmilyLogDao;
-import com.pbteach.dtx.tccdemo.bank1.service.AccountInfoService;
+import com.pbteach.dtx.tccdemo.bank1.service.Bank1Service;
 import com.pbteach.dtx.tccdemo.bank1.spring.Bank2Client;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -12,15 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
-
 /**
  * @author Administrator
  * @version 1.0
  **/
 @Service
 @Slf4j
-public class AccountInfoServiceImplBak implements AccountInfoService {
+public class Bank1ServiceImpl implements Bank1Service {
 
     @Autowired
     AccountInfoDao accountInfoDao;
@@ -34,11 +32,13 @@ public class AccountInfoServiceImplBak implements AccountInfoService {
     @Transactional(rollbackFor = Exception.class)
     @Hmily(confirmMethod = "confirm", cancelMethod = "cancel")
     public void updateAccountBalance(String msg, Double amount) {
+        // 全局事务id
         String transId = HmilyTransactionContextLocal.getInstance().get().getTransId();
         log.info("bank1 try 开始，transId={}", transId);
 
         // 幂等判断
         int existTry = hmilyLogDao.isExistTry(transId);
+        // 通故全局事务id查找到try日志，表明已经只执行过try
         if (existTry > 0) {
             log.info("已经执行过try，无需重复执行try，transId={}", transId);
             return;
@@ -47,6 +47,7 @@ public class AccountInfoServiceImplBak implements AccountInfoService {
         // 悬挂处理
         int existConfirm = hmilyLogDao.isExistConfirm(transId);
         int existCancel = hmilyLogDao.isExistCancel(transId);
+        // 通故全局事务id查找到confirm、cancel日志，表明已经只执行过confirm、cancel
         if (existConfirm > 0 || existCancel > 0) {
             log.info("confirm，cancel有一个已经执行过，try不能再次执行，transId={}", transId);
             return;
@@ -60,12 +61,13 @@ public class AccountInfoServiceImplBak implements AccountInfoService {
         // blank1减金额
         accountInfoDao.subtractAccountBalance("1", amount);
 
-        // 添加try日志记录
+        // 添加try日志记录，try日志和扣减余额在同一个本地事务中，要么都成功，要么都失败
+        // 日志的组件id必须是全局事务id，如果同一个事物重复调用try，到这一步会报主键重复
         hmilyLogDao.addTry(transId);
 
         // 远程调用
-        Boolean transfer = bank2Client.transfer(msg, amount);
-        if (!transfer) {
+        Boolean result = bank2Client.transfer(msg, amount);
+        if (!result) {
             throw new RuntimeException("调用bank2失败");
         }
 
@@ -73,17 +75,16 @@ public class AccountInfoServiceImplBak implements AccountInfoService {
         if (StringUtils.equals("bank1调用bank2成功后，发生异常，模拟回滚", msg)) {
             throw new RuntimeException("bank1调用bank2成功后，发生异常，模拟回滚，transId=" + transId);
         }
-
     }
 
     public void confirm(String accountNo, Double amount) {
         String transId = HmilyTransactionContextLocal.getInstance().get().getTransId();
         log.info("bank1 confirm 开始执行，transId={}", transId);
-
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void cancel(String msg, Double amount) {
+        // 全局事务id
         String transId = HmilyTransactionContextLocal.getInstance().get().getTransId();
         log.info("bank1 cancel 开始执行，transId={}", transId);
 
@@ -103,11 +104,8 @@ public class AccountInfoServiceImplBak implements AccountInfoService {
 
         // bank1回滚，加钱
         accountInfoDao.addAccountBalance(msg, amount);
-
         // 添加日志
         hmilyLogDao.addCancel(transId);
-
-
-
     }
+
 }
