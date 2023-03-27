@@ -251,7 +251,6 @@
   <!--管理module，编译本项目时，会编译modules中的项目-->
   <modules>
     <module>note</module>
-      <module>project/generic</module>
   </modules>
 
 </project>
