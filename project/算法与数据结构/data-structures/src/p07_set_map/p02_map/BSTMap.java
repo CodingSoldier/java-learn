@@ -105,14 +105,18 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V>{
   private Node<K, V> removeMin(Node<K, V> node) {
     if (node.left == null) {
       Node<K, V> rightNode = node.right;
-      node = null;
+      node.right = null;
       size--;
       return rightNode;
     }
-    return removeMin(node.left);
+    node.left = removeMin(node.left);
+    return node;
   }
 
   private Node<K, V> removeNode(Node<K, V> node, K key) {
+    if (node == null) {
+      return null;
+    }
     if (key.compareTo(node.key) < 0) {
       node.left = removeNode(node.left, key);
     } else if (key.compareTo(node.key) > 0) {
@@ -120,12 +124,20 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V>{
     } else { // key == node.key
       if (node.left == null) {
         Node<K, V> rightNode = node.right;
-        node = null;
+        node.right = null;
         size--;
         return rightNode;
       } else if (node.right == null) {
-        return node.left;
+        Node<K, V> leftNode = node.left;
+        node.left = null;
+        size--;
+        return leftNode;
       }
+      Node<K, V> successor = minimum(node);
+      successor.right = removeMin(node);
+      successor.left = node.left;
+      node.left = node.right = null;
+      return successor;
     }
     return node;
   }
