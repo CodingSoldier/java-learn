@@ -1,0 +1,18 @@
+{
+  "productKey": "ik8nUag4zSA",
+  "deviceName": "device01",
+  "productSecret":"",
+  "deviceSecret": "a9b9de11ddf053a89eb38634e088601c",
+  "instanceId": "iot-06z00c9jqpd2mgl",
+  "region": "cn-shanghai",
+  "subDevice": [
+    {
+      "productKey": "",
+      "deviceName": ""
+    },
+    {
+      "productKey": "",
+      "deviceName": ""
+    }
+  ]
+}
