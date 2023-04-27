@@ -43,7 +43,8 @@ public class HelloWorld {
         System.out.println(System.getProperty("user.dir"));
         String diPath = System.getProperty("user.dir") + "/device_id.json";
         // TODO
-        String deviceInfo = FileUtils.readFile("D:\\mycode\\java-learn\\project\\JavaLinkKitDemo\\device_id.json");
+        // String deviceInfo = FileUtils.readFile("D:\\mycode\\java-learn\\project\\JavaLinkKitDemo\\device_id.json");
+        String deviceInfo = FileUtils.readFile("E:\\github\\java-learn\\project\\thing-model\\JavaLinkKitDemo\\device_id.json");
         if (deviceInfo == null) {
             ALog.e(TAG, "main - need device info path.");
             return;
@@ -139,7 +140,7 @@ public class HelloWorld {
        /**
         * 测试物模型，请参照testDeviceModel函数中的TODO注释将物模型字段替换为当前产品的物模型数据
         */
-       testDeviceModel();
+       // testDeviceModel();
 
        /** 测试单纯mqtt通信能力
         * 物模型用例json的格式，用户可以通过自定义的topic使用自定义的格式, 用户可以使用SDK中单纯的mqtt通信能力满足这方面的开发需求
@@ -159,7 +160,7 @@ public class HelloWorld {
        /**
         * 测试网关子设备管理功能，高级版功能
         */
-       // testGateway(deviceInfoData);
+       testGateway(deviceInfoData);
 
        /**
         *  测试获取设备影子

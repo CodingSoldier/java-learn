@@ -1,18 +1,25 @@
 {
-  "productKey": "ik8nUag4zSA",
-  "deviceName": "device01",
+  "productKey": "ik8ngaVzfay",
+  "deviceName": "gateway_device01",
   "productSecret":"",
-  "deviceSecret": "a9b9de11ddf053a89eb38634e088601c",
+  "deviceSecret": "98e01f47f0291b17bb2dcacdde9e1dad",
   "instanceId": "iot-06z00c9jqpd2mgl",
   "region": "cn-shanghai",
   "subDevice": [
     {
-      "productKey": "",
-      "deviceName": ""
+      "productKey": "ik8nXZA5lVi",
+      "deviceName": "VTnAhZHhxAQshqAKbxQZ",
+      "deviceSecret": "d6e623c74e783e9a4bedccc8917e3872"
     },
     {
-      "productKey": "",
-      "deviceName": ""
+      "productKey": "ik8nXZA5lVi",
+      "deviceName": "fZc5FdunDavRfkwAb93b",
+      "deviceSecret": "6696b0fff86cac716743f35779216d2d"
+    },
+    {
+      "productKey": "ik8nXZA5lVi",
+      "deviceName": "VnwoGiGCCjkvluL8Q34T",
+      "deviceSecret": "f301a2b1e68dd82457c94f4ae6786626"
     }
   ]
 }

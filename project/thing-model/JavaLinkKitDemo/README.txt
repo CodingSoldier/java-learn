@@ -20,3 +20,23 @@ Demo 使用说明
 修改 com.aliyun.alink.devicesdk.demo.FileUtils.readFile 文件地址
 
 2.执行HelloWorld工程的main方法
+
+直连设备
+{
+  "ProductKey": "ik8nUag4zSA",
+  "DeviceName": "device01",
+  "DeviceSecret": "a9b9de11ddf053a89eb38634e088601c"
+}
+
+网关设备
+{
+  "ProductKey": "ik8ngaVzfay",
+  "DeviceName": "gateway_device01",
+  "DeviceSecret": "98e01f47f0291b17bb2dcacdde9e1dad"
+}
+网关子设备
+    DeviceName	                    DeviceSecret	         ProductKey
+VTnAhZHhxAQshqAKbxQZ	d6e623c74e783e9a4bedccc8917e3872	ik8nXZA5lVi
+VnwoGiGCCjkvluL8Q34T	f301a2b1e68dd82457c94f4ae6786626	ik8nXZA5lVi
+fZc5FdunDavRfkwAb93b	6696b0fff86cac716743f35779216d2d	ik8nXZA5lVi
+
