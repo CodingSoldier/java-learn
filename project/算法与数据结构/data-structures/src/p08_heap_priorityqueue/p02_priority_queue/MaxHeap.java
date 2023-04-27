@@ -1,3 +1,5 @@
+package p08_heap_priorityqueue.p02_priority_queue;
+
 public class MaxHeap<E extends Comparable<E>> {
 
     private Array<E> data;
@@ -8,6 +10,12 @@ public class MaxHeap<E extends Comparable<E>> {
 
     public MaxHeap(){
         data = new Array<>();
+    }
+
+    public MaxHeap(E[] arr){
+        data = new Array<>(arr);
+        for(int i = parent(arr.length - 1) ; i >= 0 ; i --)
+            siftDown(i);
     }
 
     // 返回堆中的元素个数
@@ -73,21 +81,26 @@ public class MaxHeap<E extends Comparable<E>> {
     private void siftDown(int k){
 
         while(leftChild(k) < data.getSize()){
-            // 找出左孩子下标
-            int j = leftChild(k);
-
-            // 右孩子下标是j+1，在左右孩子中找出最大的孩子
+            int j = leftChild(k); // 在此轮循环中,data[k]和data[j]交换位置
             if( j + 1 < data.getSize() &&
                     data.get(j + 1).compareTo(data.get(j)) > 0 )
                 j ++;
+            // data[j] 是 leftChild 和 rightChild 中的最大值
 
-            // 节点大于最大孩子，退出循环
             if(data.get(k).compareTo(data.get(j)) >= 0 )
                 break;
 
-            // 节点小于最大孩子，交换位置
             data.swap(k, j);
             k = j;
         }
+    }
+
+    // 取出堆中的最大元素，并且替换成元素e
+    public E replace(E e){
+
+        E ret = findMax();
+        data.set(0, e);
+        siftDown(0);
+        return ret;
     }
 }
