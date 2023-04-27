@@ -1,4 +1,4 @@
-package p08_heap_priorityqueue.p01_heap;
+package p08_heap_priorityqueue.p02_priority_queue;
 
 public class Array<E> {
 
