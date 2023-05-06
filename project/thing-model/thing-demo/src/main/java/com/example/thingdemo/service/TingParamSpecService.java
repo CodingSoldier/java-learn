@@ -25,12 +25,6 @@ public interface TingParamSpecService extends IService<TingParamSpecEntity> {
    */
   void addUpdate(Long tingId, Long tingDimensionId, List<TingParamSpecAddUpdateVo> addList);
 
-  ///**
-  // * 单个更新
-  // * @param updateAo
-  // */
-  //void update(TingParamSpecAddUpdateVo updateAo);
-
   /**
    * 删除
    * @param id id

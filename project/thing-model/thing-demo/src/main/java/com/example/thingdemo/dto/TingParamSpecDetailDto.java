@@ -1,9 +1,11 @@
 package com.example.thingdemo.dto;
 
+import com.example.thingdemo.vo.TingParamSpecAddUpdateVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -55,16 +57,11 @@ public class TingParamSpecDetailDto implements Serializable {
   @ApiModelProperty(value = "创建时间")
   private LocalDateTime createTime;
 
-  @ApiModelProperty(value = "创建用户id")
-  private Long createUser;
-
   @ApiModelProperty(value = "更新时间")
   private LocalDateTime updateTime;
 
-  @ApiModelProperty(value = "更新用户id")
-  private Long updateUser;
 
-  @ApiModelProperty(value = "是否删除，0未删除，1删除")
-  private Integer isDel;
+  @ApiModelProperty(value = "json对象key的数据规格")
+  private List<TingParamSpecJsonElemDto> jsonElemList;
 
 }

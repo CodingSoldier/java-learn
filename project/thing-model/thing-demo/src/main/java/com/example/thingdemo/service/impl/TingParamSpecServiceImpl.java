@@ -8,7 +8,9 @@ import com.example.thingdemo.domain.TingParamSpecEntity;
 import com.example.thingdemo.dto.TingParamSpecDetailDto;
 import com.example.thingdemo.mapper.TingParamSpecMapper;
 import com.example.thingdemo.service.TingParamSpecService;
+import com.example.thingdemo.util.CopyUtils;
 import com.example.thingdemo.vo.TingParamSpecAddUpdateVo;
+import com.example.thingdemo.vo.TingParamSpecJsonElemVo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -50,19 +52,22 @@ public class TingParamSpecServiceImpl extends ServiceImpl<TingParamSpecMapper, T
     // 无子级的数据
     List<TingParamSpecEntity> addEntityList = new ArrayList<>();
     addList.stream()
-        .filter(e -> e.getJson() == null)
+        .filter(e -> CollectionUtils.isEmpty(e.getJsonElemList()))
         .forEach(e -> {
           TingParamSpecEntity addEntity = new TingParamSpecEntity();
           BeanUtils.copyProperties(e, addEntity);
           addEntity.setTingId(tingId);
           addEntity.setTingDimensionId(tingDimensionId);
+          addEntity.setTingDimensionId(tingDimensionId);
           addEntityList.add(addEntity);
         });
-    super.saveBatch(addEntityList);
+    if (CollectionUtils.isNotEmpty(addEntityList)) {
+      super.saveBatch(addEntityList);
+    }
 
     // 有子级的数据
     addList.stream()
-        .filter(e -> e.getJson() != null)
+        .filter(e -> CollectionUtils.isNotEmpty(e.getJsonElemList()))
         .forEach(hasChild -> {
           // 保存父级
           TingParamSpecEntity parent = new TingParamSpecEntity();
@@ -72,38 +77,19 @@ public class TingParamSpecServiceImpl extends ServiceImpl<TingParamSpecMapper, T
           super.save(parent);
 
           // 保存子级
-          TingParamSpecEntity child = new TingParamSpecEntity();
-          BeanUtils.copyProperties(hasChild.getJson(), child);
-          child.setTingId(tingId);
-          child.setTingDimensionId(tingDimensionId);
-          child.setParentId(parent.getParentId());
-          super.save(child);
+          List<TingParamSpecJsonElemVo> jsonList = hasChild.getJsonElemList();
+          List<TingParamSpecEntity> childList = CopyUtils.listCopy(jsonList,
+              TingParamSpecEntity.class);
+          childList.forEach(child -> {
+            child.setTingId(tingId);
+            child.setTingDimensionId(tingDimensionId);
+            child.setParentId(parent.getId());
+          });
+          if (CollectionUtils.isNotEmpty(childList)) {
+            super.saveBatch(childList);
+          }
         });
   }
-
-  //@Override
-  //@Transactional(rollbackFor = Exception.class)
-  //public void update(TingParamSpecAddUpdateVo updateAo) {
-  //  super.removeById(updateAo.getId());
-  //
-  //  LambdaQueryWrapper<TingParamSpecEntity> delLqw = Wrappers.lambdaQuery();
-  //  delLqw.eq(TingParamSpecEntity::getParentId, updateAo.getId());
-  //  super.remove(delLqw);
-  //
-  //  TingParamSpecEntity entity = new TingParamSpecEntity();
-  //  BeanUtils.copyProperties(updateAo, entity);
-  //  entity.setId(null);
-  //  super.save(entity);
-  //
-  //  // 保存子级
-  //  if (updateAo.getJson() != null) {
-  //    TingParamSpecEntity child = new TingParamSpecEntity();
-  //    BeanUtils.copyProperties(updateAo.getJson(), child);
-  //    child.setParentId(entity.getParentId());
-  //    child.setId(null);
-  //    super.save(child);
-  //  }
-  //}
 
   @Override
   @Transactional(rollbackFor = Exception.class)

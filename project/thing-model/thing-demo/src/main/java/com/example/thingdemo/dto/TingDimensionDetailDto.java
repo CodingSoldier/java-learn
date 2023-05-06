@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -55,16 +56,10 @@ public class TingDimensionDetailDto implements Serializable {
   @ApiModelProperty(value = "创建时间")
   private LocalDateTime createTime;
 
-  @ApiModelProperty(value = "创建用户id")
-  private Long createUser;
-
   @ApiModelProperty(value = "更新时间")
   private LocalDateTime updateTime;
 
-  @ApiModelProperty(value = "更新用户id")
-  private Long updateUser;
-
-  @ApiModelProperty(value = "是否删除，0未删除，1删除")
-  private Integer isDel;
+  @ApiModelProperty(value = "数据规则")
+  private List<TingParamSpecDetailDto> paramSpecList;
 
 }

@@ -5,14 +5,25 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.thingdemo.ao.TingAddUpdateAo;
+import com.example.thingdemo.domain.TingDimensionEntity;
 import com.example.thingdemo.domain.TingEntity;
+import com.example.thingdemo.domain.TingParamSpecEntity;
 import com.example.thingdemo.dto.TingDetailDto;
+import com.example.thingdemo.dto.TingDimensionDetailDto;
+import com.example.thingdemo.dto.TingParamSpecDetailDto;
+import com.example.thingdemo.dto.TingParamSpecJsonElemDto;
 import com.example.thingdemo.exception.AppException;
 import com.example.thingdemo.mapper.TingMapper;
+import com.example.thingdemo.service.TingDimensionService;
+import com.example.thingdemo.service.TingParamSpecService;
 import com.example.thingdemo.service.TingService;
 import com.example.thingdemo.util.CommonUtil;
+import com.example.thingdemo.util.CopyUtils;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +43,10 @@ public class TingServiceImpl extends ServiceImpl<TingMapper, TingEntity> impleme
 
   @Autowired
   private TingMapper tingMapper;
+  @Autowired
+  private TingDimensionService tingDimensionService;
+  @Autowired
+  private TingParamSpecService tingParamSpecService;
 
   @Override
   @Transactional(rollbackFor = Exception.class)
@@ -68,9 +83,55 @@ public class TingServiceImpl extends ServiceImpl<TingMapper, TingEntity> impleme
     if (tingEntity == null) {
       return null;
     }
-    TingDetailDto detailDto = new TingDetailDto();
-    BeanUtils.copyProperties(tingEntity, detailDto);
-    return detailDto;
+    TingDetailDto tingDetail = new TingDetailDto();
+    BeanUtils.copyProperties(tingEntity, tingDetail);
+
+    // 维度
+    LambdaQueryWrapper<TingDimensionEntity> dimensionLqw = Wrappers.lambdaQuery();
+    dimensionLqw.eq(TingDimensionEntity::getTingId, id);
+    List<TingDimensionEntity> dimensionList = tingDimensionService.list(dimensionLqw);
+    List<TingDimensionDetailDto> dimensionDetailList = CopyUtils.listCopy(dimensionList,
+        TingDimensionDetailDto.class);
+    tingDetail.setDimensionList(dimensionDetailList);
+
+    if (CollectionUtils.isEmpty(dimensionList)) {
+      return tingDetail;
+    }
+
+    // 数据规格
+    List<Long> dimensionIdList = dimensionList.stream().map(TingDimensionEntity::getId)
+        .collect(Collectors.toList());
+    LambdaQueryWrapper<TingParamSpecEntity> paramSpecLqw = Wrappers.lambdaQuery();
+    paramSpecLqw.eq(TingParamSpecEntity::getTingId, id);
+    paramSpecLqw.in(TingParamSpecEntity::getTingDimensionId, dimensionIdList);
+    List<TingParamSpecEntity> paramSpecAllDbList = tingParamSpecService.list(paramSpecLqw);
+
+    List<TingParamSpecEntity> parentParamSpecDbList = paramSpecAllDbList.stream()
+        .filter(e -> e.getParentId() == null).collect(Collectors.toList());
+    List<TingParamSpecEntity> childParamSpecDbList = paramSpecAllDbList.stream()
+        .filter(e -> e.getParentId() != null).collect(Collectors.toList());
+
+    dimensionDetailList.forEach(dimension -> {
+      List<TingParamSpecEntity> parentList = parentParamSpecDbList.stream()
+          .filter(paramSpec -> Objects.equals(dimension.getId(), paramSpec.getTingDimensionId()))
+          .collect(Collectors.toList());
+      List<TingParamSpecDetailDto> parentDetailList = CopyUtils.listCopy(parentList,
+              TingParamSpecDetailDto.class);
+      // 数据规格子级
+      if (CollectionUtils.isNotEmpty(parentDetailList)) {
+        parentDetailList.forEach(parent -> {
+          List<TingParamSpecEntity> childList = childParamSpecDbList.stream()
+              .filter(child -> Objects.equals(parent.getId(), child.getParentId()))
+              .collect(Collectors.toList());
+          List<TingParamSpecJsonElemDto> jsonElemList = CopyUtils.listCopy(
+              childList, TingParamSpecJsonElemDto.class);
+          parent.setJsonElemList(jsonElemList);
+        });
+        dimension.setParamSpecList(parentDetailList);
+      }
+    });
+
+    return tingDetail;
   }
 
   @Override

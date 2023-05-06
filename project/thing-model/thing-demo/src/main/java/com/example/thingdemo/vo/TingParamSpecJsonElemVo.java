@@ -3,7 +3,6 @@ package com.example.thingdemo.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
-import java.util.List;
 import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,8 +17,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "物模型3维度数据规格-新增修改ao")
-public class TingParamSpecAddUpdateVo implements Serializable {
+@ApiModel(value = "json数据")
+public class TingParamSpecJsonElemVo implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -28,9 +27,6 @@ public class TingParamSpecAddUpdateVo implements Serializable {
 
   @ApiModelProperty(value = "event、action输出输出参数唯一标识符名称")
   private String paramIdentifierName;
-
-  @ApiModelProperty(value = "1 inputData，2 outputData")
-  private Integer inOutData;
 
   @ApiModelProperty(value = "数据类型: int32（原生）、float（原生）、double（原生）、text（原生）、date（String类型UTC毫秒）、bool（0或1的int类型）、enum（int类型，枚举项定义方法与bool类型定义0和1的方法相同）、struct（结构体类型，可包含前面7种类型，下面使用\"specs\":[{}]描述包含的对象）、array（数组类型，支持int、double、float、text、struct）")
   @NotEmpty(message = "数据类型不能为空")
@@ -41,10 +37,5 @@ public class TingParamSpecAddUpdateVo implements Serializable {
 
   @ApiModelProperty(value = "排序，小的在前面")
   private Integer sort;
-
-  //@ApiModelProperty(value = "json对象key的数据规格")
-  //@ApiModelProperty(value = "{\"size\":100,\"arrayItemType\":\"struct\"}")
-  @ApiModelProperty(value = "{\"min\":1,\"max\":200,\"step\":1,\"unit\":\"°C\",\"unitName\":\"摄氏度\"}")
-  private List<TingParamSpecJsonElemVo> jsonElemList;
 
 }
