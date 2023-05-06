@@ -87,7 +87,7 @@ public class SegmentTree<E> {
     }
 
     // 将index位置的值，更新为e
-    public void set(int index, E e){
+    public void set(int index, E e) {
 
         if(index < 0 || index >= data.length)
             throw new IllegalArgumentException("Index is illegal");
@@ -97,7 +97,7 @@ public class SegmentTree<E> {
     }
 
     // 在以treeIndex为根的线段树中更新index的值为e
-    private void set(int treeIndex, int l, int r, int index, E e){
+    private void set(int treeIndex, int l, int r, int index, E e) {
 
         if(l == r){
             tree[treeIndex] = e;
