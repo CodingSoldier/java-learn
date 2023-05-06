@@ -2,9 +2,11 @@ package com.example.thingdemo.service;
 
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.thingdemo.ao.TingDimensionAddUpdateAo;
 import com.example.thingdemo.domain.TingDimensionEntity;
 import com.example.thingdemo.dto.TingDimensionDetailDto;
+import com.example.thingdemo.vo.DimensionAddVo;
+import com.example.thingdemo.vo.DimensionUpdateVo;
+import java.util.List;
 
 /**
  * <p>
@@ -17,13 +19,18 @@ import com.example.thingdemo.dto.TingDimensionDetailDto;
 public interface TingDimensionService extends IService<TingDimensionEntity> {
 
   /**
-   * 新增
-   * @param addUpdateAo 新增/修改 参数
-   * @return id
+   * 批量新增
+   * @param tingId
+   * @param dimensionList
    */
-  void add(TingDimensionAddUpdateAo addUpdateAo);
+  void addBatch(Long tingId, List<DimensionAddVo> dimensionList);
 
-  Long update(TingDimensionAddUpdateAo addUpdateAo);
+  /**
+   * 更新单个维度
+   * @param updateVo
+   * @return
+   */
+  boolean update(DimensionUpdateVo updateVo);
 
 
   /**

@@ -2,7 +2,6 @@ package com.example.thingdemo.controller;
 
 import com.example.thingdemo.ao.TingAddUpdateAo;
 import com.example.thingdemo.common.Result;
-import com.example.thingdemo.dto.TingDetailDto;
 import com.example.thingdemo.service.TingService;
 import com.example.thingdemo.vo.TingAddVo;
 import com.example.thingdemo.vo.TingUpdateVo;
@@ -13,9 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

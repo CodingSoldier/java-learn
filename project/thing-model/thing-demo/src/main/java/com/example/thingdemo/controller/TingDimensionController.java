@@ -1,14 +1,13 @@
 package com.example.thingdemo.controller;
 
-import com.example.thingdemo.ao.TingDimensionAddUpdateAo;
 import com.example.thingdemo.common.Result;
 import com.example.thingdemo.service.TingDimensionService;
 import com.example.thingdemo.vo.DimensionBatchAddVo;
+import com.example.thingdemo.vo.DimensionUpdateVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,23 +31,19 @@ public class TingDimensionController {
   @Autowired
   private TingDimensionService tingDimensionService;
 
-  @PostMapping("/add")
-  @ApiOperation(value = "新增", notes = "返回id")
+  @PostMapping("/add/batch")
+  @ApiOperation(value = "新增（多个）")
   public Result<Object> add(@RequestBody @Valid DimensionBatchAddVo addVo) {
-    TingDimensionAddUpdateAo addAo = new TingDimensionAddUpdateAo();
-    BeanUtils.copyProperties(addVo, addAo);
-    tingDimensionService.add(addAo);
+    tingDimensionService.addBatch(addVo.getTingId(), addVo.getDimensionList());
     return Result.success();
   }
 
-  //@PostMapping("/update")
-  //@ApiOperation(value = "修改", notes = "返回id")
-  //public Result<Long> update(@RequestBody @Valid TingDimensionUpdateVo updateVo) {
-  //  TingDimensionAddUpdateAo updateAo = new TingDimensionAddUpdateAo();
-  //  BeanUtils.copyProperties(updateVo, updateAo);
-  //  Long id = tingDimensionService.addUpdate(updateAo);
-  //  return Result.success(id);
-  //}
+  @PostMapping("/update")
+  @ApiOperation(value = "修改单个维度")
+  public Result<Boolean> update(@RequestBody @Valid DimensionUpdateVo updateVo) {
+    boolean b = tingDimensionService.update(updateVo);
+    return Result.success(b);
+  }
 
   //@DeleteMapping("/delete/{id}")
   //@ApiOperation(value = "删除", notes = "返回是否成功")

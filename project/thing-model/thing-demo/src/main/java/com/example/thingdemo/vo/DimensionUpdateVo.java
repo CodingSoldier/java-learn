@@ -23,10 +23,14 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "物模型3维度类型，1（properties），2（event），3（action）-新增请求体")
-public class DimensionAddVo implements Serializable {
+@ApiModel(value = "物模型3维度类型修改请求体")
+public class DimensionUpdateVo implements Serializable {
 
   private static final long serialVersionUID = 1L;
+
+  @ApiModelProperty(value = "维度id", required = true)
+  @NotNull(message = "维度id不能为空")
+  private Long id;
 
   @ApiModelProperty(value = "物模型维度名称", required = true)
   @NotEmpty(message = "物模型维度名称不能为空")
@@ -34,12 +38,6 @@ public class DimensionAddVo implements Serializable {
 
   @ApiModelProperty(value = "物模型维度描述")
   private String description;
-
-  @ApiModelProperty(value = "维度类型，1（properties），2（event），3（action）")
-  @NotNull(message = "维度类型不能为空")
-  @Min(value = 1, message="维度类型只能是1、2、3")
-  @Max(value = 3, message="维度类型只能是1、2、3")
-  private Integer dimension;
 
   @ApiModelProperty(value = "唯一标识符")
   @NotEmpty(message = "唯一标识符不能为空")
@@ -63,6 +61,5 @@ public class DimensionAddVo implements Serializable {
   @Valid
   @NotNull(message = "数据规格不能为空")
   private List<TingParamSpecAddUpdateVo> paramSpecList;
-
 
 }

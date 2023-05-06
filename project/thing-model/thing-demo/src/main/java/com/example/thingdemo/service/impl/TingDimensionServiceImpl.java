@@ -5,14 +5,14 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.thingdemo.ao.TingDimensionAddUpdateAo;
 import com.example.thingdemo.domain.TingDimensionEntity;
 import com.example.thingdemo.dto.TingDimensionDetailDto;
 import com.example.thingdemo.exception.AppException;
 import com.example.thingdemo.mapper.TingDimensionMapper;
 import com.example.thingdemo.service.TingDimensionService;
+import com.example.thingdemo.service.TingParamSpecService;
 import com.example.thingdemo.vo.DimensionAddVo;
-import com.example.thingdemo.vo.TingParamSpecAddVo;
+import com.example.thingdemo.vo.DimensionUpdateVo;
 import java.util.List;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
@@ -35,57 +35,46 @@ public class TingDimensionServiceImpl extends ServiceImpl<TingDimensionMapper, T
 
   @Autowired
   private TingDimensionMapper tingDimensionMapper;
+  @Autowired
+  private TingParamSpecService tingParamSpecService;
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public void add(TingDimensionAddUpdateAo ao) {
-    List<DimensionAddVo> dimensionList = ao.getDimensionList();
+  public void addBatch(Long tingId, List<DimensionAddVo> dimensionList) {
     if (CollectionUtils.isEmpty(dimensionList)) {
       throw new AppException("dimensionList不能为空。");
     }
 
+    // 新增维度
     for (DimensionAddVo addVo : dimensionList) {
       TingDimensionEntity tingDimensionEntity = new TingDimensionEntity();
       BeanUtils.copyProperties(addVo, tingDimensionEntity);
-      tingDimensionEntity.setTingId(ao.getTingId());
+      tingDimensionEntity.setTingId(tingId);
       super.save(tingDimensionEntity);
-      Long id = tingDimensionEntity.getId();
+      Long dimensionId = tingDimensionEntity.getId();
 
-      // 数据
-      List<TingParamSpecAddVo> paramSpecList = addVo.getParamSpecList();
-
+      // 新增数据规格
+      tingParamSpecService.addUpdate(tingId, dimensionId, addVo.getParamSpecList());
     }
-
   }
-
-  //private void vaild(TingDimensionAddUpdateAo ao) {
-  //  List<DimensionAddVo> dimensionList = ao.getDimensionList();
-  //  if (CollectionUtils.isNotEmpty(dimensionList)) {
-  //    for (DimensionAddVo addVo : dimensionList) {
-  //      if (DimensionEnum.addVo.getDimension())
-  //    }
-  //  }
-  //}
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Long update(TingDimensionAddUpdateAo addUpdateAo) {
-    // id 为空，新增；id 不为空，修改
-    //Long id = addUpdateAo.getId();
-    //if (isRepeat(addUpdateAo.getId(), TingDimensionEntity::getName, addUpdateAo.getName())){
-    //  throw new AppException(RespCodeEnum.PRECONDITION_FAILED.getCode(), "修改失败，XX已存在。请修改XX。");
-    //}
-    //TingDimensionEntity tingDimensionEntity = new TingDimensionEntity();
-    //BeanUtils.copyProperties(addUpdateAo, tingDimensionEntity);
-    //if (Objects.isNull(id)) {
-    //  // 新增
-    //  super.save(tingDimensionEntity);
-    //  id = tingDimensionEntity.getId();
-    //} else {
-    //  // 修改
-    //  super.updateById(tingDimensionEntity);
-    //}
-    return 0L;
+  public boolean update(DimensionUpdateVo updateVo) {
+    TingDimensionEntity dimensionDb = super.getById(updateVo.getId());
+    if (dimensionDb == null) {
+      return false;
+    }
+
+    TingDimensionEntity tingDimensionEntity = new TingDimensionEntity();
+    BeanUtils.copyProperties(updateVo, tingDimensionEntity);
+    super.updateById(tingDimensionEntity);
+    Long dimensionId = dimensionDb.getId();
+    Long tingId = dimensionDb.getTingId();
+
+    // 新增数据规格
+    tingParamSpecService.addUpdate(tingId, dimensionId, updateVo.getParamSpecList());
+    return true;
   }
 
   @Override

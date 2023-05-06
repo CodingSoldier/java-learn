@@ -2,9 +2,10 @@ package com.example.thingdemo.service;
 
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.thingdemo.ao.TingParamSpecAddUpdateAo;
 import com.example.thingdemo.domain.TingParamSpecEntity;
 import com.example.thingdemo.dto.TingParamSpecDetailDto;
+import com.example.thingdemo.vo.TingParamSpecAddUpdateVo;
+import java.util.List;
 
 /**
  * <p>
@@ -17,12 +18,18 @@ import com.example.thingdemo.dto.TingParamSpecDetailDto;
 public interface TingParamSpecService extends IService<TingParamSpecEntity> {
 
   /**
-   * 新增/修改
-   * @param addUpdateAo 新增/修改 参数
-   * @return id
+   * 新增修改
+   * @param tingId
+   * @param tingDimensionId
+   * @param addList
    */
-  Long addUpdate(TingParamSpecAddUpdateAo addUpdateAo);
+  void addUpdate(Long tingId, Long tingDimensionId, List<TingParamSpecAddUpdateVo> addList);
 
+  ///**
+  // * 单个更新
+  // * @param updateAo
+  // */
+  //void update(TingParamSpecAddUpdateVo updateAo);
 
   /**
    * 删除
