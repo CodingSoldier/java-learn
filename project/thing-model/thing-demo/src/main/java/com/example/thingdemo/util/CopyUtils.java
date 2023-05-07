@@ -1,11 +1,12 @@
 package com.example.thingdemo.util;
 
 import com.example.thingdemo.exception.AppException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 
 /**
  * @author chenpq05

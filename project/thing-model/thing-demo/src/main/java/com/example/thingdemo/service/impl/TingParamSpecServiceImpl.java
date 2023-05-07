@@ -11,15 +11,16 @@ import com.example.thingdemo.service.TingParamSpecService;
 import com.example.thingdemo.util.CopyUtils;
 import com.example.thingdemo.vo.TingParamSpecAddUpdateVo;
 import com.example.thingdemo.vo.TingParamSpecJsonElemVo;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
