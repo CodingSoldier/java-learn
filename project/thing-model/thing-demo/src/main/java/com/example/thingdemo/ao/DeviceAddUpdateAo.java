@@ -11,24 +11,27 @@ import java.io.Serializable;
 
 /**
  * @author chenpq
- * @since 2023-05-04 14:08:27
+ * @since 2023-05-07 21:52:39
  */
 @Data
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "物模型概述-新增修改ao")
-public class TingAddUpdateAo implements Serializable {
+@ApiModel(value = "设备-新增修改ao")
+public class DeviceAddUpdateAo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "主键")
     private Long id;
 
-    @ApiModelProperty(value = "产品名称")
-    private String name;
+    @ApiModelProperty(value = "设备名称")
+    private String deviceName;
 
-    @ApiModelProperty(value = "版本")
-    private String version;
+    @ApiModelProperty(value = "设备编码")
+    private String deviceCode;
+
+    @ApiModelProperty(value = "产品key")
+    private String productKey;
 
 }

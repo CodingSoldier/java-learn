@@ -10,32 +10,31 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author chenpq
- * @since 2023-05-04 14:08:27
+ * @since 2023-05-07 21:53:04
  */
 @Data
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "物模型概述-详情返回值")
-public class TingDetailDto implements Serializable {
+@ApiModel(value = "设备影子-详情返回值")
+public class DeviceShadowPropertiesDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "物模型id")
-    private Long id;
+    @ApiModelProperty(value = "properties唯一标识符")
+    private String identifier;
 
-    @ApiModelProperty(value = "产品名称")
-    private String name;
+    @ApiModelProperty(value = "设备实际值")
+    private String currentValue;
 
-    @ApiModelProperty(value = "产品key")
-    private String productKey;
+    @ApiModelProperty(value = "期望值")
+    private String expectValue;
 
-    @ApiModelProperty(value = "版本")
-    private String version;
+    @ApiModelProperty(value = "值数据类型")
+    private String valueDataType;
 
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -44,7 +43,5 @@ public class TingDetailDto implements Serializable {
     @ApiModelProperty(value = "更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime updateTime;
-
-    private List<TingDimensionDetailDto> dimensionList;
 
 }

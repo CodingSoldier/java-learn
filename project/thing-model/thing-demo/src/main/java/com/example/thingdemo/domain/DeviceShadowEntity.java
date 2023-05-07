@@ -1,9 +1,6 @@
 package com.example.thingdemo.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -16,19 +13,19 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 物模型概述
+ * 设备影子
  * </p>
  *
  * @author chenpq
- * @since 2023-05-04 14:08:27
+ * @since 2023-05-07 21:53:04
  */
 @Data
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("ting")
-@ApiModel(value = "TingEntity对象", description = "物模型概述")
-public class TingEntity implements Serializable {
+@TableName("device_shadow")
+@ApiModel(value = "DeviceShadowEntity对象", description = "设备影子")
+public class DeviceShadowEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -36,14 +33,23 @@ public class TingEntity implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "产品名称")
-    private String name;
-
     @ApiModelProperty(value = "产品key")
     private String productKey;
 
-    @ApiModelProperty(value = "版本")
-    private String version;
+    @ApiModelProperty(value = "设备编码")
+    private String deviceCode;
+
+    @ApiModelProperty(value = "properties唯一标识符")
+    private String identifier;
+
+    @ApiModelProperty(value = "设备实际值")
+    private String currentValue;
+
+    @ApiModelProperty(value = "期望值")
+    private String expectValue;
+
+    @ApiModelProperty(value = "值数据类型")
+    private String valueDataType;
 
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;

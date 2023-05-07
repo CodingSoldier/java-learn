@@ -19,53 +19,59 @@ import java.util.List;
  */
 public interface TingDimensionService extends IService<TingDimensionEntity> {
 
-  /**
-   * 批量新增
-   * @param tingId
-   * @param dimensionList
-   */
-  void addBatch(Long tingId, List<DimensionAddVo> dimensionList);
+    /**
+     * 批量新增
+     *
+     * @param tingId
+     * @param dimensionList
+     */
+    void addBatch(Long tingId, List<DimensionAddVo> dimensionList);
 
-  /**
-   * 更新单个维度
-   * @param updateVo
-   * @return
-   */
-  boolean update(DimensionUpdateVo updateVo);
+    /**
+     * 更新单个维度
+     *
+     * @param updateVo
+     * @return
+     */
+    boolean update(DimensionUpdateVo updateVo);
 
-  /**
-   * 参数校验
-   * @param vo
-   */
-  void valid(DimensionAddVo vo);
-
-
-  /**
-   * 删除
-   * @param tingId
-   * @param id
-   * @return
-   */
-  boolean delete(Long tingId, Long id);
-
-  /**
-   *  详情
-   * @param tingId
-   * @param id
-   * @return
-   */
-  TingDimensionDetailDto detail(Long tingId, Long id);
+    /**
+     * 参数校验
+     *
+     * @param vo
+     */
+    void valid(DimensionAddVo vo);
 
 
-  /**
-   * 是否重复
-   * @param id
-   * @param tingId
-   * @param dimension
-   * @param func
-   * @param value
-   * @return
-   */
-  boolean isRepeat(Long id, Long tingId, Integer dimension, SFunction<TingDimensionEntity,?> func, String value);
+    /**
+     * 删除
+     *
+     * @param tingId
+     * @param id
+     * @return
+     */
+    boolean delete(Long tingId, Long id);
+
+    /**
+     * 详情
+     *
+     * @param tingId
+     * @param id
+     * @return
+     */
+    TingDimensionDetailDto detail(Long tingId, Long id);
+
+
+    /**
+     * 是否重复
+     *
+     * @param id
+     * @param tingId
+     * @param dimension
+     * @param func
+     * @param value
+     * @return
+     */
+    boolean isRepeat(Long id, Long tingId, Integer dimension, SFunction<TingDimensionEntity, ?> func, String value);
 
 }

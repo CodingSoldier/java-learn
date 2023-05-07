@@ -12,7 +12,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @author chenpq
  * @since 2023-05-04 14:08:27
  */
-@Mapper
 public interface TingMapper extends BaseMapper<TingEntity> {
 
 }

@@ -2,29 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.thingdemo.mapper.TingDimensionMapper">
 
-  <!-- 通用查询映射结果 -->
-  <resultMap id="BaseResultMap" type="com.example.thingdemo.domain.TingDimensionEntity">
-    <id column="id" property="id" />
-    <result column="ting_id" property="tingId" />
-    <result column="name" property="name" />
-    <result column="description" property="description" />
-    <result column="dimension" property="dimension" />
-    <result column="identifier" property="identifier" />
-    <result column="properties_access_mode" property="propertiesAccessMode" />
-    <result column="action_call_type" property="actionCallType" />
-    <result column="event_type" property="eventType" />
-    <result column="required" property="required" />
-    <result column="create_time" property="createTime" />
-    <result column="create_user" property="createUser" />
-    <result column="update_time" property="updateTime" />
-    <result column="update_user" property="updateUser" />
-    <result column="is_del" property="isDel" />
-  </resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.thingdemo.domain.TingDimensionEntity">
+        <id column="id" property="id"/>
+        <result column="ting_id" property="tingId"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+        <result column="dimension" property="dimension"/>
+        <result column="identifier" property="identifier"/>
+        <result column="properties_access_mode" property="propertiesAccessMode"/>
+        <result column="action_call_type" property="actionCallType"/>
+        <result column="event_type" property="eventType"/>
+        <result column="required" property="required"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="is_del" property="isDel"/>
+    </resultMap>
 
-  <!-- 通用查询结果列 -->
-  <sql id="Base_Column_List">
-    id, ting_id, name, description, dimension, identifier, properties_access_mode, action_call_type, event_type, required, create_time, create_user, update_time, update_user, is_del
-  </sql>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id
+        , ting_id, name, description, dimension, identifier, properties_access_mode, action_call_type, event_type, required, create_time, create_user, update_time, update_user, is_del
+    </sql>
+
+    <select id="getDimensions" resultMap="BaseResultMap">
+        SELECT td.*
+        FROM ting t,
+             ting_dimension td
+        WHERE t.is_del = 0
+          AND td.is_del = 0
+          AND t.id = td.ting_id
+          AND t.product_key = #{productKey}
+          AND td.dimension = #{dimension}
+    </select>
 
 
 </mapper>

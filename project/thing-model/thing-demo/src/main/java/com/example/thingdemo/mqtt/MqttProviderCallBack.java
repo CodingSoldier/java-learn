@@ -9,49 +9,52 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 /**
  * @author chenpq05
  * @since 2023/4/11 14:14
- *
+ * <p>
  * mqtt生产者回调
  */
 @Slf4j
 public class MqttProviderCallBack implements MqttCallback {
 
 
-  /**
-   * 与服务器断开连接的回调
-   * @author xct
-   * @param throwable
-   * @return void
-   * @date 2021/7/30 16:19
-   */
-  @Override
-  public void connectionLost(Throwable throwable) {
-    log.info("与服务器断开连接", throwable);
-  }
+    /**
+     * 与服务器断开连接的回调
+     *
+     * @param throwable
+     * @return void
+     * @author xct
+     * @date 2021/7/30 16:19
+     */
+    @Override
+    public void connectionLost(Throwable throwable) {
+        log.info("与服务器断开连接", throwable);
+    }
 
-  /**
-   * 消息到达的回调
-   * @author xct
-   * @param s
-   * @param mqttMessage
-   * @return void
-   * @date 2021/7/30 16:19
-   */
-  @Override
-  public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-    log.info("消息到达的回调", s);
-  }
+    /**
+     * 消息到达的回调
+     *
+     * @param s
+     * @param mqttMessage
+     * @return void
+     * @author xct
+     * @date 2021/7/30 16:19
+     */
+    @Override
+    public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
+        log.info("消息到达的回调", s);
+    }
 
-  /**
-   * 消息发布成功的回调
-   * @author xct
-   * @param iMqttDeliveryToken
-   * @return void
-   * @date 2021/7/30 16:20
-   */
-  @Override
-  public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-    IMqttAsyncClient client = iMqttDeliveryToken.getClient();
-    log.info(client.getClientId() + "发布消息成功！");
-  }
+    /**
+     * 消息发布成功的回调
+     *
+     * @param iMqttDeliveryToken
+     * @return void
+     * @author xct
+     * @date 2021/7/30 16:20
+     */
+    @Override
+    public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+        IMqttAsyncClient client = iMqttDeliveryToken.getClient();
+        log.info(client.getClientId() + "发布消息成功！");
+    }
 
 }

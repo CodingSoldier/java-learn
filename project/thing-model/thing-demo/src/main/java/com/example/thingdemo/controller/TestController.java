@@ -16,8 +16,8 @@ public class TestController {
     private MqttProviderConfig providerClient;
 
     @RequestMapping("/mqtt/sendMessage")
-    public Result sendMessage(int qos, String topic, String message){
-        providerClient.publish(qos,topic, message);
+    public Result sendMessage(int qos, String topic, String message) {
+        providerClient.publish(qos, topic, message);
         return Result.success();
     }
 

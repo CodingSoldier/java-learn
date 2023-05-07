@@ -6,6 +6,6 @@ package com.example.thingdemo.common;
  */
 public class TingConstant {
 
-  public static final String VERSION_100 = "1.0.0";
+    public static final String VERSION_100 = "1.0.0";
 
 }

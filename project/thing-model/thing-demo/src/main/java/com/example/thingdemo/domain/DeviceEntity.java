@@ -1,9 +1,6 @@
 package com.example.thingdemo.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -16,19 +13,19 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 物模型概述
+ * 设备
  * </p>
  *
  * @author chenpq
- * @since 2023-05-04 14:08:27
+ * @since 2023-05-07 21:52:39
  */
 @Data
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("ting")
-@ApiModel(value = "TingEntity对象", description = "物模型概述")
-public class TingEntity implements Serializable {
+@TableName("device")
+@ApiModel(value = "DeviceEntity对象", description = "设备")
+public class DeviceEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -36,14 +33,14 @@ public class TingEntity implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "产品名称")
-    private String name;
+    @ApiModelProperty(value = "设备名称")
+    private String deviceName;
+
+    @ApiModelProperty(value = "设备编码")
+    private String deviceCode;
 
     @ApiModelProperty(value = "产品key")
     private String productKey;
-
-    @ApiModelProperty(value = "版本")
-    private String version;
 
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;

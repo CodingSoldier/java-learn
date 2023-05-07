@@ -31,47 +31,47 @@ import java.util.List;
 @Api(value = "物模型3维度", tags = "物模型3维度-API")
 public class TingDimensionController {
 
-  @Autowired
-  private TingDimensionService tingDimensionService;
+    @Autowired
+    private TingDimensionService tingDimensionService;
 
-  @PostMapping("/add/batch")
-  @ApiOperation(value = "新增（多个）")
-  public Result<Object> add(@RequestBody @Valid DimensionBatchAddVo addVo) {
-    List<@Valid DimensionAddVo> dimensionList = addVo.getDimensionList();
-    for (DimensionAddVo dimensionAddVo : dimensionList) {
-      tingDimensionService.valid(dimensionAddVo);
+    @PostMapping("/add/batch")
+    @ApiOperation(value = "新增（多个）")
+    public Result<Object> add(@RequestBody @Valid DimensionBatchAddVo addVo) {
+        List<@Valid DimensionAddVo> dimensionList = addVo.getDimensionList();
+        for (DimensionAddVo dimensionAddVo : dimensionList) {
+            tingDimensionService.valid(dimensionAddVo);
+        }
+        ArrayList<Object> notRepeatList = new ArrayList<>();
+        for (DimensionAddVo vo : dimensionList) {
+            String notRepeat = vo.getDimension() + "-" + vo.getIdentifier();
+            if (notRepeatList.contains(notRepeat)) {
+                throw new AppException(vo.getIdentifier() + "重复，请修改。");
+            }
+            notRepeatList.add(notRepeat);
+        }
+        tingDimensionService.addBatch(addVo.getTingId(), addVo.getDimensionList());
+        return Result.success();
     }
-    ArrayList<Object> notRepeatList = new ArrayList<>();
-    for (DimensionAddVo vo : dimensionList) {
-      String notRepeat = vo.getDimension() + "-" + vo.getIdentifier();
-      if (notRepeatList.contains(notRepeat)) {
-        throw new AppException(vo.getIdentifier() + "重复，请修改。");
-      }
-      notRepeatList.add(notRepeat);
+
+    @PostMapping("/update")
+    @ApiOperation(value = "修改单个维度")
+    public Result<Boolean> update(@RequestBody @Valid DimensionUpdateVo updateVo) {
+        boolean b = tingDimensionService.update(updateVo);
+        return Result.success(b);
     }
-    tingDimensionService.addBatch(addVo.getTingId(), addVo.getDimensionList());
-    return Result.success();
-  }
 
-  @PostMapping("/update")
-  @ApiOperation(value = "修改单个维度")
-  public Result<Boolean> update(@RequestBody @Valid DimensionUpdateVo updateVo) {
-    boolean b = tingDimensionService.update(updateVo);
-    return Result.success(b);
-  }
+    @DeleteMapping("/delete")
+    @ApiOperation(value = "删除", notes = "返回是否成功")
+    public Result<Boolean> delete(@RequestParam("tingId") Long tingId, @RequestParam("id") Long id) {
+        boolean b = tingDimensionService.delete(tingId, id);
+        return Result.success(b);
+    }
 
-  @DeleteMapping("/delete")
-  @ApiOperation(value = "删除", notes = "返回是否成功")
-  public Result<Boolean> delete(@RequestParam("tingId")Long tingId, @RequestParam("id") Long id) {
-   boolean b = tingDimensionService.delete(tingId, id);
-   return Result.success(b);
-  }
-
-  @GetMapping("/detail")
-  @ApiOperation(value = "详情")
-  public Result<TingDimensionDetailDto> detail(@RequestParam("tingId")Long tingId, @RequestParam("id") Long id) {
-   TingDimensionDetailDto detail = tingDimensionService.detail(tingId, id);
-   return Result.success(detail);
-  }
+    @GetMapping("/detail")
+    @ApiOperation(value = "详情")
+    public Result<TingDimensionDetailDto> detail(@RequestParam("tingId") Long tingId, @RequestParam("id") Long id) {
+        TingDimensionDetailDto detail = tingDimensionService.detail(tingId, id);
+        return Result.success(detail);
+    }
 
 }

@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.PostConstruct;
 
 /**
- *
  * @author cpq
  * @since 2023-04-11
  * mq连接工厂
@@ -30,11 +29,11 @@ public class MqttProviderConfig {
      * 在bean初始化后连接到服务器
      */
     @PostConstruct
-    public void init(){
+    public void init() {
         connect();
     }
 
-    public void connect(){
+    public void connect() {
         try {
             //创建MQTT客户端对象
             client = new MqttClient(mqttProperties.getHostUrl(), mqttProperties.getProviderClientId(), new MemoryPersistence());
@@ -52,16 +51,16 @@ public class MqttProviderConfig {
             //设置心跳时间 单位为秒，表示服务器每隔1.5*20秒的时间向客户端发送心跳判断客户端是否在线
             options.setKeepAliveInterval(20);
             //设置遗嘱消息的话题，若客户端和服务器之间的连接意外断开，服务器将发布客户端的遗嘱信息
-            options.setWill("willTopic",(mqttProperties.getProviderClientId() + "与服务器断开连接").getBytes(),0,false);
+            options.setWill("willTopic", (mqttProperties.getProviderClientId() + "与服务器断开连接").getBytes(), 0, false);
             //设置回调
             client.setCallback(new MqttProviderCallBack());
             client.connect(options);
         } catch (MqttException e) {
-           log.info("创建mqtt发布者异常", e);
+            log.info("创建mqtt发布者异常", e);
         }
     }
 
-    public void publish(int qos, String topic,String message){
+    public void publish(int qos, String topic, String message) {
         MqttMessage mqttMessage = new MqttMessage();
         mqttMessage.setQos(qos);
         mqttMessage.setRetained(false);

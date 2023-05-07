@@ -16,35 +16,39 @@ import com.example.thingdemo.dto.TingDetailDto;
  */
 public interface TingService extends IService<TingEntity> {
 
-  /**
-   * 新增/修改
-   * @param addUpdateAo 新增/修改 参数
-   * @return id
-   */
-  Long addUpdate(TingAddUpdateAo addUpdateAo);
+    /**
+     * 新增/修改
+     *
+     * @param addUpdateAo 新增/修改 参数
+     * @return id
+     */
+    Long addUpdate(TingAddUpdateAo addUpdateAo);
 
 
-  /**
-   * 删除
-   * @param id id
-   * @return 是否成功
-   */
-  boolean delete(Long id);
+    /**
+     * 删除
+     *
+     * @param id id
+     * @return 是否成功
+     */
+    boolean delete(Long id);
 
-  /**
-   * 详情
-   * @param id id
-   * @return 详情
-   */
-  TingDetailDto detail(Long id);
+    /**
+     * 详情
+     *
+     * @param id id
+     * @return 详情
+     */
+    TingDetailDto detail(Long id);
 
-  /**
-   * 是否重复
-   * @param id id
-   * @param func 列函数
-   * @param value 列值
-   * @return 是否重复
-   */
-  boolean isRepeat(Long id, SFunction<TingEntity,?> func, String value);
+    /**
+     * 是否重复
+     *
+     * @param id    id
+     * @param func  列函数
+     * @param value 列值
+     * @return 是否重复
+     */
+    boolean isRepeat(Long id, SFunction<TingEntity, ?> func, String value);
 
 }

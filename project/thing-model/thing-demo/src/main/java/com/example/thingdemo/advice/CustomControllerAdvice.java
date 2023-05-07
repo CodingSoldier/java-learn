@@ -44,67 +44,67 @@ import java.util.Set;
 @RestControllerAdvice
 public class CustomControllerAdvice {
 
-  @ExceptionHandler(AppException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public Result<Object> handleAppException(AppException e) {
-    log.error("业务异常", e);
-    return Result.fail(e.getMessage());
-  }
-
-
-  /**
-   * 使用 @Valid 注解，被此方法捕获
-   */
-  @ExceptionHandler(MethodArgumentNotValidException.class)
-  public Result<Object> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
-    log.error("捕获MethodArgumentNotValidException异常", ex);
-    StringBuilder sb = new StringBuilder();
-    BindingResult bindingResult = ex.getBindingResult();
-    for (FieldError fieldError : bindingResult.getFieldErrors()) {
-      String defaultMessage = fieldError.getDefaultMessage();
-      boolean isMatch = CommonUtil.isEndWith(defaultMessage, CommonUtil.END_CHAR);
-      // 没有结尾符号，添加句号
-      defaultMessage = isMatch ? defaultMessage : String.format("%s。", defaultMessage);
-      sb.append(defaultMessage);
+    @ExceptionHandler(AppException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result<Object> handleAppException(AppException e) {
+        log.error("业务异常", e);
+        return Result.fail(e.getMessage());
     }
-    String msg = sb.toString();
-    return Result.fail(msg);
-  }
 
-  /**
-   * 使用 @Validated 注解，被此方法捕获
-   */
-  @ExceptionHandler(ConstraintViolationException.class)
-  public Result<Object> constraintViolationException(ConstraintViolationException ex) {
-    log.error("捕获ConstraintViolationException异常", ex);
-    Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
-    StringBuilder sb = new StringBuilder();
-    if (!constraintViolations.isEmpty()) {
-      for (ConstraintViolation<?> constraint : constraintViolations) {
-        String message = constraint.getMessage();
-        boolean isMatch = CommonUtil.isEndWith(message, CommonUtil.END_CHAR);
-        // 没有结尾符号，添加句号
-        message = isMatch ? message : String.format("%s。", message);
-        sb.append(message);
-      }
+
+    /**
+     * 使用 @Valid 注解，被此方法捕获
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Result<Object> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        log.error("捕获MethodArgumentNotValidException异常", ex);
+        StringBuilder sb = new StringBuilder();
+        BindingResult bindingResult = ex.getBindingResult();
+        for (FieldError fieldError : bindingResult.getFieldErrors()) {
+            String defaultMessage = fieldError.getDefaultMessage();
+            boolean isMatch = CommonUtil.isEndWith(defaultMessage, CommonUtil.END_CHAR);
+            // 没有结尾符号，添加句号
+            defaultMessage = isMatch ? defaultMessage : String.format("%s。", defaultMessage);
+            sb.append(defaultMessage);
+        }
+        String msg = sb.toString();
+        return Result.fail(msg);
     }
-    String msg = sb.toString();
-    return Result.fail(400, msg);
-  }
+
+    /**
+     * 使用 @Validated 注解，被此方法捕获
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public Result<Object> constraintViolationException(ConstraintViolationException ex) {
+        log.error("捕获ConstraintViolationException异常", ex);
+        Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
+        StringBuilder sb = new StringBuilder();
+        if (!constraintViolations.isEmpty()) {
+            for (ConstraintViolation<?> constraint : constraintViolations) {
+                String message = constraint.getMessage();
+                boolean isMatch = CommonUtil.isEndWith(message, CommonUtil.END_CHAR);
+                // 没有结尾符号，添加句号
+                message = isMatch ? message : String.format("%s。", message);
+                sb.append(message);
+            }
+        }
+        String msg = sb.toString();
+        return Result.fail(400, msg);
+    }
 
 
-  @ExceptionHandler(NullPointerException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public Result<Object> handleNullPointerException(NullPointerException e) {
-    log.error("空指针异常", e);
-    return Result.fail(500, "空指针异常");
-  }
+    @ExceptionHandler(NullPointerException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result<Object> handleNullPointerException(NullPointerException e) {
+        log.error("空指针异常", e);
+        return Result.fail(500, "空指针异常");
+    }
 
-  @ExceptionHandler(Exception.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public Result<Object> handleException(Exception e) {
-    log.error("服务异常", e);
-    return Result.fail(500, "服务异常");
-  }
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result<Object> handleException(Exception e) {
+        log.error("服务异常", e);
+        return Result.fail(500, "服务异常");
+    }
 
 }

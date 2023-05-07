@@ -2,28 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.thingdemo.mapper.TingParamSpecMapper">
 
-  <!-- 通用查询映射结果 -->
-  <resultMap id="BaseResultMap" type="com.example.thingdemo.domain.TingParamSpecEntity">
-    <id column="id" property="id" />
-    <result column="ting_id" property="tingId" />
-    <result column="ting_dimension_id" property="tingDimensionId" />
-    <result column="param_identifier" property="paramIdentifier" />
-    <result column="param_identifier_name" property="paramIdentifierName" />
-    <result column="parent_id" property="parentId" />
-    <result column="in_out_data" property="inOutData" />
-    <result column="data_type" property="dataType" />
-    <result column="specs" property="specs" />
-    <result column="sort" property="sort" />
-    <result column="create_time" property="createTime" />
-    <result column="create_user" property="createUser" />
-    <result column="update_time" property="updateTime" />
-    <result column="update_user" property="updateUser" />
-    <result column="is_del" property="isDel" />
-  </resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.thingdemo.domain.TingParamSpecEntity">
+        <id column="id" property="id"/>
+        <result column="ting_id" property="tingId"/>
+        <result column="ting_dimension_id" property="tingDimensionId"/>
+        <result column="param_identifier" property="paramIdentifier"/>
+        <result column="param_identifier_name" property="paramIdentifierName"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="in_out_data" property="inOutData"/>
+        <result column="data_type" property="dataType"/>
+        <result column="specs" property="specs"/>
+        <result column="sort" property="sort"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="is_del" property="isDel"/>
+    </resultMap>
 
-  <!-- 通用查询结果列 -->
-  <sql id="Base_Column_List">
-    id, ting_id, ting_dimension_id, param_identifier, param_identifier_name, parent_id, in_out_data, data_type, specs, sort, create_time, create_user, update_time, update_user, is_del
-  </sql>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id
+        , ting_id, ting_dimension_id, param_identifier, param_identifier_name, parent_id, in_out_data, data_type, specs, sort, create_time, create_user, update_time, update_user, is_del
+    </sql>
 
 </mapper>

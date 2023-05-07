@@ -41,169 +41,169 @@ import java.util.stream.Collectors;
 @Service
 public class TingDimensionServiceImpl extends ServiceImpl<TingDimensionMapper, TingDimensionEntity> implements TingDimensionService {
 
-  @Autowired
-  private TingDimensionMapper tingDimensionMapper;
-  @Autowired
-  private TingParamSpecService tingParamSpecService;
+    @Autowired
+    private TingDimensionMapper tingDimensionMapper;
+    @Autowired
+    private TingParamSpecService tingParamSpecService;
 
-  @Override
-  @Transactional(rollbackFor = Exception.class)
-  public void addBatch(Long tingId, List<DimensionAddVo> dimensionList) {
-    if (CollectionUtils.isEmpty(dimensionList)) {
-      throw new AppException("dimensionList不能为空。");
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void addBatch(Long tingId, List<DimensionAddVo> dimensionList) {
+        if (CollectionUtils.isEmpty(dimensionList)) {
+            throw new AppException("dimensionList不能为空。");
+        }
+
+        // 校验Identifier是否重复
+        for (DimensionAddVo vo : dimensionList) {
+            isRepeat(null, tingId, vo.getDimension(), TingDimensionEntity::getIdentifier, vo.getIdentifier());
+        }
+
+        // 新增维度
+        for (DimensionAddVo addVo : dimensionList) {
+            TingDimensionEntity tingDimensionEntity = new TingDimensionEntity();
+            BeanUtils.copyProperties(addVo, tingDimensionEntity);
+            tingDimensionEntity.setTingId(tingId);
+            super.save(tingDimensionEntity);
+            Long dimensionId = tingDimensionEntity.getId();
+
+            // 新增数据规格
+            tingParamSpecService.addUpdate(tingId, dimensionId, addVo.getParamSpecList());
+        }
     }
 
-    // 校验Identifier是否重复
-    for (DimensionAddVo vo : dimensionList) {
-      isRepeat(null, tingId, vo.getDimension(), TingDimensionEntity::getIdentifier, vo.getIdentifier());
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean update(DimensionUpdateVo updateVo) {
+        TingDimensionEntity dimensionDb = super.getById(updateVo.getId());
+        if (dimensionDb == null) {
+            return false;
+        }
+
+        isRepeat(updateVo.getId(), dimensionDb.getTingId(), dimensionDb.getDimension(), TingDimensionEntity::getIdentifier, updateVo.getIdentifier());
+
+        // 校验
+        DimensionAddVo dimensionAddVo = new DimensionAddVo();
+        BeanUtils.copyProperties(updateVo, dimensionAddVo);
+        valid(dimensionAddVo);
+
+        TingDimensionEntity tingDimensionEntity = new TingDimensionEntity();
+        BeanUtils.copyProperties(updateVo, tingDimensionEntity);
+
+        if (DimensionEnum.PROPERTIES.getCode().equals(tingDimensionEntity.getDimension())) {
+            tingDimensionEntity.setEventType(null);
+            tingDimensionEntity.setActionCallType(null);
+        }
+        if (DimensionEnum.EVENT.getCode().equals(tingDimensionEntity.getDimension())) {
+            tingDimensionEntity.setPropertiesAccessMode("");
+            tingDimensionEntity.setActionCallType(null);
+        }
+        if (DimensionEnum.ACTION.getCode().equals(tingDimensionEntity.getDimension())) {
+            tingDimensionEntity.setPropertiesAccessMode("");
+            tingDimensionEntity.setEventType(null);
+        }
+
+        super.updateById(tingDimensionEntity);
+        Long dimensionId = dimensionDb.getId();
+        Long tingId = dimensionDb.getTingId();
+
+        // 新增数据规格
+        tingParamSpecService.addUpdate(tingId, dimensionId, updateVo.getParamSpecList());
+        return true;
     }
 
-    // 新增维度
-    for (DimensionAddVo addVo : dimensionList) {
-      TingDimensionEntity tingDimensionEntity = new TingDimensionEntity();
-      BeanUtils.copyProperties(addVo, tingDimensionEntity);
-      tingDimensionEntity.setTingId(tingId);
-      super.save(tingDimensionEntity);
-      Long dimensionId = tingDimensionEntity.getId();
-
-      // 新增数据规格
-      tingParamSpecService.addUpdate(tingId, dimensionId, addVo.getParamSpecList());
-    }
-  }
-
-  @Override
-  @Transactional(rollbackFor = Exception.class)
-  public boolean update(DimensionUpdateVo updateVo) {
-    TingDimensionEntity dimensionDb = super.getById(updateVo.getId());
-    if (dimensionDb == null) {
-      return false;
-    }
-
-    isRepeat(updateVo.getId(), dimensionDb.getTingId(), dimensionDb.getDimension(), TingDimensionEntity::getIdentifier, updateVo.getIdentifier());
-
-    // 校验
-    DimensionAddVo dimensionAddVo = new DimensionAddVo();
-    BeanUtils.copyProperties(updateVo, dimensionAddVo);
-    valid(dimensionAddVo);
-
-    TingDimensionEntity tingDimensionEntity = new TingDimensionEntity();
-    BeanUtils.copyProperties(updateVo, tingDimensionEntity);
-
-    if (DimensionEnum.PROPERTIES.getCode().equals(tingDimensionEntity.getDimension())) {
-      tingDimensionEntity.setEventType(null);
-      tingDimensionEntity.setActionCallType(null);
-    }
-    if (DimensionEnum.EVENT.getCode().equals(tingDimensionEntity.getDimension())) {
-      tingDimensionEntity.setPropertiesAccessMode("");
-      tingDimensionEntity.setActionCallType(null);
-    }
-    if (DimensionEnum.ACTION.getCode().equals(tingDimensionEntity.getDimension())) {
-      tingDimensionEntity.setPropertiesAccessMode("");
-      tingDimensionEntity.setEventType(null);
+    @Override
+    public void valid(DimensionAddVo vo) {
+        if (vo == null) {
+            return;
+        }
+        if (DimensionEnum.PROPERTIES.getCode().equals(vo.getDimension())) {
+            if (StringUtils.isBlank(vo.getPropertiesAccessMode())) {
+                throw new AppException("属性的读写类型不能为空");
+            }
+            vo.setEventType(null);
+            vo.setActionCallType(null);
+        }
+        if (DimensionEnum.EVENT.getCode().equals(vo.getDimension())) {
+            if (vo.getEventType() == null) {
+                throw new AppException("事件的事件类型不能为空");
+            }
+            vo.setPropertiesAccessMode("");
+            vo.setActionCallType(null);
+        }
+        if (DimensionEnum.ACTION.getCode().equals(vo.getDimension())) {
+            if (vo.getActionCallType() == null) {
+                throw new AppException("动作的调用方式不能为空");
+            }
+            vo.setPropertiesAccessMode("");
+            vo.setEventType(null);
+        }
     }
 
-    super.updateById(tingDimensionEntity);
-    Long dimensionId = dimensionDb.getId();
-    Long tingId = dimensionDb.getTingId();
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean delete(Long tingId, Long id) {
+        LambdaQueryWrapper<TingDimensionEntity> lqw = Wrappers.lambdaQuery();
+        lqw.eq(TingDimensionEntity::getTingId, tingId);
+        lqw.eq(TingDimensionEntity::getId, id);
+        boolean b = super.remove(lqw);
 
-    // 新增数据规格
-    tingParamSpecService.addUpdate(tingId, dimensionId, updateVo.getParamSpecList());
-    return true;
-  }
-
-  @Override
-  public void valid(DimensionAddVo vo) {
-    if (vo == null) {
-      return;
+        LambdaQueryWrapper<TingParamSpecEntity> paramSpecLqw = Wrappers.lambdaQuery();
+        paramSpecLqw.eq(TingParamSpecEntity::getTingId, tingId);
+        paramSpecLqw.eq(TingParamSpecEntity::getTingDimensionId, id);
+        tingParamSpecService.remove(paramSpecLqw);
+        return b;
     }
-    if (DimensionEnum.PROPERTIES.getCode().equals(vo.getDimension())) {
-      if (StringUtils.isBlank(vo.getPropertiesAccessMode())) {
-        throw new AppException("属性的读写类型不能为空");
-      }
-      vo.setEventType(null);
-      vo.setActionCallType(null);
+
+    @Override
+    public TingDimensionDetailDto detail(Long tingId, Long id) {
+        LambdaQueryWrapper<TingDimensionEntity> lqw = Wrappers.lambdaQuery();
+        lqw.eq(TingDimensionEntity::getTingId, tingId);
+        lqw.eq(TingDimensionEntity::getId, id);
+        TingDimensionEntity dbEntity = super.getOne(lqw, false);
+        if (dbEntity == null) {
+            return null;
+        }
+        TingDimensionDetailDto detailDto = new TingDimensionDetailDto();
+        BeanUtils.copyProperties(dbEntity, detailDto);
+
+        // 数据规格
+        LambdaQueryWrapper<TingParamSpecEntity> paramSpecLqw = Wrappers.lambdaQuery();
+        paramSpecLqw.eq(TingParamSpecEntity::getTingDimensionId, id);
+        List<TingParamSpecEntity> paramSpecAllDbList = tingParamSpecService.list(paramSpecLqw);
+
+        List<TingParamSpecEntity> parentParamSpecDbList = paramSpecAllDbList.stream()
+                .filter(e -> e.getParentId() == null).collect(Collectors.toList());
+        List<TingParamSpecEntity> childParamSpecDbList = paramSpecAllDbList.stream()
+                .filter(e -> e.getParentId() != null).collect(Collectors.toList());
+
+        List<TingParamSpecDetailDto> parentDetailList = CopyUtils.listCopy(parentParamSpecDbList,
+                TingParamSpecDetailDto.class);
+        // 数据规格子级
+        if (CollectionUtils.isNotEmpty(childParamSpecDbList)) {
+            parentDetailList.forEach(parent -> {
+                List<TingParamSpecEntity> childList = childParamSpecDbList.stream()
+                        .filter(child -> Objects.equals(parent.getId(), child.getParentId()))
+                        .collect(Collectors.toList());
+                List<TingParamSpecJsonElemDto> jsonElemList = CopyUtils.listCopy(
+                        childList, TingParamSpecJsonElemDto.class);
+                parent.setJsonElemList(jsonElemList);
+            });
+        }
+        detailDto.setParamSpecList(parentDetailList);
+        return detailDto;
     }
-    if (DimensionEnum.EVENT.getCode().equals(vo.getDimension())) {
-      if (vo.getEventType() == null) {
-        throw new AppException("事件的事件类型不能为空");
-      }
-      vo.setPropertiesAccessMode("");
-      vo.setActionCallType(null);
+
+    @Override
+    public boolean isRepeat(Long id, Long tingId, Integer dimension, SFunction<TingDimensionEntity, ?> func, String value) {
+        LambdaQueryWrapper<TingDimensionEntity> lqw = Wrappers.lambdaQuery();
+        lqw.eq(TingDimensionEntity::getIsDel, 0);
+        lqw.eq(func, value);
+        lqw.ne(TingDimensionEntity::getTingId, tingId);
+        lqw.ne(TingDimensionEntity::getDimension, dimension);
+        if (Objects.nonNull(id)) {
+            lqw.ne(TingDimensionEntity::getId, id);
+        }
+        return super.count(lqw) > 0;
     }
-    if (DimensionEnum.ACTION.getCode().equals(vo.getDimension())) {
-      if (vo.getActionCallType() == null) {
-        throw new AppException("动作的调用方式不能为空");
-      }
-      vo.setPropertiesAccessMode("");
-      vo.setEventType(null);
-    }
-  }
-
-  @Override
-  @Transactional(rollbackFor = Exception.class)
-  public boolean delete(Long tingId, Long id) {
-    LambdaQueryWrapper<TingDimensionEntity> lqw = Wrappers.lambdaQuery();
-    lqw.eq(TingDimensionEntity::getTingId, tingId);
-    lqw.eq(TingDimensionEntity::getId, id);
-    boolean b = super.remove(lqw);
-
-    LambdaQueryWrapper<TingParamSpecEntity> paramSpecLqw = Wrappers.lambdaQuery();
-    paramSpecLqw.eq(TingParamSpecEntity::getTingId, tingId);
-    paramSpecLqw.eq(TingParamSpecEntity::getTingDimensionId, id);
-    tingParamSpecService.remove(paramSpecLqw);
-    return b;
-  }
-
-  @Override
-  public TingDimensionDetailDto detail(Long tingId, Long id) {
-    LambdaQueryWrapper<TingDimensionEntity> lqw = Wrappers.lambdaQuery();
-    lqw.eq(TingDimensionEntity::getTingId, tingId);
-    lqw.eq(TingDimensionEntity::getId, id);
-    TingDimensionEntity dbEntity = super.getOne(lqw, false);
-    if (dbEntity == null) {
-      return null;
-    }
-    TingDimensionDetailDto detailDto = new TingDimensionDetailDto();
-    BeanUtils.copyProperties(dbEntity, detailDto);
-
-    // 数据规格
-    LambdaQueryWrapper<TingParamSpecEntity> paramSpecLqw = Wrappers.lambdaQuery();
-    paramSpecLqw.eq(TingParamSpecEntity::getTingDimensionId, id);
-    List<TingParamSpecEntity> paramSpecAllDbList = tingParamSpecService.list(paramSpecLqw);
-
-    List<TingParamSpecEntity> parentParamSpecDbList = paramSpecAllDbList.stream()
-            .filter(e -> e.getParentId() == null).collect(Collectors.toList());
-    List<TingParamSpecEntity> childParamSpecDbList = paramSpecAllDbList.stream()
-            .filter(e -> e.getParentId() != null).collect(Collectors.toList());
-
-    List<TingParamSpecDetailDto> parentDetailList = CopyUtils.listCopy(parentParamSpecDbList,
-            TingParamSpecDetailDto.class);
-    // 数据规格子级
-    if (CollectionUtils.isNotEmpty(childParamSpecDbList)) {
-      parentDetailList.forEach(parent -> {
-        List<TingParamSpecEntity> childList = childParamSpecDbList.stream()
-                .filter(child -> Objects.equals(parent.getId(), child.getParentId()))
-                .collect(Collectors.toList());
-        List<TingParamSpecJsonElemDto> jsonElemList = CopyUtils.listCopy(
-                childList, TingParamSpecJsonElemDto.class);
-        parent.setJsonElemList(jsonElemList);
-      });
-    }
-    detailDto.setParamSpecList(parentDetailList);
-    return detailDto;
-  }
-
-  @Override
-  public boolean isRepeat(Long id, Long tingId, Integer dimension, SFunction<TingDimensionEntity,?> func, String value) {
-    LambdaQueryWrapper<TingDimensionEntity> lqw = Wrappers.lambdaQuery();
-    lqw.eq(TingDimensionEntity::getIsDel, 0);
-    lqw.eq(func, value);
-    lqw.ne(TingDimensionEntity::getTingId, tingId);
-    lqw.ne(TingDimensionEntity::getDimension, dimension);
-    if (Objects.nonNull(id)) {
-      lqw.ne(TingDimensionEntity::getId, id);
-    }
-    return super.count(lqw) > 0;
-  }
 
 }

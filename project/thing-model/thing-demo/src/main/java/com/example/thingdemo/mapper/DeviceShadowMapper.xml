@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.thingdemo.mapper.TingMapper">
+<mapper namespace="com.example.thingdemo.mapper.DeviceShadowMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.example.thingdemo.domain.TingEntity">
+    <resultMap id="BaseResultMap" type="com.example.thingdemo.domain.DeviceShadowEntity">
         <id column="id" property="id"/>
-        <result column="name" property="name"/>
         <result column="product_key" property="productKey"/>
-        <result column="version" property="version"/>
+        <result column="device_code" property="deviceCode"/>
+        <result column="identifier" property="identifier"/>
+        <result column="current_value" property="currentValue"/>
+        <result column="expect_value" property="expectValue"/>
+        <result column="value_data_type" property="valueDataType"/>
         <result column="create_time" property="createTime"/>
         <result column="create_user" property="createUser"/>
         <result column="update_time" property="updateTime"/>
@@ -18,8 +21,7 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id
-        , name, ting_key, version, create_time, create_user, update_time, update_user, is_del
+        , product_key, device_code, identifier, current_value, expect_value, value_data_type, create_time, create_user, update_time, update_user, is_del
     </sql>
-
 
 </mapper>

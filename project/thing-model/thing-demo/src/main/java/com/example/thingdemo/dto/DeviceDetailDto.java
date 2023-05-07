@@ -14,28 +14,28 @@ import java.util.List;
 
 /**
  * @author chenpq
- * @since 2023-05-04 14:08:27
+ * @since 2023-05-07 21:52:39
  */
 @Data
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "物模型概述-详情返回值")
-public class TingDetailDto implements Serializable {
+@ApiModel(value = "设备-详情返回值")
+public class DeviceDetailDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "物模型id")
+    @ApiModelProperty(value = "主键")
     private Long id;
 
-    @ApiModelProperty(value = "产品名称")
-    private String name;
+    @ApiModelProperty(value = "设备名称")
+    private String deviceName;
+
+    @ApiModelProperty(value = "设备编码")
+    private String deviceCode;
 
     @ApiModelProperty(value = "产品key")
     private String productKey;
-
-    @ApiModelProperty(value = "版本")
-    private String version;
 
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -45,6 +45,7 @@ public class TingDetailDto implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime updateTime;
 
-    private List<TingDimensionDetailDto> dimensionList;
+    @ApiModelProperty(value = "设备影子属性")
+    private List<DeviceShadowPropertiesDto> shadowPropertiesList;
 
 }

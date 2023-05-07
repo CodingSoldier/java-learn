@@ -15,33 +15,33 @@ import java.util.List;
 @Slf4j
 public class CopyUtils {
 
-  private CopyUtils() {
-  }
-
-  /**
-   * 集合拷贝
-   *
-   * @param sources     原集合
-   * @param targetClazz 目标集合元素类型
-   * @param <T>
-   * @param <E>
-   * @return 目标集合
-   * @throws AppException
-   */
-  public static <T, E> List<T> listCopy(Collection<E> sources, Class<T> targetClazz)
-      throws AppException {
-    ArrayList<T> result = new ArrayList<>();
-    for (E source : sources) {
-      try {
-        T t = targetClazz.getDeclaredConstructor().newInstance();
-        BeanUtils.copyProperties(source, t);
-        result.add(t);
-      } catch (Exception e) {
-        log.error("异常", e);
-        throw new AppException(e.getMessage());
-      }
+    private CopyUtils() {
     }
-    return result;
-  }
+
+    /**
+     * 集合拷贝
+     *
+     * @param sources     原集合
+     * @param targetClazz 目标集合元素类型
+     * @param <T>
+     * @param <E>
+     * @return 目标集合
+     * @throws AppException
+     */
+    public static <T, E> List<T> listCopy(Collection<E> sources, Class<T> targetClazz)
+            throws AppException {
+        ArrayList<T> result = new ArrayList<>();
+        for (E source : sources) {
+            try {
+                T t = targetClazz.getDeclaredConstructor().newInstance();
+                BeanUtils.copyProperties(source, t);
+                result.add(t);
+            } catch (Exception e) {
+                log.error("异常", e);
+                throw new AppException(e.getMessage());
+            }
+        }
+        return result;
+    }
 
 }

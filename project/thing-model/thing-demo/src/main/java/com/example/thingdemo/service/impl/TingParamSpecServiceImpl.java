@@ -34,92 +34,92 @@ import java.util.Objects;
 @Service
 public class TingParamSpecServiceImpl extends ServiceImpl<TingParamSpecMapper, TingParamSpecEntity> implements TingParamSpecService {
 
-  @Autowired
-  private TingParamSpecMapper tingParamSpecMapper;
+    @Autowired
+    private TingParamSpecMapper tingParamSpecMapper;
 
-  @Override
-  @Transactional(rollbackFor = Exception.class)
-  public void addUpdate(Long tingId, Long tingDimensionId, List<TingParamSpecAddUpdateVo> addList) {
-    // 删除旧数据
-    LambdaQueryWrapper<TingParamSpecEntity> delLqw = Wrappers.lambdaQuery();
-    delLqw.eq(TingParamSpecEntity::getTingId, tingId);
-    delLqw.eq(TingParamSpecEntity::getTingDimensionId, tingDimensionId);
-    super.remove(delLqw);
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void addUpdate(Long tingId, Long tingDimensionId, List<TingParamSpecAddUpdateVo> addList) {
+        // 删除旧数据
+        LambdaQueryWrapper<TingParamSpecEntity> delLqw = Wrappers.lambdaQuery();
+        delLqw.eq(TingParamSpecEntity::getTingId, tingId);
+        delLqw.eq(TingParamSpecEntity::getTingDimensionId, tingDimensionId);
+        super.remove(delLqw);
 
-    if (CollectionUtils.isEmpty(addList)) {
-      return;
+        if (CollectionUtils.isEmpty(addList)) {
+            return;
+        }
+
+        // 无子级的数据
+        List<TingParamSpecEntity> addEntityList = new ArrayList<>();
+        addList.stream()
+                .filter(e -> CollectionUtils.isEmpty(e.getJsonElemList()))
+                .forEach(e -> {
+                    TingParamSpecEntity addEntity = new TingParamSpecEntity();
+                    BeanUtils.copyProperties(e, addEntity);
+                    addEntity.setTingId(tingId);
+                    addEntity.setTingDimensionId(tingDimensionId);
+                    addEntity.setTingDimensionId(tingDimensionId);
+                    addEntityList.add(addEntity);
+                });
+        if (CollectionUtils.isNotEmpty(addEntityList)) {
+            super.saveBatch(addEntityList);
+        }
+
+        // 有子级的数据
+        addList.stream()
+                .filter(e -> CollectionUtils.isNotEmpty(e.getJsonElemList()))
+                .forEach(hasChild -> {
+                    // 保存父级
+                    TingParamSpecEntity parent = new TingParamSpecEntity();
+                    BeanUtils.copyProperties(hasChild, parent);
+                    parent.setTingId(tingId);
+                    parent.setTingDimensionId(tingDimensionId);
+                    super.save(parent);
+
+                    // 保存子级
+                    List<TingParamSpecJsonElemVo> jsonList = hasChild.getJsonElemList();
+                    List<TingParamSpecEntity> childList = CopyUtils.listCopy(jsonList,
+                            TingParamSpecEntity.class);
+                    childList.forEach(child -> {
+                        child.setTingId(tingId);
+                        child.setTingDimensionId(tingDimensionId);
+                        child.setParentId(parent.getId());
+                    });
+                    if (CollectionUtils.isNotEmpty(childList)) {
+                        super.saveBatch(childList);
+                    }
+                });
     }
 
-    // 无子级的数据
-    List<TingParamSpecEntity> addEntityList = new ArrayList<>();
-    addList.stream()
-        .filter(e -> CollectionUtils.isEmpty(e.getJsonElemList()))
-        .forEach(e -> {
-          TingParamSpecEntity addEntity = new TingParamSpecEntity();
-          BeanUtils.copyProperties(e, addEntity);
-          addEntity.setTingId(tingId);
-          addEntity.setTingDimensionId(tingDimensionId);
-          addEntity.setTingDimensionId(tingDimensionId);
-          addEntityList.add(addEntity);
-        });
-    if (CollectionUtils.isNotEmpty(addEntityList)) {
-      super.saveBatch(addEntityList);
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean delete(Long id) {
+        // 删除
+        return super.removeById(id);
     }
 
-    // 有子级的数据
-    addList.stream()
-        .filter(e -> CollectionUtils.isNotEmpty(e.getJsonElemList()))
-        .forEach(hasChild -> {
-          // 保存父级
-          TingParamSpecEntity parent = new TingParamSpecEntity();
-          BeanUtils.copyProperties(hasChild, parent);
-          parent.setTingId(tingId);
-          parent.setTingDimensionId(tingDimensionId);
-          super.save(parent);
-
-          // 保存子级
-          List<TingParamSpecJsonElemVo> jsonList = hasChild.getJsonElemList();
-          List<TingParamSpecEntity> childList = CopyUtils.listCopy(jsonList,
-              TingParamSpecEntity.class);
-          childList.forEach(child -> {
-            child.setTingId(tingId);
-            child.setTingDimensionId(tingDimensionId);
-            child.setParentId(parent.getId());
-          });
-          if (CollectionUtils.isNotEmpty(childList)) {
-            super.saveBatch(childList);
-          }
-        });
-  }
-
-  @Override
-  @Transactional(rollbackFor = Exception.class)
-  public boolean delete(Long id) {
-    // 删除
-    return super.removeById(id);
-  }
-
-  @Override
-  public TingParamSpecDetailDto detail(Long id) {
-    TingParamSpecEntity tingParamSpecEntity = super.getById(id);
-    if (tingParamSpecEntity == null) {
-      return null;
+    @Override
+    public TingParamSpecDetailDto detail(Long id) {
+        TingParamSpecEntity tingParamSpecEntity = super.getById(id);
+        if (tingParamSpecEntity == null) {
+            return null;
+        }
+        TingParamSpecDetailDto detailDto = new TingParamSpecDetailDto();
+        BeanUtils.copyProperties(tingParamSpecEntity, detailDto);
+        return detailDto;
     }
-    TingParamSpecDetailDto detailDto = new TingParamSpecDetailDto();
-    BeanUtils.copyProperties(tingParamSpecEntity, detailDto);
-    return detailDto;
-  }
 
 
-  @Override
-  public boolean isRepeat(Long id, SFunction<TingParamSpecEntity,?> func, String value) {
-    LambdaQueryWrapper<TingParamSpecEntity> lqw = Wrappers.lambdaQuery();
-    lqw.eq(TingParamSpecEntity::getIsDel, 0);
-    lqw.eq(func, value);
-    if (Objects.nonNull(id)) {
-      lqw.ne(TingParamSpecEntity::getId, id);
+    @Override
+    public boolean isRepeat(Long id, SFunction<TingParamSpecEntity, ?> func, String value) {
+        LambdaQueryWrapper<TingParamSpecEntity> lqw = Wrappers.lambdaQuery();
+        lqw.eq(TingParamSpecEntity::getIsDel, 0);
+        lqw.eq(func, value);
+        if (Objects.nonNull(id)) {
+            lqw.ne(TingParamSpecEntity::getId, id);
+        }
+        return super.count(lqw) > 0;
     }
-    return super.count(lqw) > 0;
-  }
 
 }

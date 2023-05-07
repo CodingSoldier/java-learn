@@ -24,15 +24,15 @@ import java.util.List;
 @ApiModel(value = "物模型-新增请求体")
 public class DimensionBatchAddVo implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  @ApiModelProperty(value = "物模型id", required = true)
-  @NotNull(message = "物模型id不能为空")
-  private Long tingId;
+    @ApiModelProperty(value = "物模型id", required = true)
+    @NotNull(message = "物模型id不能为空")
+    private Long tingId;
 
-  @ApiModelProperty(value = "物模型维度", required = true)
-  @NotNull(message = "维度不能为空")
-  @Size(min = 1, message = "维度不能为空")
-  private List<@Valid DimensionAddVo> dimensionList;
+    @ApiModelProperty(value = "物模型维度", required = true)
+    @NotNull(message = "维度不能为空")
+    @Size(min = 1, message = "维度不能为空")
+    private List<@Valid DimensionAddVo> dimensionList;
 
 }
