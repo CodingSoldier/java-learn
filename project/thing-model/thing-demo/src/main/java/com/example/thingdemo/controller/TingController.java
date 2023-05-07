@@ -1,6 +1,7 @@
 package com.example.thingdemo.controller;
 
 import com.example.thingdemo.ao.TingAddUpdateAo;
+import com.example.thingdemo.common.TingConstant;
 import com.example.thingdemo.common.Result;
 import com.example.thingdemo.dto.TingDetailDto;
 import com.example.thingdemo.service.TingService;
@@ -39,7 +40,7 @@ public class TingController {
     TingAddUpdateAo addAo = new TingAddUpdateAo();
     BeanUtils.copyProperties(addVo, addAo);
     if (StringUtils.isBlank(addAo.getVersion())) {
-      addAo.setVersion("1.0.0");
+      addAo.setVersion(TingConstant.VERSION_100);
     }
     Long id = tingService.addUpdate(addAo);
     return Result.success(id);
