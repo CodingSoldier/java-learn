@@ -8,17 +8,13 @@ import com.example.thingdemo.vo.TingAddVo;
 import com.example.thingdemo.vo.TingUpdateVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * <p>
@@ -58,13 +54,13 @@ public class TingController {
     return Result.success(id);
   }
 
-  //@DeleteMapping("/delete/{id}")
-  //@ApiOperation(value = "删除", notes = "返回是否成功")
-  //public Result<Boolean> delete(@PathVariable("id") Long id) {
-  //  boolean b = tingService.delete(id);
-  //  return Result.success(b);
-  //}
-  //
+  @DeleteMapping("/delete/{id}")
+  @ApiOperation(value = "删除", notes = "返回是否成功")
+  public Result<Boolean> delete(@PathVariable("id") Long id) {
+   boolean b = tingService.delete(id);
+   return Result.success(b);
+  }
+
 
   @GetMapping("/detail/{id}")
   @ApiOperation(value = "详情")

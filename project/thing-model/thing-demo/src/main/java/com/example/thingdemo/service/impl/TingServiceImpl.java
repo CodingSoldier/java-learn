@@ -19,15 +19,16 @@ import com.example.thingdemo.service.TingParamSpecService;
 import com.example.thingdemo.service.TingService;
 import com.example.thingdemo.util.CommonUtil;
 import com.example.thingdemo.util.CopyUtils;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -73,8 +74,19 @@ public class TingServiceImpl extends ServiceImpl<TingMapper, TingEntity> impleme
   @Override
   @Transactional(rollbackFor = Exception.class)
   public boolean delete(Long id) {
+
     // 删除
-    return super.removeById(id);
+    boolean b = super.removeById(id);
+
+    LambdaQueryWrapper<TingDimensionEntity> dimensionLqw = Wrappers.lambdaQuery();
+    dimensionLqw.eq(TingDimensionEntity::getTingId, id);
+    tingDimensionService.remove(dimensionLqw);
+
+    LambdaQueryWrapper<TingParamSpecEntity> paramSpecLqw = Wrappers.lambdaQuery();
+    paramSpecLqw.eq(TingParamSpecEntity::getTingId, id);
+    tingParamSpecService.remove(paramSpecLqw);
+
+    return b;
   }
 
   @Override

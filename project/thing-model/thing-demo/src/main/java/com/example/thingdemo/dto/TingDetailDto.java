@@ -1,14 +1,16 @@
 package com.example.thingdemo.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
 * @author chenpq
@@ -36,9 +38,11 @@ public class TingDetailDto implements Serializable {
   private String version;
 
   @ApiModelProperty(value = "创建时间")
+  @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
   private LocalDateTime createTime;
 
   @ApiModelProperty(value = "更新时间")
+  @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
   private LocalDateTime updateTime;
 
   private List<TingDimensionDetailDto> dimensionList;

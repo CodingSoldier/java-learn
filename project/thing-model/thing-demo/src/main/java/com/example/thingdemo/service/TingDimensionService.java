@@ -32,29 +32,39 @@ public interface TingDimensionService extends IService<TingDimensionEntity> {
    */
   boolean update(DimensionUpdateVo updateVo);
 
+  /**
+   * 参数校验
+   * @param vo
+   */
+  void valid(DimensionAddVo vo);
+
 
   /**
    * 删除
-   * @param id id
-   * @return 是否成功
+   * @param tingId
+   * @param id
+   * @return
    */
-  boolean delete(Long id);
+  boolean delete(Long tingId, Long id);
 
   /**
-   * 详情
-   * @param id id
-   * @return 详情
+   *  详情
+   * @param tingId
+   * @param id
+   * @return
    */
-  TingDimensionDetailDto detail(Long id);
+  TingDimensionDetailDto detail(Long tingId, Long id);
 
 
   /**
    * 是否重复
-   * @param id id
-   * @param func 列函数
-   * @param value 列值
-   * @return 是否重复
+   * @param id
+   * @param tingId
+   * @param dimension
+   * @param func
+   * @param value
+   * @return
    */
-  boolean isRepeat(Long id, SFunction<TingDimensionEntity,?> func, String value);
+  boolean isRepeat(Long id, Long tingId, Integer dimension, SFunction<TingDimensionEntity,?> func, String value);
 
 }

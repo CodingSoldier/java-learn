@@ -1,18 +1,21 @@
 package com.example.thingdemo.controller;
 
 import com.example.thingdemo.common.Result;
+import com.example.thingdemo.dto.TingDimensionDetailDto;
+import com.example.thingdemo.exception.AppException;
 import com.example.thingdemo.service.TingDimensionService;
+import com.example.thingdemo.vo.DimensionAddVo;
 import com.example.thingdemo.vo.DimensionBatchAddVo;
 import com.example.thingdemo.vo.DimensionUpdateVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -34,6 +37,18 @@ public class TingDimensionController {
   @PostMapping("/add/batch")
   @ApiOperation(value = "新增（多个）")
   public Result<Object> add(@RequestBody @Valid DimensionBatchAddVo addVo) {
+    List<@Valid DimensionAddVo> dimensionList = addVo.getDimensionList();
+    for (DimensionAddVo dimensionAddVo : dimensionList) {
+      tingDimensionService.valid(dimensionAddVo);
+    }
+    ArrayList<Object> notRepeatList = new ArrayList<>();
+    for (DimensionAddVo vo : dimensionList) {
+      String notRepeat = vo.getDimension() + "-" + vo.getIdentifier();
+      if (notRepeatList.contains(notRepeat)) {
+        throw new AppException(vo.getIdentifier() + "重复，请修改。");
+      }
+      notRepeatList.add(notRepeat);
+    }
     tingDimensionService.addBatch(addVo.getTingId(), addVo.getDimensionList());
     return Result.success();
   }
@@ -45,20 +60,18 @@ public class TingDimensionController {
     return Result.success(b);
   }
 
-  //@DeleteMapping("/delete/{id}")
-  //@ApiOperation(value = "删除", notes = "返回是否成功")
-  //public Result<Boolean> delete(@PathVariable("id") Long id) {
-  //  boolean b = tingDimensionService.delete(id);
-  //  return Result.success(b);
-  //}
-  //
-  //@GetMapping("/detail/{id}")
-  //@ApiOperation(value = "详情")
-  //public Result<TingDimensionDetailDto> detail(@PathVariable("id") Long id) {
-  //  TingDimensionDetailDto detail = tingDimensionService.detail(id);
-  //  return Result.success(detail);
-  //}
+  @DeleteMapping("/delete")
+  @ApiOperation(value = "删除", notes = "返回是否成功")
+  public Result<Boolean> delete(@RequestParam("tingId")Long tingId, @RequestParam("id") Long id) {
+   boolean b = tingDimensionService.delete(tingId, id);
+   return Result.success(b);
+  }
 
-
+  @GetMapping("/detail")
+  @ApiOperation(value = "详情")
+  public Result<TingDimensionDetailDto> detail(@RequestParam("tingId")Long tingId, @RequestParam("id") Long id) {
+   TingDimensionDetailDto detail = tingDimensionService.detail(tingId, id);
+   return Result.success(detail);
+  }
 
 }

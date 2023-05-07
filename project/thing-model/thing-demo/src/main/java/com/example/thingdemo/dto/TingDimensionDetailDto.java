@@ -1,14 +1,16 @@
 package com.example.thingdemo.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
 * @author chenpq
@@ -21,7 +23,7 @@ import lombok.experimental.SuperBuilder;
 @ApiModel(value = "物模型3维度类型，1（properties），2（event），3（action）-详情返回值")
 public class TingDimensionDetailDto implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
   @ApiModelProperty(value = "主键")
   private Long id;
@@ -54,9 +56,11 @@ public class TingDimensionDetailDto implements Serializable {
   private Integer required;
 
   @ApiModelProperty(value = "创建时间")
+  @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
   private LocalDateTime createTime;
 
   @ApiModelProperty(value = "更新时间")
+  @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
   private LocalDateTime updateTime;
 
   @ApiModelProperty(value = "数据规则")
