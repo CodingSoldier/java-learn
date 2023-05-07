@@ -28,11 +28,11 @@ public class TingDetailDto implements Serializable {
   @ApiModelProperty(value = "物模型id")
   private Long id;
 
-  @ApiModelProperty(value = "物模型名称")
+  @ApiModelProperty(value = "产品名称")
   private String name;
 
-  @ApiModelProperty(value = "物模型key")
-  private String tingKey;
+  @ApiModelProperty(value = "产品key")
+  private String productKey;
 
   @ApiModelProperty(value = "版本")
   private String version;

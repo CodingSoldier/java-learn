@@ -29,8 +29,8 @@ public class TingUpdateVo implements Serializable {
   @NotNull(message = "主键不能为空")
   private Long id;
 
-  @ApiModelProperty(value = "物模型名称", required = true)
-  @NotEmpty(message = "物模型名称不能为空")
+  @ApiModelProperty(value = "产品名称", required = true)
+  @NotEmpty(message = "产品名称不能为空")
   private String name;
 
   @ApiModelProperty(value = "版本，版本号必须是纯数字和英文点号", example = "1.0.0")

@@ -25,7 +25,7 @@ public class TingAddUpdateAo implements Serializable {
   @ApiModelProperty(value = "主键")
   private Long id;
 
-  @ApiModelProperty(value = "物模型名称")
+  @ApiModelProperty(value = "产品名称")
   private String name;
 
   @ApiModelProperty(value = "版本")

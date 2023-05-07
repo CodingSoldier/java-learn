@@ -55,13 +55,13 @@ public class TingServiceImpl extends ServiceImpl<TingMapper, TingEntity> impleme
     // id 为空，新增；id 不为空，修改
     Long id = addUpdateAo.getId();
     if (isRepeat(addUpdateAo.getId(), TingEntity::getName, addUpdateAo.getName())){
-      throw new AppException("修改失败，物模型名称已存在。请修改物模型名称。");
+      throw new AppException("修改失败，产品名称已存在。请修改产品名称。");
     }
     TingEntity tingEntity = new TingEntity();
     BeanUtils.copyProperties(addUpdateAo, tingEntity);
     if (Objects.isNull(id)) {
       // 新增
-      tingEntity.setTingKey(CommonUtil.uuid32());
+      tingEntity.setProductKey(CommonUtil.uuid32());
       super.save(tingEntity);
       id = tingEntity.getId();
     } else {

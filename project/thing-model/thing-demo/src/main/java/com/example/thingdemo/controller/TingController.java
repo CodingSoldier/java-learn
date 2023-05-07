@@ -27,7 +27,7 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping("/ting")
-@Api(value = "物模型概述", tags = "物模型概述-API")
+@Api(value = "产品", tags = "产品-API")
 public class TingController {
 
   @Autowired

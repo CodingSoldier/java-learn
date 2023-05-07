@@ -6,7 +6,7 @@
   <resultMap id="BaseResultMap" type="com.example.thingdemo.domain.TingEntity">
     <id column="id" property="id" />
     <result column="name" property="name" />
-    <result column="ting_key" property="tingKey" />
+    <result column="product_key" property="productKey" />
     <result column="version" property="version" />
     <result column="create_time" property="createTime" />
     <result column="create_user" property="createUser" />
