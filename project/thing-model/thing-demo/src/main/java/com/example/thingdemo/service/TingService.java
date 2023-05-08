@@ -3,6 +3,7 @@ package com.example.thingdemo.service;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.thingdemo.ao.TingAddUpdateAo;
+import com.example.thingdemo.cache.TingCache;
 import com.example.thingdemo.domain.TingEntity;
 import com.example.thingdemo.dto.TingDetailDto;
 
@@ -40,6 +41,20 @@ public interface TingService extends IService<TingEntity> {
      * @return 详情
      */
     TingDetailDto detail(Long id);
+
+    /**
+     * 获取物模型缓存
+     * @param productKey
+     * @return
+     */
+    TingCache getTingCache(String productKey);
+
+    /**
+     * 删除物模型缓存
+     * @param productKey
+     * @return
+     */
+    boolean removeTingCache(String productKey);
 
     /**
      * 是否重复

@@ -93,13 +93,6 @@ public class TingParamSpecServiceImpl extends ServiceImpl<TingParamSpecMapper, T
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean delete(Long id) {
-        // 删除
-        return super.removeById(id);
-    }
-
-    @Override
     public TingParamSpecDetailDto detail(Long id) {
         TingParamSpecEntity tingParamSpecEntity = super.getById(id);
         if (tingParamSpecEntity == null) {
@@ -110,16 +103,5 @@ public class TingParamSpecServiceImpl extends ServiceImpl<TingParamSpecMapper, T
         return detailDto;
     }
 
-
-    @Override
-    public boolean isRepeat(Long id, SFunction<TingParamSpecEntity, ?> func, String value) {
-        LambdaQueryWrapper<TingParamSpecEntity> lqw = Wrappers.lambdaQuery();
-        lqw.eq(TingParamSpecEntity::getIsDel, 0);
-        lqw.eq(func, value);
-        if (Objects.nonNull(id)) {
-            lqw.ne(TingParamSpecEntity::getId, id);
-        }
-        return super.count(lqw) > 0;
-    }
 
 }

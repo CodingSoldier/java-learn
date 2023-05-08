@@ -2,7 +2,7 @@ package com.example.thingdemo.controller;
 
 import com.example.thingdemo.ao.TingAddUpdateAo;
 import com.example.thingdemo.common.Result;
-import com.example.thingdemo.common.TingConstant;
+import com.example.thingdemo.constant.TingConstant;
 import com.example.thingdemo.dto.TingDetailDto;
 import com.example.thingdemo.service.TingService;
 import com.example.thingdemo.vo.TingAddVo;

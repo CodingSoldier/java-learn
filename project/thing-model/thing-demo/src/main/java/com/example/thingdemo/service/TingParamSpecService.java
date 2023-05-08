@@ -28,29 +28,11 @@ public interface TingParamSpecService extends IService<TingParamSpecEntity> {
     void addUpdate(Long tingId, Long tingDimensionId, List<TingParamSpecAddUpdateVo> addList);
 
     /**
-     * 删除
-     *
-     * @param id id
-     * @return 是否成功
-     */
-    boolean delete(Long id);
-
-    /**
      * 详情
      *
      * @param id id
      * @return 详情
      */
     TingParamSpecDetailDto detail(Long id);
-
-    /**
-     * 是否重复
-     *
-     * @param id    id
-     * @param func  列函数
-     * @param value 列值
-     * @return 是否重复
-     */
-    boolean isRepeat(Long id, SFunction<TingParamSpecEntity, ?> func, String value);
 
 }

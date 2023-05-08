@@ -1,4 +1,4 @@
-package com.example.thingdemo.common;
+package com.example.thingdemo.constant;
 
 /**
  * @author chenpq

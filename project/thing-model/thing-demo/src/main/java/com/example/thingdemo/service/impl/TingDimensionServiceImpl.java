@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.thingdemo.domain.TingDimensionEntity;
+import com.example.thingdemo.domain.TingEntity;
 import com.example.thingdemo.domain.TingParamSpecEntity;
 import com.example.thingdemo.dto.TingDimensionDetailDto;
 import com.example.thingdemo.dto.TingParamSpecDetailDto;
@@ -15,19 +16,19 @@ import com.example.thingdemo.exception.AppException;
 import com.example.thingdemo.mapper.TingDimensionMapper;
 import com.example.thingdemo.service.TingDimensionService;
 import com.example.thingdemo.service.TingParamSpecService;
+import com.example.thingdemo.service.TingService;
 import com.example.thingdemo.util.CopyUtils;
 import com.example.thingdemo.vo.DimensionAddVo;
 import com.example.thingdemo.vo.DimensionUpdateVo;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -45,6 +46,8 @@ public class TingDimensionServiceImpl extends ServiceImpl<TingDimensionMapper, T
     private TingDimensionMapper tingDimensionMapper;
     @Autowired
     private TingParamSpecService tingParamSpecService;
+    @Autowired
+    private TingService tingService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -68,6 +71,12 @@ public class TingDimensionServiceImpl extends ServiceImpl<TingDimensionMapper, T
 
             // 新增数据规格
             tingParamSpecService.addUpdate(tingId, dimensionId, addVo.getParamSpecList());
+        }
+
+        TingEntity tingDb = tingService.getById(tingId);
+        if (tingDb != null) {
+            // 删除缓存
+            tingService.removeTingCache(tingDb.getProductKey());
         }
     }
 
@@ -108,6 +117,13 @@ public class TingDimensionServiceImpl extends ServiceImpl<TingDimensionMapper, T
 
         // 新增数据规格
         tingParamSpecService.addUpdate(tingId, dimensionId, updateVo.getParamSpecList());
+
+        TingEntity tingDb = tingService.getById(tingId);
+        if (tingDb != null) {
+            // 删除缓存
+            tingService.removeTingCache(tingDb.getProductKey());
+        }
+
         return true;
     }
 
@@ -142,6 +158,8 @@ public class TingDimensionServiceImpl extends ServiceImpl<TingDimensionMapper, T
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean delete(Long tingId, Long id) {
+        TingEntity tingDb = tingService.getById(tingId);
+
         LambdaQueryWrapper<TingDimensionEntity> lqw = Wrappers.lambdaQuery();
         lqw.eq(TingDimensionEntity::getTingId, tingId);
         lqw.eq(TingDimensionEntity::getId, id);
@@ -151,6 +169,12 @@ public class TingDimensionServiceImpl extends ServiceImpl<TingDimensionMapper, T
         paramSpecLqw.eq(TingParamSpecEntity::getTingId, tingId);
         paramSpecLqw.eq(TingParamSpecEntity::getTingDimensionId, id);
         tingParamSpecService.remove(paramSpecLqw);
+
+        if (tingDb != null) {
+            // 删除缓存
+            tingService.removeTingCache(tingDb.getProductKey());
+        }
+
         return b;
     }
 
