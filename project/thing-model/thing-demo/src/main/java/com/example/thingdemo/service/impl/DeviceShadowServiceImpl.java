@@ -12,13 +12,16 @@ import com.example.thingdemo.domain.TingParamSpecEntity;
 import com.example.thingdemo.enums.DimensionEnum;
 import com.example.thingdemo.mapper.DeviceShadowMapper;
 import com.example.thingdemo.mapper.TingDimensionMapper;
+import com.example.thingdemo.mqtt.MqttProviderSender;
 import com.example.thingdemo.service.DeviceService;
 import com.example.thingdemo.service.DeviceShadowService;
 import com.example.thingdemo.service.TingParamSpecService;
+import com.example.thingdemo.util.CommonUtil;
 import com.example.thingdemo.vo.DevicePropertyUpdateVo;
 import com.example.thingdemo.vo.DeviceShadowInitVo;
 import com.example.thingdemo.vo.DeviceShadowUpdateCurrentVo;
 import com.example.thingdemo.vo.DeviceShadowUpdateExpectVo;
+import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +53,8 @@ public class DeviceShadowServiceImpl extends ServiceImpl<DeviceShadowMapper, Dev
     private DeviceService deviceService;
     @Autowired
     private TingParamSpecService tingParamSpecService;
+    @Autowired
+    private MqttProviderSender mqttProviderSender;
 
     @Override
     public List<DeviceShadowEntity> getShadows(String productKey, String deviceCode) {
@@ -110,9 +115,13 @@ public class DeviceShadowServiceImpl extends ServiceImpl<DeviceShadowMapper, Dev
         lwqUp.eq(DeviceShadowEntity::getDeviceCode, deviceDb.getDeviceCode());
         lwqUp.eq(DeviceShadowEntity::getIdentifier, updateVo.getIdentifier());
 
-        lwqUp.set(DeviceShadowEntity::getExpectValue, updateVo.getExpectValue());
+        lwqUp.set(DeviceShadowEntity::getExpectValue, CommonUtil.objectToString(updateVo.getExpectValue()));
         boolean b = super.update(lwqUp);
 
+        // 发送mqtt消息
+        HashMap<String, Object> param = new HashMap<>();
+        param.put(updateVo.getIdentifier(), updateVo.getExpectValue());
+        mqttProviderSender.propertySet(deviceDb.getProductKey(), deviceDb.getDeviceCode(), param);
 
         return b;
     }

@@ -10,7 +10,7 @@ public class TingReq<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    // 消息id号，用户自定义，String类型的数字，长度限制不超过13位。
+    // 消息id号，用户自定义，String类型的数字，长度限制不超过32位。
     private String id;
 
     // 物模型版本

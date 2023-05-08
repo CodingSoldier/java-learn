@@ -1,6 +1,13 @@
 package com.example.thingdemo.mqtt;
 
+import com.example.thingdemo.cache.TingCache;
 import com.example.thingdemo.constant.TopicConstant;
+import com.example.thingdemo.exception.AppException;
+import com.example.thingdemo.protocol.TingReq;
+import com.example.thingdemo.service.TingService;
+import com.example.thingdemo.util.CommonUtil;
+import com.example.thingdemo.util.ObjectMapperUtil;
+import io.netty.handler.codec.MessageAggregationException;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +35,10 @@ public class MqttProviderSender {
 
     @Autowired
     private MqttProviderConfig mqttProviderConfig;
+    @Autowired
+    private TingService tingService;
 
-    private void publish(int qos, String topic, String message) throws MqttException, MqttPersistenceException {
+    private void publish(int qos, String topic, String message) {
         MqttMessage mqttMessage = new MqttMessage();
         mqttMessage.setQos(qos);
         mqttMessage.setRetained(false);
@@ -41,12 +50,38 @@ public class MqttProviderSender {
         MqttDeliveryToken token;
         //将指定消息发布到主题，但不等待消息传递完成。返回的token可用于跟踪消息的传递状态。
         //一旦此方法干净地返回，消息就已被客户端接受发布。当连接可用时，将在后台完成消息传递。
-        token = mqttTopic.publish(mqttMessage);
-        token.waitForCompletion(1000 * 60);
+        try {
+            log.info("发送mqtt消息，topic={}, message={}", topic, message);
+            token = mqttTopic.publish(mqttMessage);
+            token.waitForCompletion(1000 * 60);
+        }catch (MqttException e) {
+            log.error("", e);
+            throw new AppException("发送数据到mqtt异常");
+        }
+
     }
-    //
-    //public String propertySet(String productKey, String deviceCode, Map<String, Object> params) {
-    //    String topic = TopicConstant.PROPERTY_SET.replace("{productKey}")
-    //}
+
+    /**
+     * 设置属性
+     * @param productKey
+     * @param deviceCode
+     * @param params
+     * @return 消息id
+     */
+    public String propertySet(String productKey, String deviceCode, Map<String, Object> params) {
+        TingCache tingCache = tingService.getTingCache(productKey);
+        if (tingCache == null) {
+            throw new AppException("设置属性失败，找不到物模型信息");
+        }
+        String topic = TopicConstant.PROPERTY_SET
+            .replace("{productKey}", productKey)
+            .replace("{deviceCode}", deviceCode);
+        final String id = CommonUtil.uuid32();
+        TingReq tingReq = new TingReq(id, tingCache.getProfile().getVersion(),
+            params);
+        String msg = ObjectMapperUtil.writeValueAsString(tingReq);
+        publish(1, topic, msg);
+        return id;
+    }
 
 }

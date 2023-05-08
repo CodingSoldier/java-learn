@@ -32,7 +32,7 @@ public class DevicePropertyUpdateVo implements Serializable {
     private String identifier;
 
     @ApiModelProperty(value = "期望值")
-    @NotEmpty(message = "期望值不能为空")
-    private String expectValue;
+    @NotNull(message = "期望值不能为空")
+    private Object expectValue;
 
 }
