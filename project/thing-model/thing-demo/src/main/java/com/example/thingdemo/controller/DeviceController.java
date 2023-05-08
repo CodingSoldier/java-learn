@@ -5,6 +5,7 @@ import com.example.thingdemo.common.Result;
 import com.example.thingdemo.dto.DeviceDetailDto;
 import com.example.thingdemo.service.DeviceService;
 import com.example.thingdemo.vo.DeviceAddVo;
+import com.example.thingdemo.vo.DevicePropertyUpdateVo;
 import com.example.thingdemo.vo.DeviceUpdateVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -63,6 +64,5 @@ public class DeviceController {
         DeviceDetailDto detail = deviceService.detail(id);
         return Result.success(detail);
     }
-
 
 }

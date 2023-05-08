@@ -60,6 +60,11 @@ public class MqttProviderConfig {
         }
     }
 
+    public MqttClient getClient() {
+        return client;
+    }
+
+
     public void publish(int qos, String topic, String message) {
         MqttMessage mqttMessage = new MqttMessage();
         mqttMessage.setQos(qos);

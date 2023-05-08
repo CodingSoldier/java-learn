@@ -5,14 +5,17 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.thingdemo.domain.DeviceEntity;
 import com.example.thingdemo.domain.DeviceShadowEntity;
 import com.example.thingdemo.domain.TingDimensionEntity;
 import com.example.thingdemo.domain.TingParamSpecEntity;
 import com.example.thingdemo.enums.DimensionEnum;
 import com.example.thingdemo.mapper.DeviceShadowMapper;
 import com.example.thingdemo.mapper.TingDimensionMapper;
+import com.example.thingdemo.service.DeviceService;
 import com.example.thingdemo.service.DeviceShadowService;
 import com.example.thingdemo.service.TingParamSpecService;
+import com.example.thingdemo.vo.DevicePropertyUpdateVo;
 import com.example.thingdemo.vo.DeviceShadowInitVo;
 import com.example.thingdemo.vo.DeviceShadowUpdateCurrentVo;
 import com.example.thingdemo.vo.DeviceShadowUpdateExpectVo;
@@ -42,6 +45,9 @@ public class DeviceShadowServiceImpl extends ServiceImpl<DeviceShadowMapper, Dev
     private DeviceShadowMapper deviceShadowMapper;
     @Autowired
     private TingDimensionMapper tingDimensionMapper;
+
+    @Autowired
+    private DeviceService deviceService;
     @Autowired
     private TingParamSpecService tingParamSpecService;
 
@@ -91,17 +97,24 @@ public class DeviceShadowServiceImpl extends ServiceImpl<DeviceShadowMapper, Dev
         }
     }
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateExpectValue(DeviceShadowUpdateExpectVo updateVo) {
+    public boolean updateExpectValue(DevicePropertyUpdateVo updateVo) {
+        DeviceEntity deviceDb = deviceService.getById(updateVo.getDeviceId());
+        if (deviceDb == null) {
+            return false;
+        }
+
         LambdaUpdateWrapper<DeviceShadowEntity> lwqUp = Wrappers.lambdaUpdate();
-        lwqUp.eq(DeviceShadowEntity::getProductKey, updateVo.getProductKey());
-        lwqUp.eq(DeviceShadowEntity::getDeviceCode, updateVo.getDeviceCode());
+        lwqUp.eq(DeviceShadowEntity::getProductKey, deviceDb.getProductKey());
+        lwqUp.eq(DeviceShadowEntity::getDeviceCode, deviceDb.getDeviceCode());
         lwqUp.eq(DeviceShadowEntity::getIdentifier, updateVo.getIdentifier());
 
         lwqUp.set(DeviceShadowEntity::getExpectValue, updateVo.getExpectValue());
-        return super.update(lwqUp);
+        boolean b = super.update(lwqUp);
+
+
+        return b;
     }
 
     @Override

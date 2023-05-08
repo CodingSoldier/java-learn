@@ -24,6 +24,11 @@ public interface DeviceService extends IService<DeviceEntity> {
      */
     Long add(DeviceAddUpdateAo addUpdateAo);
 
+    /**
+     * 更新
+     * @param addUpdateAo
+     * @return
+     */
     boolean update(DeviceAddUpdateAo addUpdateAo);
 
     /**

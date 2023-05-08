@@ -1,0 +1,52 @@
+package com.example.thingdemo.mqtt;
+
+import com.example.thingdemo.constant.TopicConstant;
+import java.util.Map;
+import javax.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
+import org.eclipse.paho.client.mqttv3.MqttTopic;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+import springfox.documentation.service.ApiListing;
+
+/**
+ * @author cpq
+ * @since 2023-04-11
+ * mq连接工厂
+ */
+@Slf4j
+@Component
+public class MqttProviderSender {
+
+    @Autowired
+    private MqttProviderConfig mqttProviderConfig;
+
+    private void publish(int qos, String topic, String message) throws MqttException, MqttPersistenceException {
+        MqttMessage mqttMessage = new MqttMessage();
+        mqttMessage.setQos(qos);
+        mqttMessage.setRetained(false);
+        mqttMessage.setPayload(message.getBytes());
+        //主题目的地，用于发布/订阅消息
+        MqttTopic mqttTopic = mqttProviderConfig.getClient().getTopic(topic);
+        //提供一种机制来跟踪消息的传递进度。
+        //用于在以非阻塞方式（在后台运行）执行发布时跟踪消息的传递进度
+        MqttDeliveryToken token;
+        //将指定消息发布到主题，但不等待消息传递完成。返回的token可用于跟踪消息的传递状态。
+        //一旦此方法干净地返回，消息就已被客户端接受发布。当连接可用时，将在后台完成消息传递。
+        token = mqttTopic.publish(mqttMessage);
+        token.waitForCompletion(1000 * 60);
+    }
+    //
+    //public String propertySet(String productKey, String deviceCode, Map<String, Object> params) {
+    //    String topic = TopicConstant.PROPERTY_SET.replace("{productKey}")
+    //}
+
+}

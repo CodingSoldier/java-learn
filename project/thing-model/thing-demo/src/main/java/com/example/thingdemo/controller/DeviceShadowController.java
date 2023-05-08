@@ -1,11 +1,16 @@
 package com.example.thingdemo.controller;
 
+import com.example.thingdemo.ao.DeviceAddUpdateAo;
 import com.example.thingdemo.common.Result;
+import com.example.thingdemo.domain.DeviceEntity;
+import com.example.thingdemo.service.DeviceService;
 import com.example.thingdemo.service.DeviceShadowService;
+import com.example.thingdemo.vo.DevicePropertyUpdateVo;
 import com.example.thingdemo.vo.DeviceShadowUpdateExpectVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,10 +35,12 @@ public class DeviceShadowController {
 
     @Autowired
     private DeviceShadowService deviceShadowService;
+    @Autowired
+    private DeviceService deviceService;
 
     @PostMapping("/update/expect-value")
     @ApiOperation(value = "修改", notes = "返回id")
-    public Result<Boolean> update(@RequestBody @Valid DeviceShadowUpdateExpectVo updateVo) {
+    public Result<Boolean> update(@RequestBody @Valid DevicePropertyUpdateVo updateVo) {
         boolean b = deviceShadowService.updateExpectValue(updateVo);
         return Result.success(b);
     }

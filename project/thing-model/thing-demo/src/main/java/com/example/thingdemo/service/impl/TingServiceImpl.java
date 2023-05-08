@@ -21,6 +21,7 @@ import com.example.thingdemo.dto.TingDimensionDetailDto;
 import com.example.thingdemo.dto.TingParamSpecDetailDto;
 import com.example.thingdemo.dto.TingParamSpecJsonElemDto;
 import com.example.thingdemo.enums.DimensionEnum;
+import com.example.thingdemo.enums.InoutDataEnum;
 import com.example.thingdemo.exception.AppException;
 import com.example.thingdemo.mapper.TingMapper;
 import com.example.thingdemo.service.TingDimensionService;
@@ -214,6 +215,7 @@ public class TingServiceImpl extends ServiceImpl<TingMapper, TingEntity> impleme
         List<TingParamSpecEntity> childParamSpecDbList = paramSpecAllDbList.stream()
             .filter(e -> e.getParentId() != null).collect(Collectors.toList());
 
+        // 维度遍历
         dimensionList.forEach(dimension -> {
             // 属性
             if (DimensionEnum.PROPERTIES.getCode().equals(dimension.getDimension())) {
@@ -228,34 +230,41 @@ public class TingServiceImpl extends ServiceImpl<TingMapper, TingEntity> impleme
                     });
                 properties.add(property);
             } else {
-                List<TingParamSpecEntity> parentList = parentParamSpecDbList.stream()
+                // 事件、动作
+                List<TingParamSpecEntity> parentDimensionParamSpecList = parentParamSpecDbList.stream()
                     .filter(paramSpec -> Objects.equals(dimension.getId(), paramSpec.getTingDimensionId()))
                     .collect(Collectors.toList());
-                List<TingParamSpecCache> parentParamSpecCacheList = new ArrayList<>();
-                List<TingParamSpecCache> parentParamSpecCacheList = new ArrayList<>();
-                parentList.forEach(parentEntity -> {
-                    TingParamSpecCache parentCache = new TingParamSpecCache();
-                    BeanUtils.copyProperties(parentEntity, parentCache);
-                    parentParamSpecCacheList.add(parentCache);
-
+                List<TingParamSpecCache> inputData = new ArrayList<>();
+                List<TingParamSpecCache> outputData = new ArrayList<>();
+                // 每个维度的数据规则
+                parentDimensionParamSpecList.forEach(parentEntity -> {
+                    TingParamSpecCache paramSpecParentCache = new TingParamSpecCache();
+                    BeanUtils.copyProperties(parentEntity, paramSpecParentCache);
+                    // 判断是inputData还是outputData
+                    if (InoutDataEnum.INPUT_DATA.getCode().equals(parentEntity.getInOutData())) {
+                        inputData.add(paramSpecParentCache);
+                    } else if (InoutDataEnum.OUTPUT_DATA.getCode().equals(parentEntity.getInOutData())) {
+                        outputData.add(paramSpecParentCache);
+                    }
                     // 设置子级数据规格
                     List<TingParamSpecEntity> childList = childParamSpecDbList.stream()
                         .filter(child -> Objects.equals(parentEntity.getId(), child.getParentId()))
                         .collect(Collectors.toList());
                     List<TingParamSpecJsonElemCache> jsonElemList = CopyUtils.listCopy(
                         childList, TingParamSpecJsonElemCache.class);
-                    parentCache.setJsonElemList(jsonElemList);
+                    paramSpecParentCache.setJsonElemList(jsonElemList);
                 });
 
                 if (DimensionEnum.EVENT.getCode().equals(dimension.getDimension())) {
                     TingEventCache event = new TingEventCache();
                     BeanUtils.copyProperties(dimension, event);
-                    event.setParamSpecList(parentParamSpecCacheList);
+                    event.setOutputData(outputData);
                     events.add(event);
                 } else if (DimensionEnum.ACTION.getCode().equals(dimension.getDimension())) {
                     TingActionCache action = new TingActionCache();
                     BeanUtils.copyProperties(dimension, action);
-                    action.setParamSpecList(parentParamSpecCacheList);
+                    action.setInputData(inputData);
+                    action.setOutputData(outputData);
                     actions.add(action);
                 }
             }

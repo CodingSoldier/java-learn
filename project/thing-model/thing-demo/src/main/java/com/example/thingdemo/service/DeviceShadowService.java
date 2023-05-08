@@ -2,6 +2,7 @@ package com.example.thingdemo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.thingdemo.domain.DeviceShadowEntity;
+import com.example.thingdemo.vo.DevicePropertyUpdateVo;
 import com.example.thingdemo.vo.DeviceShadowInitVo;
 import com.example.thingdemo.vo.DeviceShadowUpdateCurrentVo;
 import com.example.thingdemo.vo.DeviceShadowUpdateExpectVo;
@@ -40,7 +41,7 @@ public interface DeviceShadowService extends IService<DeviceShadowEntity> {
      * @param updateVo
      * @return
      */
-    boolean updateExpectValue(DeviceShadowUpdateExpectVo updateVo);
+    boolean updateExpectValue(DevicePropertyUpdateVo updateVo);
 
     /**
      * 更新实际值
