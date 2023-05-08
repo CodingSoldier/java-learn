@@ -7,22 +7,15 @@ import com.example.thingdemo.protocol.TingReq;
 import com.example.thingdemo.service.TingService;
 import com.example.thingdemo.util.CommonUtil;
 import com.example.thingdemo.util.ObjectMapperUtil;
-import io.netty.handler.codec.MessageAggregationException;
-import java.util.Map;
-import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
-import springfox.documentation.service.ApiListing;
+
+import java.util.Map;
 
 /**
  * @author cpq
@@ -74,8 +67,8 @@ public class MqttProviderSender {
             throw new AppException("设置属性失败，找不到物模型信息");
         }
         String topic = TopicConstant.PROPERTY_SET
-            .replace("{productKey}", productKey)
-            .replace("{deviceCode}", deviceCode);
+            .replace("${productKey}", productKey)
+            .replace("${deviceCode}", deviceCode);
         final String id = CommonUtil.uuid32();
         TingReq tingReq = new TingReq(id, tingCache.getProfile().getVersion(),
             params);

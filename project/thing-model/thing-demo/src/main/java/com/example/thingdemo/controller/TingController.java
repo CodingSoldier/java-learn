@@ -62,7 +62,6 @@ public class TingController {
         return Result.success(b);
     }
 
-
     @GetMapping("/detail/{id}")
     @ApiOperation(value = "详情")
     public Result<TingDetailDto> detail(@PathVariable("id") Long id) {

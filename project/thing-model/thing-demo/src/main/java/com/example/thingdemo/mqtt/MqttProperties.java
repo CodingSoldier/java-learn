@@ -35,10 +35,6 @@ public class MqttProperties {
      */
     private String consumerClientId;
     /**
-     * 默认连接话题
-     */
-    private String defaultTopic;
-    /**
      * 超时时间
      */
     private int timeout = 100;
