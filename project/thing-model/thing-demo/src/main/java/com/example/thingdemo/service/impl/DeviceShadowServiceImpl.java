@@ -7,27 +7,26 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.thingdemo.domain.DeviceEntity;
 import com.example.thingdemo.domain.DeviceShadowEntity;
-import com.example.thingdemo.domain.TingDimensionEntity;
-import com.example.thingdemo.domain.TingParamSpecEntity;
+import com.example.thingdemo.domain.ThingDimensionEntity;
+import com.example.thingdemo.domain.ThingParamSpecEntity;
 import com.example.thingdemo.enums.DimensionEnum;
 import com.example.thingdemo.mapper.DeviceShadowMapper;
-import com.example.thingdemo.mapper.TingDimensionMapper;
+import com.example.thingdemo.mapper.ThingDimensionMapper;
 import com.example.thingdemo.mqtt.MqttProviderSender;
 import com.example.thingdemo.service.DeviceService;
 import com.example.thingdemo.service.DeviceShadowService;
-import com.example.thingdemo.service.TingParamSpecService;
+import com.example.thingdemo.service.ThingParamSpecService;
 import com.example.thingdemo.util.CommonUtil;
 import com.example.thingdemo.vo.DevicePropertyUpdateVo;
 import com.example.thingdemo.vo.DeviceShadowInitVo;
 import com.example.thingdemo.vo.DeviceShadowUpdateCurrentVo;
-import com.example.thingdemo.vo.DeviceShadowUpdateExpectVo;
-import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -47,12 +46,12 @@ public class DeviceShadowServiceImpl extends ServiceImpl<DeviceShadowMapper, Dev
     @Autowired
     private DeviceShadowMapper deviceShadowMapper;
     @Autowired
-    private TingDimensionMapper tingDimensionMapper;
+    private ThingDimensionMapper thingDimensionMapper;
 
     @Autowired
     private DeviceService deviceService;
     @Autowired
-    private TingParamSpecService tingParamSpecService;
+    private ThingParamSpecService thingParamSpecService;
     @Autowired
     private MqttProviderSender mqttProviderSender;
 
@@ -72,26 +71,26 @@ public class DeviceShadowServiceImpl extends ServiceImpl<DeviceShadowMapper, Dev
         lqwRemoveOld.eq(DeviceShadowEntity::getDeviceCode, initVo.getDeviceCode());
         super.remove(lqwRemoveOld);
 
-        List<TingDimensionEntity> properties = tingDimensionMapper.getDimensions(initVo.getProductKey(), DimensionEnum.PROPERTIES.getCode());
+        List<ThingDimensionEntity> properties = thingDimensionMapper.getDimensions(initVo.getProductKey(), DimensionEnum.PROPERTIES.getCode());
         if (CollectionUtils.isEmpty(properties)) {
             return;
         }
-        LambdaQueryWrapper<TingParamSpecEntity> lqwSpecs = Wrappers.lambdaQuery();
-        lqwSpecs.eq(TingParamSpecEntity::getTingId, properties.get(0).getTingId());
-        List<Long> idList = properties.stream().map(TingDimensionEntity::getId).collect(Collectors.toList());
-        lqwSpecs.in(TingParamSpecEntity::getTingDimensionId, idList);
-        List<TingParamSpecEntity> paramSpecList = tingParamSpecService.list(lqwSpecs);
+        LambdaQueryWrapper<ThingParamSpecEntity> lqwSpecs = Wrappers.lambdaQuery();
+        lqwSpecs.eq(ThingParamSpecEntity::getThingId, properties.get(0).getThingId());
+        List<Long> idList = properties.stream().map(ThingDimensionEntity::getId).collect(Collectors.toList());
+        lqwSpecs.in(ThingParamSpecEntity::getThingDimensionId, idList);
+        List<ThingParamSpecEntity> paramSpecList = thingParamSpecService.list(lqwSpecs);
 
         ArrayList<DeviceShadowEntity> shadowList = new ArrayList<>();
-        for (TingDimensionEntity p : properties) {
+        for (ThingDimensionEntity p : properties) {
             DeviceShadowEntity deviceShadow = new DeviceShadowEntity();
             deviceShadow.setProductKey(initVo.getProductKey());
             deviceShadow.setDeviceCode(initVo.getDeviceCode());
             deviceShadow.setIdentifier(p.getIdentifier());
 
             paramSpecList.stream()
-                    .filter(e -> Objects.equals(p.getTingId(), e.getTingId())
-                            && Objects.equals(p.getId(), e.getTingDimensionId()))
+                    .filter(e -> Objects.equals(p.getThingId(), e.getThingId())
+                            && Objects.equals(p.getId(), e.getThingDimensionId()))
                     .findFirst()
                     .ifPresent(e -> deviceShadow.setValueDataType(e.getDataType()));
             shadowList.add(deviceShadow);

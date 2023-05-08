@@ -28,7 +28,7 @@ public class DimensionBatchAddVo implements Serializable {
 
     @ApiModelProperty(value = "物模型id", required = true)
     @NotNull(message = "物模型id不能为空")
-    private Long tingId;
+    private Long thingId;
 
     @ApiModelProperty(value = "物模型维度", required = true)
     @NotNull(message = "维度不能为空")

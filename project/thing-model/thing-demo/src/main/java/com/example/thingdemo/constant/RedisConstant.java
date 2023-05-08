@@ -9,6 +9,6 @@ public class RedisConstant {
     /**
      * 物模型
      */
-    public static final String TING = "ting-demo:ting:";
+    public static final String THING = "thing-demo:thing:";
 
 }

@@ -10,7 +10,7 @@ import java.util.Map;
 public enum InoutDataEnum {
 
     /**
-     * ting_param_spec#in_out_data
+     * thing_param_spec#in_out_data
      * 1 inputData，2 outputData
      */
     INPUT_DATA(1, "inputData"),

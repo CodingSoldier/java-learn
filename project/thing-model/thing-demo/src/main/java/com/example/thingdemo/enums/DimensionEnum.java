@@ -10,7 +10,7 @@ import java.util.Map;
 public enum DimensionEnum {
 
     /**
-     * ting_dimension#dimension
+     * thing_dimension#dimension
      * 维度类型，1（properties），2（event），3（action）
      */
     PROPERTIES(1, "属性"),

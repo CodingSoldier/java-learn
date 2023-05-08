@@ -59,7 +59,7 @@ public class DimensionAddVo implements Serializable {
     @ApiModelProperty(value = "数据规格")
     @Valid
     @NotNull(message = "数据规格不能为空")
-    private List<TingParamSpecAddUpdateVo> paramSpecList;
+    private List<ThingParamSpecAddUpdateVo> paramSpecList;
 
 
 }

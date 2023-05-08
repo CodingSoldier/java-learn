@@ -1,10 +1,10 @@
 package com.example.thingdemo.mqtt;
 
-import com.example.thingdemo.cache.TingCache;
+import com.example.thingdemo.cache.ThingCache;
 import com.example.thingdemo.constant.TopicConstant;
 import com.example.thingdemo.exception.AppException;
-import com.example.thingdemo.protocol.TingReq;
-import com.example.thingdemo.service.TingService;
+import com.example.thingdemo.protocol.ThingReq;
+import com.example.thingdemo.service.ThingService;
 import com.example.thingdemo.util.CommonUtil;
 import com.example.thingdemo.util.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ public class MqttProviderSender {
     @Autowired
     private MqttProviderConfig mqttProviderConfig;
     @Autowired
-    private TingService tingService;
+    private ThingService thingService;
 
     private void publish(int qos, String topic, String message) {
         MqttMessage mqttMessage = new MqttMessage();
@@ -62,17 +62,17 @@ public class MqttProviderSender {
      * @return 消息id
      */
     public String propertySet(String productKey, String deviceCode, Map<String, Object> params) {
-        TingCache tingCache = tingService.getTingCache(productKey);
-        if (tingCache == null) {
+        ThingCache thingCache = thingService.getThingCache(productKey);
+        if (thingCache == null) {
             throw new AppException("设置属性失败，找不到物模型信息");
         }
         String topic = TopicConstant.PROPERTY_SET
             .replace("${productKey}", productKey)
             .replace("${deviceCode}", deviceCode);
         final String id = CommonUtil.uuid32();
-        TingReq tingReq = new TingReq(id, tingCache.getProfile().getVersion(),
+        ThingReq thingReq = new ThingReq(id, thingCache.getProfile().getVersion(),
             params);
-        String msg = ObjectMapperUtil.writeValueAsString(tingReq);
+        String msg = ObjectMapperUtil.writeValueAsString(thingReq);
         publish(1, topic, msg);
         return id;
     }
