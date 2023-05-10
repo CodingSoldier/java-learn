@@ -56,6 +56,10 @@ public interface ThingService extends IService<ThingEntity> {
      */
     boolean removeThingCache(String productKey);
 
+    String getThingVersionCache(String productKey);
+
+    boolean removeThingVersionCache(String productKey);
+
     /**
      * 是否重复
      *

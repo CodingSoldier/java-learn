@@ -11,4 +11,9 @@ public class RedisConstant {
      */
     public static final String THING = "thing-demo:thing:";
 
+    /**
+     * 物模型版本
+     */
+    public static final String THING_VERSION = "thing-demo:thing-version:";
+
 }

@@ -25,6 +25,7 @@ import com.example.thingdemo.util.CommonUtil;
 import com.example.thingdemo.util.CopyUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -270,7 +271,34 @@ public class ThingServiceImpl extends ServiceImpl<ThingMapper, ThingEntity> impl
 
     @Override
     public boolean removeThingCache(String productKey) {
-        return redisTemplate.delete(RedisConstant.THING + productKey);
+        Boolean delete = redisTemplate.delete(RedisConstant.THING + productKey);
+        removeThingVersionCache(productKey);
+        return delete;
+    }
+
+    @Override
+    public String getThingVersionCache(String productKey) {
+        String redisKey = RedisConstant.THING_VERSION + productKey;
+        Object o = redisTemplate.opsForValue().get(redisKey);
+        String version = CommonUtil.objectToString(o);
+        if (StringUtils.isNotBlank(version)) {
+            return version;
+        }
+
+        LambdaQueryWrapper<ThingEntity> thingLqw = Wrappers.lambdaQuery();
+        thingLqw.eq(ThingEntity::getProductKey, productKey);
+        ThingEntity thingDb = super.getOne(thingLqw, false);
+        if (thingDb == null) {
+            return null;
+        }
+        version = thingDb.getVersion();
+        redisTemplate.opsForValue().set(redisKey, version, 10, TimeUnit.DAYS);
+        return version;
+    }
+
+    @Override
+    public boolean removeThingVersionCache(String productKey) {
+        return redisTemplate.delete(RedisConstant.THING_VERSION + productKey);
     }
 
     @Override

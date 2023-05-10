@@ -1,9 +1,9 @@
 package com.example.thingdemo.mqtt;
 
-import com.example.thingdemo.cache.ThingCache;
 import com.example.thingdemo.constant.TopicConstant;
 import com.example.thingdemo.exception.AppException;
-import com.example.thingdemo.protocol.ThingReq;
+import com.example.thingdemo.mqtt.protocol.ThingReq;
+import com.example.thingdemo.mqtt.protocol.ThingResp;
 import com.example.thingdemo.service.ThingService;
 import com.example.thingdemo.util.CommonUtil;
 import com.example.thingdemo.util.ObjectMapperUtil;
@@ -24,7 +24,7 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class MqttProviderSender {
+public class MqttSender {
 
     @Autowired
     private MqttProviderConfig mqttProviderConfig;
@@ -62,19 +62,34 @@ public class MqttProviderSender {
      * @return 消息id
      */
     public String propertySet(String productKey, String deviceCode, Map<String, Object> params) {
-        ThingCache thingCache = thingService.getThingCache(productKey);
-        if (thingCache == null) {
-            throw new AppException("设置属性失败，找不到物模型信息");
-        }
+        String version = thingService.getThingVersionCache(productKey);
         String topic = TopicConstant.PROPERTY_SET
             .replace("${productKey}", productKey)
             .replace("${deviceCode}", deviceCode);
         final String id = CommonUtil.uuid32();
-        ThingReq thingReq = new ThingReq(id, thingCache.getProfile().getVersion(),
+
+        ThingReq thingReq = new ThingReq(id, version,
             params);
         String msg = ObjectMapperUtil.writeValueAsString(thingReq);
         publish(1, topic, msg);
         return id;
+    }
+
+    /**
+     * 响应-设备上报
+     * @param productKey
+     * @param deviceCode
+     * @param thingResp
+     * @return
+     */
+    public void propertyPostReply(String productKey, String deviceCode, ThingResp thingResp) {
+        String topic = TopicConstant.PROPERTY_POST_REPLY
+            .replace("${productKey}", productKey)
+            .replace("${deviceCode}", deviceCode);
+        final String id = CommonUtil.uuid32();
+
+        String msg = ObjectMapperUtil.writeValueAsString(thingResp);
+        publish(1, topic, msg);
     }
 
 }

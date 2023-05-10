@@ -12,7 +12,7 @@ import com.example.thingdemo.domain.ThingParamSpecEntity;
 import com.example.thingdemo.enums.DimensionEnum;
 import com.example.thingdemo.mapper.DeviceShadowMapper;
 import com.example.thingdemo.mapper.ThingDimensionMapper;
-import com.example.thingdemo.mqtt.MqttProviderSender;
+import com.example.thingdemo.mqtt.MqttSender;
 import com.example.thingdemo.service.DeviceService;
 import com.example.thingdemo.service.DeviceShadowService;
 import com.example.thingdemo.service.ThingParamSpecService;
@@ -53,7 +53,7 @@ public class DeviceShadowServiceImpl extends ServiceImpl<DeviceShadowMapper, Dev
     @Autowired
     private ThingParamSpecService thingParamSpecService;
     @Autowired
-    private MqttProviderSender mqttProviderSender;
+    private MqttSender mqttProviderSender;
 
     @Override
     public List<DeviceShadowEntity> getShadows(String productKey, String deviceCode) {

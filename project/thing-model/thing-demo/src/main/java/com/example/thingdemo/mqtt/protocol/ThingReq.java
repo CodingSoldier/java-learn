@@ -1,4 +1,4 @@
-package com.example.thingdemo.protocol;
+package com.example.thingdemo.mqtt.protocol;
 
 import java.io.Serializable;
 
