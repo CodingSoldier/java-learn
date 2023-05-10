@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.thingdemo.ao.ThingAddUpdateAo;
-import com.example.thingdemo.cache.*;
 import com.example.thingdemo.constant.RedisConstant;
 import com.example.thingdemo.domain.ThingDimensionEntity;
 import com.example.thingdemo.domain.ThingEntity;
