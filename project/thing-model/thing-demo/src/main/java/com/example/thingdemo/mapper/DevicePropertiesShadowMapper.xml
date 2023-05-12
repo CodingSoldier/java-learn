@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.thingdemo.mapper.DeviceShadowMapper">
+<mapper namespace="com.example.thingdemo.mapper.DevicePropertiesShadowMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.example.thingdemo.domain.DeviceShadowEntity">
+    <resultMap id="BaseResultMap" type="com.example.thingdemo.domain.DevicePropertiesShadowEntity">
         <id column="id" property="id"/>
         <result column="product_key" property="productKey"/>
         <result column="device_code" property="deviceCode"/>

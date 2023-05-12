@@ -6,15 +6,15 @@ import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.thingdemo.ao.DeviceAddUpdateAo;
 import com.example.thingdemo.domain.DeviceEntity;
-import com.example.thingdemo.domain.DeviceShadowEntity;
+import com.example.thingdemo.domain.DevicePropertiesShadowEntity;
 import com.example.thingdemo.dto.DeviceDetailDto;
-import com.example.thingdemo.dto.DeviceShadowPropertiesDto;
+import com.example.thingdemo.dto.DevicePropertiesShadowDto;
 import com.example.thingdemo.exception.AppException;
 import com.example.thingdemo.mapper.DeviceMapper;
 import com.example.thingdemo.service.DeviceService;
-import com.example.thingdemo.service.DeviceShadowService;
+import com.example.thingdemo.service.DevicePropertiesShadowService;
 import com.example.thingdemo.util.CopyUtils;
-import com.example.thingdemo.vo.DeviceShadowInitVo;
+import com.example.thingdemo.vo.DevicePropertiesShadowInitVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, DeviceEntity> i
     @Autowired
     private DeviceMapper deviceMapper;
     @Autowired
-    private DeviceShadowService deviceShadowService;
+    private DevicePropertiesShadowService devicePropertiesShadowService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -57,11 +57,11 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, DeviceEntity> i
         super.save(deviceEntity);
         Long id = deviceEntity.getId();
 
-        // 初始化设备影子
-        DeviceShadowInitVo deviceShadowInitVo = new DeviceShadowInitVo();
-        deviceShadowInitVo.setProductKey(deviceEntity.getProductKey());
-        deviceShadowInitVo.setDeviceCode(deviceEntity.getDeviceCode());
-        deviceShadowService.initDeviceShadow(deviceShadowInitVo);
+        // 初始化设备属性影子
+        DevicePropertiesShadowInitVo initVo = new DevicePropertiesShadowInitVo();
+        initVo.setProductKey(deviceEntity.getProductKey());
+        initVo.setDeviceCode(deviceEntity.getDeviceCode());
+        devicePropertiesShadowService.initDevicePropertiesShadow(initVo);
 
         return id;
     }
@@ -93,11 +93,11 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, DeviceEntity> i
         // 删除
         boolean b = super.removeById(id);
 
-        // 删除设备影子
-        LambdaQueryWrapper<DeviceShadowEntity> lqwShadow = Wrappers.lambdaQuery();
-        lqwShadow.eq(DeviceShadowEntity::getDeviceCode, deviceDb.getDeviceCode());
-        lqwShadow.eq(DeviceShadowEntity::getProductKey, deviceDb.getProductKey());
-        deviceShadowService.remove(lqwShadow);
+        // 删除设备属性影子
+        LambdaQueryWrapper<DevicePropertiesShadowEntity> lqwShadow = Wrappers.lambdaQuery();
+        lqwShadow.eq(DevicePropertiesShadowEntity::getDeviceCode, deviceDb.getDeviceCode());
+        lqwShadow.eq(DevicePropertiesShadowEntity::getProductKey, deviceDb.getProductKey());
+        devicePropertiesShadowService.remove(lqwShadow);
 
         return b;
     }
@@ -111,10 +111,10 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, DeviceEntity> i
         DeviceDetailDto detailDto = new DeviceDetailDto();
         BeanUtils.copyProperties(deviceDb, detailDto);
 
-        // 设备影子
-        List<DeviceShadowEntity> shadowList = deviceShadowService.getShadows(deviceDb.getProductKey(),
+        // 设备属性影子
+        List<DevicePropertiesShadowEntity> shadowList = devicePropertiesShadowService.getShadows(deviceDb.getProductKey(),
                 deviceDb.getDeviceCode());
-        List<DeviceShadowPropertiesDto> shadowDtoList = CopyUtils.listCopy(shadowList, DeviceShadowPropertiesDto.class);
+        List<DevicePropertiesShadowDto> shadowDtoList = CopyUtils.listCopy(shadowList, DevicePropertiesShadowDto.class);
         detailDto.setShadowPropertiesList(shadowDtoList);
         return detailDto;
     }

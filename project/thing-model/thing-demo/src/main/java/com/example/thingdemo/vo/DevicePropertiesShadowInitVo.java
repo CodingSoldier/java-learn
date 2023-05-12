@@ -17,8 +17,8 @@ import java.io.Serializable;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "设备影子-新增请求体")
-public class DeviceShadowInitVo implements Serializable {
+@ApiModel(value = "设备属性影子-新增请求体")
+public class DevicePropertiesShadowInitVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

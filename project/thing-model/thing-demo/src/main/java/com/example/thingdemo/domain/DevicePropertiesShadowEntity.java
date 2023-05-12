@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 设备影子
+ * 设备属性影子
  * </p>
  *
  * @author chenpq
@@ -23,9 +23,9 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("device_shadow")
-@ApiModel(value = "DeviceShadowEntity对象", description = "设备影子")
-public class DeviceShadowEntity implements Serializable {
+@TableName("device_properties_shadow")
+@ApiModel(value = "DevicePropertiesShadowEntity对象", description = "设备属性影子")
+public class DevicePropertiesShadowEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

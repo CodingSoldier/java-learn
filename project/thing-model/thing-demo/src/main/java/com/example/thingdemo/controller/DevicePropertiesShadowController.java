@@ -1,7 +1,7 @@
 package com.example.thingdemo.controller;
 
 import com.example.thingdemo.common.Result;
-import com.example.thingdemo.service.DeviceShadowService;
+import com.example.thingdemo.service.DevicePropertiesShadowService;
 import com.example.thingdemo.vo.DevicePropertyUpdateVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,7 +16,7 @@ import javax.validation.Valid;
 
 /**
  * <p>
- * 设备影子 前端控制器
+ * 设备属性影子 前端控制器
  * </p>
  *
  * @author chenpq
@@ -24,17 +24,17 @@ import javax.validation.Valid;
  */
 @Slf4j
 @RestController
-@RequestMapping("/device-shadow")
-@Api(value = "设备影子", tags = "设备影子-API")
-public class DeviceShadowController {
+@RequestMapping("/device-properties-shadow")
+@Api(value = "设备属性影子", tags = "设备属性影子-API")
+public class DevicePropertiesShadowController {
 
     @Autowired
-    private DeviceShadowService deviceShadowService;
+    private DevicePropertiesShadowService devicePropertiesShadowService;
 
     @PostMapping("/update/expect-value")
     @ApiOperation(value = "修改")
     public Result<Boolean> update(@RequestBody @Valid DevicePropertyUpdateVo updateVo) {
-        boolean b = deviceShadowService.updateExpectValue(updateVo);
+        boolean b = devicePropertiesShadowService.updateExpectValue(updateVo);
         return Result.success(b);
     }
 

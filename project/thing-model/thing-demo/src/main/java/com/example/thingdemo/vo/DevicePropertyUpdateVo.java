@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "设备影子-更新期望值请求体")
+@ApiModel(value = "设备属性影子-更新期望值请求体")
 public class DevicePropertyUpdateVo implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "设备影子-详情返回值")
-public class DeviceShadowPropertiesDto implements Serializable {
+@ApiModel(value = "设备属性影子-详情返回值")
+public class DevicePropertiesShadowDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

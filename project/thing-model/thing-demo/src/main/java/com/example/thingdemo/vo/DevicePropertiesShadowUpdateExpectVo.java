@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 /**
@@ -17,21 +18,25 @@ import java.io.Serializable;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "设备影子-更新实际值请求体")
-public class DeviceShadowUpdateCurrentVo implements Serializable {
+@ApiModel(value = "设备属性影子-更新期望值请求体")
+public class DevicePropertiesShadowUpdateExpectVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "产品key")
+    @NotEmpty(message = "产品key不能为空")
     private String productKey;
 
     @ApiModelProperty(value = "设备编码")
+    @NotEmpty(message = "设备编码不能为空")
     private String deviceCode;
 
     @ApiModelProperty(value = "properties唯一标识符")
+    @NotEmpty(message = "identifier不能为空")
     private String identifier;
 
-    @ApiModelProperty(value = "设备实际值")
-    private String currentValue;
+    @ApiModelProperty(value = "期望值")
+    @NotEmpty(message = "期望值不能为空")
+    private String expectValue;
 
 }
