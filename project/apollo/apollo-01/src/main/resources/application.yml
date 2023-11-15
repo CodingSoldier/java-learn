@@ -5,6 +5,8 @@ app:
   id: SampleApp
 apollo:
   meta: http://127.0.0.1:8080
+  # 指定cluster
+  cluster: default
   bootstrap:
     # 项目中的配置文件application.yml优先级最低
     # namespaces不填写application，apollo服务器上的application（Namespace）也会被加载

@@ -20,12 +20,16 @@ public class ValueController {
   @Value("${test.public1}")
   private String testpublic1;
 
+  //@Value("${cluster-value01}")
+  //private String clusterValue01;
+
   @GetMapping("/value01")
   public String value01() {
     System.out.println("#################value01="+value01);
     System.out.println("#################test9="+test9);
     System.out.println("#################testpublic1="+testpublic1);
-    return "返回结果："+value01;
+    //System.out.println("#################clusterValue01="+clusterValue01);
+    return "";
   }
 
 }

@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @EnableApolloConfig
 public class Apollo01Application {
-
   public static void main(String[] args) {
     SpringApplication.run(Apollo01Application.class, args);
   }
