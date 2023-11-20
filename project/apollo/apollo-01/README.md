@@ -35,7 +35,9 @@ apollo:
 ```
 
 ## 使用方式补充
-1、如果apollo服务端有多环境，可以加上JVM参数-Denv指定环境。例如：
+1、只有使用分布式部署方式才能在配置文件中配置环境。web管理页面无法新建环境，Quick Start方式部署也不支持配置环境。
+
+2、如果apollo服务端有多环境，可以加上JVM参数-Denv指定环境。例如：
 ```shell
 java -jar test.jar -Denv=DEV
 ```
