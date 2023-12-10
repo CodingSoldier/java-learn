@@ -2,13 +2,13 @@ package com.example.thingdemo.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.io.Serializable;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 
 /**
  * @author chenpq
@@ -19,20 +19,24 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel(value = "设备属性影子-更新期望值请求体")
-public class DevicePropertyUpdateVo implements Serializable {
+public class DevicePropertiesShadowUpdateExpectVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "设备id")
-    @NotNull(message = "设备id不能为空")
-    private Long deviceId;
+    @ApiModelProperty(value = "产品key")
+    @NotEmpty(message = "产品key不能为空")
+    private String productKey;
+
+    @ApiModelProperty(value = "设备编码")
+    @NotEmpty(message = "设备编码不能为空")
+    private String deviceCode;
 
     @ApiModelProperty(value = "properties唯一标识符")
     @NotEmpty(message = "identifier不能为空")
     private String identifier;
 
     @ApiModelProperty(value = "期望值")
-    @NotNull(message = "期望值不能为空")
-    private Object expectValue;
+    @NotEmpty(message = "期望值不能为空")
+    private String expectValue;
 
 }

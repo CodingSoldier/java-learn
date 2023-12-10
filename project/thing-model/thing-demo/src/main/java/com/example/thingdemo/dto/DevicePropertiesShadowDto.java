@@ -10,32 +10,31 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author chenpq
- * @since 2023-05-07 21:52:39
+ * @since 2023-05-07 21:53:04
  */
 @Data
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "设备-详情返回值")
-public class DeviceDetailDto implements Serializable {
+@ApiModel(value = "设备属性影子-详情返回值")
+public class DevicePropertiesShadowDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "主键")
-    private Long id;
+    @ApiModelProperty(value = "properties唯一标识符")
+    private String identifier;
 
-    @ApiModelProperty(value = "设备名称")
-    private String deviceName;
+    @ApiModelProperty(value = "设备实际值")
+    private String currentValue;
 
-    @ApiModelProperty(value = "设备编码")
-    private String deviceCode;
+    @ApiModelProperty(value = "期望值")
+    private String expectValue;
 
-    @ApiModelProperty(value = "产品key")
-    private String productKey;
+    @ApiModelProperty(value = "值数据类型")
+    private String valueDataType;
 
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -44,8 +43,5 @@ public class DeviceDetailDto implements Serializable {
     @ApiModelProperty(value = "更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime updateTime;
-
-    @ApiModelProperty(value = "设备属性影子属性")
-    private List<DevicePropertiesShadowDto> shadowPropertiesList;
 
 }

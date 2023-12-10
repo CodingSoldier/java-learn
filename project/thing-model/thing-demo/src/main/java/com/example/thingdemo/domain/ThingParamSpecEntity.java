@@ -51,6 +51,9 @@ public class ThingParamSpecEntity implements Serializable {
     @ApiModelProperty(value = "父id。struct结构体的键的父id是struct。[{}]数组元素struct，struct的键的父id是数组。[]数组元素不是struct，数组元素没有父id。")
     private Long parentId;
 
+    @ApiModelProperty(value = "树id层级路径")
+    private String treePath;
+
     @ApiModelProperty(value = "1 inputData，2 outputData")
     private Integer inOutData;
 

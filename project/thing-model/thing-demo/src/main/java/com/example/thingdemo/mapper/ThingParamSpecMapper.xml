@@ -10,6 +10,7 @@
         <result column="param_identifier" property="paramIdentifier"/>
         <result column="param_identifier_name" property="paramIdentifierName"/>
         <result column="parent_id" property="parentId"/>
+        <result column="tree_path" property="treePath"/>
         <result column="in_out_data" property="inOutData"/>
         <result column="data_type" property="dataType"/>
         <result column="specs" property="specs"/>
@@ -23,7 +24,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, thing_id, thing_dimension_id, param_identifier, param_identifier_name, parent_id, in_out_data, data_type, specs, sort, create_time, create_user, update_time, update_user, is_del
+        id, thing_id, thing_dimension_id, param_identifier, param_identifier_name, parent_id, tree_path, in_out_data, data_type, specs, sort, create_time, create_user, update_time, update_user, is_del
     </sql>
 
 </mapper>

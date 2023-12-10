@@ -2,6 +2,7 @@ package com.example.thingdemo.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,5 +39,8 @@ public class ThingParamSpecJsonElemVo implements Serializable {
 
     @ApiModelProperty(value = "排序，小的在前面")
     private Integer sort;
+
+    @ApiModelProperty(value = "json对象key的数据规格")
+    private List<ThingParamSpecJsonElemVo> jsonElemList;
 
 }

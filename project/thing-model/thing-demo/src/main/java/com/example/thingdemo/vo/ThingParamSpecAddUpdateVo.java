@@ -43,9 +43,9 @@ public class ThingParamSpecAddUpdateVo implements Serializable {
     @ApiModelProperty(value = "排序，小的在前面")
     private Integer sort;
 
-    //@ApiModelProperty(value = "json对象key的数据规格")
+    @ApiModelProperty(value = "json对象key的数据规格")
     //@ApiModelProperty(value = "{\"size\":100,\"arrayItemType\":\"struct\"}")
-    @ApiModelProperty(value = "{\"min\":1,\"max\":200,\"step\":1,\"unit\":\"°C\",\"unitName\":\"摄氏度\"}")
+    //@ApiModelProperty(value = "{\"min\":1,\"max\":200,\"step\":1,\"unit\":\"°C\",\"unitName\":\"摄氏度\"}")
     private List<ThingParamSpecJsonElemVo> jsonElemList;
 
 }
