@@ -1,8 +1,0 @@
-https://windmt.com/2018/04/15/spring-cloud-2-eureka/
-
-hosts配置
-127.0.0.1       activate.navicat.com eureka-server-one eureka-server-two eureka-server-three
-运行application-one.properties、application-two.properties、application-three.properties
-
-
-

@@ -37,11 +37,14 @@ public class Test01Service {
 
   @Transactional
   public void test(Test01 test01) {
+    int my = test01Dao.getMy();
+    log.info("##############{}", my);
+
     List<Test01> all = test01Dao.findAll();
     log.info("#############all={}", all);
 
     List<Test01> list = test01Dao.findByCompanyCodeInAndCompanyNameLike(
-        Arrays.asList("71123363334354545", "7112336336463474688"), test01.getCompanyName());
+        Arrays.asList("7112336ssfdf3334354545", "711233633646dfs3474688"), test01.getCompanyName());
     log.info("#############list={}", list);
 
     Test01 db = test01Dao.getById(test01.getId());
@@ -54,8 +57,7 @@ public class Test01Service {
     Example<Test01> test01Example = Example.of(test01);
     Page<Test01> page = test01Dao.findAll(test01Example, pageRequest);
 
-    int my = test01Dao.getMy();
-    log.info("##############{}", my);
+
   }
 
 }

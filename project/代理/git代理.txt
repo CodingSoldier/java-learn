@@ -1,20 +1,22 @@
 
 # 以下使用http代理
-git config http.proxy http://127.0.0.1:1643
-git config https.proxy https://127.0.0.1:1643
+git config http.proxy http://127.0.0.1:14785
+
+git config https.proxy https://127.0.0.1:14785
 
 # 以下使用socks5代理
 
-git config http.proxy socks5://127.0.0.1:14784
-git config https.proxy socks5://127.0.0.1:14784
+git config http.proxy socks5://127.0.0.1:14785
+
+git config https.proxy socks5://127.0.0.1:14785
 
 # 取消全局代理
 git config --global --unset http.proxy
+
 git config --global --unset https.proxy
 
 # 取消代理
 git config --unset http.proxy
+
 git config --unset https.proxy
-
-
 
