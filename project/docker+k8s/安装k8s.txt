@@ -1,0 +1,1 @@
+https://kuboard.cn/install/history-k8s/install-k8s-1.19.x.html
