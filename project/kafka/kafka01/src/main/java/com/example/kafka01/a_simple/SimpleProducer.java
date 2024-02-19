@@ -1,4 +1,4 @@
-package com.example.kafka01;
+package com.example.kafka01.a_simple;
 
 import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -43,7 +43,7 @@ public class SimpleProducer {
         <String, String>(props);
 
     for(int i = 0; i < 10; i++) {
-      producer.send(new ProducerRecord("first-p", Integer.toString(i), Integer.toString(i)));
+      producer.send(new ProducerRecord("first", Integer.toString(i), Integer.toString(i)));
     }
 
     producer.flush();

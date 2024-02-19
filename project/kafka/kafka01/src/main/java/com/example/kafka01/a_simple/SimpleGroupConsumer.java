@@ -1,4 +1,4 @@
-package com.example.kafka01;
+package com.example.kafka01.a_simple;
 
 import java.util.Arrays;
 import java.util.Properties;
@@ -10,14 +10,14 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
  * @author chenpq05
  * @since 2024/2/2 14:00
  */
-public class SimpleConsumer {
+public class SimpleGroupConsumer {
 
   public static void main(String[] args) throws Exception {
-    String topicName = "first";
+    String topic = "first-p";
+    String group = "my-group";
     Properties props = new Properties();
-
     props.put("bootstrap.servers", "localhost:9092");
-    props.put("group.id", "test");
+    props.put("group.id", group);
     props.put("enable.auto.commit", "true");
     props.put("auto.commit.interval.ms", "1000");
     props.put("session.timeout.ms", "30000");
@@ -26,20 +26,16 @@ public class SimpleConsumer {
     props.put("value.deserializer",
         "org.apache.kafka.common.serialization.StringDeserializer");
     KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
-    // Kafka Consumer subscribes list of topics here.
-    consumer.subscribe(Arrays.asList(topicName));
 
-    // print the topic name
-    System.out.println("Subscribed to topic " + topicName);
+    consumer.subscribe(Arrays.asList(topic));
+    System.out.println("Subscribed to topic " + topic);
     int i = 0;
 
     while (true) {
       ConsumerRecords<String, String> records = consumer.poll(100);
-      for (ConsumerRecord<String, String> record : records) {
-        // print the offset,key and value for the consumer records.
+      for (ConsumerRecord<String, String> record : records)
         System.out.printf("offset = %d, key = %s, value = %s\n",
             record.offset(), record.key(), record.value());
-      }
     }
   }
 
