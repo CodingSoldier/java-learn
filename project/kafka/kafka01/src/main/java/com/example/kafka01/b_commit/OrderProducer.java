@@ -3,8 +3,10 @@ package com.example.kafka01.b_commit;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import java.util.Properties;
+import java.util.concurrent.Future;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -29,11 +31,12 @@ public class OrderProducer {
     props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
     props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
     KafkaProducer<String, String> kafkaProducer = new KafkaProducer<>(props);
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 30; i++) {
 
       // 发送数据,需要一个producerRecord对象,最少参数 String topic, V value
-      ProducerRecord<String, String> record = new ProducerRecord<>("order", "订单信息！" + i);
-      kafkaProducer.send(record);
+      ProducerRecord<String, String> record = new ProducerRecord<>("order-p", "订单信息！" + i);
+      Future<RecordMetadata> future = kafkaProducer.send(record);
+      //future.get().pa
 
       ////第一种分区策略，如果既没有指定分区号，也没有指定数据key，那么就会使用轮询的方式将数据均匀的发送到不同的分区里面去
       //ProducerRecord<String, String> producerRecord1 = new ProducerRecord<>("mypartition", "mymessage" + i);

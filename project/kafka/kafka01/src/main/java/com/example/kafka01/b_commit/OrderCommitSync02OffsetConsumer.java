@@ -33,7 +33,7 @@ public class OrderCommitSync02OffsetConsumer {
     props.put("value.deserializer",
         "org.apache.kafka.common.serialization.StringDeserializer");
     KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-    consumer.subscribe(Arrays.asList("order"));
+    consumer.subscribe(Arrays.asList("order-p"));
     try {
       while(true) {
         ConsumerRecords<String, String> records = consumer.poll(100);
