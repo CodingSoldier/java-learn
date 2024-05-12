@@ -4,10 +4,10 @@ server:
 # mq都是用本地
 spring:
   rabbitmq:
-    host: mqserverin.vanrui.com
+    host: 127.0.0.1
     port: 5672
-    username: chenpq05
-    password: chenpq05
+    username: guest
+    password: guest
     publisher-confirms: true
     virtual-host: /
 ## mq都是用本地

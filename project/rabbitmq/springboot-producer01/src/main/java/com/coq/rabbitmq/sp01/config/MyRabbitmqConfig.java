@@ -4,6 +4,7 @@ import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,14 @@ public class MyRabbitmqConfig {
     // RabbitTemplate rabbitTemplate(){
     //     return new RabbitTemplate();
     // }
+
+    @Bean
+    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
+        RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
+        // 必须设置为true，不然在spring启动时不会注入到ioc
+        rabbitAdmin.setAutoStartup(true);
+        return rabbitAdmin;
+    }
 
     /**
      * 设置回调
@@ -80,4 +89,5 @@ public class MyRabbitmqConfig {
             }
         };
     }
+
 }
