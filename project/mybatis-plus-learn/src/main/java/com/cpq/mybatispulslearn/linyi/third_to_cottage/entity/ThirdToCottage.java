@@ -1,10 +1,10 @@
 package com.cpq.mybatispulslearn.linyi.third_to_cottage.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -22,24 +22,6 @@ public class ThirdToCottage implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 社区id
-     */
-    @TableField("villageID")
-    private Integer villageID;
-
-    /**
-     * 社区楼栋id
-     */
-    @TableField("buildingID")
-    private Integer buildingID;
-
-    /**
-     * 社区房屋id
-     */
-    @TableField("cottageID")
-    private Integer cottageID;
-
-    /**
      * 第三方社区code
      */
     private String thirdVillageCode;
@@ -48,16 +30,5 @@ public class ThirdToCottage implements Serializable {
      * 第三方社区楼栋code
      */
     private String thirdBuildingCode;
-
-    /**
-     * 第三方社区房屋code
-     */
-    private String thirdCottageCode;
-
-    /**
-     * 第三方系统：1-零壹系统
-     */
-    private Integer source;
-
 
 }
