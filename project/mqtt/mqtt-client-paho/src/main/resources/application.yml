@@ -1,0 +1,12 @@
+server:
+  port: 8991
+spring:
+  application:
+    name: mqtt-client-paho
+
+
+mqtt:
+  broker-url: tcp://192.168.1.231:1883
+  client-id: emq-client-01
+  username: user
+  password: 123456
