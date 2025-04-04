@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <preConditions>
+        <dbms type="mysql"/>
+        <sqlCheck expectedResult="1">select 1</sqlCheck>
+    </preConditions>
+
+    <changeSet id="1" author="nvoxland">
+        <comment>
+            You can add comments to changeSets.
+            They can even be multiple lines if you would like.
+            They aren't used to compute the changeSet MD5Sum, so you can update them whenever you want without causing
+            problems.
+        </comment>
+        <!--        故意设置个错误的tablespace-->
+        <createTable tableName="persons1" schemaName="liquuibase_test1">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="firstname" type="varchar(50)"/>
+            <column name="lastname" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="30" author="nvoxland">
+        <createTable tableName="pkTest" schemaName="liquuibase_test1">
+            <column name="id" type="int"/>
+            <column name="value" type="varchar(50)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

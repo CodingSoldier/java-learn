@@ -1,6 +1,0 @@
-[submodule "params-validate"]
-	path = params-validate
-	url = git@github.com:CodingSoldier/params-validate.git
-[submodule "test-params-validate"]
-	path = test-params-validate
-	url = git@github.com:CodingSoldier/test-params-validate.git

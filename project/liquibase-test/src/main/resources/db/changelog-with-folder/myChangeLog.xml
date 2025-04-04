@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+<!--    <includeAll path="db/changelog-with-folder/sql"/>-->
+<!--    把整个sql 当成一个changeset,注意sql文件成功加载后不能够变动-->
+
+    <include file="db/changelog-with-folder/sql/v1.sql"/>
+    <include file="sql/v2.sql" relativeToChangelogFile="true" />
+
+    <include file="db/changelog-with-folder/sql/changelog1.xml" />
+
+    <changeSet id="52" author="pkeeble">
+        <sqlFile path="sql/v3.sql" stripComments="true" relativeToChangelogFile="true"  />
+    </changeSet>
+
+</databaseChangeLog>
