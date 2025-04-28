@@ -1,4 +1,4 @@
-package com.coq.rabbitmq.sp01.producer;
+package com.coq.rabbitmq.sp01.notuserspringcomsumer;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
@@ -7,12 +7,12 @@ import com.rabbitmq.client.Envelope;
 
 import java.io.IOException;
 
-public class MyConsumer2 extends DefaultConsumer {
+public class Consumer02 extends DefaultConsumer {
 
 
     private Channel channel;
 
-    public MyConsumer2(Channel channel) {
+    public Consumer02(Channel channel) {
         super(channel);
         this.channel = channel;
     }
