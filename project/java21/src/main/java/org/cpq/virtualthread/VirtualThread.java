@@ -1,4 +1,4 @@
-package org.cpq;
+package org.cpq.virtualthread;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
