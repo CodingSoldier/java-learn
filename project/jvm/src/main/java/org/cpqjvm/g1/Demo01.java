@@ -42,8 +42,8 @@ public class Demo01 {
     //  *
     //  * G1只有YoungGC、MixedGC和FullGC
     //  * YoungGC：只回收新生代区域，代价低/频率高
-    //  * MixGC：回收全部新生代 + 部分老年代，频率一般
-    //  * FullGC：回收全部堆空间，代价高/频率低
+    //  * MixGC：回收新生代 + 部分老年代，频率一般
+    //  * FullGC：回收堆空间，代价高/频率低
     //  */
     // public static void main(String[] args) {
     //     byte[] data = new byte[1024 * 256];
