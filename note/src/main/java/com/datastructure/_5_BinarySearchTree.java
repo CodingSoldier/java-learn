@@ -245,16 +245,16 @@ public class _5_BinarySearchTree {
                 bst.add(num);
             }
 
-            // System.out.println("-------前序遍历------");
-            // bst.preOrder();
-            // System.out.println("------中序遍历-------");
-            // bst.inOrder();
-            // System.out.println("------后序遍历-------");
-            // bst.postOrder();
-            // System.out.println("------广度优先遍历-------");
-            // bst.levelOrder();
-            //
-            //
+            System.out.println("-------前序遍历------");
+            bst.preOrder();
+            System.out.println("------中序遍历-------");
+            bst.inOrder();
+            System.out.println("------后序遍历-------");
+            bst.postOrder();
+            System.out.println("------广度优先遍历-------");
+            bst.levelOrder();
+
+
             // ArrayList<Integer> nums2 = new ArrayList<>();
 
             //while(!bst.isEmpty())
@@ -266,7 +266,7 @@ public class _5_BinarySearchTree {
             //System.out.println(nums2);
 
             //
-            bst.remove(16);
+            // bst.remove(16);
             //bst.preOrder();
 
         }
