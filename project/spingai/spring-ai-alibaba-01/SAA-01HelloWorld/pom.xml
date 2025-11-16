@@ -19,10 +19,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<!-- 引入 springai alibaba DashScope 模型适配的 Starter
-        如果你在学习的过程中，如果你发现有疑惑的地方，欢迎你通过邮箱留言给阳哥。
-        邮箱：zzyybs@126.com我们一起迭代出更好的课程！谢谢你选择尚硅谷
-        -->
 		<dependency>
 			<groupId>com.alibaba.cloud.ai</groupId>
 			<artifactId>spring-ai-alibaba-starter-dashscope</artifactId>

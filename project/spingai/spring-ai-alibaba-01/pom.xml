@@ -26,6 +26,18 @@
     <module>SAA-02Ollama</module>
     <module>SAA-03ChatModelChatClient</module>
     <module>SAA-04StreamingOutput</module>
+    <module>SAA-05Prompt</module>
+    <module>SAA-06PromptTemplate</module>
+    <module>SAA-07StructuredOutput</module>
+    <module>SAA-08Persistent</module>
+    <module>SAA-09Text2image</module>
+    <module>SAA-10Text2voice</module>
+    <module>SAA-11Embed2vector</module>
+    <module>SAA-12RAG4AiOps</module>
+    <module>SAA-13ToolCalling</module>
+    <module>SAA-14LocalMcpServer</module>
+    <module>SAA-15LocalMcpClient</module>
+    <module>SAA-16ClientCallBaiduMcpServer</module>
   </modules>
 
 
