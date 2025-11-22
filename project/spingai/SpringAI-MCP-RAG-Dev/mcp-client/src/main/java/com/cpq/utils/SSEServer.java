@@ -10,12 +10,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-/**
- * @ClassName SSEServer
- * @Author 风间影月
- * @Version 1.0
- * @Description SSEServer
- **/
 @Slf4j
 public class SSEServer {
 
@@ -24,9 +18,6 @@ public class SSEServer {
 
     /**
      * @Description: 连接SSE服务
-     * @Author 风间影月
-     * @param userId
-     * @return SseEmitter
      */
     public static SseEmitter connect(String userId) {
 
@@ -45,57 +36,6 @@ public class SSEServer {
         return sseEmitter;
     }
 
-    public static void sendMsg(String userId, String message, SSEMsgType msgType) {
-
-        if (CollectionUtils.isEmpty(sseClients)) {
-            return;
-        }
-
-        if (sseClients.containsKey(userId)) {
-            SseEmitter sseEmitter = sseClients.get(userId);
-            sendEmitterMessage(sseEmitter, userId, message, msgType);
-        }
-
-    }
-
-    public static void sendMsgToAllUsers(String message) {
-
-        if (CollectionUtils.isEmpty(sseClients)) {
-            return;
-        }
-
-        sseClients.forEach((userId, sseEmitter) -> {
-                sendEmitterMessage(sseEmitter, userId, message, SSEMsgType.MESSAGE);
-            }
-        );
-    }
-
-    private static void sendEmitterMessage(SseEmitter sseEmitter,
-                                          String userId,
-                                          String message,
-                                          SSEMsgType msgType) {
-
-        try {
-            SseEmitter.SseEventBuilder msgEvent = SseEmitter.event()
-                    .id(userId)
-                    .data(message)
-                    .name(msgType.type);
-            sseEmitter.send(msgEvent);
-        } catch (IOException e) {
-            log.error("SSE异常...{}", e.getMessage());
-            remove(userId);
-        }
-
-    }
-
-    public static Consumer<Throwable> errorCallback(String userId) {
-        return Throwable -> {
-            log.error("SSE异常...");
-            // 移除用户连接
-            remove(userId);
-        };
-    }
-
     public static Runnable timeoutCallback(String userId) {
         return () -> {
             log.info("SSE超时...");
@@ -112,11 +52,60 @@ public class SSEServer {
         };
     }
 
+    public static Consumer<Throwable> errorCallback(String userId) {
+        return Throwable -> {
+            log.error("SSE异常...");
+            // 移除用户连接
+            remove(userId);
+        };
+    }
+
     public static void remove(String userId) {
         // 删除用户
         sseClients.remove(userId);
         log.info("SSE连接被移除，移除的用户ID为：{}", userId);
     }
+
+    public static void sendMsg(String userId, String message, SSEMsgType msgType) {
+        if (CollectionUtils.isEmpty(sseClients)) {
+            return;
+        }
+
+        if (sseClients.containsKey(userId)) {
+            SseEmitter sseEmitter = sseClients.get(userId);
+            sendEmitterMessage(sseEmitter, userId, message, msgType);
+        }
+    }
+
+    private static void sendEmitterMessage(SseEmitter sseEmitter,
+                                           String userId,
+                                           String message,
+                                           SSEMsgType msgType) {
+        try {
+            SseEmitter.SseEventBuilder msgEvent = SseEmitter.event()
+                    .id(userId)
+                    .data(message)
+                    .name(msgType.type);
+            sseEmitter.send(msgEvent);
+        } catch (IOException e) {
+            log.error("SSE异常...{}", e.getMessage());
+            remove(userId);
+        }
+    }
+
+    public static void sendMsgToAllUsers(String message) {
+        if (CollectionUtils.isEmpty(sseClients)) {
+            return;
+        }
+
+        sseClients.forEach((userId, sseEmitter) -> {
+                sendEmitterMessage(sseEmitter, userId, message, SSEMsgType.MESSAGE);
+            }
+        );
+    }
+
+
+
 
 
 }

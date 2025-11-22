@@ -2,7 +2,6 @@ package com.cpq.enums;
 
 /**
  * @Description: 发送SSE的消息类型
- * @Author 风间影月
  */
 public enum SSEMsgType {
 
