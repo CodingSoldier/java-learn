@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.0</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.cpq</groupId>
+    <artifactId>SpringAI-MCP-RAG-Dev</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <modules>
+        <module>mcp-client</module>
+    </modules>
+
+
+<!--
+如果大家对springai的相关依赖没法引入，请修改maven的配置文件，增加阿里云的镜像仓库
+<mirror>
+  <id>nexus-aliyun</id>
+  <mirrorOf>central</mirrorOf>
+  <name>Nexus aliyun</name>
+  <url>http://maven.aliyun.com/repository/public</url>
+</mirror>
+-->
+
+</project>
