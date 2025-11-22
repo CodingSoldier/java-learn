@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 @Slf4j
-public class SSEServer {
+public class SseServer {
 
     // 存放所有用户
     private static final Map<String, SseEmitter> sseClients = new ConcurrentHashMap<>();
@@ -39,8 +39,7 @@ public class SSEServer {
     public static Runnable timeoutCallback(String userId) {
         return () -> {
             log.info("SSE超时...");
-            // 移除用户连接
-            remove(userId);
+            completeAndRemove(userId);
         };
     }
 
@@ -55,8 +54,7 @@ public class SSEServer {
     public static Consumer<Throwable> errorCallback(String userId) {
         return Throwable -> {
             log.error("SSE异常...");
-            // 移除用户连接
-            remove(userId);
+            completeAndRemove(userId);
         };
     }
 
@@ -68,14 +66,20 @@ public class SSEServer {
         }
     }
 
-    public static void sendMsg(String userId, String message, SSEMsgType msgType) {
-        if (CollectionUtils.isEmpty(sseClients)) {
-            return;
+    public static void completeAndRemove(String userId) {
+        SseEmitter sseEmitter = sseClients.get(userId);
+        if (sseEmitter != null) {
+            sseEmitter.complete();
+            // 移除用户连接
+            sseClients.remove(userId);
+            log.info("SSE连接被移除，移除的用户ID为：{}", userId);
         }
+    }
 
+    public static void sendMsg(String userId, String message, SSEMsgType msgType) {
         SseEmitter sseEmitter = sseClients.get(userId);
         if (sseEmitter == null) {
-            log.error("sseEmitter为空，userId={}", userId);
+            log.debug("sseEmitter为空，userId={}", userId);
             return;
         }
         sendEmitterMessage(sseEmitter, userId, message, msgType);
@@ -92,8 +96,10 @@ public class SSEServer {
                     .name(msgType.type);
             sseEmitter.send(msgEvent);
         } catch (IOException e) {
-            log.error("SSE异常...{}", e.getMessage());
+            log.error("SSE异常...", e);
             remove(userId);
+        } catch (Exception e) {
+            log.error("SSE异常Exception...", e);
         }
     }
 

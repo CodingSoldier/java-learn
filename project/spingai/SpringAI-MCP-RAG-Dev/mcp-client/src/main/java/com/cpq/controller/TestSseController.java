@@ -1,7 +1,7 @@
 package com.cpq.controller;
 
 import com.cpq.enums.SSEMsgType;
-import com.cpq.sse.SSEServer;
+import com.cpq.sse.SseServer;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/test/sse")
-public class TestSSEController {
+public class TestSseController {
 
 
     /**
@@ -18,7 +18,7 @@ public class TestSSEController {
      */
     @GetMapping("sendMessage")
     public Object sendMessage(@RequestParam String userId, @RequestParam String message){
-        SSEServer.sendMsg(userId, message, SSEMsgType.MESSAGE);
+        SseServer.sendMsg(userId, message, SSEMsgType.MESSAGE);
         return "OK";
     }
 
@@ -29,7 +29,7 @@ public class TestSSEController {
     public Object sendMessageAdd(@RequestParam String userId, @RequestParam String message) throws Exception {
         for (int i = 0; i < 10; i++) {
             Thread.sleep(200);
-            SSEServer.sendMsg(userId, message, SSEMsgType.ADD);
+            SseServer.sendMsg(userId, message, SSEMsgType.ADD);
         }
         return "OK";
     }
@@ -39,7 +39,7 @@ public class TestSSEController {
      */
     @GetMapping("sendMessageAll")
     public Object sendMessageAll(@RequestParam String message){
-        SSEServer.sendMsgToAllUsers(message);
+        SseServer.sendMsgToAllUsers(message);
         return "OK";
     }
 
