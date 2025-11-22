@@ -38,6 +38,8 @@
     <module>SAA-14LocalMcpServer</module>
     <module>SAA-15LocalMcpClient</module>
     <module>SAA-16ClientCallBaiduMcpServer</module>
+    <module>SAA-17BailianRAG</module>
+    <module>SAA-18TodayMenu</module>
   </modules>
 
 
