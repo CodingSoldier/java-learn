@@ -22,7 +22,7 @@ public class SSEServer {
     public static SseEmitter connect(String userId) {
 
         // 设置超时时间，0L表示不超时（永不过期）；默认是30秒，超时未完成任务则会抛出异常
-        SseEmitter sseEmitter = new SseEmitter(0L);
+        SseEmitter sseEmitter = new SseEmitter(10 * 24 * 60 * 60 * 1000L);
 
         // 注册回调方法
         sseEmitter.onTimeout(timeoutCallback(userId));
@@ -62,8 +62,10 @@ public class SSEServer {
 
     public static void remove(String userId) {
         // 删除用户
-        sseClients.remove(userId);
-        log.info("SSE连接被移除，移除的用户ID为：{}", userId);
+        if (sseClients.containsKey(userId)) {
+            sseClients.remove(userId);
+            log.info("SSE连接被移除，移除的用户ID为：{}", userId);
+        }
     }
 
     public static void sendMsg(String userId, String message, SSEMsgType msgType) {
@@ -71,10 +73,12 @@ public class SSEServer {
             return;
         }
 
-        if (sseClients.containsKey(userId)) {
-            SseEmitter sseEmitter = sseClients.get(userId);
-            sendEmitterMessage(sseEmitter, userId, message, msgType);
+        SseEmitter sseEmitter = sseClients.get(userId);
+        if (sseEmitter == null) {
+            log.error("sseEmitter为空，userId={}", userId);
+            return;
         }
+        sendEmitterMessage(sseEmitter, userId, message, msgType);
     }
 
     private static void sendEmitterMessage(SseEmitter sseEmitter,
@@ -99,13 +103,10 @@ public class SSEServer {
         }
 
         sseClients.forEach((userId, sseEmitter) -> {
-                sendEmitterMessage(sseEmitter, userId, message, SSEMsgType.MESSAGE);
-            }
+                    sendEmitterMessage(sseEmitter, userId, message, SSEMsgType.MESSAGE);
+                }
         );
     }
-
-
-
 
 
 }
