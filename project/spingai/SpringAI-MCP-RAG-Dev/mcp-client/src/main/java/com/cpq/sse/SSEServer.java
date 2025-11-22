@@ -1,4 +1,4 @@
-package com.cpq.utils;
+package com.cpq.sse;
 
 import com.cpq.enums.SSEMsgType;
 import lombok.extern.slf4j.Slf4j;
