@@ -7,7 +7,6 @@ spring:
     redis:
       host: 192.168.1.221
       port: 6379
-#      password: 123456
   ai:
 #    mcp:
 #      client:
@@ -30,11 +29,15 @@ spring:
       chat:
         options:
           model: qwen-plus
+      embedding:
+        enabled: true
+        options:
+          model: text-embedding-v4
     vectorstore:
       redis:
         initialize-schema: true         # 是否初始化所需的模式
         index-name: lee-vectorstore     # 用于存储向量的索引名称
-        prefix: 'embedding:'             # Redis 键的前缀
+        prefix: 'embedding:'            # Redis 键的前缀
 
 logging:
   level:
