@@ -3,6 +3,11 @@ spring:
     name: spring-ai-mcp-client
   profiles:
     active: dev
+  data:
+    redis:
+      host: 192.168.1.221
+      port: 6379
+#      password: 123456
   ai:
 #    mcp:
 #      client:
@@ -20,21 +25,16 @@ spring:
 #        stdio:
 #          servers-configuration: classpath:mcp-server.json
     openai:
-      api-key: ${OPENAI_API_KEY}
-      base-url: ${OPENAI_BASE_URL}
+      api-key: ${ALI_AI_KEY}
+      base-url: https://dashscope.aliyuncs.com/compatible-mode
       chat:
         options:
-          model: ${OPENAI_MODEL}
-#    vectorstore:
-#      redis:
-#        initialize-schema: true         # 是否初始化所需的模式
-#        index-name: lee-vectorstore     # 用于存储向量的索引名称
-#        prefix: 'embedding:'             # Redis 键的前缀
-#  data:
-#    redis:
-#      host: 127.0.0.1
-#      port: 9379
-#      password: 123456
+          model: qwen-plus
+    vectorstore:
+      redis:
+        initialize-schema: true         # 是否初始化所需的模式
+        index-name: lee-vectorstore     # 用于存储向量的索引名称
+        prefix: 'embedding:'             # Redis 键的前缀
 
 logging:
   level:

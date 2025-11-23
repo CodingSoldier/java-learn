@@ -39,35 +39,41 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-starter-model-openai</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-        <!--<dependency>-->
-        <!--    <groupId>org.springframework.ai</groupId>-->
-        <!--    <artifactId>spring-ai-advisors-vector-store</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--    <groupId>org.springframework.ai</groupId>-->
-        <!--    <artifactId>spring-ai-starter-vector-store-redis</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--    <groupId>org.springframework.ai</groupId>-->
-        <!--    <artifactId>spring-ai-starter-model-transformers</artifactId>-->
-        <!--</dependency>-->
+
+        <!-- spring-ai基础包 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-openai</artifactId>
+        </dependency>
+
+        <!-- RAG、知识库、Redis实现向量化 基础包-->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-advisors-vector-store</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-vector-store-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-transformers</artifactId>
+        </dependency>
+        <!--解析文档-->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-tika-document-reader</artifactId>
+        </dependency>
 
         <!--<dependency>-->
         <!--    <groupId>org.springframework.ai</groupId>-->
@@ -79,11 +85,7 @@
         <!--    <artifactId>spring-ai-mcp</artifactId>-->
         <!--</dependency>-->
 
-        <!--解析文档-->
-        <!--<dependency>-->
-        <!--    <groupId>org.springframework.ai</groupId>-->
-        <!--    <artifactId>spring-ai-tika-document-reader</artifactId>-->
-        <!--</dependency>-->
+
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -107,12 +109,6 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>5.8.30</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.cdimascio</groupId>
-            <artifactId>dotenv-java</artifactId>
-            <version>3.2.0</version>
         </dependency>
 
         <dependency>
