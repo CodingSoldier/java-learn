@@ -7,8 +7,10 @@ import com.cpq.enums.SSEMsgType;
 import com.cpq.sse.SseServer;
 import com.cpq.util.CustomTextSplitter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.reader.TextReader;
 import org.springframework.ai.vectorstore.redis.RedisVectorStore;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -78,7 +81,7 @@ public class RagService {
                                               如果查到，请回复具体的内容。不相关的近似内容不必提到。
                                               """;
 
-    public void doChatRagSearch(ChatEntity chatEntity, List<Document> ragContext) {
+    public void doChatRagSearch(ChatEntity chatEntity, List<Document> documents) {
 
         String userId = chatEntity.getCurrentUserName();
         String question = chatEntity.getMessage();
@@ -86,18 +89,19 @@ public class RagService {
 
         // 构建提示词
         String context = null;
-        if (ragContext != null && ragContext.size() > 0) {
-            context = ragContext.stream()
+        if (CollectionUtils.isNotEmpty(documents)) {
+            context = documents.stream()
                     .map(Document::getText)
                     .collect(Collectors.joining("\n"));
         }
 
         // 组装提示词
-        Prompt prompt = new Prompt(RAG_PROMPT
-                .replace("{context}", context)
-                .replace("{question}", question));
+        PromptTemplate promptTemplate = new PromptTemplate(RAG_PROMPT);
+        Map<String, Object> map = Map.of("context", context,
+                "question", question);
+        Prompt prompt = promptTemplate.create(map);
 
-        System.out.println(prompt);
+        log.info("{}", prompt);
 
         Flux<String> stringFlux = chatClient.prompt(prompt).stream().content();
 
