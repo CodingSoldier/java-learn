@@ -43,8 +43,9 @@ logging:
   level:
     root: info
 
-#internet:
-#  websearch:
-#    searxng:
-#      url: http://localhost:6080/search
-#      counts: 10
+# SearXNG联网搜索
+internet:
+  websearch:
+    searxng:
+      url: http://192.168.1.221:8888/search
+      counts: 10
