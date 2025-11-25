@@ -8,21 +8,23 @@ spring:
       host: 192.168.1.221
       port: 6379
   ai:
-#    mcp:
-#      client:
-#        enabled: true
-#        name: spring-ai-mcp-client
-#        type: ASYNC
-#        sse:
-#          connections:
-#            server1:
-#              url: https://mcp.amap.com
-#              sse-endpoint: /sse?key=09557e21174fff33be82c6cf0fa2cbcb
+    mcp:
+      client:
+        enabled: true
+        name: spring-ai-mcp-client
+        type: ASYNC
+        sse:
+          connections:
+            # 通过sse使用远程mcp服务，高德地图mcp服务
+            server1:
+              url: https://mcp.amap.com
+              sse-endpoint: /sse?key=09557e21174fff33be82c6cf0fa2cbcb
 #            server2:
 #              url: http://localhost:9060
 #              sse-endpoint: /sse
-#        stdio:
-#          servers-configuration: classpath:mcp-server.json
+        stdio:
+          # 本地通过stdio使用mcp服务
+          servers-configuration: classpath:mcp-server.json
     openai:
       api-key: ${ALI_AI_KEY}
       base-url: https://dashscope.aliyuncs.com/compatible-mode
