@@ -31,6 +31,12 @@ public class EmailTool {
         this.from = from;
     }
 
+    @Tool(description = "查询我的邮件/邮箱地址")
+    public String getMyEmailAddress() {
+        log.info("========== 调用MCP工具：getMyEmailAddress() ==========");
+        return "tfz9011@163.com";
+    }
+
     @Data
     @ToString
     @NoArgsConstructor
@@ -45,12 +51,6 @@ public class EmailTool {
 
         @ToolParam(description = "邮件的内容是否为html还是markdown格式，如果是markdown格式，则为1；如果是html格式，则为2")
         private Integer contentType;
-    }
-
-    @Tool(description = "查询我的邮件/邮箱地址")
-    public String getMyEmailAddress() {
-        log.info("========== 调用MCP工具：getMyEmailAddress() ==========");
-        return "fatherfilm@163.com";
     }
 
     @Tool(description = "给指定邮箱发送邮件信息，email 为收件人邮箱，subject 为邮件标题，message 为邮件的内容")

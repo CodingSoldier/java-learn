@@ -12,14 +12,15 @@ spring:
       client:
         enabled: true
         name: spring-ai-mcp-client
-        request-timeout: 20s
+        request-timeout: 60s
         type: ASYNC
         sse:
           connections:
             # 通过sse使用远程mcp服务，高德地图mcp服务
             server1:
               url: https://mcp.amap.com
-              sse-endpoint: /sse?key=09557e21174fff33be82c6cf0fa2cbcb
+              sse-endpoint: /sse?key=bfd7f79a957f12846678ed71b420565c
+            # 是用本地开发的mcp服务
             server2:
               url: http://localhost:9060
               sse-endpoint: /sse

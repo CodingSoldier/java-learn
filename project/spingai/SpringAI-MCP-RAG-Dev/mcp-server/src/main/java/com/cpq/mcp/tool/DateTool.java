@@ -13,6 +13,9 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class DateTool {
 
+    /**
+     * 大模型会根据函数参数，自动填充参数的值
+     */
     @Tool(description = "根据城市所在的时区id来获得当前的时间")
     public String getCurrentTimeByZoneId(String cityName, String zoneId) {
 
