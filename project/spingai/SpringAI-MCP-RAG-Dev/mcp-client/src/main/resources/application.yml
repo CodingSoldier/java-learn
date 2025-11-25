@@ -12,6 +12,7 @@ spring:
       client:
         enabled: true
         name: spring-ai-mcp-client
+        request-timeout: 20s
         type: ASYNC
         sse:
           connections:
@@ -19,9 +20,9 @@ spring:
             server1:
               url: https://mcp.amap.com
               sse-endpoint: /sse?key=09557e21174fff33be82c6cf0fa2cbcb
-#            server2:
-#              url: http://localhost:9060
-#              sse-endpoint: /sse
+            server2:
+              url: http://localhost:9060
+              sse-endpoint: /sse
         stdio:
           # 本地通过stdio使用mcp服务
           servers-configuration: classpath:mcp-server.json

@@ -24,6 +24,7 @@
 
     <modules>
         <module>mcp-client</module>
+        <module>mcp-server</module>
     </modules>
 
 

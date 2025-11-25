@@ -26,16 +26,15 @@ public class McpService {
         String userId = chatEntity.getCurrentUserName();
         String prompt = chatEntity.getMessage();
         String botMsgId = chatEntity.getBotMsgId();
-
+        log.info("#############prompt{}", prompt);
         Flux<String> stringFlux = chatClient.prompt(prompt).stream().content();
-
         List<String> list = stringFlux.toStream().map(str -> {
             String content = str.toString();
             SseServer.sendMsg(userId, content, SSEMsgType.ADD);
             log.info("content: {}", content);
             return content;
         }).collect(Collectors.toList());
-
+        log.info("#############list={}", list);
         String fullContent = list.stream().collect(Collectors.joining());
 
         ChatResponseEntity chatResponseEntity = new ChatResponseEntity(fullContent, botMsgId);
