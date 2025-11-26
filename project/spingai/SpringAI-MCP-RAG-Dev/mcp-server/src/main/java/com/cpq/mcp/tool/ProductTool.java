@@ -1,6 +1,7 @@
 package com.cpq.mcp.tool;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.cpq.entity.Product;
 import com.cpq.enums.ListSortEnum;
 import com.cpq.enums.PriceCompareEnum;
@@ -9,7 +10,6 @@ import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -17,10 +17,10 @@ import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
-
 
 @Component
 @Slf4j
@@ -30,111 +30,107 @@ public class ProductTool {
     private ProductMapper productMapper;
 
     @Data
-    @ToString
-    @NoArgsConstructor
     @AllArgsConstructor
-    public static class CreateProductRequest {
+    @NoArgsConstructor
+    public static class ProductAdd implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = 1L;
+
         @ToolParam(description = "商品的名称")
         private String productName;
+
         @ToolParam(description = "商品的品牌")
         private String brand;
-        @ToolParam(description = "商品的简介（可以为空）")
+
+        @ToolParam(description = "商品的简介（可以为空）", required = false)
         private String description;
 
         @ToolParam(description = "商品的价格")
-        private Integer price;
+        private Double price;
+
         @ToolParam(description = "商品的库存数量")
         private Integer stock;
+
         @ToolParam(description = "商品的状态（上架状态的值为1/下架状态的值为0/预售状态的值为2）")
-        private Integer status;
+        private Integer status=1;
+
     }
 
-    @Tool(description = "创建/新增商品信息记录")
-    public String createNewProduct(CreateProductRequest createProductRequest) {
-
-        log.info("========== 调用MCP工具：createNewProduct() ==========");
-        log.info(String.format("| 参数 createProductRequest 为： %s", createProductRequest.toString()));
-        log.info("========== End ==========");
-
+    @Tool(description = "创建/新增商品")
+    public String addProduct(ProductAdd productAdd) {
+        log.info("========== 创建/新增商品 productAdd={} ==========", productAdd);
         Product product = new Product();
-        BeanUtils.copyProperties(createProductRequest, product);
-
-        // 生成12为的随机数字
+        BeanUtils.copyProperties(productAdd, product);
         product.setProductNumber(RandomStringUtils.randomNumeric(12));
-
         productMapper.insert(product);
-
         return "商品信息创建成功";
     }
 
-    @Transactional
-    @Tool(description = "根据商品id删除商品记录")
-    public String deleteProduct(String productId) {
-
-        log.info("========== 调用MCP工具：deleteProduct() ==========");
-        log.info(String.format("| 参数 productId 为： %s", productId));
-        log.info("========== End ==========");
-
-        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("product_number", productId);
-
-        productMapper.delete(queryWrapper);
-
-        return "商品信息删除成功";
-    }
-
-
     @Data
-    @ToString
-    @NoArgsConstructor
     @AllArgsConstructor
-    public static class QueryProductRequest {
+    @NoArgsConstructor
+    public static class ProductUpdate implements Serializable {
 
-        // required = true 默认谁自动填充数据，所以查询的时候建议使用 false
+        @Serial
+        private static final long serialVersionUID = 1L;
 
-        @ToolParam(description = "商品的编号", required = false)
-        private String productId;
+        @ToolParam(description = "商品的编号")
+        private String productNumber;
+
         @ToolParam(description = "商品的名称", required = false)
         private String productName;
+
         @ToolParam(description = "商品的品牌", required = false)
         private String brand;
-        @ToolParam(description = "具体商品价格大小", required = false)
-        private Integer price;
+
+        @ToolParam(description = "商品的简介（可以为空）", required = false)
+        private String description;
+
+        @ToolParam(description = "商品的价格", required = false)
+        private Double price;
+
+        @ToolParam(description = "商品的库存数量", required = false)
+        private Integer stock;
 
         @ToolParam(description = "商品的状态（上架状态的值为1/下架状态的值为0/预售状态的值为2）", required = false)
         private Integer status;
 
-        @ToolParam(description = "查询列表的排序", required = false)
-        private ListSortEnum sortEnum;
-
-        @ToolParam(description = "比较价格的大小", required = false)
-        private PriceCompareEnum priceCompareEnum;
     }
 
-    @Transactional
+    @Tool(description = "根据商品编号修改商品信息")
+    public String updateProduct(ProductUpdate productUpdate) {
+        log.info("========== 修改商品 updateProduct={} ==========", productUpdate);
+        Product product = new Product();
+        BeanUtils.copyProperties(productUpdate, product);
+
+        LambdaQueryWrapper<Product> lqwUp = Wrappers.lambdaQuery();
+        lqwUp.eq(Product::getProductNumber, productUpdate.getProductNumber());
+        productMapper.update(product, lqwUp);
+        return "商品信息更新成功";
+    }
+
+    @Tool(description = "根据商品编号删除商品")
+    public String deleteProduct(String productNumber) {
+        log.info("========== 根据商品编号删除商品 productNumber={} ==========", productNumber);
+        LambdaQueryWrapper<Product> lqw = Wrappers.lambdaQuery();
+        lqw.eq(Product::getProductNumber, productNumber);
+        productMapper.delete(lqw);
+        return "商品信息删除成功";
+    }
+
     @Tool(description = "把排序（正序/倒序）转换为对应的枚举")
     public ListSortEnum getSortEnum(String sort) {
-
-        log.info("========== 调用MCP工具：getSortEnum() ==========");
-        log.info(String.format("| 参数 sort 为： %s", sort));
-        log.info("========== End ==========");
-
-        if (sort.equalsIgnoreCase(ListSortEnum.ASC.value)) {
+        log.info("========== 调用getSortEnum()，sort={} ==========", sort);
+        if (ListSortEnum.ASC.value.equals(sort)) {
             return ListSortEnum.ASC;
-        } else {
-            return ListSortEnum.DESC;
         }
-
+        return ListSortEnum.DESC;
     }
 
-    @Transactional
     @Tool(description = "把商品价格的比较（大于/小于/大于等于/小于等于/高于/低于/不高于/不低于/等于）转换为对应的枚举")
     public PriceCompareEnum getPriceCompareEnum(String priceCompare) {
-
-        log.info("========== 调用MCP工具：getPriceCompareEnum() ==========");
-        log.info(String.format("| 参数 priceCompare 为： %s", priceCompare));
-        log.info("========== End ==========");
-
+        log.info("========== getPriceCompareEnum() ，priceCompare={}==========", priceCompare);
         if (priceCompare.equalsIgnoreCase(PriceCompareEnum.GREATER_THAN.value)) {
             return PriceCompareEnum.GREATER_THAN;
         } else if (priceCompare.equalsIgnoreCase(PriceCompareEnum.LESS_THAN.value)) {
@@ -154,118 +150,91 @@ public class ProductTool {
         } else {
             return PriceCompareEnum.EQUAL_TO;
         }
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ProductQuery implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = 1L;
+
+        @ToolParam(description = "商品的编号", required = false)
+        private String productNumber;
+
+        @ToolParam(description = "商品的名称", required = false)
+        private String productName;
+
+        @ToolParam(description = "商品的品牌", required = false)
+        private String brand;
+
+        @ToolParam(description = "商品的价格", required = false)
+        private Double price;
+
+        @ToolParam(description = "查询列表的排序", required = false)
+        private ListSortEnum sortEnum;
+
+        @ToolParam(description = "比较价格大小", required = false)
+        private PriceCompareEnum priceCompare;
 
     }
 
     @Tool(description = "根据条件查询商品（product）信息")
-    public List<Product> queryProductListByCondition(QueryProductRequest queryProductRequest) {
+    public List<Product> queryProduct(ProductQuery productQuery) {
+        log.info("========== 根据条件查询商品 productQuery={}==========", productQuery);
+        LambdaQueryWrapper<Product> lqw = Wrappers.lambdaQuery();
+        lqw.eq(StringUtils.isNotBlank(productQuery.getProductNumber()),
+                Product::getProductNumber, productQuery.getProductNumber());
+        lqw.like(StringUtils.isNotBlank(productQuery.getProductName()),
+                Product::getProductName, productQuery.getProductName());
+        lqw.like(StringUtils.isNotBlank(productQuery.getBrand()),
+                Product::getBrand, productQuery.getBrand());
 
-        log.info("========== 调用MCP工具：queryProductListByCondition() ==========");
-        log.info(String.format("| 参数 queryProductRequest 为： %s", queryProductRequest.toString()));
-        log.info("========== End ==========");
-
-        String productId = queryProductRequest.getProductId();
-        String productName = queryProductRequest.getProductName();
-        String brand = queryProductRequest.getBrand();
-
-        Integer status = queryProductRequest.getStatus();
-        ListSortEnum sortEnum = queryProductRequest.getSortEnum();
-
-        Integer price = queryProductRequest.getPrice();
-        PriceCompareEnum priceCompareEnum = queryProductRequest.getPriceCompareEnum();
-
-        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
-
-        if (StringUtils.isNotBlank(productId)) {
-            queryWrapper.eq("product_number", productId);
-        }
-        if (StringUtils.isNotBlank(productName)) {
-            queryWrapper.like("product_name", productName);
-        }
-        if (StringUtils.isNotBlank(brand)) {
-            queryWrapper.like("brand", brand);
-        }
-        if (status != null) {
-            queryWrapper.eq("status", status);
-        }
-
+        Double price = productQuery.getPrice();
+        PriceCompareEnum priceCompareEnum = productQuery.getPriceCompare();
         if (price != null && priceCompareEnum != null) {
             if (priceCompareEnum.type.equals(PriceCompareEnum.GREATER_THAN.type)) {
-                queryWrapper.gt("price", price);
+                lqw.gt(Product::getPrice, price);
             } else if (priceCompareEnum.type.equals(PriceCompareEnum.LESS_THAN.type)) {
-                queryWrapper.lt("price", price);
+                lqw.lt(Product::getPrice, price);
             } else if (priceCompareEnum.type.equals(PriceCompareEnum.GREATER_THAN_OR_EQUAL_TO.type)) {
-                queryWrapper.ge("price", price);
+                lqw.ge(Product::getPrice, price);
             } else if (priceCompareEnum.type.equals(PriceCompareEnum.LESS_THAN_OR_EQUAL_TO.type)) {
-                queryWrapper.le("price", price);
+                lqw.le(Product::getPrice, price);
             } else if (priceCompareEnum.type.equals(PriceCompareEnum.HIGHER_THAN.type)) {
-                queryWrapper.gt("price", price);
+                lqw.gt(Product::getPrice, price);
             } else if (priceCompareEnum.type.equals(PriceCompareEnum.LOWER_THAN.type)) {
-                queryWrapper.lt("price", price);
+                lqw.lt(Product::getPrice, price);
             } else if (priceCompareEnum.type.equals(PriceCompareEnum.NOT_HIGHER_THAN.type)) {
-                queryWrapper.le("price", price);
+                lqw.le(Product::getPrice, price);
             } else if (priceCompareEnum.type.equals(PriceCompareEnum.NOT_LOWER_THAN.type)) {
-                queryWrapper.ge("price", price);
+                lqw.ge(Product::getPrice, price);
             } else {
-                queryWrapper.eq("price", price);
+                lqw.eq(Product::getPrice, price);
+            }
+
+            ListSortEnum sortEnum = productQuery.getSortEnum();
+            if (sortEnum != null) {
+                if (sortEnum.type.equals(ListSortEnum.ASC.type)) {
+                    lqw.orderByAsc(Product::getPrice);
+                } else {
+                    lqw.orderByDesc(Product::getPrice);
+                }
             }
         }
 
-        if (sortEnum != null && sortEnum.type.equals(ListSortEnum.ASC.type)) {
-            queryWrapper.orderByAsc("price");
-        }
-        if (sortEnum != null && sortEnum.type.equals(ListSortEnum.DESC.type)) {
-            queryWrapper.orderByDesc("price");
-        }
-
-        List<Product> productList = productMapper.selectList(queryWrapper);
-
-        return productList;
-    }
-
-    @Data
-    @ToString
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ModifyProductRequest {
-
-        @ToolParam(description = "商品的编号", required = false)
-        private String productId;
-        @ToolParam(description = "商品的名称", required = false)
-        private String productName;
-        @ToolParam(description = "商品的品牌", required = false)
-        private String brand;
-        @ToolParam(description = "商品的简介", required = false)
-        private String description;
-        @ToolParam(description = "具体商品价格大小", required = false)
-        private Integer price;
-        @ToolParam(description = "商品的库存数量", required = false)
-        private Integer stock;
-        @ToolParam(description = "商品的状态（上架状态的值为1/下架状态的值为0/预售状态的值为2）", required = false)
-        private Integer status;
-
-    }
-
-    @Tool(description = "根据商品的ID/编号修改商品信息")
-    public String modifyProduct(ModifyProductRequest modifyProductRequest) {
-
-        log.info("========== 调用MCP工具：modifyProduct() ==========");
-        log.info(String.format("| 参数 modifyProductRequest 为： %s", modifyProductRequest.toString()));
-        log.info("========== End ==========");
-
-        Product product = new Product();
-        BeanUtils.copyProperties(modifyProductRequest, product);
-
-        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("product_number", modifyProductRequest.getProductId());
-
-        int update = productMapper.update(product, queryWrapper);
-        if (update <= 0) {
-            return "商品信息更新失败，或商品可能不存在";
-        }
-
-        return "商品信息更新成功";
+        return productMapper.selectList(lqw);
     }
 
 
 }
+
+
+
+
+
+
+
+
+
