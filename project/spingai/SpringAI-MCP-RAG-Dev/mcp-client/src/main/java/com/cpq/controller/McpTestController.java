@@ -26,6 +26,16 @@ public class McpTestController {
             "botMsgId": 154545475454
         }'
      但是无法在本地创建文件，提示没有权限
+
+     2、测试高德地图服务、发送邮件服务
+     curl --location --request POST 'http://127.0.0.1:9090/mcp-test/doChat' \
+     --header 'Content-Type: application/json' \
+     --data-raw '{
+     "currentUserName": 12456,
+     "message": "介绍一份杭州市一天的旅游攻略，并把旅游攻略发送到我的邮箱",
+     "botMsgId": 154545475454
+     }'
+
      */
     @PostMapping("doChat")
     public void doChat(@RequestBody ChatEntity chatEntity){
