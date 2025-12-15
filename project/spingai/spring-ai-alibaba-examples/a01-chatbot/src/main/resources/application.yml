@@ -1,0 +1,4 @@
+spring:
+  ai:
+    dashscope:
+      api-key: ${ALI_AI_KEY}
