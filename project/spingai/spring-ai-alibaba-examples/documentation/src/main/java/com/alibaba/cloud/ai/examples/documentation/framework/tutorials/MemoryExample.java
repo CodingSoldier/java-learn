@@ -142,6 +142,8 @@ public class MemoryExample {
 		agent.call("你好，我叫 bob", config);
 		agent.call("写一首关于猫的短诗", config);
 		agent.call("现在对狗做同样的事情", config);
+		agent.call("写一首关于狗的短诗", config);
+		agent.call("写一首关于牛的短诗", config);
 		AssistantMessage finalResponse = agent.call("我叫什么名字？", config);
 
 		System.out.println(finalResponse.getText());
@@ -200,8 +202,8 @@ public class MemoryExample {
 
 		MessageSummarizationHook summarizationHook = new MessageSummarizationHook(
 				summaryModel,
-				4000,  // 在 4000 tokens 时触发总结
-				20     // 总结后保留最后 20 条消息
+				100,  // 在 4000 tokens 时触发总结
+				3     // 总结后保留最后 20 条消息
 		);
 
 		ReactAgent agent = ReactAgent.builder()
@@ -216,8 +218,12 @@ public class MemoryExample {
 				.build();
 
 		agent.call("你好，我叫 bob", config);
+		agent.call("陈晓红生了一个儿子，请给她儿子取一个名字", config);
 		agent.call("写一首关于猫的短诗", config);
+		agent.call("写一首关于狗的短诗", config);
 		agent.call("现在对狗做同样的事情", config);
+		agent.call("介绍红烧肉的做法", config);
+		agent.call("她又生了一个女儿，请给她女儿取一个名字", config);
 		AssistantMessage finalResponse = agent.call("我叫什么名字？", config);
 
 		System.out.println(finalResponse.getText());
@@ -289,7 +295,7 @@ public class MemoryExample {
 
 			// // 示例5：使用消息修剪
 			// System.out.println("\n--- 示例5：使用消息修剪 ---");
-			// useMessageTrimming();
+//			 useMessageTrimming();
 			//
 			// // 示例8：使用消息删除
 			// System.out.println("\n--- 示例8：使用消息删除 ---");
@@ -297,11 +303,11 @@ public class MemoryExample {
 			//
 			// // 示例10：使用消息总结
 			// System.out.println("\n--- 示例10：使用消息总结 ---");
-			// useMessageSummarization();
+//			 useMessageSummarization();
 			//
 			// // 示例12：使用工具访问记忆
 			// System.out.println("\n--- 示例12：使用工具访问记忆 ---");
-			// accessMemoryInTool();
+			 accessMemoryInTool();
 
 			// System.out.println("\n=== 所有示例执行完成 ===");
 		}
@@ -534,6 +540,9 @@ public class MemoryExample {
 		public String apply(String query, ToolContext toolContext) {
 			// 从上下文中获取用户信息
 			RunnableConfig config = (RunnableConfig) toolContext.getContext().get("config");
+			if (config == null) {
+				return "未知用户";
+			}
 			String userId = (String) config.metadata("user_id").orElse("");
 
 			if ("user_123".equals(userId)) {

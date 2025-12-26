@@ -72,7 +72,7 @@ public class AgentsExample {
 	public static void basicModelConfiguration() {
 		// 创建 DashScope API 实例
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		// 创建 ChatModel
@@ -92,7 +92,7 @@ public class AgentsExample {
 	 */
 	public static void advancedModelConfiguration() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -110,7 +110,7 @@ public class AgentsExample {
 
 	public static void toolUsage() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -137,7 +137,7 @@ public class AgentsExample {
 	 */
 	public static void basicSystemPrompt() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -156,7 +156,7 @@ public class AgentsExample {
 	 */
 	public static void instructionUsage() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -186,7 +186,7 @@ public class AgentsExample {
 
 	public static void dynamicSystemPrompt() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -205,7 +205,7 @@ public class AgentsExample {
 	 */
 	public static void basicInvocation() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -238,7 +238,7 @@ public class AgentsExample {
 	 */
 	public static void getFullState() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -271,7 +271,7 @@ public class AgentsExample {
 	 */
 	public static void useConfiguration() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -299,7 +299,7 @@ public class AgentsExample {
 	 */
 	public static void basicStreamInvocation() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -333,7 +333,7 @@ public class AgentsExample {
 	 */
 	public static void advancedStreamInvocation() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -370,7 +370,7 @@ public class AgentsExample {
 	 */
 	public static void collectStreamOutputs() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -408,7 +408,7 @@ public class AgentsExample {
 
 	public static void structuredOutputWithType() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -432,7 +432,7 @@ public class AgentsExample {
 	 */
 	public static void structuredOutputWithSchema() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -458,7 +458,7 @@ public class AgentsExample {
 	 */
 	public static void configureMemory() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()

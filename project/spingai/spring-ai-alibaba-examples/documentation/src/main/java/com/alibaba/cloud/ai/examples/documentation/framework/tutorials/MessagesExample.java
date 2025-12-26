@@ -56,7 +56,7 @@ public class MessagesExample {
 	 */
 	public static void basicMessageUsage() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		// 使用 DashScope ChatModel
@@ -80,7 +80,7 @@ public class MessagesExample {
 	 */
 	public static void textPromptUsage() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -96,7 +96,7 @@ public class MessagesExample {
 	 */
 	public static void messagePromptUsage() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -119,7 +119,7 @@ public class MessagesExample {
 	 */
 	public static void basicSystemMessage() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -141,7 +141,7 @@ public class MessagesExample {
 	 */
 	public static void detailedSystemMessage() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -169,7 +169,7 @@ public class MessagesExample {
 	 */
 	public static void textUserMessage() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -217,7 +217,7 @@ public class MessagesExample {
 	 */
 	public static void basicAssistantMessage() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -234,7 +234,7 @@ public class MessagesExample {
 	 */
 	public static void manualAssistantMessage() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -260,7 +260,7 @@ public class MessagesExample {
 	 */
 	public static void toolCallsInAssistantMessage() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -285,7 +285,7 @@ public class MessagesExample {
 	 */
 	public static void tokenUsage() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -308,7 +308,7 @@ public class MessagesExample {
 	 */
 	public static void streamingMessages() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -334,7 +334,7 @@ public class MessagesExample {
 	 */
 	public static void toolResponseMessage() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -431,7 +431,7 @@ public class MessagesExample {
 	 */
 	public static void basicConversationExample() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -499,7 +499,7 @@ public class MessagesExample {
 	 */
 	public static void messagesInReactAgent() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()

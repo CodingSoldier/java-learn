@@ -71,7 +71,7 @@ public class HooksExample {
 	 */
 	public static void basicHooksAndInterceptors() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -104,7 +104,7 @@ public class HooksExample {
 	 */
 	public static void messageSummarization() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -134,7 +134,7 @@ public class HooksExample {
 	 */
 	public static void humanInTheLoop() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -171,7 +171,7 @@ public class HooksExample {
 	 */
 	public static void modelCallLimit() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -194,7 +194,7 @@ public class HooksExample {
 	 */
 	public static void piiDetection() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -222,7 +222,7 @@ public class HooksExample {
 	 */
 	public static void toolRetry() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -250,7 +250,7 @@ public class HooksExample {
 	 */
 	public static void planning() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -275,7 +275,7 @@ public class HooksExample {
 	 */
 	public static void llmToolSelector() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -303,7 +303,7 @@ public class HooksExample {
 	 */
 	public static void llmToolEmulator() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -328,7 +328,7 @@ public class HooksExample {
 	 */
 	public static void contextEditing() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()

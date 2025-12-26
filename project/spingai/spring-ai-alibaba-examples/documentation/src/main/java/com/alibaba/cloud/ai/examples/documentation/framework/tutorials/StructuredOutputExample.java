@@ -43,7 +43,7 @@ public class StructuredOutputExample {
 	 */
 	public static void basicJsonSchema() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -73,7 +73,7 @@ public class StructuredOutputExample {
 	 */
 	public static void complexNestedSchema() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -103,7 +103,7 @@ public class StructuredOutputExample {
 	 */
 	public static void structuredAnalysisSchema() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -134,7 +134,7 @@ public class StructuredOutputExample {
 	 */
 	public static void outputTypeContactInfo() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -160,7 +160,7 @@ public class StructuredOutputExample {
 	 */
 	public static void outputTypeProductReview() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -186,7 +186,7 @@ public class StructuredOutputExample {
 	 */
 	public static void outputTypeTextAnalysis() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -214,7 +214,7 @@ public class StructuredOutputExample {
 	 */
 	public static void tryCatchPattern() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -245,7 +245,7 @@ public class StructuredOutputExample {
 	 */
 	public static void validationPattern() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -275,7 +275,7 @@ public class StructuredOutputExample {
 	 */
 	public static void retryPattern() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -318,7 +318,7 @@ public class StructuredOutputExample {
 	 */
 	public static void comprehensiveExample() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()

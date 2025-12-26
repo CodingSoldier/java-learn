@@ -70,7 +70,7 @@ public class ToolsExample {
 	 */
 	public static void addToolToChatClient() {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -141,7 +141,7 @@ public class ToolsExample {
 	 */
 	public static void accessingContext() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -175,7 +175,7 @@ public class ToolsExample {
 	 */
 	public static void accessingMemoryStore() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -217,7 +217,7 @@ public class ToolsExample {
 	 */
 	public static void toolsInReactAgent() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -256,7 +256,7 @@ public class ToolsExample {
 	 */
 	public static void comprehensiveToolExample() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -313,7 +313,7 @@ public class ToolsExample {
 	 */
 	public static void methodToolsExample() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -346,7 +346,7 @@ public class ToolsExample {
 	 */
 	public static void multipleMethodToolsExample() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -379,7 +379,7 @@ public class ToolsExample {
 	 */
 	public static void toolCallbackProviderExample() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -417,7 +417,7 @@ public class ToolsExample {
 	 */
 	public static void toolNamesWithResolverExample() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -462,7 +462,7 @@ public class ToolsExample {
 	 */
 	public static void resolverExample() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -502,7 +502,7 @@ public class ToolsExample {
 	 */
 	public static void combinedToolProvisionExample() throws GraphRunnerException {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -576,52 +576,52 @@ public class ToolsExample {
 			System.out.println("\n--- 示例1：编程式工具规范 ---");
 			programmaticToolSpecification();
 
-			System.out.println("\n--- 示例2：添加工具到 ChatClient ---");
-			addToolToChatClient();
-
-			System.out.println("\n--- 示例3：自定义工具名称 ---");
-			customToolName();
-
-			System.out.println("\n--- 示例4：自定义工具描述 ---");
-			customToolDescription();
-
-			System.out.println("\n--- 示例5：高级 Schema 定义 ---");
-			advancedSchemaDefinition();
-
-			System.out.println("\n--- 示例6：访问状态 ---");
-			accessingState();
-
-			System.out.println("\n--- 示例7：访问上下文 ---");
-			accessingContext();
-
-			System.out.println("\n--- 示例8：访问内存存储 ---");
-			accessingMemoryStore();
-
-			System.out.println("\n--- 示例9：ReactAgent 中的工具 ---");
-			toolsInReactAgent();
-
-			System.out.println("\n--- 示例10：综合工具示例（tools 方法） ---");
-			comprehensiveToolExample();
-
-			System.out.println("\n--- 示例11：使用 methodTools（@Tool 注解） ---");
-			methodToolsExample();
-
-			System.out.println("\n--- 示例12：多个 methodTools 对象 ---");
-			multipleMethodToolsExample();
-
-			System.out.println("\n--- 示例13：使用 ToolCallbackProvider ---");
-			toolCallbackProviderExample();
-
-			System.out.println("\n--- 示例14：使用 toolNames 和 resolver ---");
-			toolNamesWithResolverExample();
-
-			System.out.println("\n--- 示例15：使用 resolver ---");
-			resolverExample();
-
-			System.out.println("\n--- 示例16：组合使用多种工具提供方式 ---");
-			combinedToolProvisionExample();
-
-			System.out.println("\n=== 所有示例执行完成 ===");
+//			System.out.println("\n--- 示例2：添加工具到 ChatClient ---");
+//			addToolToChatClient();
+//
+//			System.out.println("\n--- 示例3：自定义工具名称 ---");
+//			customToolName();
+//
+//			System.out.println("\n--- 示例4：自定义工具描述 ---");
+//			customToolDescription();
+//
+//			System.out.println("\n--- 示例5：高级 Schema 定义 ---");
+//			advancedSchemaDefinition();
+//
+//			System.out.println("\n--- 示例6：访问状态 ---");
+//			accessingState();
+//
+//			System.out.println("\n--- 示例7：访问上下文 ---");
+//			accessingContext();
+//
+//			System.out.println("\n--- 示例8：访问内存存储 ---");
+//			accessingMemoryStore();
+//
+//			System.out.println("\n--- 示例9：ReactAgent 中的工具 ---");
+//			toolsInReactAgent();
+//
+//			System.out.println("\n--- 示例10：综合工具示例（tools 方法） ---");
+//			comprehensiveToolExample();
+//
+//			System.out.println("\n--- 示例11：使用 methodTools（@Tool 注解） ---");
+//			methodToolsExample();
+//
+//			System.out.println("\n--- 示例12：多个 methodTools 对象 ---");
+//			multipleMethodToolsExample();
+//
+//			System.out.println("\n--- 示例13：使用 ToolCallbackProvider ---");
+//			toolCallbackProviderExample();
+//
+//			System.out.println("\n--- 示例14：使用 toolNames 和 resolver ---");
+//			toolNamesWithResolverExample();
+//
+//			System.out.println("\n--- 示例15：使用 resolver ---");
+//			resolverExample();
+//
+//			System.out.println("\n--- 示例16：组合使用多种工具提供方式 ---");
+//			combinedToolProvisionExample();
+//
+//			System.out.println("\n=== 所有示例执行完成 ===");
 		}
 		catch (Exception e) {
 			System.err.println("执行示例时发生错误: " + e.getMessage());
