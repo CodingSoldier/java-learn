@@ -17,33 +17,24 @@ package com.alibaba.cloud.ai.examples.documentation.framework.advanced;
 
 import com.alibaba.cloud.ai.dashscope.api.DashScopeApi;
 import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatModel;
-import com.alibaba.cloud.ai.graph.OverAllState;
 import com.alibaba.cloud.ai.graph.RunnableConfig;
 import com.alibaba.cloud.ai.graph.agent.ReactAgent;
 import com.alibaba.cloud.ai.graph.agent.hook.HookPosition;
 import com.alibaba.cloud.ai.graph.agent.hook.HookPositions;
-import com.alibaba.cloud.ai.graph.agent.hook.JumpTo;
-import com.alibaba.cloud.ai.graph.agent.hook.ModelHook;
-import com.alibaba.cloud.ai.graph.agent.hook.messages.MessagesModelHook;
 import com.alibaba.cloud.ai.graph.agent.hook.messages.AgentCommand;
+import com.alibaba.cloud.ai.graph.agent.hook.messages.MessagesModelHook;
 import com.alibaba.cloud.ai.graph.agent.hook.messages.UpdatePolicy;
 import com.alibaba.cloud.ai.graph.agent.interceptor.ModelCallHandler;
 import com.alibaba.cloud.ai.graph.agent.interceptor.ModelInterceptor;
 import com.alibaba.cloud.ai.graph.agent.interceptor.ModelRequest;
 import com.alibaba.cloud.ai.graph.agent.interceptor.ModelResponse;
 import com.alibaba.cloud.ai.graph.exception.GraphRunnerException;
-
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.tool.ToolCallback;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -72,7 +63,7 @@ public class ContextEngineeringExample {
 	public static void main(String[] args) {
 		// 创建 DashScope API 实例
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		// 创建 ChatModel
@@ -540,26 +531,26 @@ public class ContextEngineeringExample {
 			System.out.println("示例1: 基于状态的动态提示");
 			example1_stateAwarePrompt();
 			System.out.println();
-
-			System.out.println("示例2: 基于存储的个性化提示");
-			example2_personalizedPrompt();
-			System.out.println();
-
-			System.out.println("示例3: 消息过滤");
-			example3_messageFilter();
-			System.out.println();
-
-			System.out.println("示例4: 基于上下文的工具选择");
-			example4_contextualToolSelection();
-			System.out.println();
-
-			System.out.println("示例5: 日志记录Hook");
-			example5_loggingHook();
-			System.out.println();
-
-			System.out.println("示例6: 消息摘要Hook");
-			example6_summarizationHook();
-			System.out.println();
+			//
+			// System.out.println("示例2: 基于存储的个性化提示");
+			// example2_personalizedPrompt();
+			// System.out.println();
+			//
+			// System.out.println("示例3: 消息过滤");
+			// example3_messageFilter();
+			// System.out.println();
+			//
+			// System.out.println("示例4: 基于上下文的工具选择");
+			// example4_contextualToolSelection();
+			// System.out.println();
+			//
+			// System.out.println("示例5: 日志记录Hook");
+			// example5_loggingHook();
+			// System.out.println();
+			//
+			// System.out.println("示例6: 消息摘要Hook");
+			// example6_summarizationHook();
+			// System.out.println();
 
 		}
 		catch (Exception e) {

@@ -25,21 +25,12 @@ import com.alibaba.cloud.ai.graph.agent.ReactAgent;
 import com.alibaba.cloud.ai.graph.agent.hook.AgentHook;
 import com.alibaba.cloud.ai.graph.agent.hook.HookPosition;
 import com.alibaba.cloud.ai.graph.agent.hook.HookPositions;
-import com.alibaba.cloud.ai.graph.agent.hook.ModelHook;
-import com.alibaba.cloud.ai.graph.agent.hook.messages.MessagesModelHook;
 import com.alibaba.cloud.ai.graph.agent.hook.messages.AgentCommand;
+import com.alibaba.cloud.ai.graph.agent.hook.messages.MessagesModelHook;
 import com.alibaba.cloud.ai.graph.agent.hook.messages.UpdatePolicy;
-import com.alibaba.cloud.ai.graph.agent.interceptor.ModelCallHandler;
-import com.alibaba.cloud.ai.graph.agent.interceptor.ModelInterceptor;
-import com.alibaba.cloud.ai.graph.agent.interceptor.ModelRequest;
-import com.alibaba.cloud.ai.graph.agent.interceptor.ModelResponse;
-import com.alibaba.cloud.ai.graph.agent.interceptor.ToolCallHandler;
-import com.alibaba.cloud.ai.graph.agent.interceptor.ToolCallRequest;
-import com.alibaba.cloud.ai.graph.agent.interceptor.ToolCallResponse;
-import com.alibaba.cloud.ai.graph.agent.interceptor.ToolInterceptor;
+import com.alibaba.cloud.ai.graph.agent.interceptor.*;
 import com.alibaba.cloud.ai.graph.checkpoint.savers.MemorySaver;
 import com.alibaba.cloud.ai.graph.exception.GraphRunnerException;
-
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.SystemMessage;
@@ -50,14 +41,13 @@ import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.ai.tool.function.FunctionToolCallback;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
-
-import reactor.core.publisher.Flux;
 
 /**
  * Agents Tutorial - agents.md
@@ -488,56 +478,52 @@ public class AgentsExample {
 		System.out.println("注意：需要设置 AI_DASHSCOPE_API_KEY 环境变量\n");
 
 		try {
-			System.out.println("\n--- 示例1：基础模型配置 ---");
-			basicModelConfiguration();
-
-			System.out.println("\n--- 示例2：高级模型配置 ---");
-			advancedModelConfiguration();
-
-			System.out.println("\n--- 示例3：工具使用 ---");
-			toolUsage();
-
-			System.out.println("\n--- 示例5：基础 System Prompt ---");
-			basicSystemPrompt();
-
-			System.out.println("\n--- 示例6：使用 instruction ---");
-			instructionUsage();
-
-			System.out.println("\n--- 示例7：动态 System Prompt ---");
-			dynamicSystemPrompt();
-
-			System.out.println("\n--- 示例8：基础调用 ---");
-			basicInvocation();
-
-			System.out.println("\n--- 示例9：获取完整状态 ---");
-			getFullState();
-
-			System.out.println("\n--- 示例10：使用配置 ---");
+			// System.out.println("\n--- 示例1：基础模型配置 ---");
+			// basicModelConfiguration();
+			//
+			// System.out.println("\n--- 示例2：高级模型配置 ---");
+			// advancedModelConfiguration();
+			//
+			// System.out.println("\n--- 示例3：工具使用 ---");
+			// toolUsage();
+			//
+			// System.out.println("\n--- 示例5：基础 System Prompt ---");
+			// basicSystemPrompt();
+			//
+			// System.out.println("\n--- 示例6：使用 instruction ---");
+			// instructionUsage();
+			//
+			// System.out.println("\n--- 示例7：动态 System Prompt ---");
+			// dynamicSystemPrompt();
+			//
+			// System.out.println("\n--- 示例8：基础调用 ---");
+			// basicInvocation();
+			//
+			// System.out.println("\n--- 示例9：获取完整状态 ---");
+			// getFullState();
+			//
+			// System.out.println("\n--- 示例10：使用配置 ---");
 			useConfiguration();
-
-			System.out.println("\n--- 示例10.1：流式调用 - 基础用法 ---");
-			basicStreamInvocation();
-
-			System.out.println("\n--- 示例10.2：流式调用 - 高级用法 ---");
-			advancedStreamInvocation();
-
-			System.out.println("\n--- 示例10.3：流式调用 - 收集所有输出 ---");
-			collectStreamOutputs();
-
-			System.out.println("\n--- 示例11：使用 outputType ---");
-			structuredOutputWithType();
-
-			System.out.println("\n--- 示例12：使用 outputSchema ---");
-			structuredOutputWithSchema();
-
-			System.out.println("\n--- 示例13：配置记忆 ---");
-			configureMemory();
+			//
+			// System.out.println("\n--- 示例10.1：流式调用 - 基础用法 ---");
+			// basicStreamInvocation();
+			//
+			// System.out.println("\n--- 示例10.2：流式调用 - 高级用法 ---");
+			// advancedStreamInvocation();
+			//
+			// System.out.println("\n--- 示例10.3：流式调用 - 收集所有输出 ---");
+			// collectStreamOutputs();
+			//
+			// System.out.println("\n--- 示例11：使用 outputType ---");
+			// structuredOutputWithType();
+			//
+			// System.out.println("\n--- 示例12：使用 outputSchema ---");
+			// structuredOutputWithSchema();
+			//
+			// System.out.println("\n--- 示例13：配置记忆 ---");
+			// configureMemory();
 
 			System.out.println("\n=== 所有示例执行完成 ===");
-		}
-		catch (GraphRunnerException e) {
-			System.err.println("执行示例时发生错误: " + e.getMessage());
-			e.printStackTrace();
 		}
 		catch (Exception e) {
 			System.err.println("发生未预期的错误: " + e.getMessage());

@@ -56,7 +56,7 @@ public class ToolSelectionExample {
 	 */
 	public static void basicToolSelection() throws Exception {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-			.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+			.apiKey(System.getenv("ALI_AI_KEY"))
 			.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -94,7 +94,7 @@ public class ToolSelectionExample {
 	 */
 	public static void toolSelectionWithAlwaysInclude() throws Exception {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-			.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+			.apiKey(System.getenv("ALI_AI_KEY"))
 			.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -130,7 +130,7 @@ public class ToolSelectionExample {
 	 */
 	public static void toolSelectionWithCustomPrompt() throws Exception {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-			.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+			.apiKey(System.getenv("ALI_AI_KEY"))
 			.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()
@@ -175,7 +175,7 @@ public class ToolSelectionExample {
 	 */
 	public static void multiToolScenario() throws Exception {
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-			.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+			.apiKey(System.getenv("ALI_AI_KEY"))
 			.build();
 
 		ChatModel chatModel = DashScopeChatModel.builder()

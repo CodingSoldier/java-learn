@@ -55,7 +55,7 @@ public class AgentToolExample {
 	public static void main(String[] args) {
 		// 创建 DashScope API 实例
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
-				.apiKey(System.getenv("AI_DASHSCOPE_API_KEY"))
+				.apiKey(System.getenv("ALI_AI_KEY"))
 				.build();
 
 		// 创建 ChatModel

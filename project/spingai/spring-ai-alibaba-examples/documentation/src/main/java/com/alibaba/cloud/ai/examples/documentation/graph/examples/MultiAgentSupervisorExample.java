@@ -75,7 +75,7 @@ public class MultiAgentSupervisorExample {
 		System.out.println("=== Multi-Agent Supervisor 示例 ===\n");
 
 		// 检查环境变量
-		String apiKey = System.getenv("AI_DASHSCOPE_API_KEY");
+		String apiKey = System.getenv("ALI_AI_KEY");
 		if (apiKey == null || apiKey.isEmpty()) {
 			System.err.println("错误：请先配置 AI_DASHSCOPE_API_KEY 环境变量");
 			System.err.println("示例需要 DashScope API Key 才能运行");

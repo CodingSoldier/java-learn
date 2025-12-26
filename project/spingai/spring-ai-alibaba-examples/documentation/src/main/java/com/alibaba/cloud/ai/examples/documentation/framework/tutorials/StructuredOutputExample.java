@@ -364,10 +364,10 @@ public class StructuredOutputExample {
 //			basicJsonSchema();
 
 			System.out.println("\n--- 示例2：复杂嵌套 Schema ---");
-			complexNestedSchema();
+			// complexNestedSchema();
 //
 //			System.out.println("\n--- 示例3：结构化分析 Schema ---");
-//			structuredAnalysisSchema();
+			structuredAnalysisSchema();
 //
 //			System.out.println("\n--- 示例4：OutputType - 联系信息 ---");
 //			outputTypeContactInfo();
