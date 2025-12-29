@@ -17,14 +17,7 @@ package com.alibaba.cloud.ai.examples.documentation.framework.advanced;
 
 import com.alibaba.cloud.ai.dashscope.api.DashScopeApi;
 import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatModel;
-import com.alibaba.cloud.ai.graph.CompileConfig;
-import com.alibaba.cloud.ai.graph.CompiledGraph;
-import com.alibaba.cloud.ai.graph.KeyStrategy;
-import com.alibaba.cloud.ai.graph.KeyStrategyFactory;
-import com.alibaba.cloud.ai.graph.NodeOutput;
-import com.alibaba.cloud.ai.graph.OverAllState;
-import com.alibaba.cloud.ai.graph.RunnableConfig;
-import com.alibaba.cloud.ai.graph.StateGraph;
+import com.alibaba.cloud.ai.graph.*;
 import com.alibaba.cloud.ai.graph.action.InterruptionMetadata;
 import com.alibaba.cloud.ai.graph.action.NodeAction;
 import com.alibaba.cloud.ai.graph.agent.ReactAgent;
@@ -33,8 +26,7 @@ import com.alibaba.cloud.ai.graph.agent.hook.hip.ToolConfig;
 import com.alibaba.cloud.ai.graph.checkpoint.config.SaverConfig;
 import com.alibaba.cloud.ai.graph.checkpoint.savers.MemorySaver;
 import com.alibaba.cloud.ai.graph.state.strategy.ReplaceStrategy;
-import com.alibaba.cloud.ai.graph.streaming.StreamingOutput;
-
+import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.tool.ToolCallback;
@@ -175,7 +167,7 @@ public class HumanInTheLoopExample {
 	 *
 	 * 为特定工具配置人工审批
 	 */
-	public void example1_basicConfiguration() {
+	public void example1_basicConfiguration() throws Exception {
 		// 配置检查点保存器（人工介入需要检查点来处理中断）
 		MemorySaver memorySaver = new MemorySaver();
 
@@ -213,6 +205,9 @@ public class HumanInTheLoopExample {
 				.hooks(List.of(humanInTheLoopHook))
 				.saver(memorySaver)
 				.build();
+
+		AssistantMessage message = agent.call("执行SQL语句：select * from user limit 1");
+		System.out.println(message.getText());
 
 		System.out.println("人工介入Hook配置示例完成");
 	}
@@ -711,7 +706,7 @@ public class HumanInTheLoopExample {
 
 		try {
 //			System.out.println("示例1: 配置中断和基本使用");
-//			example1_basicConfiguration();
+// 			example1_basicConfiguration();
 //			System.out.println();
 //
 //			System.out.println("示例2: 批准（approve）决策");
@@ -730,9 +725,9 @@ public class HumanInTheLoopExample {
 //			example5_multipleTools();
 //			System.out.println();
 
-			System.out.println("示例6: Workflow中嵌套ReactAgent的人工中断");
+			// System.out.println("示例6: Workflow中嵌套ReactAgent的人工中断");
 			example6_workflowWithHumanInTheLoop();
-			System.out.println();
+			// System.out.println();
 
 		}
 		catch (Exception e) {

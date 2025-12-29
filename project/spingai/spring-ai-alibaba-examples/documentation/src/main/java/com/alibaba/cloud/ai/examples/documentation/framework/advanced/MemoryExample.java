@@ -17,21 +17,18 @@ package com.alibaba.cloud.ai.examples.documentation.framework.advanced;
 
 import com.alibaba.cloud.ai.dashscope.api.DashScopeApi;
 import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatModel;
-import com.alibaba.cloud.ai.graph.OverAllState;
 import com.alibaba.cloud.ai.graph.RunnableConfig;
 import com.alibaba.cloud.ai.graph.agent.ReactAgent;
 import com.alibaba.cloud.ai.graph.agent.hook.HookPosition;
 import com.alibaba.cloud.ai.graph.agent.hook.HookPositions;
-import com.alibaba.cloud.ai.graph.agent.hook.ModelHook;
-import com.alibaba.cloud.ai.graph.agent.hook.messages.MessagesModelHook;
 import com.alibaba.cloud.ai.graph.agent.hook.messages.AgentCommand;
+import com.alibaba.cloud.ai.graph.agent.hook.messages.MessagesModelHook;
 import com.alibaba.cloud.ai.graph.agent.hook.messages.UpdatePolicy;
 import com.alibaba.cloud.ai.graph.checkpoint.savers.MemorySaver;
 import com.alibaba.cloud.ai.graph.exception.GraphRunnerException;
 import com.alibaba.cloud.ai.graph.store.Store;
 import com.alibaba.cloud.ai.graph.store.StoreItem;
 import com.alibaba.cloud.ai.graph.store.stores.MemoryStore;
-
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.model.ChatModel;
@@ -39,12 +36,7 @@ import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.function.FunctionToolCallback;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
+import java.util.*;
 import java.util.function.BiFunction;
 
 /**
@@ -638,26 +630,26 @@ public class MemoryExample {
 			System.out.println("示例1: 在工具中读取长期记忆");
 			example1_readMemoryInTool();
 			System.out.println();
-
-			System.out.println("示例2: 在工具中写入长期记忆");
-			example2_writeMemoryInTool();
-			System.out.println();
-
-			System.out.println("示例3: 使用ModelHook管理长期记忆");
-			example3_memoryWithModelHook();
-			System.out.println();
-
-			System.out.println("示例4: 结合短期和长期记忆");
-			example4_combinedMemory();
-			System.out.println();
-
-			System.out.println("示例5: 跨会话记忆");
-			example5_crossSessionMemory();
-			System.out.println();
-
-			System.out.println("示例6: 用户偏好学习");
-			example6_preferLearning();
-			System.out.println();
+			//
+			// System.out.println("示例2: 在工具中写入长期记忆");
+			// example2_writeMemoryInTool();
+			// System.out.println();
+			//
+			// System.out.println("示例3: 使用ModelHook管理长期记忆");
+			// example3_memoryWithModelHook();
+			// System.out.println();
+			//
+			// System.out.println("示例4: 结合短期和长期记忆");
+			// example4_combinedMemory();
+			// System.out.println();
+			//
+			// System.out.println("示例5: 跨会话记忆");
+			// example5_crossSessionMemory();
+			// System.out.println();
+			//
+			// System.out.println("示例6: 用户偏好学习");
+			// example6_preferLearning();
+			// System.out.println();
 
 		}
 		catch (Exception e) {

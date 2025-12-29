@@ -528,9 +528,9 @@ public class ContextEngineeringExample {
 		System.out.println("=== 上下文工程（Context Engineering）示例 ===\n");
 
 		try {
-			System.out.println("示例1: 基于状态的动态提示");
-			example1_stateAwarePrompt();
-			System.out.println();
+			// System.out.println("示例1: 基于状态的动态提示");
+			// example1_stateAwarePrompt();
+			// System.out.println();
 			//
 			// System.out.println("示例2: 基于存储的个性化提示");
 			// example2_personalizedPrompt();
@@ -545,7 +545,7 @@ public class ContextEngineeringExample {
 			// System.out.println();
 			//
 			// System.out.println("示例5: 日志记录Hook");
-			// example5_loggingHook();
+			example5_loggingHook();
 			// System.out.println();
 			//
 			// System.out.println("示例6: 消息摘要Hook");
