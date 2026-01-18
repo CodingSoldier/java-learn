@@ -24,6 +24,7 @@ import com.alibaba.cloud.ai.graph.checkpoint.savers.MemorySaver;
 import com.alibaba.cloud.ai.graph.exception.GraphStateException;
 import com.alibaba.cloud.ai.graph.state.strategy.AppendStrategy;
 import com.alibaba.cloud.ai.graph.state.strategy.ReplaceStrategy;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
@@ -202,7 +203,7 @@ public class QuickStartExample {
 					.content();
 
 			// 解析为 EmailClassification 对象
-			EmailClassification classification = parseClassification(response);
+			EmailClassification classification = JSON.parseObject(response, EmailClassification.class);
 
 			// 根据分类确定下一个节点
 			String nextNode;
