@@ -31,6 +31,7 @@ import org.springframework.ai.chat.model.ChatModel;
 import reactor.core.publisher.Flux;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -150,7 +151,7 @@ public class QuickStartExample {
 					.map(v -> (String) v)
 					.orElse("");
 
-			log.info("Processing email: {}", emailContent);
+			log.info("ReadEmailNode----Processing email: {}", emailContent);
 
 			List<String> messages = new ArrayList<>();
 			messages.add("Processing email: " + emailContent);
@@ -295,7 +296,7 @@ public class QuickStartExample {
 						"包含大写字母、小写字母、数字和符号"
 				);
 
-				log.info("Searching documentation for: {}", query);
+				log.info("SearchDocumentationNode--Searching documentation for: {}", query);
 
 				return Map.of(
 						"search_results", searchResults,
@@ -303,7 +304,7 @@ public class QuickStartExample {
 				);
 			} catch (Exception e) {
 				// 对于可恢复的搜索错误，存储错误并继续
-				log.warn("Search error: {}", e.getMessage());
+				log.warn("SearchDocumentationNode--Search error: {}", e.getMessage());
 				List<String> errorResult = List.of("搜索暂时不可用: " + e.getMessage());
 				return Map.of(
 						"search_results", errorResult,
@@ -323,7 +324,7 @@ public class QuickStartExample {
 			// 在您的bug跟踪系统中创建票据
 			String ticketId = "BUG-12345";  // 将通过API创建
 
-			log.info("Created bug ticket: {}", ticketId);
+			log.info("BugTrackingNode---Created bug ticket: {}", ticketId);
 
 			return Map.of(
 					"search_results", List.of("已创建Bug票据 " + ticketId),
@@ -408,7 +409,7 @@ public class QuickStartExample {
 
 			// 路由到适当的下一个节点
 			String nextNode = needsReview ? "human_review" : "send_reply";
-
+			log.info("DraftResponseNode--Routing to {}", nextNode);
 			return Map.of(
 					"draft_response", response,  // 仅存储原始响应
 					"next_node", nextNode
@@ -441,7 +442,7 @@ public class QuickStartExample {
 					"action", "请审核并批准/编辑此响应"
 			);
 
-			log.info("Waiting for human review: {}", reviewData);
+			log.info("HumanReviewNode---Waiting for human review: {}", reviewData);
 
 			// 返回审核数据和下一个节点
 			// 注意：在 interruptBefore 模式下，此节点在人工输入后才会执行
@@ -465,7 +466,7 @@ public class QuickStartExample {
 					.orElse("");
 
 			// 与邮件服务集成
-			log.info("Sending reply: {}...", 
+			log.info("SendReplyNode---Sending reply: {}...",
 					draftResponse.length() > 100 
 							? draftResponse.substring(0, 100) 
 							: draftResponse);
@@ -606,16 +607,17 @@ public class QuickStartExample {
 				.doOnComplete(() -> log.info("流完成"))
 				.blockLast();
 
-		// 获取最终状态
+//		 获取最终状态
 		var finalState = app.getState(updatedConfig);
 		String status = (String) finalState.state().data().get("status");
 		log.info("Email sent successfully! Status: {}", status);
+		TimeUnit.SECONDS.sleep(999999);
 	}
 
 	/**
 	 * 测试简单问题
 	 */
-	public static void testSimpleQuestion(CompiledGraph app) {
+	public static void testSimpleQuestion(CompiledGraph app) throws Exception {
 		log.info("=== 测试简单问题 ===");
 
 		Map<String, Object> initialState = Map.of(
@@ -632,6 +634,7 @@ public class QuickStartExample {
 		// invoke 返回 Optional<OverAllState>，需要使用 orElseThrow() 获取结果
 		var result = app.invoke(initialState, config).orElseThrow();
 		log.info("Simple question processed. Status: {}", result.data().get("status"));
+		TimeUnit.SECONDS.sleep(999999);
 	}
 
 	/**
