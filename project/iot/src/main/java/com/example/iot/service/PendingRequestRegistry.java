@@ -1,9 +1,9 @@
 package com.example.iot.service;
 
 import com.example.iot.config.InvokeProperties;
-import com.example.iot.exception.DuplicatePendingRequestException;
-import com.example.iot.exception.InvokeTimeoutException;
-import com.example.iot.exception.PendingRequestLimitExceededException;
+import com.github.codingsoldier.common.enums.ResultCodeEnum;
+import com.github.codingsoldier.common.exception.HttpStatus4xxException;
+import com.github.codingsoldier.common.exception.HttpStatus5xxException;
 import jakarta.annotation.PreDestroy;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
@@ -69,7 +69,7 @@ public class PendingRequestRegistry {
     public PendingRequest register(long msgId, Duration timeout) {
         if (!pendingPermits.tryAcquire()) {
             log.warn("待处理请求数量达到上限，msgId={}，maxPending={}", msgId, maxPending);
-            throw new PendingRequestLimitExceededException(maxPending);
+            throw new HttpStatus4xxException(ResultCodeEnum.TOO_MANY_REQUESTS, "待处理请求数量达到上限");
         }
 
         PendingRequest request = new PendingRequest(msgId, new CompletableFuture<>());
@@ -77,7 +77,7 @@ public class PendingRequestRegistry {
         if (previous != null) {
             pendingPermits.release();
             log.warn("待处理请求重复，msgId={}", msgId);
-            throw new DuplicatePendingRequestException(msgId);
+            throw new HttpStatus4xxException(40900, "msgId 重复");
         }
 
         request.setTimeoutFuture(timeoutExecutor.schedule(() -> timeout(msgId, request),
@@ -164,7 +164,7 @@ public class PendingRequestRegistry {
 
         pendingPermits.release();
         log.warn("调用请求等待超时，msgId={}", msgId);
-        request.getFuture().completeExceptionally(new InvokeTimeoutException(msgId));
+        request.getFuture().completeExceptionally(new HttpStatus5xxException(50400, "等待 MQTT 回复超时"));
     }
 
     private void cleanupAfterRemove(PendingRequest request) {

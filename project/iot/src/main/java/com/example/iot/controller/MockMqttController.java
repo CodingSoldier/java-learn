@@ -4,6 +4,7 @@ import com.example.iot.model.MockMqttReplyResponse;
 import com.example.iot.model.MqttReplyMessage;
 import com.example.iot.mqtt.PseudoMqttGateway;
 import com.example.iot.service.ServiceInvokeService;
+import com.github.codingsoldier.common.resp.Result;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,13 +32,13 @@ public class MockMqttController {
      * @return 匹配结果
      */
     @PostMapping("/invoke-reply")
-    public ResponseEntity<MockMqttReplyResponse> invokeReply(@Valid @RequestBody MqttReplyMessage message) {
+    public ResponseEntity<Result<MockMqttReplyResponse>> invokeReply(@Valid @RequestBody MqttReplyMessage message) {
         log.info("模拟 MQTT 接收，topic={}，msgId={}",
                 PseudoMqttGateway.INVOKE_REPLY_TOPIC, message.getMsgId());
         boolean matched = serviceInvokeService.completeReply(message.getMsgId(), message.getData());
-        return ResponseEntity.ok(MockMqttReplyResponse.builder()
+        return ResponseEntity.ok(Result.success(MockMqttReplyResponse.builder()
                 .msgId(message.getMsgId())
                 .matched(matched)
-                .build());
+                .build()));
     }
 }

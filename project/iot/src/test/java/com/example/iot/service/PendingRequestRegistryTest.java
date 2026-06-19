@@ -3,8 +3,8 @@ package com.example.iot.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.example.iot.exception.InvokeTimeoutException;
-import com.example.iot.exception.PendingRequestLimitExceededException;
+import com.github.codingsoldier.common.exception.HttpStatus4xxException;
+import com.github.codingsoldier.common.exception.HttpStatus5xxException;
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -55,7 +55,7 @@ class PendingRequestRegistryTest {
 
         assertThatThrownBy(() -> request.getFuture().get(1, TimeUnit.SECONDS))
                 .isInstanceOf(ExecutionException.class)
-                .hasCauseInstanceOf(InvokeTimeoutException.class);
+                .hasCauseInstanceOf(HttpStatus5xxException.class);
         assertThat(registry.size()).isZero();
     }
 
@@ -99,7 +99,7 @@ class PendingRequestRegistryTest {
         registry.register(1L, Duration.ofSeconds(1));
 
         assertThatThrownBy(() -> registry.register(2L, Duration.ofSeconds(1)))
-                .isInstanceOf(PendingRequestLimitExceededException.class);
+                .isInstanceOf(HttpStatus4xxException.class);
         assertThat(registry.size()).isOne();
     }
 }

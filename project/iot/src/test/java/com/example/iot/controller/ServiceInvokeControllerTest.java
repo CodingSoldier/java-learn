@@ -59,12 +59,14 @@ class ServiceInvokeControllerTest {
                                 {"msgId":124545,"data":"返回的数据"}
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.msgId").value(124545))
-                .andExpect(jsonPath("$.matched").value(true));
+                .andExpect(jsonPath("$.code").value(20000))
+                .andExpect(jsonPath("$.data.msgId").value(124545))
+                .andExpect(jsonPath("$.data.matched").value(true));
 
         mockMvc.perform(asyncDispatch(invokeResult))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value("返回的数据"));
+                .andExpect(jsonPath("$.code").value(20000))
+                .andExpect(jsonPath("$.data.data").value("返回的数据"));
     }
 
     /**
@@ -86,7 +88,7 @@ class ServiceInvokeControllerTest {
 
         mockMvc.perform(asyncDispatch(invokeResult))
                 .andExpect(status().isGatewayTimeout())
-                .andExpect(jsonPath("$.code").value("TIMEOUT"))
+                .andExpect(jsonPath("$.code").value(50400))
                 .andExpect(jsonPath("$.message").value("等待 MQTT 回复超时"));
     }
 
@@ -101,9 +103,10 @@ class ServiceInvokeControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {"msgId":999999,"data":"返回的数据"}
-                                """))
+                """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.msgId").value(999999))
-                .andExpect(jsonPath("$.matched").value(false));
+                .andExpect(jsonPath("$.code").value(20000))
+                .andExpect(jsonPath("$.data.msgId").value(999999))
+                .andExpect(jsonPath("$.data.matched").value(false));
     }
 }

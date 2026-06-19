@@ -1,15 +1,16 @@
 package com.example.iot.service;
 
-import com.example.iot.common.ApiErrorResponse;
 import com.example.iot.common.MsgIdGenerator;
 import com.example.iot.config.InvokeProperties;
-import com.example.iot.exception.DuplicatePendingRequestException;
-import com.example.iot.exception.InvokeTimeoutException;
-import com.example.iot.exception.PendingRequestLimitExceededException;
 import com.example.iot.model.MqttInvokeMessage;
 import com.example.iot.model.ServiceInvokeRequest;
 import com.example.iot.model.ServiceInvokeResponse;
 import com.example.iot.mqtt.MqttGateway;
+import com.github.codingsoldier.common.enums.ResultCodeEnum;
+import com.github.codingsoldier.common.exception.HttpStatus5xxException;
+import com.github.codingsoldier.common.exception.MicroServiceException;
+import com.github.codingsoldier.common.resp.Result;
+import com.github.codingsoldier.common.util.CommonUtil;
 import java.time.Duration;
 import java.util.concurrent.CompletionException;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +28,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 @RequiredArgsConstructor
 public class ServiceInvokeService {
 
-    private static final String CODE_TIMEOUT = "TIMEOUT";
-
-    private static final String CODE_TOO_MANY_PENDING = "TOO_MANY_PENDING";
-
-    private static final String CODE_DUPLICATE_MSG_ID = "DUPLICATE_MSG_ID";
-
-    private static final String CODE_INTERNAL_ERROR = "INTERNAL_ERROR";
+    private static final int CODE_MQTT_REPLY_TIMEOUT = 50400;
 
     private final MsgIdGenerator msgIdGenerator;
 
@@ -51,23 +46,14 @@ public class ServiceInvokeService {
      */
     public DeferredResult<ResponseEntity<?>> invoke(ServiceInvokeRequest request) {
         long msgId = msgIdGenerator.nextId();
-        PendingRequest pendingRequest;
-        try {
-            pendingRequest = pendingRequestRegistry.register(msgId, invokeProperties.getTimeout());
-        } catch (PendingRequestLimitExceededException ex) {
-            log.warn("拒绝调用请求，原因：待处理请求数量达到上限，msgId={}", msgId, ex);
-            return completed(HttpStatus.TOO_MANY_REQUESTS, CODE_TOO_MANY_PENDING, "待处理请求数量达到上限");
-        } catch (DuplicatePendingRequestException ex) {
-            log.warn("拒绝调用请求，原因：msgId 重复，msgId={}", msgId, ex);
-            return completed(HttpStatus.CONFLICT, CODE_DUPLICATE_MSG_ID, "msgId 重复");
-        }
+        PendingRequest pendingRequest = pendingRequestRegistry.register(msgId, invokeProperties.getTimeout());
 
         DeferredResult<ResponseEntity<?>> result = new DeferredResult<>(deferredTimeoutMillis(invokeProperties.getTimeout()));
         pendingRequest.getFuture().whenComplete((data, throwable) -> completeDeferredResult(result, msgId, data, throwable));
         result.onCompletion(() -> pendingRequestRegistry.cancel(msgId));
         result.onTimeout(() -> {
             log.warn("Servlet 异步请求先于注册表完成前超时，msgId={}", msgId);
-            pendingRequestRegistry.fail(msgId, new InvokeTimeoutException(msgId));
+            pendingRequestRegistry.fail(msgId, new HttpStatus5xxException(CODE_MQTT_REPLY_TIMEOUT, "等待 MQTT 回复超时"));
         });
 
         try {
@@ -77,7 +63,8 @@ public class ServiceInvokeService {
                     .build());
         } catch (RuntimeException ex) {
             log.error("发送模拟 MQTT 调用消息失败，msgId={}", msgId, ex);
-            pendingRequestRegistry.fail(msgId, ex);
+            pendingRequestRegistry.fail(msgId,
+                    new HttpStatus5xxException(ResultCodeEnum.BACKEND_SERVER_ERROR, "发送模拟 MQTT 调用消息失败"));
         }
 
         return result;
@@ -97,35 +84,22 @@ public class ServiceInvokeService {
     private void completeDeferredResult(DeferredResult<ResponseEntity<?>> result, long msgId,
                                         String data, Throwable throwable) {
         if (throwable == null) {
-            result.setResult(ResponseEntity.ok(ServiceInvokeResponse.builder()
+            result.setResult(ResponseEntity.ok(Result.success(ServiceInvokeResponse.builder()
                     .data(data == null ? "" : data)
-                    .build()));
+                    .build())));
             return;
         }
 
         Throwable cause = unwrap(throwable);
-        if (cause instanceof InvokeTimeoutException) {
-            result.setResult(ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT)
-                    .body(error(CODE_TIMEOUT, "等待 MQTT 回复超时")));
+        if (cause instanceof MicroServiceException microServiceException) {
+            result.setResult(ResponseEntity.status(CommonUtil.getResponseStatus(microServiceException.getCode()))
+                    .body(Result.fail(microServiceException.getCode(), microServiceException.getMessage())));
             return;
         }
 
         log.error("调用请求失败，msgId={}", msgId, cause);
         result.setResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(error(CODE_INTERNAL_ERROR, "调用请求失败")));
-    }
-
-    private DeferredResult<ResponseEntity<?>> completed(HttpStatus status, String code, String message) {
-        DeferredResult<ResponseEntity<?>> result = new DeferredResult<>();
-        result.setResult(ResponseEntity.status(status).body(error(code, message)));
-        return result;
-    }
-
-    private ApiErrorResponse error(String code, String message) {
-        return ApiErrorResponse.builder()
-                .code(code)
-                .message(message)
-                .build();
+                .body(Result.fail(ResultCodeEnum.SERVER_ERROR.getCode(), "调用请求失败")));
     }
 
     private long deferredTimeoutMillis(Duration timeout) {
