@@ -1,15 +1,15 @@
 package com.example.iot.common;
 
-import java.util.concurrent.atomic.AtomicLong;
+import cn.hutool.core.lang.Snowflake;
 import org.springframework.stereotype.Component;
 
 /**
- * 生成单节点唯一的消息 ID。
+ * 基于雪花算法生成分布式唯一的消息 ID。
  */
 @Component
 public class MsgIdGenerator {
 
-    private final AtomicLong sequence = new AtomicLong(System.currentTimeMillis() * 1_000L);
+    private final Snowflake snowflake = new Snowflake();
 
     /**
      * 返回下一个消息 ID。
@@ -17,6 +17,6 @@ public class MsgIdGenerator {
      * @return 生成的消息 ID
      */
     public long nextId() {
-        return sequence.incrementAndGet();
+        return snowflake.nextId();
     }
 }

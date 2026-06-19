@@ -41,12 +41,6 @@ public class HiveMqttGateway {
      * @param message 调用消息
      * @return 发送完成结果
      */
-    /**
-     * 向 MQTT 调用主题发布服务调用消息。
-     *
-     * @param message 调用消息
-     * @return 发送完成结果
-     */
     public CompletableFuture<Void> sendInvoke(MqttInvokeMessage message) {
         try {
             byte[] payload = ObjectMapperUtil.writeValueAsString(message).getBytes(StandardCharsets.UTF_8);

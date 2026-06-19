@@ -46,8 +46,10 @@ public class ServiceInvokeService {
      */
     public DeferredResult<ResponseEntity<?>> invoke(ServiceInvokeRequest request) {
         long msgId = msgIdGenerator.nextId();
-        PendingRequest pendingRequest = pendingRequestRegistry.register(msgId, invokeProperties.getTimeout());
+        MqttInvokeMessage invokeMsg = new MqttInvokeMessage(msgId, request.getData());
+        log.info("MQTT 调用消息，invokeMsg = {}", invokeMsg);
 
+        PendingRequest pendingRequest = pendingRequestRegistry.register(msgId, invokeProperties.getTimeout());
         DeferredResult<ResponseEntity<?>> result = new DeferredResult<>(deferredTimeoutMillis(invokeProperties.getTimeout()));
         pendingRequest.getFuture().whenComplete((data, throwable) -> completeDeferredResult(result, msgId, data, throwable));
         result.onCompletion(() -> pendingRequestRegistry.cancel(msgId));
@@ -57,8 +59,6 @@ public class ServiceInvokeService {
         });
 
         try {
-            MqttInvokeMessage invokeMsg = new MqttInvokeMessage(msgId, request.getData());
-            log.info("发送 MQTT 调用消息，invokeMsg = {}", invokeMsg);
             mqttGateway.sendInvoke(invokeMsg).whenComplete((ignored, throwable) -> {
                         if (throwable == null) {
                             return;
