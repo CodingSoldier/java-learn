@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class HiveMqttGateway implements MqttGateway {
+public class HiveMqttGateway {
 
     private final Mqtt5AsyncClient mqttClient;
 
@@ -41,7 +41,12 @@ public class HiveMqttGateway implements MqttGateway {
      * @param message 调用消息
      * @return 发送完成结果
      */
-    @Override
+    /**
+     * 向 MQTT 调用主题发布服务调用消息。
+     *
+     * @param message 调用消息
+     * @return 发送完成结果
+     */
     public CompletableFuture<Void> sendInvoke(MqttInvokeMessage message) {
         try {
             byte[] payload = ObjectMapperUtil.writeValueAsString(message).getBytes(StandardCharsets.UTF_8);

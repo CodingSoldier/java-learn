@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 import com.example.iot.IotApplication;
 import com.example.iot.common.MsgIdGenerator;
 import com.example.iot.mqtt.HiveMqttClientLifecycle;
-import com.example.iot.mqtt.MqttGateway;
+import com.example.iot.mqtt.HiveMqttGateway;
 import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ class ServiceInvokeControllerTest {
     private MsgIdGenerator msgIdGenerator;
 
     @MockitoBean
-    private MqttGateway mqttGateway;
+    private HiveMqttGateway mqttGateway;
 
     @MockitoBean
     private HiveMqttClientLifecycle hiveMqttClientLifecycle;

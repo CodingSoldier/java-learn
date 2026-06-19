@@ -5,7 +5,7 @@ import com.example.iot.config.InvokeProperties;
 import com.example.iot.model.MqttInvokeMessage;
 import com.example.iot.model.ServiceInvokeRequest;
 import com.example.iot.model.ServiceInvokeResponse;
-import com.example.iot.mqtt.MqttGateway;
+import com.example.iot.mqtt.HiveMqttGateway;
 import com.github.codingsoldier.common.enums.ResultCodeEnum;
 import com.github.codingsoldier.common.exception.HttpStatus5xxException;
 import com.github.codingsoldier.common.exception.MicroServiceException;
@@ -36,7 +36,7 @@ public class ServiceInvokeService {
 
     private final PendingRequestRegistry pendingRequestRegistry;
 
-    private final MqttGateway mqttGateway;
+    private final HiveMqttGateway mqttGateway;
 
     /**
      * 调用 IoT 服务，并异步等待匹配的 MQTT 回复。
