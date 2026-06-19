@@ -19,16 +19,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * {@link HiveMqttGateway} 的测试。
  */
+@ExtendWith(MockitoExtension.class)
 class HiveMqttGatewayTest {
 
     private HiveMqttGateway gateway;
-
-    private MqttProperties properties;
 
     @Mock
     private Mqtt5AsyncClient mqttClient;
@@ -41,8 +41,7 @@ class HiveMqttGatewayTest {
      */
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        properties = new MqttProperties();
+        MqttProperties properties = new MqttProperties();
         gateway = new HiveMqttGateway(mqttClient, properties, mqttReplyHandler);
     }
 

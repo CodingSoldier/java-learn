@@ -98,7 +98,7 @@ public class HiveMqttGateway implements MqttGateway {
                     });
         } catch (RuntimeException ex) {
             log.error("序列化 MQTT 调用消息失败，msgId={}", message.getMsgId(), ex);
-            return CompletableFuture.<Void>failedFuture(new IllegalStateException("序列化 MQTT 调用消息失败", ex));
+            return CompletableFuture.failedFuture(new IllegalStateException("序列化 MQTT 调用消息失败", ex));
         }
     }
 
@@ -149,7 +149,7 @@ public class HiveMqttGateway implements MqttGateway {
                 .keepAlive((int) properties.getKeepAlive().toSeconds())
                 .cleanStart(true);
         if (StringUtils.hasText(properties.getUsername())) {
-            builder.simpleAuth(buildSimpleAuth());
+            builder = builder.simpleAuth(buildSimpleAuth());
         }
         return builder.build();
     }
@@ -158,7 +158,7 @@ public class HiveMqttGateway implements MqttGateway {
         var builder = Mqtt5SimpleAuth.builder()
                 .username(properties.getUsername());
         if (StringUtils.hasLength(properties.getPassword())) {
-            builder.password(properties.getPassword().getBytes(StandardCharsets.UTF_8));
+            builder = builder.password(properties.getPassword().getBytes(StandardCharsets.UTF_8));
         }
         return builder.build();
     }
