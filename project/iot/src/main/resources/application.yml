@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: iot
+  threads:
+    virtual:
+      enabled: true
+  main:
+    keep-alive: true
+
+iot:
+  invoke:
+    timeout: 30s
+    max-pending: 10000

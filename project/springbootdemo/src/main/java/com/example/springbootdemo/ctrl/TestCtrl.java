@@ -26,7 +26,7 @@ public class TestCtrl {
     @GetMapping("/1")
     public Object test1(){
         for(int i=1; i<20; i++) {
-            System.out.println("提交第" + i + "个任务!");
+            System.out.println("提交第dfgd辅导费地方" + i + "个任务!");
             pool.execute(new Runnable() {
                 @Override
                 public void run() {

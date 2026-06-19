@@ -415,34 +415,34 @@ public class HumanInTheLoopExample {
 		}
 
 		System.out.println("\n模式一示例执行完成\n");
-
-		// ========== 模式二：interruptBefore 模式 ==========
-		System.out.println("=== 模式二：interruptBefore 模式 ===");
-		System.out.println("演示如何使用 interruptBefore 配置在指定节点前中断\n");
-
-		CompiledGraph graph2 = createGraphWithInterruptBefore();
-
-		// 执行直到中断
-		executeUntilInterruptWithInterruptBefore(graph2);
-
-		// 等待用户输入并更新状态
-		RunnableConfig updateConfig1 = waitUserInputAndUpdateStateWithInterruptBefore(graph2);
-
-		// 继续执行
-		continueExecutionWithInterruptBefore(graph2, updateConfig1);
-
-		// 第二次等待用户输入
-		var invokeConfig = RunnableConfig.builder()
-				.threadId("Thread1")
-				.build();
-		RunnableConfig updateConfig2 = waitUserInputSecondTime(graph2, invokeConfig);
-
-		// 继续执行直到完成
-		continueExecutionUntilComplete(graph2, updateConfig2);
-
-		System.out.println("\n模式二示例执行完成");
-		System.out.println("\n========================================");
-		System.out.println("所有示例执行完成");
-		System.out.println("========================================");
+		//
+		// // ========== 模式二：interruptBefore 模式 ==========
+		// System.out.println("=== 模式二：interruptBefore 模式 ===");
+		// System.out.println("演示如何使用 interruptBefore 配置在指定节点前中断\n");
+		//
+		// CompiledGraph graph2 = createGraphWithInterruptBefore();
+		//
+		// // 执行直到中断
+		// executeUntilInterruptWithInterruptBefore(graph2);
+		//
+		// // 等待用户输入并更新状态
+		// RunnableConfig updateConfig1 = waitUserInputAndUpdateStateWithInterruptBefore(graph2);
+		//
+		// // 继续执行
+		// continueExecutionWithInterruptBefore(graph2, updateConfig1);
+		//
+		// // 第二次等待用户输入
+		// var invokeConfig = RunnableConfig.builder()
+		// 		.threadId("Thread1")
+		// 		.build();
+		// RunnableConfig updateConfig2 = waitUserInputSecondTime(graph2, invokeConfig);
+		//
+		// // 继续执行直到完成
+		// continueExecutionUntilComplete(graph2, updateConfig2);
+		//
+		// System.out.println("\n模式二示例执行完成");
+		// System.out.println("\n========================================");
+		// System.out.println("所有示例执行完成");
+		// System.out.println("========================================");
 	}
 }
