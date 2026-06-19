@@ -32,9 +32,6 @@ public class MqttReplyPayloadHandler {
                     MqttTopics.INVOKE_REPLY_TOPIC, new String(payload, StandardCharsets.UTF_8), ex);
             return;
         }
-        log.info("MQTT 收到回复数据，topic={}，msgId={}，message={}",
-            MqttTopics.INVOKE_REPLY_TOPIC, message.getMsgId(), message);
-
         if (message == null) {
             log.error("解析 MQTT 回复失败，message == null");
             return;
@@ -43,6 +40,8 @@ public class MqttReplyPayloadHandler {
             log.warn("MQTT 回复缺少 msgId，topic={}", MqttTopics.INVOKE_REPLY_TOPIC);
             return;
         }
+        log.info("MQTT 收到回复数据，topic={}，msgId={}，message={}",
+            MqttTopics.INVOKE_REPLY_TOPIC, message.getMsgId(), message);
 
         boolean matched = serviceInvokeReplyService.completeReply(message.getMsgId(), message.getData());
         log.info("MQTT 回复处理完成，topic={}，msgId={}，matched={}",
