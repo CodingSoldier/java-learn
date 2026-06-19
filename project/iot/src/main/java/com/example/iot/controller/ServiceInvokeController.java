@@ -31,7 +31,7 @@ public class ServiceInvokeController {
      */
     @PostMapping("/invoke")
     public DeferredResult<ResponseEntity<?>> invoke(@Valid @RequestBody ServiceInvokeRequest request) {
-        log.info("service/invoke Received request {}", request);
+        log.info("请求参数service/invoke Received request {}", request);
         return serviceInvokeService.invoke(request);
     }
 }

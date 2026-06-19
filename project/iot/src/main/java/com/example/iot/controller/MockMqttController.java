@@ -2,8 +2,8 @@ package com.example.iot.controller;
 
 import com.example.iot.model.MockMqttReplyResponse;
 import com.example.iot.model.MqttReplyMessage;
-import com.example.iot.mqtt.PseudoMqttGateway;
-import com.example.iot.service.ServiceInvokeService;
+import com.example.iot.mqtt.MqttTopics;
+import com.example.iot.service.ServiceInvokeReplyService;
 import com.github.codingsoldier.common.resp.Result;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MockMqttController {
 
-    private final ServiceInvokeService serviceInvokeService;
+    private final ServiceInvokeReplyService serviceInvokeReplyService;
 
     /**
      * 模拟从 MQTT 调用回复主题收到回复。
@@ -34,8 +34,8 @@ public class MockMqttController {
     @PostMapping("/invoke-reply")
     public ResponseEntity<Result<MockMqttReplyResponse>> invokeReply(@Valid @RequestBody MqttReplyMessage message) {
         log.info("模拟 MQTT 接收，topic={}，msgId={}",
-                PseudoMqttGateway.INVOKE_REPLY_TOPIC, message.getMsgId());
-        boolean matched = serviceInvokeService.completeReply(message.getMsgId(), message.getData());
+                MqttTopics.INVOKE_REPLY_TOPIC, message.getMsgId());
+        boolean matched = serviceInvokeReplyService.completeReply(message.getMsgId(), message.getData());
         return ResponseEntity.ok(Result.success(MockMqttReplyResponse.builder()
                 .msgId(message.getMsgId())
                 .matched(matched)

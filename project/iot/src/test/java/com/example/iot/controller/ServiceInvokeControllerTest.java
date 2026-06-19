@@ -7,8 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.Mockito.when;
 
-import com.example.iot.common.MsgIdGenerator;
 import com.example.iot.IotApplication;
+import com.example.iot.common.MsgIdGenerator;
+import com.example.iot.mqtt.HiveMqttClientLifecycle;
 import com.example.iot.mqtt.MqttGateway;
 import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,9 @@ class ServiceInvokeControllerTest {
 
     @MockitoBean
     private MqttGateway mqttGateway;
+
+    @MockitoBean
+    private HiveMqttClientLifecycle hiveMqttClientLifecycle;
 
     /**
      * 模拟 MQTT 回复到达后完成原始 HTTP 请求。

@@ -12,16 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 public class PseudoMqttGateway implements MqttGateway {
 
     /**
-     * 模拟的 MQTT 调用主题。
-     */
-    public static final String INVOKE_TOPIC = "/sys/servie/invoke";
-
-    /**
-     * 模拟的 MQTT 回复主题。
-     */
-    public static final String INVOKE_REPLY_TOPIC = "/sys/servie/invoke_reply";
-
-    /**
      * 记录一次模拟 MQTT 发布操作。
      *
      * @param message 调用消息
@@ -30,7 +20,7 @@ public class PseudoMqttGateway implements MqttGateway {
     public CompletableFuture<Void> sendInvoke(MqttInvokeMessage message) {
         try {
             String payload = ObjectMapperUtil.writeValueAsString(message);
-            log.info("模拟 MQTT 发布，topic={}，payload={}", INVOKE_TOPIC, payload);
+            log.info("模拟 MQTT 发布，topic={}，payload={}", MqttTopics.INVOKE_TOPIC, payload);
             return CompletableFuture.completedFuture(null);
         } catch (RuntimeException ex) {
             log.error("序列化模拟 MQTT 调用消息失败，msgId={}", message.getMsgId(), ex);

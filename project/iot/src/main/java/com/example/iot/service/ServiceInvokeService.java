@@ -36,8 +36,6 @@ public class ServiceInvokeService {
 
     private final PendingRequestRegistry pendingRequestRegistry;
 
-    private final MqttReplyHandler mqttReplyHandler;
-
     private final MqttGateway mqttGateway;
 
     /**
@@ -59,10 +57,9 @@ public class ServiceInvokeService {
         });
 
         try {
-            mqttGateway.sendInvoke(MqttInvokeMessage.builder()
-                    .msgId(msgId)
-                    .data(request.getData())
-                    .build()).whenComplete((ignored, throwable) -> {
+            MqttInvokeMessage invokeMsg = new MqttInvokeMessage(msgId, request.getData());
+            log.info("发送 MQTT 调用消息，invokeMsg = {}", invokeMsg);
+            mqttGateway.sendInvoke(invokeMsg).whenComplete((ignored, throwable) -> {
                         if (throwable == null) {
                             return;
                         }
@@ -77,17 +74,6 @@ public class ServiceInvokeService {
         }
 
         return result;
-    }
-
-    /**
-     * 使用 MQTT 回复数据完成待处理调用请求。
-     *
-     * @param msgId 消息 ID
-     * @param data 回复数据
-     * @return 是否匹配到待处理请求
-     */
-    public boolean completeReply(long msgId, String data) {
-        return mqttReplyHandler.completeReply(msgId, data);
     }
 
     private void completeDeferredResult(DeferredResult<ResponseEntity<?>> result, long msgId,
