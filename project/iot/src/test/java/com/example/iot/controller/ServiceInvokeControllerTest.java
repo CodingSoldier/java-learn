@@ -9,6 +9,8 @@ import static org.mockito.Mockito.when;
 
 import com.example.iot.common.MsgIdGenerator;
 import com.example.iot.IotApplication;
+import com.example.iot.mqtt.MqttGateway;
+import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,6 +38,9 @@ class ServiceInvokeControllerTest {
     @MockitoBean
     private MsgIdGenerator msgIdGenerator;
 
+    @MockitoBean
+    private MqttGateway mqttGateway;
+
     /**
      * 模拟 MQTT 回复到达后完成原始 HTTP 请求。
      *
@@ -44,6 +49,8 @@ class ServiceInvokeControllerTest {
     @Test
     void shouldReturnReplyDataWhenMockMqttReplyArrives() throws Exception {
         when(msgIdGenerator.nextId()).thenReturn(124545L);
+        when(mqttGateway.sendInvoke(org.mockito.ArgumentMatchers.any()))
+                .thenReturn(CompletableFuture.completedFuture(null));
 
         MvcResult invokeResult = mockMvc.perform(post("/service/invoke")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -77,6 +84,8 @@ class ServiceInvokeControllerTest {
     @Test
     void shouldReturnGatewayTimeoutWhenReplyDoesNotArrive() throws Exception {
         when(msgIdGenerator.nextId()).thenReturn(124546L);
+        when(mqttGateway.sendInvoke(org.mockito.ArgumentMatchers.any()))
+                .thenReturn(CompletableFuture.completedFuture(null));
 
         MvcResult invokeResult = mockMvc.perform(post("/service/invoke")
                         .contentType(MediaType.APPLICATION_JSON)

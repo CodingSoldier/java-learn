@@ -1,15 +1,12 @@
 package com.example.iot;
 
-import com.example.iot.config.InvokeProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 /**
  * IoT 系统应用入口。
  */
 @SpringBootApplication
-@EnableConfigurationProperties(InvokeProperties.class)
 public class IotApplication {
 
     /**

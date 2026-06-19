@@ -1,0 +1,20 @@
+version: "3.7"
+services:
+  emqx:
+    image: emqx/emqx:5.8.8
+    container_name: emqx
+    restart: always
+    privileged: true
+    environment:
+      TZ: Asia/Shanghai
+      EMQX_DASHBOARD__DEFAULT_PASSWORD: Admin@123
+    ports:
+      - "1883:1883"
+      - "8883:8883"
+      - "8083:8083"
+      - "8084:8084"
+      - "18083:18083"
+    volumes:
+      - /data/emqx/etc:/opt/emqx/etc
+      - /data/emqx/data:/opt/emqx/data
+      - /data/emqx/log:/opt/emqx/log

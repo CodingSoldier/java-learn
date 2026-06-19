@@ -6,9 +6,9 @@ This repository is a Maven-based Spring Boot IoT service. Main code lives under 
 
 - `controller/`: HTTP entry points such as `/service/invoke` and mock MQTT reply APIs.
 - `service/`: async request orchestration and pending request registry.
-- `mqtt/`: MQTT gateway abstraction and pseudo MQTT implementation.
+- `mqtt/`: MQTT gateway abstraction, HiveMQ Client implementation, and local pseudo gateway.
 - `model/`: request, response, and MQTT payload DTOs.
-- `config/`: configuration properties.
+- `config/`: configuration properties and MQTT client beans.
 - `src/main/resources/application.yml`: runtime configuration.
 - `src/test/java`: unit and MVC integration tests.
 
@@ -22,6 +22,8 @@ Do not commit generated build output from `target/` or IDE-only files unless int
 
 The project depends on the local `micro-service` framework artifacts. If Maven cannot resolve `com.github.codingsoldier:*:25.0.0`, run `mvn install` in `E:\github\micro-service` first.
 
+By default the app connects to EMQX at `192.168.1.221:1883` using HiveMQ Client.
+
 ## Coding Style & Naming Conventions
 
 Use Java 25 and Spring Boot conventions. Keep indentation at 4 spaces. Use Lombok where already used to reduce boilerplate. Public classes and methods should have concise JavaDoc in Chinese.
@@ -32,7 +34,7 @@ DTOs and response models should implement `Serializable` and define `serialVersi
 
 Tests use JUnit 5, AssertJ, Spring MVC Test, and Mockito. Test classes should follow `*Test` naming, for example `PendingRequestRegistryTest`.
 
-Cover async behavior explicitly: successful reply matching, timeout, unknown `msgId`, duplicate replies, and pending request limits. Run `mvn test` before submitting changes.
+Cover async behavior explicitly: successful reply matching, timeout, unknown `msgId`, duplicate replies, pending request limits, MQTT publish payloads, and MQTT reply parsing. MVC tests should mock `MqttGateway` unless they intentionally require a real broker. Run `mvn test` before submitting changes.
 
 ## Commit & Pull Request Guidelines
 
@@ -43,3 +45,5 @@ Pull requests should include a short description, affected APIs, test results, a
 ## Architecture Notes
 
 `/service/invoke` intentionally returns `DeferredResult<ResponseEntity<?>>` to preserve async HTTP behavior. Keep this signature unless the async design is being intentionally redesigned. Response bodies should use `Result.success(...)` or `Result.fail(...)` for consistency with the `micro-service` framework.
+
+The production MQTT path uses HiveMQ Client with MQTT 5. It publishes to `/sys/servie/invoke` and subscribes to `/sys/servie/invoke_reply`; keep the current topic spelling unless a coordinated migration changes both sides.

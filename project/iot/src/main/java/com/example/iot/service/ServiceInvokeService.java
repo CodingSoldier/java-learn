@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
 /**
- * 编排 HTTP 服务调用请求和模拟 MQTT 回复。
+ * 编排 HTTP 服务调用请求和 MQTT 回复。
  */
 @Slf4j
 @Service
@@ -36,10 +36,12 @@ public class ServiceInvokeService {
 
     private final PendingRequestRegistry pendingRequestRegistry;
 
+    private final MqttReplyHandler mqttReplyHandler;
+
     private final MqttGateway mqttGateway;
 
     /**
-     * 调用模拟 IoT 服务，并异步等待匹配的回复。
+     * 调用 IoT 服务，并异步等待匹配的 MQTT 回复。
      *
      * @param request 调用请求
      * @return 延迟 HTTP 响应
@@ -60,25 +62,32 @@ public class ServiceInvokeService {
             mqttGateway.sendInvoke(MqttInvokeMessage.builder()
                     .msgId(msgId)
                     .data(request.getData())
-                    .build());
+                    .build()).whenComplete((ignored, throwable) -> {
+                        if (throwable == null) {
+                            return;
+                        }
+                        log.error("发送 MQTT 调用消息失败，msgId={}", msgId, throwable);
+                        pendingRequestRegistry.fail(msgId,
+                                new HttpStatus5xxException(ResultCodeEnum.BACKEND_SERVER_ERROR, "发送 MQTT 调用消息失败"));
+                    });
         } catch (RuntimeException ex) {
-            log.error("发送模拟 MQTT 调用消息失败，msgId={}", msgId, ex);
+            log.error("发送 MQTT 调用消息失败，msgId={}", msgId, ex);
             pendingRequestRegistry.fail(msgId,
-                    new HttpStatus5xxException(ResultCodeEnum.BACKEND_SERVER_ERROR, "发送模拟 MQTT 调用消息失败"));
+                    new HttpStatus5xxException(ResultCodeEnum.BACKEND_SERVER_ERROR, "发送 MQTT 调用消息失败"));
         }
 
         return result;
     }
 
     /**
-     * 使用模拟 MQTT 回复数据完成待处理调用请求。
+     * 使用 MQTT 回复数据完成待处理调用请求。
      *
      * @param msgId 消息 ID
      * @param data 回复数据
      * @return 是否匹配到待处理请求
      */
     public boolean completeReply(long msgId, String data) {
-        return pendingRequestRegistry.complete(msgId, data);
+        return mqttReplyHandler.completeReply(msgId, data);
     }
 
     private void completeDeferredResult(DeferredResult<ResponseEntity<?>> result, long msgId,

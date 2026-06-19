@@ -14,3 +14,12 @@ iot:
   invoke:
     timeout: 30s
     max-pending: 10000
+  mqtt:
+    host: 192.168.1.221
+    port: 1883
+    client-id: iot-service
+    username: ""
+    password: ""
+    qos: 1
+    keep-alive: 60s
+    connect-timeout: 10s

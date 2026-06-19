@@ -3,11 +3,13 @@ package com.example.iot.config;
 import java.time.Duration;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * 服务调用请求相关配置。
  */
 @Data
+@Component
 @ConfigurationProperties(prefix = "iot.invoke")
 public class InvokeProperties {
 

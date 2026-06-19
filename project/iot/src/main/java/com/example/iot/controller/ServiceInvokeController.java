@@ -4,6 +4,7 @@ import com.example.iot.model.ServiceInvokeRequest;
 import com.example.iot.service.ServiceInvokeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 /**
  * IoT 服务调用 HTTP 接口。
  */
+@Slf4j
 @RestController
 @RequestMapping("/service")
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class ServiceInvokeController {
      */
     @PostMapping("/invoke")
     public DeferredResult<ResponseEntity<?>> invoke(@Valid @RequestBody ServiceInvokeRequest request) {
+        log.info("service/invoke Received request {}", request);
         return serviceInvokeService.invoke(request);
     }
 }
