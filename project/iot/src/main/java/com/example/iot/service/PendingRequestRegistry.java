@@ -126,7 +126,8 @@ public class PendingRequestRegistry {
         }
 
         cleanupAfterRemove(request);
-        return request.getFuture().completeExceptionally(throwable);
+        request.getFuture().completeExceptionally(throwable);
+        return true;
     }
 
     /**
@@ -142,7 +143,8 @@ public class PendingRequestRegistry {
         }
 
         cleanupAfterRemove(request);
-        return request.getFuture().cancel(false);
+        request.getFuture().cancel(false);
+        return true;
     }
 
     /**

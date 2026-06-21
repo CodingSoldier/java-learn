@@ -2,7 +2,6 @@ package com.example.iot.mqtt;
 
 import com.example.iot.config.MqttProperties;
 import com.example.iot.model.MqttPublishRequest;
-import com.github.codingsoldier.common.util.objectmapper.ObjectMapperUtil;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;

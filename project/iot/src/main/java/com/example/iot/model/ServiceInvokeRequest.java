@@ -26,25 +26,25 @@ public class ServiceInvokeRequest implements Serializable {
     /**
      * 设备产品标识。
      */
-    @NotBlank(message = "productKey must not be blank")
+    @NotBlank(message = "产品标识不能为空")
     private String productKey;
 
     /**
      * 设备编码。
      */
-    @NotBlank(message = "deviceCode must not be blank")
+    @NotBlank(message = "设备编码不能为空")
     private String deviceCode;
 
     /**
      * 服务编码。
      */
-    @NotBlank(message = "serviceCode must not be blank")
+    @NotBlank(message = "服务编码不能为空")
     private String serviceCode;
 
     /**
      * 服务调用参数，JSON 对象类型；缺省时归一化为空 Map。
      */
-    @NotNull(message = "data must not be null")
+    @NotNull(message = "服务参数不能为空")
     @Builder.Default
     private Map<String, Object> data = new HashMap<>();
 }

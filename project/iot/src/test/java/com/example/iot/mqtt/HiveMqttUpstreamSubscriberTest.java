@@ -52,7 +52,7 @@ class HiveMqttUpstreamSubscriberTest {
                 .subscribe(subscribeCaptor.capture(), callbackCaptor.capture());
 
         // 第一次：直连设备服务响应过滤器
-        Mqtt5Subscribe firstSubscribe = subscribeCaptor.getAllValues().get(0);
+        Mqtt5Subscribe firstSubscribe = subscribeCaptor.getAllValues().getFirst();
         assertThat(firstSubscribe.getSubscriptions()).hasSize(1);
         assertThat(firstSubscribe.getSubscriptions().getFirst().getTopicFilter().toString())
                 .hasToString(MqttTopicResolver.directServiceResponseFilter());

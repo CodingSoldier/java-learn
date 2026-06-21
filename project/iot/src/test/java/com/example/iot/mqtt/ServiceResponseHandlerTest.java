@@ -2,7 +2,6 @@ package com.example.iot.mqtt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.iot.config.InvokeProperties;
 import com.example.iot.model.MqttTopicMetadata;
 import com.example.iot.model.ServiceResponseMessage;
 import com.example.iot.service.PendingRequestRegistry;

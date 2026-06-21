@@ -256,7 +256,7 @@ class EndToEndInvokeTest {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setErrorHandler(new org.springframework.web.client.DefaultResponseErrorHandler() {
             @Override
-            public boolean hasError(org.springframework.http.client.ClientHttpResponse response) {
+            public boolean hasError(@org.springframework.lang.NonNull org.springframework.http.client.ClientHttpResponse response) {
                 return false;
             }
         });

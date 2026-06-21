@@ -35,7 +35,6 @@ public class MqttUpstreamDispatcher {
      * @param payloadBytes MQTT payload 字节
      * @return 分发结果
      */
-    @SuppressWarnings("unchecked")
     public MqttDispatchResult dispatch(String topic, byte[] payloadBytes) {
         MqttTopicMetadata metadata = MqttTopicResolver.parse(topic);
         if (!metadata.isValid()) {
@@ -50,13 +49,11 @@ public class MqttUpstreamDispatcher {
         }
 
         try {
-            return switch (messageType) {
-                case "services-response" -> dispatchServiceResponse(metadata, payloadBytes, topic);
-                default -> {
-                    log.warn("暂不支持的消息类型，messageType={}，topic={}", messageType, topic);
-                    yield MqttDispatchResult.builder().msgId("").matched(false).build();
-                }
-            };
+            if ("services-response".equals(messageType)) {
+                return dispatchServiceResponse(metadata, payloadBytes, topic);
+            }
+            log.warn("暂不支持的消息类型，messageType={}，topic={}", messageType, topic);
+            return MqttDispatchResult.builder().msgId("").matched(false).build();
         } catch (Exception ex) {
             log.error("消息分发异常，topic={}", topic, ex);
             return MqttDispatchResult.builder().msgId("").matched(false).build();
