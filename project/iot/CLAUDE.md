@@ -22,30 +22,57 @@ mvn spring-boot:run               # start on port 8080
 - **Lombok** for boilerplate reduction
 - Local MQTT broker: EMQX 5.8.8 via `doc/docker-compose.yml`
 
-## Architecture: Async HTTP-to-MQTT Bridge
+## Architecture
 
-The service accepts HTTP POST at `/service/invoke`, publishes to MQTT, and holds the HTTP response open via `DeferredResult` until an MQTT reply arrives or timeout fires.
+### Dual Access Model
+
+Two MQTT接入方式，上层业务不感知差异：
+
+- **设备直连** (`DIRECT_DEVICE`)：设备独立连接 EMQX，Topic 含 `productKey` + `deviceCode`。
+- **网关代理** (`GATEWAY_SUB_DEVICE`)：网关代理子设备，Topic 只含 `gatewayId`，payload 携带子设备身份。
+
+`DeviceRouteResolver` 根据 `(productKey, deviceCode)` 解析接入路由（`AccessType` + `gatewayId`），决定下行 Topic 前缀。
+
+### MQTT Topic 协议
+
+```
+sys/v1/{连接对象}/{对象标识}/{方向}/{业务类型}
+```
+
+- 直连：`sys/v1/products/{productKey}/devices/{deviceCode}/{up|down}/...`
+- 网关：`sys/v1/gateways/{gatewayId}/{up|down}/sub-devices/...`
+- 方向：`up`（设备→平台）、`down`（平台→设备）
+- Topic 变量约束：1-64 字符，`[a-zA-Z0-9._-]`
+
+`MqttTopicResolver` 负责 Topic 构建、解析和变量校验。
+
+### Async HTTP-to-MQTT Bridge
 
 ```
 HTTP POST /service/invoke
     → ServiceInvokeService.invoke()
-        → MsgIdGenerator (AtomicLong, thread-safe)
+        → DeviceRouteResolver.resolve()
+        → MsgIdGenerator (snowflake, thread-safe)
         → PendingRequestRegistry.register()  (Semaphore-gated, max 10k pending)
-        → MqttGateway.sendInvoke()           (publishes to /sys/servie/invoke)
+        → MqttGateway.sendInvoke()           (publishes to resolved topic)
         → DeferredResult wired to CompletableFuture
 
-MQTT reply on /sys/servie/invoke_reply
-    → HiveMqttGateway.handleReplyPayload()
-        → MqttReplyHandler.completeReply()
-            → PendingRequestRegistry.complete()
-                → DeferredResult.setResult()
+MQTT reply (services-response)
+    → HiveMqttUpstreamSubscriber
+        → MqttUpstreamDispatcher.dispatch()
+            → ServiceResponseHandler
+                → PendingRequestRegistry.complete()
+                    → DeferredResult.setResult()
 ```
 
 Key classes:
-- **`MqttGateway`** — interface with two implementations: `HiveMqttGateway` (production, MQTT 5) and `PseudoMqttGateway` (stub, logs only)
-- **`PendingRequestRegistry`** — in-memory `ConcurrentHashMap<Long, PendingRequest>` with `Semaphore` for backpressure and `ScheduledExecutorService` for per-request timeouts
-- **`ServiceInvokeService`** — orchestration: msgId generation → pending registration → DeferredResult wiring → MQTT publish
-- **`MqttClientConfiguration`** — creates `Mqtt5AsyncClient` bean with auto-reconnect
+- **`MqttGateway`** — interface: `HiveMqttGateway`（生产，MQTT 5）和 `PseudoMqttGateway`（桩，仅日志）
+- **`DeviceRouteResolver` / `InMemoryDeviceRouteResolver`** — 设备路由解析，决定接入方式和下行 Topic
+- **`MqttTopicResolver`** — Topic 构建、解析、变量校验（纯静态工具类）
+- **`MqttUpstreamDispatcher`** — 上行消息分发，解析 Topic 元数据后路由到对应 Handler
+- **`PendingRequestRegistry`** — `ConcurrentHashMap<String, PendingRequest>` + `Semaphore` 限流 + `ScheduledExecutorService` 超时
+- **`ServiceInvokeService`** — 编排：路由解析 → msgId 生成 → pending 注册 → DeferredResult 绑定 → MQTT 发布
+- **`MqttClientConfiguration`** — 创建 `Mqtt5AsyncClient` bean，支持自动重连
 
 ## Coding Conventions
 
@@ -62,14 +89,22 @@ Key classes:
 - **`@MockitoBean`** (Spring Boot 4.x style) for mocking in MVC tests.
 - **`@TestPropertySource`** for overriding config (e.g., shorter timeouts).
 - MVC tests mock `MqttGateway` — no real broker needed.
+- `MqttTopicResolverTest` 覆盖 Topic 构建、解析和变量校验。
 - Async coverage expected: successful reply, timeout, unknown msgId, duplicate reply, max-pending rejection.
 
-## Topics (intentional spelling)
+## Topic Examples
 
-- Publish: `/sys/servie/invoke`
-- Subscribe: `/sys/servie/invoke_reply`
+```
+# 直连设备服务调用
+sys/v1/products/{productKey}/devices/{deviceCode}/down/services/{serviceCode}/request
+sys/v1/products/{productKey}/devices/{deviceCode}/up/services/{serviceCode}/response
 
-The "servie" typo is known and preserved — both sides must match.
+# 网关子设备服务调用
+sys/v1/gateways/{gatewayId}/down/sub-devices/services/{serviceCode}/request
+sys/v1/gateways/{gatewayId}/up/sub-devices/services/{serviceCode}/response
+```
+
+`MqttTopicResolver` 提供完整的构建和解析方法，不要手动拼接 Topic 字符串。
 
 ## Configuration (`application.yml`)
 
@@ -77,6 +112,10 @@ The "servie" typo is known and preserved — both sides must match.
 |---|---|---|
 | `iot.invoke.timeout` | 30s | Per-request MQTT reply timeout |
 | `iot.invoke.max-pending` | 10000 | Max concurrent in-flight requests |
+| `iot.routing.devices[].product-key` | — | 设备产品标识 |
+| `iot.routing.devices[].device-code` | — | 设备编码 |
+| `iot.routing.devices[].access-type` | — | `DIRECT_DEVICE` 或 `GATEWAY_SUB_DEVICE` |
+| `iot.routing.devices[].gateway-id` | — | 网关标识（仅网关代理模式） |
 | `iot.mqtt.host` | 192.168.1.221 | EMQX broker host |
 | `iot.mqtt.port` | 1883 | EMQX broker port |
 | `iot.mqtt.qos` | 1 | MQTT QoS level |

@@ -35,7 +35,7 @@ class MqttUpstreamDispatcherTest {
 
         String payload = validPayload("124545", "20000", "{\"value\":true}");
         MqttDispatchResult result = dispatcher.dispatch(
-                "iot/v1/products/light/devices/light001/up/services/switch/response",
+                "sys/v1/products/light/devices/light001/up/services/switch/response",
                 payload.getBytes(StandardCharsets.UTF_8));
 
         assertThat(result.getMsgId()).isEqualTo("124545");
@@ -66,7 +66,7 @@ class MqttUpstreamDispatcherTest {
                 + "\"target\":{\"productKey\":\"sensor\",\"deviceCode\":\"sensor001\"},"
                 + "\"data\":{\"value\":true}}";
         MqttDispatchResult result = dispatcher.dispatch(
-                "iot/v1/gateways/gw001/up/sub-devices/services/switch/response",
+                "sys/v1/gateways/gw001/up/sub-devices/services/switch/response",
                 payload.getBytes(StandardCharsets.UTF_8));
 
         assertThat(result.getMsgId()).isEqualTo("124549");
@@ -90,7 +90,7 @@ class MqttUpstreamDispatcherTest {
     @Test
     void shouldReturnMatchedFalseForInvalidJson() {
         MqttDispatchResult result = dispatcher.dispatch(
-                "iot/v1/products/light/devices/light001/up/services/switch/response",
+                "sys/v1/products/light/devices/light001/up/services/switch/response",
                 "不是 JSON".getBytes(StandardCharsets.UTF_8));
         assertThat(result.isMatched()).isFalse();
     }
@@ -98,7 +98,7 @@ class MqttUpstreamDispatcherTest {
     @Test
     void shouldReturnMatchedFalseWhenMsgIdMissing() {
         MqttDispatchResult result = dispatcher.dispatch(
-                "iot/v1/products/light/devices/light001/up/services/switch/response",
+                "sys/v1/products/light/devices/light001/up/services/switch/response",
                 "{\"code\":20000}".getBytes(StandardCharsets.UTF_8));
         assertThat(result.getMsgId()).isEmpty();
         assertThat(result.isMatched()).isFalse();
@@ -108,7 +108,7 @@ class MqttUpstreamDispatcherTest {
     @Test
     void shouldReturnMatchedFalseWhenCodeMissing() {
         MqttDispatchResult result = dispatcher.dispatch(
-                "iot/v1/products/light/devices/light001/up/services/switch/response",
+                "sys/v1/products/light/devices/light001/up/services/switch/response",
                 "{\"msgId\":\"123\"}".getBytes(StandardCharsets.UTF_8));
         assertThat(result.getMsgId()).isEqualTo("123");
         assertThat(result.isMatched()).isFalse();
@@ -118,7 +118,7 @@ class MqttUpstreamDispatcherTest {
     @Test
     void shouldReturnMatchedFalseForGatewayResponseWithoutTarget() {
         MqttDispatchResult result = dispatcher.dispatch(
-                "iot/v1/gateways/gw001/up/sub-devices/services/switch/response",
+                "sys/v1/gateways/gw001/up/sub-devices/services/switch/response",
                 "{\"msgId\":\"123\",\"code\":20000}".getBytes(StandardCharsets.UTF_8));
         assertThat(result.getMsgId()).isEqualTo("123");
         assertThat(result.isMatched()).isFalse();
@@ -128,7 +128,7 @@ class MqttUpstreamDispatcherTest {
     @Test
     void shouldReturnMatchedFalseForUnsupportedMessageType() {
         MqttDispatchResult result = dispatcher.dispatch(
-                "iot/v1/products/light/devices/light001/up/properties/report",
+                "sys/v1/products/light/devices/light001/up/properties/report",
                 "{\"msgId\":\"123\"}".getBytes(StandardCharsets.UTF_8));
         assertThat(result.isMatched()).isFalse();
     }
@@ -136,7 +136,7 @@ class MqttUpstreamDispatcherTest {
     @Test
     void shouldRejectNumericMsgId() {
         MqttDispatchResult result = dispatcher.dispatch(
-                "iot/v1/products/light/devices/light001/up/services/switch/response",
+                "sys/v1/products/light/devices/light001/up/services/switch/response",
                 validPayload("123", "20000", "{}")
                         .replace("\"123\"", "123")
                         .getBytes(StandardCharsets.UTF_8));
@@ -148,7 +148,7 @@ class MqttUpstreamDispatcherTest {
     @Test
     void shouldRejectMissingTimestamp() {
         MqttDispatchResult result = dispatcher.dispatch(
-                "iot/v1/products/light/devices/light001/up/services/switch/response",
+                "sys/v1/products/light/devices/light001/up/services/switch/response",
                 "{\"msgId\":\"123\",\"code\":20000,\"data\":{}}".getBytes(StandardCharsets.UTF_8));
 
         assertThat(result.getMsgId()).isEqualTo("123");
@@ -159,7 +159,7 @@ class MqttUpstreamDispatcherTest {
     @Test
     void shouldRejectStringCode() {
         MqttDispatchResult result = dispatcher.dispatch(
-                "iot/v1/products/light/devices/light001/up/services/switch/response",
+                "sys/v1/products/light/devices/light001/up/services/switch/response",
                 validPayload("123", "\"20000\"", "{}").getBytes(StandardCharsets.UTF_8));
 
         assertThat(result.getMsgId()).isEqualTo("123");
@@ -170,7 +170,7 @@ class MqttUpstreamDispatcherTest {
     @Test
     void shouldRejectNonObjectData() {
         MqttDispatchResult result = dispatcher.dispatch(
-                "iot/v1/products/light/devices/light001/up/services/switch/response",
+                "sys/v1/products/light/devices/light001/up/services/switch/response",
                 validPayload("123", "20000", "\"错误类型\"").getBytes(StandardCharsets.UTF_8));
 
         assertThat(result.getMsgId()).isEqualTo("123");
@@ -184,7 +184,7 @@ class MqttUpstreamDispatcherTest {
                 + ",\"code\":20000,\"message\":\"成功\"}";
 
         MqttDispatchResult result = dispatcher.dispatch(
-                "iot/v1/products/light/devices/light001/up/services/switch/response",
+                "sys/v1/products/light/devices/light001/up/services/switch/response",
                 payload.getBytes(StandardCharsets.UTF_8));
 
         ArgumentCaptor<ServiceResponseMessage> messageCaptor = ArgumentCaptor.forClass(ServiceResponseMessage.class);
@@ -199,7 +199,7 @@ class MqttUpstreamDispatcherTest {
                 + ",\"code\":20000,\"target\":{\"productKey\":\"\",\"deviceCode\":\"sensor001\"},\"data\":{}}";
 
         MqttDispatchResult result = dispatcher.dispatch(
-                "iot/v1/gateways/gw001/up/sub-devices/services/switch/response",
+                "sys/v1/gateways/gw001/up/sub-devices/services/switch/response",
                 payload.getBytes(StandardCharsets.UTF_8));
 
         assertThat(result.getMsgId()).isEqualTo("123");

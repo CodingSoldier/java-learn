@@ -52,7 +52,7 @@ class HiveMqttGatewayTest {
         byte[] correlationData = "124545".getBytes(StandardCharsets.UTF_8);
 
         MqttPublishRequest request = MqttPublishRequest.builder()
-                .topic("iot/v1/products/light/devices/light001/down/services/switch/request")
+                .topic("sys/v1/products/light/devices/light001/down/services/switch/request")
                 .payload(payload)
                 .correlationData(correlationData)
                 .build();
@@ -65,7 +65,7 @@ class HiveMqttGatewayTest {
         String publishedPayload = new String(publish.getPayloadAsBytes(), StandardCharsets.UTF_8);
         assertThat(future).isCompleted();
         assertThat(publish.getTopic().toString())
-                .hasToString("iot/v1/products/light/devices/light001/down/services/switch/request");
+                .hasToString("sys/v1/products/light/devices/light001/down/services/switch/request");
         assertThat(publish.getQos()).isEqualTo(MqttQos.AT_LEAST_ONCE);
         assertThat(publishedPayload).contains("\"msgId\":\"124545\"");
         assertThat(publishedPayload).contains("\"value\":true");

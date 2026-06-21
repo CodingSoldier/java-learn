@@ -7,12 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * MQTT Topic 构建、解析和变量校验工具。
  * <p>
- * 主题格式：{@code iot/v1/{连接对象}/{对象标识}/{方向}/{业务类型}}
+ * 主题格式：{@code sys/v1/{连接对象}/{对象标识}/{方向}/{业务类型}}
  */
 @Slf4j
 public final class MqttTopicResolver {
 
-    private static final String PROTOCOL_PREFIX = "iot/v1";
+    private static final String PROTOCOL_PREFIX = "sys/v1";
 
     private static final String PRODUCTS = "products";
     private static final String DEVICES = "devices";
@@ -330,8 +330,8 @@ public final class MqttTopicResolver {
     // ========== 内部方法 ==========
 
     private static MqttTopicMetadata parseDirectTopic(String[] parts, String topic) {
-        // iot/v1/products/{productKey}/devices/{deviceCode}/...
-        // 0     1  2        3           4      5          6 ...
+        // sys/v1/products/{productKey}/devices/{deviceCode}/...
+        // 0   1  2        3           4      5          6 ...
         if (parts.length < 9) {
             log.warn("直连设备 Topic 层级不足，topic={}", topic);
             return MqttTopicMetadata.builder().valid(false).build();
@@ -402,8 +402,8 @@ public final class MqttTopicResolver {
     }
 
     private static MqttTopicMetadata parseGatewayTopic(String[] parts, String topic) {
-        // iot/v1/gateways/{gatewayId}/...
-        // 0     1  2        3          4 ...
+        // sys/v1/gateways/{gatewayId}/...
+        // 0   1  2        3          4 ...
         if (parts.length < 8) {
             log.warn("网关 Topic 层级不足，topic={}", topic);
             return MqttTopicMetadata.builder().valid(false).build();

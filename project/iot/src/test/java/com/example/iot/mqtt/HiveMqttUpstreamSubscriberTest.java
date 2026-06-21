@@ -86,14 +86,14 @@ class HiveMqttUpstreamSubscriberTest {
                 {"msgId":"124545","code":20000,"message":"成功"}
                 """.getBytes(StandardCharsets.UTF_8);
         Mqtt5Publish publish = Mqtt5Publish.builder()
-                .topic("iot/v1/products/light/devices/light001/up/services/switch/response")
+                .topic("sys/v1/products/light/devices/light001/up/services/switch/response")
                 .payload(payload)
                 .build();
 
         callbackCaptor.getAllValues().getFirst().accept(publish);
 
         verify(mqttUpstreamDispatcher).dispatch(
-                "iot/v1/products/light/devices/light001/up/services/switch/response",
+                "sys/v1/products/light/devices/light001/up/services/switch/response",
                 payload);
     }
 }
