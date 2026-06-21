@@ -1,7 +1,7 @@
 package com.example.iot.mqtt;
 
 import com.example.iot.config.MqttProperties;
-import com.example.iot.model.MqttInvokeMessage;
+import com.example.iot.model.MqttPublishRequest;
 import com.github.codingsoldier.common.util.objectmapper.ObjectMapperUtil;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
@@ -36,16 +36,63 @@ public class HiveMqttGateway {
     }
 
     /**
-     * 向 MQTT 调用主题发布服务调用消息。
+     * 发布 MQTT 消息。
      *
-     * @param message 调用消息
+     * @param request 发布请求
      * @return 发送完成结果
      */
-    public CompletableFuture<Void> sendInvoke(MqttInvokeMessage message) {
+    public CompletableFuture<Void> publish(MqttPublishRequest request) {
         try {
-            byte[] payload = ObjectMapperUtil.writeValueAsString(message).getBytes(StandardCharsets.UTF_8);
+            var builder = Mqtt5Publish.builder()
+                    .topic(request.getTopic())
+                    .qos(resolveQos())
+                    .payload(request.getPayload());
+
+            if (request.getResponseTopic() != null) {
+                builder = builder.responseTopic(request.getResponseTopic());
+            }
+            if (request.getCorrelationData() != null) {
+                builder = builder.correlationData(request.getCorrelationData());
+            }
+
+            Mqtt5Publish publish = builder.build();
+            String msgId = "";
+            try {
+                byte[] correlationData = request.getCorrelationData();
+                if (correlationData != null) {
+                    msgId = new String(correlationData, StandardCharsets.UTF_8);
+                }
+            } catch (Exception ignored) {
+                // 忽略解析异常
+            }
+
+            final String logMsgId = msgId;
+            return mqttClient.publish(publish)
+                    .thenApply(ignored -> (Void) null)
+                    .whenComplete((ignored, throwable) -> {
+                        if (throwable == null) {
+                            log.info("MQTT 发布成功，topic={}，msgId={}", request.getTopic(), logMsgId);
+                            return;
+                        }
+                        log.error("MQTT 发布失败，topic={}，msgId={}", request.getTopic(), logMsgId, throwable);
+                    });
+        } catch (RuntimeException ex) {
+            log.error("序列化 MQTT 消息失败，topic={}", request.getTopic(), ex);
+            return CompletableFuture.failedFuture(new IllegalStateException("序列化 MQTT 消息失败", ex));
+        }
+    }
+
+    /**
+     * 向指定主题发布 JSON payload。
+     *
+     * @param topic   目标主题
+     * @param payload JSON payload 字节
+     * @return 发送完成结果
+     */
+    public CompletableFuture<Void> publish(String topic, byte[] payload) {
+        try {
             Mqtt5Publish publish = Mqtt5Publish.builder()
-                    .topic(MqttTopics.INVOKE_TOPIC)
+                    .topic(topic)
                     .qos(resolveQos())
                     .payload(payload)
                     .build();
@@ -53,16 +100,14 @@ public class HiveMqttGateway {
                     .thenApply(ignored -> (Void) null)
                     .whenComplete((ignored, throwable) -> {
                         if (throwable == null) {
-                            log.info("MQTT 发布成功，topic={}，msgId={}",
-                                    MqttTopics.INVOKE_TOPIC, message.getMsgId());
+                            log.info("MQTT 发布成功，topic={}", topic);
                             return;
                         }
-                        log.error("MQTT 发布失败，topic={}，msgId={}",
-                                MqttTopics.INVOKE_TOPIC, message.getMsgId(), throwable);
+                        log.error("MQTT 发布失败，topic={}", topic, throwable);
                     });
         } catch (RuntimeException ex) {
-            log.error("序列化 MQTT 调用消息失败，msgId={}", message.getMsgId(), ex);
-            return CompletableFuture.failedFuture(new IllegalStateException("序列化 MQTT 调用消息失败", ex));
+            log.error("构建 MQTT 发布消息失败，topic={}", topic, ex);
+            return CompletableFuture.failedFuture(new IllegalStateException("构建 MQTT 发布消息失败", ex));
         }
     }
 

@@ -8,24 +8,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 模拟 MQTT 回复接口返回的响应。
+ * MQTT 上游消息分发结果。
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MockMqttReplyResponse implements Serializable {
+public class MqttDispatchResult implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 回复携带的消息 ID。
+     * 从 payload 中解析的消息 ID；解析失败时为空字符串。
      */
-    private Long msgId;
+    @Builder.Default
+    private String msgId = "";
 
     /**
-     * 是否匹配到了待处理的 HTTP 请求。
+     * 消息是否成功匹配并分发到处理器。
      */
     private boolean matched;
 }

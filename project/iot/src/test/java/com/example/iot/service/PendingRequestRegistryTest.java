@@ -3,6 +3,7 @@ package com.example.iot.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.example.iot.model.ServiceResponseMessage;
 import com.github.codingsoldier.common.exception.HttpStatus4xxException;
 import com.github.codingsoldier.common.exception.HttpStatus5xxException;
 import java.time.Duration;
@@ -36,12 +37,18 @@ class PendingRequestRegistryTest {
     @Test
     void shouldRegisterCompleteAndCleanup() throws Exception {
         registry = new PendingRequestRegistry(10);
-        PendingRequest request = registry.register(1L, Duration.ofSeconds(1));
+        PendingRequest request = registry.register("123", Duration.ofSeconds(1),
+                "light", "light001", null, "switch");
 
-        boolean matched = registry.complete(1L, "返回的数据");
+        ServiceResponseMessage response = ServiceResponseMessage.builder()
+                .msgId("123")
+                .code(20000)
+                .message("成功")
+                .build();
+        boolean matched = registry.complete("123", response);
 
         assertThat(matched).isTrue();
-        assertThat(request.getFuture().get(1, TimeUnit.SECONDS)).isEqualTo("返回的数据");
+        assertThat(request.getFuture().get(1, TimeUnit.SECONDS)).isEqualTo(response);
         assertThat(registry.size()).isZero();
     }
 
@@ -51,7 +58,8 @@ class PendingRequestRegistryTest {
     @Test
     void shouldTimeoutAndCleanup() {
         registry = new PendingRequestRegistry(10);
-        PendingRequest request = registry.register(1L, Duration.ofMillis(30));
+        PendingRequest request = registry.register("123", Duration.ofMillis(30),
+                "light", "light001", null, "switch");
 
         assertThatThrownBy(() -> request.getFuture().get(1, TimeUnit.SECONDS))
                 .isInstanceOf(ExecutionException.class)
@@ -66,7 +74,11 @@ class PendingRequestRegistryTest {
     void shouldReturnFalseForUnknownMsgId() {
         registry = new PendingRequestRegistry(10);
 
-        boolean matched = registry.complete(999L, "返回的数据");
+        ServiceResponseMessage response = ServiceResponseMessage.builder()
+                .msgId("999")
+                .code(20000)
+                .build();
+        boolean matched = registry.complete("999", response);
 
         assertThat(matched).isFalse();
     }
@@ -79,14 +91,20 @@ class PendingRequestRegistryTest {
     @Test
     void shouldIgnoreDuplicatedReply() throws Exception {
         registry = new PendingRequestRegistry(10);
-        PendingRequest request = registry.register(1L, Duration.ofSeconds(1));
+        PendingRequest request = registry.register("123", Duration.ofSeconds(1),
+                "light", "light001", null, "switch");
 
-        boolean firstMatched = registry.complete(1L, "第一次返回");
-        boolean secondMatched = registry.complete(1L, "第二次返回");
+        ServiceResponseMessage firstResponse = ServiceResponseMessage.builder()
+                .msgId("123").code(20000).message("第一次返回").build();
+        ServiceResponseMessage secondResponse = ServiceResponseMessage.builder()
+                .msgId("123").code(20000).message("第二次返回").build();
+
+        boolean firstMatched = registry.complete("123", firstResponse);
+        boolean secondMatched = registry.complete("123", secondResponse);
 
         assertThat(firstMatched).isTrue();
         assertThat(secondMatched).isFalse();
-        assertThat(request.getFuture().get(1, TimeUnit.SECONDS)).isEqualTo("第一次返回");
+        assertThat(request.getFuture().get(1, TimeUnit.SECONDS)).isEqualTo(firstResponse);
         assertThat(registry.size()).isZero();
     }
 
@@ -96,10 +114,27 @@ class PendingRequestRegistryTest {
     @Test
     void shouldRejectWhenMaxPendingExceeded() {
         registry = new PendingRequestRegistry(1);
-        registry.register(1L, Duration.ofSeconds(1));
+        registry.register("123", Duration.ofSeconds(1),
+                "light", "light001", null, "switch");
 
-        assertThatThrownBy(() -> registry.register(2L, Duration.ofSeconds(1)))
+        assertThatThrownBy(() -> registry.register("456", Duration.ofSeconds(1),
+                "light", "light001", null, "switch"))
                 .isInstanceOf(HttpStatus4xxException.class);
         assertThat(registry.size()).isOne();
+    }
+
+    /**
+     * 注册请求应保存预期的设备身份信息。
+     */
+    @Test
+    void shouldStoreExpectedDeviceIdentity() {
+        registry = new PendingRequestRegistry(10);
+        PendingRequest request = registry.register("123", Duration.ofSeconds(1),
+                "sensor", "sensor001", "gw001", "switch");
+
+        assertThat(request.getExpectedProductKey()).isEqualTo("sensor");
+        assertThat(request.getExpectedDeviceCode()).isEqualTo("sensor001");
+        assertThat(request.getExpectedGatewayId()).isEqualTo("gw001");
+        assertThat(request.getExpectedServiceCode()).isEqualTo("switch");
     }
 }

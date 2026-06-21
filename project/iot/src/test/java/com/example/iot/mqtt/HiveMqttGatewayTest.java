@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.example.iot.config.MqttProperties;
-import com.example.iot.model.MqttInvokeMessage;
+import com.example.iot.model.MqttPublishRequest;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
@@ -40,25 +40,57 @@ class HiveMqttGatewayTest {
     }
 
     /**
-     * 发布调用消息时应包含消息 ID 和业务数据。
+     * 发布请求消息时应包含正确的 topic、payload 和 MQTT 5 属性。
      */
     @Test
-    void shouldPublishInvokeMessageAsJson() {
+    void shouldPublishRequestWithCorrectTopicAndPayload() {
         when(mqttClient.publish(any(Mqtt5Publish.class))).thenReturn(CompletableFuture.completedFuture(null));
 
-        CompletableFuture<Void> future = gateway.sendInvoke(MqttInvokeMessage.builder()
-                .msgId(124545L)
-                .data("发的数据")
-                .build());
+        byte[] payload = """
+                {"msgId":"124545","timestamp":1781883000000,"data":{"value":true}}
+                """.getBytes(StandardCharsets.UTF_8);
+        byte[] correlationData = "124545".getBytes(StandardCharsets.UTF_8);
+
+        MqttPublishRequest request = MqttPublishRequest.builder()
+                .topic("iot/v1/products/light/devices/light001/down/services/switch/request")
+                .payload(payload)
+                .correlationData(correlationData)
+                .build();
+
+        CompletableFuture<Void> future = gateway.publish(request);
 
         ArgumentCaptor<Mqtt5Publish> captor = ArgumentCaptor.forClass(Mqtt5Publish.class);
         verify(mqttClient).publish(captor.capture());
         Mqtt5Publish publish = captor.getValue();
-        String payload = new String(publish.getPayloadAsBytes(), StandardCharsets.UTF_8);
+        String publishedPayload = new String(publish.getPayloadAsBytes(), StandardCharsets.UTF_8);
         assertThat(future).isCompleted();
-        assertThat(publish.getTopic().toString()).hasToString(MqttTopics.INVOKE_TOPIC);
+        assertThat(publish.getTopic().toString())
+                .hasToString("iot/v1/products/light/devices/light001/down/services/switch/request");
         assertThat(publish.getQos()).isEqualTo(MqttQos.AT_LEAST_ONCE);
-        assertThat(payload).contains("\"msgId\":124545");
-        assertThat(payload).contains("\"data\":\"发的数据\"");
+        assertThat(publishedPayload).contains("\"msgId\":\"124545\"");
+        assertThat(publishedPayload).contains("\"value\":true");
+        assertThat(publish.getCorrelationData()).isPresent();
+        java.nio.ByteBuffer corrData = publish.getCorrelationData().get();
+        byte[] corrBytes = new byte[corrData.remaining()];
+        corrData.get(corrBytes);
+        corrData.rewind();
+        assertThat(new String(corrBytes, StandardCharsets.UTF_8))
+                .isEqualTo("124545");
+    }
+
+    /**
+     * 发布简单 payload 到指定主题。
+     */
+    @Test
+    void shouldPublishSimplePayload() {
+        when(mqttClient.publish(any(Mqtt5Publish.class))).thenReturn(CompletableFuture.completedFuture(null));
+
+        byte[] payload = "{\"test\":true}".getBytes(StandardCharsets.UTF_8);
+        CompletableFuture<Void> future = gateway.publish("test/topic", payload);
+
+        ArgumentCaptor<Mqtt5Publish> captor = ArgumentCaptor.forClass(Mqtt5Publish.class);
+        verify(mqttClient).publish(captor.capture());
+        assertThat(future).isCompleted();
+        assertThat(captor.getValue().getTopic().toString()).hasToString("test/topic");
     }
 }

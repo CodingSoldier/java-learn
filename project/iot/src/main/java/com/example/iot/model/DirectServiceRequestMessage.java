@@ -10,19 +10,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 服务调用成功时的 HTTP 响应。
+ * 直连设备服务调用请求消息。
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServiceInvokeResponse implements Serializable {
+public class DirectServiceRequestMessage implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 服务调用返回的数据，JSON 对象类型；缺省时归一化为空 Map。
+     * 消息 ID，Snowflake 十进制字符串。
+     */
+    private String msgId;
+
+    /**
+     * 消息发送时间，UTC Unix 毫秒时间戳。
+     */
+    private Long timestamp;
+
+    /**
+     * 服务调用参数，JSON 对象类型；缺省时归一化为空 Map。
      */
     @Builder.Default
     private Map<String, Object> data = new HashMap<>();

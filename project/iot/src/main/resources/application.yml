@@ -14,6 +14,15 @@ iot:
   invoke:
     timeout: 30s
     max-pending: 10000
+  routing:
+    devices:
+      - product-key: light
+        device-code: light001
+        access-type: DIRECT_DEVICE
+      - product-key: sensor
+        device-code: sensor001
+        access-type: GATEWAY_SUB_DEVICE
+        gateway-id: gw001
   mqtt:
     host: 192.168.1.221
     port: 1883

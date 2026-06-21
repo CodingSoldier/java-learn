@@ -6,7 +6,7 @@ This repository is a Maven-based Spring Boot IoT service. Main code lives under 
 
 - `controller/`: HTTP entry points such as `/service/invoke` and mock MQTT reply APIs.
 - `service/`: async request orchestration and pending request registry.
-- `mqtt/`: MQTT gateway abstraction, HiveMQ Client implementation, and local pseudo gateway.
+- `mqtt/`: HiveMQ Client gateway, lifecycle, Topic resolver, upstream dispatcher, and response handlers.
 - `model/`: request, response, and MQTT payload DTOs.
 - `config/`: configuration properties and MQTT client beans.
 - `src/main/resources/application.yml`: runtime configuration.
@@ -34,7 +34,7 @@ DTOs and response models should implement `Serializable` and define `serialVersi
 
 Tests use JUnit 5, AssertJ, Spring MVC Test, and Mockito. Test classes should follow `*Test` naming, for example `PendingRequestRegistryTest`.
 
-Cover async behavior explicitly: successful reply matching, timeout, unknown `msgId`, duplicate replies, pending request limits, MQTT publish payloads, and MQTT reply parsing. MVC tests should mock `MqttGateway` unless they intentionally require a real broker. Run `mvn test` before submitting changes.
+Cover async behavior explicitly: successful response matching, timeout, unknown `msgId`, duplicate responses, pending request limits, MQTT publish payloads, strict Topic parsing, and payload validation. `EndToEndInvokeTest` intentionally uses the real EMQX broker and assigns unique MQTT Client IDs. Run `mvn test` before submitting changes.
 
 ## Commit & Pull Request Guidelines
 
@@ -46,4 +46,4 @@ Pull requests should include a short description, affected APIs, test results, a
 
 `/service/invoke` intentionally returns `DeferredResult<ResponseEntity<?>>` to preserve async HTTP behavior. Keep this signature unless the async design is being intentionally redesigned. Response bodies should use `Result.success(...)` or `Result.fail(...)` for consistency with the `micro-service` framework.
 
-The production MQTT path uses HiveMQ Client with MQTT 5. It publishes to `/sys/servie/invoke` and subscribes to `/sys/servie/invoke_reply`; keep the current topic spelling unless a coordinated migration changes both sides.
+The production MQTT path uses HiveMQ Client with MQTT 5. Direct-device service calls use `iot/v1/products/{productKey}/devices/{deviceCode}/down/services/{serviceCode}/request`; gateway sub-device calls use `iot/v1/gateways/{gatewayId}/down/sub-devices/services/{serviceCode}/request`. Responses use the corresponding `up/.../response` Topic and must pass strict Topic, payload, and pending-request identity validation.

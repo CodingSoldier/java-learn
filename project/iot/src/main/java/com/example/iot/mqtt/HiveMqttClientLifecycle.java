@@ -26,26 +26,24 @@ public class HiveMqttClientLifecycle {
 
     private final MqttProperties properties;
 
-    private final HiveMqttReplySubscriber hiveMqttReplySubscriber;
+    private final HiveMqttUpstreamSubscriber hiveMqttUpstreamSubscriber;
 
     /**
-     * 应用启动完成后连接 MQTT 并订阅回复主题。
+     * 应用启动完成后连接 MQTT 并订阅服务响应主题。
      */
     @EventListener(ApplicationReadyEvent.class)
     public void connectAndSubscribe() {
         mqttClient.connect(buildConnectMessage())
                 .orTimeout(properties.getConnectTimeout().toMillis(), TimeUnit.MILLISECONDS)
-                .thenCompose(ignored -> hiveMqttReplySubscriber.subscribeReplyTopic())
+                .thenCompose(ignored -> hiveMqttUpstreamSubscriber.subscribeServiceResponseTopics())
                 .whenComplete((ignored, throwable) -> {
                     if (throwable == null) {
-                        log.info("MQTT 客户端连接并订阅成功，host={}，port={}，clientId={}，replyTopic={}",
-                                properties.getHost(), properties.getPort(), properties.getClientId(),
-                                MqttTopics.INVOKE_REPLY_TOPIC);
+                        log.info("MQTT 客户端连接并订阅成功，host={}，port={}，clientId={}",
+                                properties.getHost(), properties.getPort(), properties.getClientId());
                         return;
                     }
-                    log.error("MQTT 客户端连接或订阅失败，host={}，port={}，clientId={}，replyTopic={}",
-                            properties.getHost(), properties.getPort(), properties.getClientId(),
-                            MqttTopics.INVOKE_REPLY_TOPIC, throwable);
+                    log.error("MQTT 客户端连接或订阅失败，host={}，port={}，clientId={}",
+                            properties.getHost(), properties.getPort(), properties.getClientId(), throwable);
                 });
     }
 
