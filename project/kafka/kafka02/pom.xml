@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 独立工程，不继承 example-parent，依赖版本通过下方 BOM import 统一管理 -->
+    <groupId>com.github.codingsoldier.example</groupId>
+    <artifactId>kafka02</artifactId>
+    <version>1.1.1</version>
+    <packaging>jar</packaging>
+
+    <description>Kafka 集群示例工程（基于 micro-service 框架）</description>
+
+    <properties>
+        <java.version>25</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <micro-service.version>25.0.0</micro-service.version>
+        <spring-boot.version>4.0.6</spring-boot.version>
+        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
+        <lombok.version>1.18.46</lombok.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- micro-service 框架 BOM，内部 import 了 spring-boot-dependencies，统一托管 spring-kafka 等版本 -->
+            <dependency>
+                <groupId>com.github.codingsoldier</groupId>
+                <artifactId>micro-service-dependencies</artifactId>
+                <version>${micro-service.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- micro-service 框架基础能力 -->
+        <dependency>
+            <groupId>com.github.codingsoldier</groupId>
+            <artifactId>micro-service-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.codingsoldier</groupId>
+            <artifactId>starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.codingsoldier</groupId>
+            <artifactId>starter-logback</artifactId>
+        </dependency>
+
+        <!-- Kafka，版本由 BOM 托管；spring-kafka 传递引入 kafka-clients，供原生客户端使用 -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- 打包为可运行的 Spring Boot 应用 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <configuration>
+                    <mainClass>com.github.codingsoldier.example.kafka02.Kafka02Application</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 没有 parent，需显式声明编译插件、Java 版本与 Lombok 注解处理器 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <release>${java.version}</release>
+                    <encoding>UTF-8</encoding>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
