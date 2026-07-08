@@ -46,3 +46,18 @@ Node-RED 默认不带 MySQL 节点，需要手动安装 `node-red-node-mysql`。
 
 ### 使用mysql
 ![04-mysql.jpg](file/04-mysql.jpg)
+
+## modbus
+安装 node-red-contrib-modbus
+
+modbus地址配置
+
+![05-modbus地址配置.jpg](file/05-modbus地址配置.jpg)
+
+modbus读
+
+![06-modbus读.jpg](file/06-modbus读.jpg)
+
+## node-red-contrib-loop
+安装node-red-contrib-loop
+
